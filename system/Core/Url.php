@@ -18,28 +18,28 @@ class Url {
     }
 
     public function rest($name, $args = '', $connection = 'NONSSL') {
-       if ($connection == 'NONSSL') {
+        if ($connection == 'NONSSL') {
             $url = $this->url;
         } else {
             $url = $this->ssl;
         }
-        
+
         $url .= 'rest/' . $name;
-        
+
         if ($args) {
             if (is_array($args)) {
                 $args = http_build_query($args);
             }
             $url .= str_replace('&', '&amp;', '&' . ltrim($args, '&'));
         }
-        
+
         return $url;
     }
-    
+
     /**
      * Rewrite the URL!
      * @param string $route
-     * @param arry $args
+     * @param string $args
      * @param string $connection NONSSL | SSL | CURRENT | PATH 
      * @return type
      */
@@ -48,15 +48,12 @@ class Url {
             $url = $this->url;
         } elseif ($connection == 'SSL') {
             $url = $this->ssl;
-        } elseif ($connection == 'CURRENT') {
+        } else {
             if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
                 $url = $this->ssl;
             } else {
                 $url = $this->url;
             }
-            //PATH OPTION
-        } else {
-            $url = '';
         }
 
         $url .= 'index.php?p=' . $route;
@@ -74,6 +71,19 @@ class Url {
             $url = $rewrite->rewrite($url);
         }
 
+        if ($connection == 'PATH') {
+            $path = parse_url($url, PHP_URL_PATH);
+            $query = parse_url($url, PHP_URL_QUERY);
+            $frag = parse_url($url, PHP_URL_FRAGMENT);
+
+            $url = $path;
+            if ($query) {
+                $url .= '?' . $query;
+            }
+            if ($frag) {
+                $url .= '#' . $frag;
+            }
+        }
         return $url;
     }
 
