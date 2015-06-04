@@ -36,11 +36,27 @@ class Url {
         return $url;
     }
     
+    /**
+     * Rewrite the URL!
+     * @param string $route
+     * @param arry $args
+     * @param string $connection NONSSL | SSL | CURRENT | PATH 
+     * @return type
+     */
     public function link($route, $args = '', $connection = 'NONSSL') {
         if ($connection == 'NONSSL') {
             $url = $this->url;
-        } else {
+        } elseif ($connection == 'SSL') {
             $url = $this->ssl;
+        } elseif ($connection == 'CURRENT') {
+            if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
+                $url = $this->ssl;
+            } else {
+                $url = $this->url;
+            }
+            //PATH OPTION
+        } else {
+            $url = '';
         }
 
         $url .= 'index.php?p=' . $route;
