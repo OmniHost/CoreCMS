@@ -2,33 +2,45 @@
 
 class ControllerCommonSeoUrl extends \Core\Controller {
 
+    protected $_internals = array(
+        'account' => 'account/account',
+        'contact-us' => 'common/contact',
+        'maintenance' => 'common/maintenance'
+    );
+
     public function index() {
         // Add rewrite to url class
         //    if ($this->config->get('config_seo_url')) {
         $this->url->addRewrite($this);
         //     }
         // Decode URL
+
         if (isset($this->request->get['_route_'])) {
             unset($this->request->get['p']);
-            $parts = explode('/', $this->request->get['_route_']);
 
-            foreach ($parts as $part) {
-                $query = $this->db->query("SELECT * FROM url_alias WHERE keyword = '" . $this->db->escape($part) . "'");
+            if (isset($this->_internals[$this->request->get['_route_']])) {
+                $this->request->get['p'] = $this->_internals[$this->request->get['_route_']];
+            } else {
 
-                if ($query->num_rows) {
-                    $url = explode('=', $query->row['query']);
+                $parts = explode('/', $this->request->get['_route_']);
 
-                   
-                    if($url[0] == 'ams_page_id') {
-                        $this->request->get['ams_page_id'] = $url[1];
-                        $page = $this->db->fetchRow("select namespace from #__ams_pages where ams_page_id = '" . (int)$url[1] . "'");
-                        $this->request->get['p'] = str_replace(".","/", $page['namespace']);
+                foreach ($parts as $part) {
+                    $query = $this->db->query("SELECT * FROM #__url_alias WHERE keyword = '" . $this->db->escape($part) . "'");
+
+                    if ($query->num_rows) {
+                        $url = explode('=', $query->row['query']);
+
+
+                        if ($url[0] == 'ams_page_id') {
+                            $this->request->get['ams_page_id'] = $url[1];
+                            $page = $this->db->fetchRow("select namespace from #__ams_pages where ams_page_id = '" . (int) $url[1] . "'");
+                            $this->request->get['p'] = str_replace(".", "/", $page['namespace']);
+                        }
+                    } else {
+                        $this->request->get['p'] = $this->request->get['_route_'];
                     }
-                } else {
-                    $this->request->get['p'] = 'error/not_found';
                 }
             }
-            
 
             if (isset($this->request->get['p'])) {
                 return $this->forward($this->request->get['p']);
@@ -47,8 +59,8 @@ class ControllerCommonSeoUrl extends \Core\Controller {
 
         foreach ($data as $key => $value) {
             if (isset($data['p'])) {
-                if($key == 'ams_page_id'){
-                     $query = $this->db->query("SELECT * FROM url_alias WHERE `query` = '" . $this->db->escape($key . '=' . (int) $value) . "'");
+                if ($key == 'ams_page_id') {
+                    $query = $this->db->query("SELECT * FROM url_alias WHERE `query` = '" . $this->db->escape($key . '=' . (int) $value) . "'");
 
                     if ($query->num_rows) {
                         $url .= '/' . $query->row['keyword'];
@@ -56,7 +68,12 @@ class ControllerCommonSeoUrl extends \Core\Controller {
                         unset($data[$key]);
                     }
                 }
-                
+            }
+            if (array_search($data['p'], $this->_internals)) {
+                $url .= '/' . array_search($data['p'], $this->_internals);
+            }
+            if ($data['p'] == 'common/home') {
+                $url .= '/';
             }
         }
 
@@ -76,8 +93,8 @@ class ControllerCommonSeoUrl extends \Core\Controller {
             }
 
             return $url_info['scheme'] . '://' . $url_info['host'] . (isset($url_info['port']) ? ':' . $url_info['port'] : '') . str_replace('/index.php', '', $url_info['path']) . $url . $query;
-        } elseif ($data['p'] == 'common/home') {
-
+        } else {
+            $url .= '/' . $data['p'];
             unset($data['p']);
             $query = '';
 
@@ -91,10 +108,7 @@ class ControllerCommonSeoUrl extends \Core\Controller {
                 }
             }
 
-            return $url_info['scheme'] . '://' . $url_info['host'] . (isset($url_info['port']) ? ':' . $url_info['port'] : '') . str_replace('/index.php', '', $url_info['path'])  . $query;
-        } else {
-
-            return str_replace("/index.php", "/", $link);
+            return $url_info['scheme'] . '://' . $url_info['host'] . (isset($url_info['port']) ? ':' . $url_info['port'] : '') . str_replace('/index.php', '', $url_info['path']) . $url . $query;
         }
     }
 
