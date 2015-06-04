@@ -1,0 +1,42 @@
+</div>
+<div class="box-footer">
+    <button class="btn btn-primary">
+        <i class="fa fa-check"></i> <?php echo $button_save; ?>
+    </button>
+    <a href="<?php echo $cancel; ?>" class="btn" onclick="$('#form').submit();">
+        <i class="fa fa-times"></i> <?php echo $button_cancel; ?>
+    </a>
+</div>
+</div>
+</form>
+
+</section><!-- /.content -->
+
+<script>
+    var slugXHR = null;
+<?php if (isset($doslug) && $doslug): ?>
+        docReady(function () {
+            $('#nameInput').on("keyup", function () {
+                var pdata = {name: $(this).val()};
+                if (slugXHR != null) {
+                    slugXHR.abort();
+                    slugXHR = null;
+                }
+                slugXHR = $.ajax({
+                    type: "POST",
+                    url: 'index.php?p=cms/page/getSlug&token=<?php echo $this->session->data['token']; ?>',
+                    data: pdata,
+                    dataType: 'json',
+                    success: function (msg) {
+                        /* handle the ajax response */
+                        $('#slugInput').val(msg.slug);
+                        $('#slugInputValue').val(msg.slug);
+
+                    }
+                });
+            });
+        });
+<?php endif; ?>
+</script>
+
+<?php echo $footer; ?>

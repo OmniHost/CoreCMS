@@ -1,0 +1,427 @@
+<?php echo $header; ?>
+<?php include(__DIR__ . '/../common/page-header.phtml'); ?>
+
+<section class="content">
+
+    <div class="box">
+        <div class="box-header text-right">
+
+            <button onclick="$('#form').submit();" class="btn btn-app"><i class="fa fa-save text-green"></i> <?php echo $button_save; ?></button>
+            <a href="<?php echo $cancel; ?>" class="btn btn-app"><i class="fa fa-reply"></i>  <?php echo $button_cancel; ?></a>
+
+
+        </div>
+
+        <div class="box-body">
+            <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form" class="form-horizontal">
+                <div class="form-group">
+                    <label for="nameInput" class="col-sm-2 control-label required"><?php echo $entry_name; ?></label>
+                    <div class="col-sm-9">
+                        <input type="text" name="name" value="<?php echo $name; ?>" class="form-control required" id="nameInput" />
+                        <?php if ($error_name) { ?>
+                            <span class="error text-danger"><?php echo $error_name; ?></span>
+                        <?php } ?>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-header"><?php echo $entry_header; ?></label>
+                    <div class="col-sm-9">
+                        <select name="header" id="input-header" class="form-control">
+                            <?php if ($isheader) { ?>
+                                <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+                                <option value="0"><?php echo $text_disabled; ?></option>
+                            <?php } else { ?>
+                                <option value="1"><?php echo $text_enabled; ?></option>
+                                <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-footer"><?php echo $entry_footer; ?></label>
+                    <div class="col-sm-9">
+                        <select name="footer" id="input-footer" class="form-control">
+                            <?php if ($isfooter) { ?>
+                                <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+                                <option value="0"><?php echo $text_disabled; ?></option>
+                            <?php } else { ?>
+                                <option value="1"><?php echo $text_enabled; ?></option>
+                                <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-footer"><?php echo $entry_structure; ?></label>
+                    <div class="col-sm-9">
+
+                        <div class="dd" id="nestable">
+                            <ol class="dd-list">
+                                <?php echo buildMenuTree($items); ?>
+
+                            </ol>
+                        </div>
+                        <input type="hidden" id="menu_items_input" name="items" value="" />
+                        <button type="button" id="add_menu_item">Add Menu Item</button>
+                    </div>
+
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<div id="menu-item-modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Modal title</h4>
+            </div>
+            <div class="modal-body form-horizontal">
+                <input type="hidden" id="item_id" value="0" />
+                <div class="form-group">
+                    <label class="col-sm-3 control-label required"><?php echo $entry_title; ?></label>
+                    <div class="col-sm-9">
+                        <input type="text"  value="" class="form-control required" id="titleInput" />
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label required"><?php echo $entry_link; ?></label>
+                    <div class="col-sm-9">
+                        <input type="text" value="" class="form-control required" id="linkLabelInput" />
+                        <input type="hidden" id="amsPageIdInput" value="0" />
+                        <input type="hidden" id="linkInput" value="" />
+                        <span class="help-text"><?php echo $help_link; ?></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="accessInput" class="col-sm-3"><?php echo $entry_allowed_groups; ?></label>
+                    <div class="col-sm-9">
+
+                        <ul class="list-group">
+                            <?php $class = 'odd'; ?>
+                            <?php foreach ($customer_groups as $customer_group) : ?>
+                                <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+                                <li class="list-group-item <?php echo $class; ?>">
+                                    <input type="checkbox" class="allowed_groups" value="<?php echo $customer_group['customer_group_id']; ?>" />
+                                    <?php echo $customer_group['name']; ?>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="accessInput" class="col-sm-3"><?php echo $entry_denied_groups; ?></label>
+                    <div class="col-sm-9">
+
+                        <ul class="list-group">
+                            <?php $class = 'odd'; ?>
+                            <?php foreach ($customer_groups as $customer_group) : ?>
+                                <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+                                <li class="list-group-item <?php echo $class; ?>">
+                                    <input type="checkbox" class="denied_groups" value="<?php echo $customer_group['customer_group_id']; ?>" />
+                                    <?php echo $customer_group['name']; ?>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button id="save_menu_item" type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+
+</div><!-- /.modal -->
+
+
+
+<?php
+
+function buildMenuTree($mi, &$_id = 0) {
+    /* <li class="dd-item" data-id="3" 
+     * data-title="item label" 
+     * data-ams_page_id="0" data-link="asldfkjasdlk" data-allowed="-1" data-denied=""><div class="dd-handle"></div><div class="dd-content"><span class="text">item label</span><div class="tools"><i class="fa fa-edit"></i><i class="fa fa-trash-o"></i></div></div></li> */
+
+    $xhtml = '';
+    foreach ($mi as $m) {
+
+        $xhtml .= '<li class="dd-item" data-id="' . $_id++ . '" '
+                . 'data-title="' . htmlentities($m['title']) . '" '
+                . 'data-link="' . $m['link'] . '" '
+                . 'data-linklabel="' . $m['linklabel'] . '" '
+                . 'data-allowed_groups="' . $m['allowed_groups'] . '" '
+                . 'data-denied_groups="' . $m['denied_groups'] . '">';
+        $xhtml .= '<div class="dd-handle"></div>';
+        $xhtml .= '<div class="dd-content">';
+        $xhtml .= ' <span class="text">' . $m['title'] . '</span>
+                                        <div class="tools">
+                                            <i class="fa fa-edit"></i>
+                                            <i class="fa fa-trash-o"></i>
+                                        </div>';
+        $xhtml .= '</div>';
+        if ($m['children']) {
+            $xhtml .= '<ol class="dd-list">';
+            $xhtml .= buildMenuTree($m['children'], $_id);
+            $xhtml .= '</ol>';
+        }
+        $xhtml .= '</li>';
+    }
+
+    return $xhtml;
+}
+?>
+<?php
+/*
+ * <ol class="dd-list">
+  <li class="dd-item" data-id="1" data-title="" data-ams_page_id="0" data-link="">
+  <div class="dd-handle"></div>
+  <div class="dd-content">
+  <span class="text">Item 1</span>
+  <div class="tools">
+  <i class="fa fa-edit"></i>
+  <i class="fa fa-trash-o"></i>
+  </div>
+  </div>
+  </li>
+  <li class="dd-item" data-id="9"><div class="dd-handle"></div>
+  <div class="dd-content">
+  <span class="text">Item 9</span>
+  <div class="tools">
+  <i class="fa fa-edit"></i>
+  <i class="fa fa-trash-o"></i>
+  </div>
+  </div></li>
+  <li class="dd-item" data-id="2"><button data-action="collapse" type="button">Collapse</button><button data-action="expand" type="button" style="display: none;">Expand</button>
+  <div class="dd-handle"></div>
+  <div class="dd-content">
+  <span class="text">Item 2</span>
+  <div class="tools">
+  <i class="fa fa-edit"></i>
+  <i class="fa fa-trash-o"></i>
+  </div>
+  </div>
+  <ol class="dd-list">
+  <li class="dd-item" data-id="3">
+  <div class="dd-handle">
+
+  </div>
+  <div class="dd-content">
+  <span class="text">Item 3</span>
+  <div class="tools">
+  <i class="fa fa-edit"></i>
+  <i class="fa fa-trash-o"></i>
+  </div>
+  </div>
+  </li>
+  <li class="dd-item" data-id="4"><div class="dd-handle"></div>
+  <div class="dd-content">
+  <span class="text">Item 4</span>
+  <div class="tools">
+  <i class="fa fa-edit"></i>
+  <i class="fa fa-trash-o"></i>
+  </div>
+  </div></li>
+  <li class="dd-item" data-id="5">
+  <div class="dd-handle"></div>
+  <div class="dd-content">
+  <span class="text">Item 5</span>
+  <div class="tools">
+  <i class="fa fa-edit"></i>
+  <i class="fa fa-trash-o"></i>
+  </div>
+  </div>
+  </li>
+
+  </ol>
+  </li>
+
+  </ol>
+ * 
+ */
+?>
+
+<script type="text/javascript"><!--
+    function htmlEntities(str) {
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos');
+    }
+
+    var $item_id = 0;
+
+    var $item_action;
+
+    docReady(function () {
+        $('#nestable').nestable();
+        $('#menu_items_input').val(JSON.stringify($('#nestable').nestable('serialize')));
+        $('#nestable').on('change', function () {
+            $('#menu_items_input').val(JSON.stringify($('#nestable').nestable('serialize')));
+
+            /* on change event */
+        });
+
+        $('#linkInput').on("keydown", function () {
+            $('#amsPageIdInput').val('0');
+            $('#linkInput').val($(this).val());
+        });
+
+        var item_ids = $('#nestable [data-id]').map(function () {
+            return parseInt($(this).attr('data-id'), 10);
+        }
+        ).get();
+        $item_id = Math.max.apply(Math, item_ids);
+
+        $('#add_menu_item').on("click", function () {
+            $item_action = 'add';
+            $item_id++;
+            $('#item_id').val($item_id);
+            $('#titleInput').val('');
+            $('#amsPageIdInput').val('0');
+            $('#linkInput').val('');
+            $('#linkLabelInput').val('');
+            $('#menu-item-modal .modal-title').text('Add Menu Item');
+
+            $('.denied_groups').prop("checked", false);
+            $('.allowed_groups').prop("checked", false);
+            $('.allowed_groups[value="-1"]').prop("checked", "checked");
+
+            $('#menu-item-modal').modal('show');
+        });
+
+        $('#nestable .fa-edit').on("click", function () {
+            var theLi = $(this).closest('li');
+            $item_action = 'edit';
+            $('#item_id').val(theLi.attr('data-id'));
+            $('#titleInput').val(theLi.attr('data-title'));
+            $('#amsPageIdInput').val(theLi.attr('data-ams_page_id'));
+            $('#linkInput').val(theLi.attr('data-link'));
+            $('#linkLabelInput').val(theLi.attr('data-linklabel'));
+            $('#menu-item-modal .modal-title').text('Edit Menu Item');
+
+            $('.denied_groups').prop("checked", false);
+            $('.allowed_groups').prop("checked", false);
+            try {
+                var all = theLi.attr('data-allowed_groups').split(",");
+                $.each(all, function (i, j) {
+                    $('.allowed_groups[value="' + j + '"]').prop("checked", "checked");
+                });
+            } catch (err) {
+
+            }
+            try {
+                 var den = theLi.attr('data-denied_groups').split(",");
+                 $.each(den, function (i, j) {
+                    $('.denied_groups[value="' + j + '"]').prop("checked", "checked");
+                });
+            }catch(err) {}
+
+
+            //$('.allowed_groups[value="-1"]').prop("checked", "checked");
+
+            $('#menu-item-modal').modal('show');
+        });
+
+
+        $('#linkLabelInput').autocomplete({
+            'source': function (request, response) {
+                $.ajax({
+                    url: '<?php echo $catalog_uri; ?>?p=cms/page/autocomplete&token=<?php echo $token; ?>&filter_page=' + encodeURIComponent(request.term),
+                    dataType: 'json',
+                    success: function (json) {
+                        $('.ui-autocomplete').css('z-index', '999999999');
+                        response($.map(json, function (item) {
+                            return {
+                                label: item['name'],
+                                ams_page: item['ams_page_id'],
+                                link: item['link']
+                            }
+                        }));
+                    }
+                });
+            },
+            'select': function (ev, ui) {
+                //  console.log(ui.item);
+                $('#linkInput').val(ui.item.link);
+                $('#linkLabelInput').val(ui.item.label);
+                $('#amsPageIdInput').val(ui.item.ams_page);
+                return false;
+
+                // $('input[name=\'filter_name\']').val(item['label']);
+            }
+        });
+
+        $('#save_menu_item').on("click", function () {
+            var theTitle = $('#titleInput').val();
+            var theLink = $('#linkInput').val();
+            var theLabel = $('#linkLabelInput').val();
+            var thePage = $('#amsPageIdInput').val();
+            var theId = $('#item_id').val();
+            var theDenied = new Array();
+            var theAllowed = new Array();
+            $('.denied_groups:checked').each(function () {
+                theDenied.push($(this).val());
+            });
+            $('.allowed_groups:checked').each(function () {
+                theAllowed.push($(this).val());
+            });
+
+            if (theLink == '') {
+                theLink = theLabel;
+            }
+
+            if ($item_action == 'add') {
+                var newitem = $('<li />')
+                        .addClass("dd-item")
+                        .attr('data-id', theId)
+                        .attr('data-title', htmlEntities(theTitle))
+                        .attr('data-ams_page_id', thePage)
+                        .attr('data-link', theLink)
+                        .attr('data-linklabel', htmlEntities(theLabel))
+                        .attr('data-allowed_groups', theAllowed.join())
+                        .attr('data-denied_groups', theDenied.join())
+                        .prop('data-allowed_groups', theAllowed.join())
+                        .prop('data-denied_groups', theDenied.join())
+                        .append('<div class="dd-handle"></div>');
+                var ddcontent = $('<div />').addClass('dd-content');
+                ddcontent.append('<span class="text">' + theTitle + '</span>');
+                ddcontent.append('<div class="tools"><i class="fa fa-edit"></i><i class="fa fa-trash-o"></i></div>');
+                newitem.append(ddcontent);
+                $('#nestable > ol').append(newitem);
+
+            } else {
+                $('li[data-id=' + theId + ']').attr('data-ams_page_id', thePage)
+                        .attr('data-link', theLink)
+
+                        .attr('data-linklabel', htmlEntities(theLabel))
+                        .attr('data-title', htmlEntities(theTitle))
+                        .attr('data-allowed_groups', theAllowed.join())
+                        .attr('data-denied_groups', theDenied.join())
+                        .prop('data-allowed_groups', theAllowed.join())
+                        .prop('data-denied_groups', theDenied.join());
+                $('li[data-id=' + theId + '] > .dd-content .text').html(theTitle);
+            }
+            $('#menu_items_input').val(JSON.stringify($('#nestable').nestable('serialize')));
+            $('#menu-item-modal').modal('hide');
+        });
+
+
+        $('#nestable .fa-trash-o').on("click", function () {
+            if (confirm('<?php echo $text_confirm; ?>')) {
+                $(this).closest('li').remove();
+            }
+        });
+        /*
+         * var denied = new Array();
+         $('.denied_groups:checked').each(function() { 
+         denied.push($(this).val());
+         });
+         */
+    });
+//--></script> 
+<?php echo $footer; ?>

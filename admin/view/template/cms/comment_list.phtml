@@ -1,0 +1,200 @@
+<?php echo $header; ?>
+<?php include(__DIR__ . '/../common/page-header.phtml'); ?>
+
+<!-- Main content -->
+<section class="content">
+
+    <div class="box">
+        <div class="box-header text-right">
+            <a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-app"><i class="fa fa-plus text-primary"></i> <?php echo $button_add; ?></a>
+            <button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-app" onclick="confirm('<?php echo $text_confirm; ?>') ? $('#form-review').submit() : false;"><i class="fa fa-trash-o text-danger"></i> <?php echo $button_delete; ?></button>
+        </div>
+        <div class="box-body">
+
+            <div class="well">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label" for="input-page"><?php echo $entry_page; ?></label>
+                            <input type="text" name="filter_page" value="<?php echo $filter_page; ?>" placeholder="<?php echo $entry_page; ?>" id="input-page" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="input-author"><?php echo $entry_author; ?></label>
+                            <input type="text" name="filter_author" value="<?php echo $filter_author; ?>" placeholder="<?php echo $entry_author; ?>" id="input-author" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label" for="input-status"><?php echo $entry_status; ?></label>
+                            <select name="filter_status" id="input-status" class="form-control">
+                                <option value="*"></option>
+                                <?php if ($filter_status) { ?>
+                                    <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+                                <?php } else { ?>
+                                    <option value="1"><?php echo $text_enabled; ?></option>
+                                <?php } ?>
+                                <?php if (($filter_status !== null) && !$filter_status) { ?>
+                                    <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+                                <?php } else { ?>
+                                    <option value="0"><?php echo $text_disabled; ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="input-date-added"><?php echo $entry_date_added; ?></label>
+                            <div class="input-group date">
+                                <input type="text" name="filter_date_added" value="<?php echo $filter_date_added; ?>" placeholder="<?php echo $entry_date_added; ?>" data-format="YYYY-MM-DD" id="input-date-added" class="form-control" />
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                </span></div>
+                        </div>
+                        <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
+                    </div>
+                </div>
+            </div>
+            <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form-review">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
+                                <td class="text-left"><?php if ($sort == 'id.name') { ?>
+                                        <a href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_name; ?></a>
+                                    <?php } else { ?>
+                                        <a href="<?php echo $sort_iname; ?>"><?php echo $column_name; ?></a>
+                                    <?php } ?></td>
+                                <td class="text-left"><?php if ($sort == 'r.author') { ?>
+                                        <a href="<?php echo $sort_author; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_author; ?></a>
+                                    <?php } else { ?>
+                                        <a href="<?php echo $sort_author; ?>"><?php echo $column_author; ?></a>
+                                    <?php } ?></td>
+                                <td class="text-left"><?php if ($sort == 'r.status') { ?>
+                                        <a href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?></a>
+                                    <?php } else { ?>
+                                        <a href="<?php echo $sort_status; ?>"><?php echo $column_status; ?></a>
+                                    <?php } ?></td>
+                                <td class="text-left"><?php if ($sort == 'r.date_added') { ?>
+                                        <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
+                                    <?php } else { ?>
+                                        <a href="<?php echo $sort_date_added; ?>"><?php echo $column_date_added; ?></a>
+                                    <?php } ?></td>
+                                <td class="text-right"><?php echo $column_action; ?></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if ($comments) { ?>
+                                <?php foreach ($comments as $comment) { ?>
+                                    <tr>
+                                        <td class="text-center"><?php if (in_array($comment['comment_id'], $selected)) { ?>
+                                                <input type="checkbox" name="selected[]" value="<?php echo $comment['comment_id']; ?>" checked="checked" />
+                                            <?php } else { ?>
+                                                <input type="checkbox" name="selected[]" value="<?php echo $comment['comment_id']; ?>" />
+                                            <?php } ?></td>
+                                        <td class="text-left"><?php echo $comment['name']; ?></td>
+                                        <td class="text-left"><?php echo $comment['author']; ?></td>
+                                        <td class="text-left"><?php echo $comment['status']; ?></td>
+                                        <td class="text-left"><?php echo $comment['date_added']; ?></td>
+                                        <td class="text-right"><a href="<?php echo $comment['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
+                                    </tr>
+                                <?php } ?>
+                            <?php } else { ?>
+                                <tr>
+                                    <td class="text-center" colspan="7"><?php echo $text_no_results; ?></td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="6"><?php echo $pagination; ?></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</section>
+<script type="text/javascript"><!--
+    docReady(function () {
+        $('#button-filter').on('click', function () {
+            url = 'index.php?p=cms/comment&token=<?php echo $token; ?>';
+
+            var filter_page = $('input[name=\'filter_page\']').val();
+
+            if (filter_page) {
+                url += '&filter_page=' + encodeURIComponent(filter_page);
+            }
+
+            var filter_author = $('input[name=\'filter_author\']').val();
+
+            if (filter_author) {
+                url += '&filter_author=' + encodeURIComponent(filter_author);
+            }
+
+            var filter_status = $('select[name=\'filter_status\']').val();
+
+            if (filter_status != '*') {
+                url += '&filter_status=' + encodeURIComponent(filter_status);
+            }
+
+            var filter_date_added = $('input[name=\'filter_date_added\']').val();
+
+            if (filter_date_added) {
+                url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
+            }
+
+            location = url;
+        });
+        
+       $('#input-date-added').datetimepicker({
+            pickTime: false
+        });
+       
+        $('input[name=\'filter_page\']').autocomplete({
+            'source': function (request, response) {
+                $.ajax({
+                    url: 'index.php?p=cms/comment/autocomplete&token=<?php echo $token; ?>&filter_page=' + encodeURIComponent(request),
+                    dataType: 'json',
+                    success: function (json) {
+                        response($.map(json, function (item) {
+                            return {
+                                label: item['name'],
+                                value: item['comment_id']
+                            }
+                        }));
+                    }
+                });
+            },
+            'select': function (ev, ui) {
+                $('input[name=\'filter_page\']').val(ui.item.label);
+                //$('input[name=\'object_id\']').val(item['value']);
+                return false;
+            }
+        });
+
+        $('input[name=\'filter_author\']').autocomplete({
+            'source': function (request, response) {
+                $.ajax({
+                    url: 'index.php?p=cms/comment/autocomplete&token=<?php echo $token; ?>&filter_author=' + encodeURIComponent(request),
+                    dataType: 'json',
+                    success: function (json) {
+                        response($.map(json, function (item) {
+                            return {
+                                label: item['name'],
+                                value: item['comment_id']
+                            }
+                        }));
+                    }
+                });
+            },
+            'select': function (event,ui) {
+            console.log(ui.item.label);
+                $('input[name=\'filter_author\']').val(ui.item.label);
+                return false;
+                //$('input[name=\'object_id\']').val(item['value']);		
+            }
+        });
+    });
+    //--></script>
+<?php echo $footer; ?>

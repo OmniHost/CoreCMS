@@ -1,0 +1,16 @@
+<?php
+
+define('NS','front');
+define('VERSION', '1.0.1');
+error_reporting(E_ALL);
+
+require('config.php');
+require(DIR_SYSTEM . 'startup.php');
+require_once(DIR_ROOT . 'system/Core/Core.php');
+$core = new \Core\Core($config);
+$core->load->library('customer');
+$core->customer = new Customer();
+$core->addPreAction('common/maintenance');
+$core->addPreAction('common/seo_url');
+
+$core->dispatch();

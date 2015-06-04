@@ -1,0 +1,97 @@
+<div id="map-box">
+    <div class="box box-solid bg-light-blue-gradient" >
+        <div class="box-header ui-sortable-handle">
+            <div class="pull-right box-tools">
+
+                <button class="btn btn-primary btn-sm pull-right" data-widget='collapse' data-toggle="tooltip" title="Collapse" style="margin-right: 5px;"><i class="fa fa-minus"></i></button>
+            </div><!-- /. tools -->
+
+            <i class="fa fa-eye"></i> 
+            <h3 class="box-title"><?php echo $heading_title; ?></h3>
+        </div>
+        <div class="box-body">
+            <div id="world-map" style="height: 250px; width: 100%;"></div>
+        </div>
+
+
+    </div>
+</div>
+<script>
+    docReady(function () {
+        $.ajax({
+            url: 'index.php?p=dashboard/map/map&token=<?php echo $token; ?>',
+            dataType: 'json',
+            success: function (json) {
+                data = [];
+
+                for (i in json) {
+                    data[i] = json[i]['users'];
+                }
+
+                //World map by jvectormap
+                /*   $('#world-map').vectorMap({
+                 map: 'world_mill_en',
+                 backgroundColor: "transparent",
+                 
+                 showTooltip: true,
+                 regionStyle: {
+                 initial: {
+                 fill: '#e4e4e4',
+                 "fill-opacity": 1,
+                 stroke: 'none',
+                 "stroke-width": 0,
+                 "stroke-opacity": 1
+                 }
+                 },
+                 series: {
+                 regions: [{
+                 values: data,
+                 scale: ["#92c1dc", "#ebf4f9"],
+                 normalizeFunction: 'polynomial'
+                 }]
+                 },
+                 onRegionLabelShow: function (e, el, code) {
+                 if (typeof visitorsData[code] != "undefined")
+                 el.html(el.html() + ': ' + visitorsData[code] + ' new visitors');
+                 }
+                 });*/
+
+                $('#world-map').vectorMap({
+                    map: 'world_mill_en',
+                    backgroundColor: 'transparent',
+                    borderColor: '#9FD5F1',
+                    color: '#9FD5F1',
+                    hoverOpacity: 0.7,
+                    selectedColor: '#666666',
+                    enableZoom: true,
+                    showTooltip: true,
+                    values: data,
+                    regionStyle: {
+                        initial: {
+                            fill: '#e4e4e4',
+                            "fill-opacity": 1,
+                            stroke: 'none',
+                            "stroke-width": 0,
+                            "stroke-opacity": 1
+                        }
+                    },
+                    normalizeFunction: 'polynomial',
+                    onRegionLabelShow: function (e, el, code) {
+
+                        if (typeof data[code] != "undefined")
+                            el.html(el.html() + '<br /><?php echo $text_users; ?> ' + json[code]['users']  + '<br />' + '<?php echo $text_online; ?> ' + json[code]['online']);
+                    },
+                    onLabelShow: function (event, label, code) {
+                        console.log(label);
+                        if (json[code]) {
+                            label.html('<strong>' + label.text() + '</strong><br />' + '<?php echo $text_users; ?> ' + json[code]['users'] + '<br />' + '<?php echo $text_online; ?> ' + json[code]['online']);
+                        }
+                    }
+                });
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+            }
+        });
+    });
+</script> 

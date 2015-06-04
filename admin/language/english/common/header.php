@@ -1,0 +1,36 @@
+<?php
+
+$_['text_logout'] = 'Sign Out';
+
+
+$_['menu_dashboard'] = 'Dashboard';
+$_['menu_user_admin'] = 'Backend Users';
+$_['menu_user_public'] = 'Frontend Users';
+$_['menu_user'] = 'Users';
+$_['menu_user'] = 'Users';
+$_['menu_user_group'] = 'User Groups';
+$_['menu_user_ip_ban'] = 'Banned IP\'s';
+$_['menu_content'] = 'Content Management';
+$_['menu_pages'] = 'Pages';
+$_['menu_posts'] = 'Blog Posts';
+$_['menu_post_cats'] = 'Blog Categories';
+$_['menu_logout'] = 'Sign Out';
+$_['menu_system'] = 'System';
+$_['menu_setting'] = 'Settings';
+$_['menu_layout'] = 'Layouts';
+$_['menu_menus'] = 'Menus';
+$_['menu_extension'] = 'Extensions';
+$_['menu_modules'] = 'Modules';
+$_['menu_install'] = 'Installer';
+$_['menu_modifications'] = 'Modifications';
+$_['menu_comments'] = 'Comments';
+$_['menu_menu'] = 'Menus';
+$_['menu_blog_category'] = 'Blog Categories';
+$_['menu_reports'] = 'Reports';
+$_['menu_report_user_activity'] = 'User Activity';
+$_['menu_report_user_online'] = 'User Online';
+$_['menu_banners'] = 'Banners / Gallary';
+$_['alert_user'] = 'Users';
+$_['text_user_online'] = 'Users Online';
+$_['text_user_approve'] = 'Users Pending Approval';
+$_['text_comment'] = 'Comments Pending Approval';

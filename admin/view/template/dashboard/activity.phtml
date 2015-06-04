@@ -1,0 +1,26 @@
+<div id="activity-box" >
+    <div class="box box-primary">
+        <div class="box-header ui-sortable-handle">
+            <div class="pull-right box-tools">
+
+                <button class="btn btn-primary btn-sm pull-right" data-widget='collapse' data-toggle="tooltip" title="Collapse" style="margin-right: 5px;"><i class="fa fa-minus"></i></button>
+            </div><!-- /. tools -->
+
+            <i class="fa fa-calendar"></i> 
+            <h3 class="box-title"><?php echo $heading_title; ?></h3>
+        </div>
+        <div class="box-body">
+
+            <ul class="list-group">
+                <?php if ($activities) { ?>
+                    <?php foreach ($activities as $activity) { ?>
+                        <li class="list-group-item"><?php echo $activity['comment']; ?><br />
+                            <small class="text-muted"><i class="fa fa-clock-o"></i> <?php echo $activity['date_added']; ?></small></li>
+                    <?php } ?>
+                <?php } else { ?>
+                    <li class="list-group-item text-center"><?php echo $text_no_results; ?></li>
+                    <?php } ?>
+            </ul>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,23 @@
+<div id="stats-box" >
+    <div class="box box-primary">
+        <div class="box-header ui-sortable-handle">
+            <div class="pull-right box-tools">
+
+                <button class="btn btn-primary btn-sm pull-right" data-widget='collapse' data-toggle="tooltip" title="Collapse" style="margin-right: 5px;"><i class="fa fa-minus"></i></button>
+            </div><!-- /. tools -->
+
+            <i class="fa fa-bar-chart"></i> 
+            <h3 class="box-title"><?php echo $heading_title; ?></h3>
+        </div>
+        <div class="box-body">
+
+            <ul class="list-group">
+                <li class="list-group-item"><span class="badge bg-aqua-active"><?php echo $total_users; ?></span> <a href="<?php echo $users; ?>"><?php echo $text_users; ?></a></li>
+                <li class="list-group-item"><span class="badge bg-aqua-active"><?php echo $online_total; ?></span> <a href="<?php echo $online; ?>"><?php echo $text_online; ?></a></li>
+                <li class="list-group-item"><span class="badge bg-aqua-active"><?php echo $total_pages; ?></span> <a href="<?php echo $pages; ?>"><?php echo $text_pages; ?></a></li>
+                <li class="list-group-item"><span class="badge bg-aqua-active"><?php echo $total_posts; ?></span> <a href="<?php echo $posts; ?>"><?php echo $text_posts; ?></a></li>
+                <li class="list-group-item"><span class="badge bg-aqua-active"><?php echo $total_comments; ?></span> <a href="<?php echo $comments; ?>"><?php echo $text_comments; ?></a></li>
+            </ul>
+        </div>
+    </div>
+</div>

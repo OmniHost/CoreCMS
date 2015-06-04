@@ -1,0 +1,156 @@
+<?php echo $header; ?>
+<style>
+    #dashhide .box-body, #dashhide .box-tools {
+        display: none !important;
+    }
+
+    #dashhide {
+       border-bottom: 1px #ccc dashed;
+    }
+    
+    #dashhide .box {
+        max-width: 200px;
+        overflow: hidden;
+        float: left;
+        margin:10px;
+    }
+    .connectedSortable.collapse {
+        min-height: 0px;
+    }
+     .connectedSortable.collapse.in {
+        min-height: 100px;
+    }
+    
+    .connectedSortable.collapse .box {
+        display:none;
+    }
+    
+    .connectedSortable.collapse.in .box {
+        display:block;
+    }
+    
+</style>
+<?php include(__DIR__ . '/../common/page-header.phtml'); ?>
+
+<!-- Main content -->
+<section class="content">
+    <!--a style="cursor:pointer;" data-toggle="collapse" data-target="#dashhide" class="btn btn-info pull-right">Widgets</a>
+   
+    <div class="connectedSortable clearfix collapse" id="dashhide">
+    </div-->
+    <div class="row">
+        <div class="col-lg-5 connectedSortable ui-sortable" id="dashleft" style="display:none;">
+            <?php $w = 0; ?>
+            <?php foreach ($widgets as $wkey => $widget): ?>
+                <?php
+                $w++;
+                if ($w == 1):
+                    ?>
+                    <?php echo $widget; ?>
+                    <?php
+                else:
+                    if ($w == 3) {
+                        $w = 0;
+                    }
+                endif;
+                ?>
+            <?php endforeach; ?>
+        </div>
+        <div class="col-lg-4 col-sm-6 col-xs-12 connectedSortable ui-sortable" id="dashcntr" style="display:none;">
+            <?php $w = 0; ?>
+            <?php foreach ($widgets as $wkey => $widget): ?>
+                <?php
+                $w++;
+                if ($w == 2):
+                    ?>
+                    <?php echo $widget; ?>
+                    <?php
+                else:
+                    if ($w == 3) {
+                        $w = 0;
+                    }
+                endif;
+                ?>
+            <?php endforeach; ?>
+        </div>
+        <div class="col-lg-3 col-sm-6 col-xs-12 connectedSortable ui-sortable" id="dashright" style="display:none;">
+            <?php $w = 0; ?>
+            <?php foreach ($widgets as $wkey => $widget): ?>
+                <?php
+                $w++;
+                if ($w == 3):
+                    ?>
+                    <?php echo $widget; ?>
+                    <?php $w = 0; ?>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </div> 
+    </div>
+
+
+</section><!-- /.content -->
+<script>
+    var panelXHR = null;
+    docReady(function () {
+
+        try {
+            var panels = <?php echo $panels; ?>;
+
+            var itemsl = panels.dashleft.split(",");
+            if (itemsl) {
+                $(itemsl).each(function (i, j) {
+                    console.log(j);
+                    $('#' + j).detach().appendTo('#dashleft');
+                });
+            }
+            var itemsc = panels.dashcntr.split(",");
+            if (itemsc) {
+                $(itemsc).each(function (i, j) {
+                    console.log(j);
+                    $('#' + j).detach().appendTo('#dashcntr');
+                });
+            }
+            var itemsr = panels.dashright.split(",");
+            if (itemsr) {
+                $(itemsr).each(function (i, j) {
+                    console.log(j);
+                    $('#' + j).detach().appendTo('#dashright');
+                });
+            }
+            $('.connectedSortable').show();
+        } catch (err) {
+        }
+
+        $(".connectedSortable").sortable({
+            placeholder: "sort-highlight",
+            connectWith: ".connectedSortable",
+            handle: ".box-header, .nav-tabs",
+            forcePlaceholderSize: true,
+            zIndex: 999999,
+            stop: function (event, ui) {
+
+                if (panelXHR != null) {
+                    panelXHR.abort();
+                    panelXHR = null;
+                }
+                var panels = {};
+                $(".connectedSortable").each(function () {
+                    var id = $(this).attr('id');
+                    panels[id] = $(this).sortable("toArray").join();
+                });
+                panelXHR = $.ajax({
+                    type: "POST",
+                    url: 'index.php?p=common/home/positions&token=<?php echo $this->session->data['token']; ?>',
+                    data: {panels: JSON.stringify(panels)}
+                });
+
+
+
+
+            }
+        });
+        $(".connectedSortable .box-header, .connectedSortable .nav-tabs-custom").css("cursor", "move");
+    });
+</script>
+
+<?php echo $footer; ?>

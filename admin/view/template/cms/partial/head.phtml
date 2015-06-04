@@ -1,0 +1,48 @@
+<?php echo $header; ?>
+<?php include(__DIR__ . '/../../common/page-header.phtml'); ?>
+
+<!-- Main content -->
+<section class="content">
+
+    <form action="<?php echo $action; ?>" class="form-horizontal form-validate" method="post" enctype="multipart/form-data" id="form">
+        <div class="box">
+            <div class="box-body">
+                <div class="form-group">
+                    <label for="nameInput" class="col-sm-2 control-label required"><?php echo $entry_name; ?></label>
+                    <div class="col-sm-9">
+                        <input type="text" name="name" value="<?php echo $name; ?>" class="form-control required" id="nameInput" />
+                        <?php if ($error_name) { ?>
+                            <span class="error text-danger"><?php echo $error_name; ?></span>
+                        <?php } ?>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="designInput" class="col-sm-2 control-label required"><?php echo $entry_layout; ?></label>
+                    <div class="col-sm-9">
+                        <select name="layout_id" id="designInput" class="form-control">
+                            <?php foreach($layouts as $layout): ?>
+                            <?php if($layout_id == $layout['layout_id']): ?>
+                                    <option value="<?php echo $layout['layout_id'];?>" selected><?php echo $layout['name'];?></option>
+                            <?php else: ?>
+                            <option value="<?php echo $layout['layout_id'];?>"><?php echo $layout['name'];?></option>
+                            <?php endif; ?>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="slugInput" class="col-sm-2 control-label required"><?php echo $entry_seo_url; ?></label>
+                    <div class="col-sm-9">
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <?php echo $site_url; ?>
+                            </div>
+                            <input disabled="disabled" type="text" value="<?php echo $slug; ?>" class="form-control required " id="slugInput" />
+
+                            <input type="hidden" name="slug" value="<?php echo $slug; ?>" id="slugInputValue" />
+                        </div>
+                        <?php if ($error_slug) { ?>
+                            <span class="error text-danger"><?php echo $error_slug; ?></span>
+                        <?php } ?>
+                    </div>
+                </div>
