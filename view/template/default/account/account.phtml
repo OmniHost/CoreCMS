@@ -1,0 +1,53 @@
+<?php echo $header; ?>
+<div class="breadcrumbs">
+    <div class="container">
+        <h3 class="pull-left"><?php echo $heading_title; ?></h3>
+        <ul class="pull-right breadcrumb">
+            <?php foreach ($breadcrumbs as $breadcrumb) { ?>
+                <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
+            <?php } ?>
+        </ul>
+    </div>
+</div>
+<?php echo $column_top; ?>
+<section class="content">
+    <div class="container">
+        <div class="row">
+            <?php if ($column_left): ?>
+                <?php echo $column_left; ?>
+            <?php endif; ?>
+            <?php if ($column_left && $column_right) { ?>
+                <?php $class = 'col-sm-6'; ?>
+            <?php } elseif ($column_left || $column_right) { ?>
+                <?php $class = 'col-sm-9'; ?>
+            <?php } else { ?>
+                <?php $class = 'col-sm-12'; ?>
+            <?php } ?>
+            <div class="<?php echo $class; ?>">
+                <?php echo $content_top; ?>
+
+                <?php if ($success) { ?>
+                    <div class="alert alert-success"><i class="fa fa-check-circle"></i> <?php echo $success; ?></div>
+                <?php } ?>
+
+                <h3 class="heading"><?php echo $text_my_account; ?></h3>
+                <ul class="list-unstyled">
+                    <li><a href="<?php echo $edit; ?>"><?php echo $text_edit; ?></a></li>
+                    <li><a href="<?php echo $password; ?>"><?php echo $text_password; ?></a></li>
+                </ul>
+                <h3 class="heading"><span><?php echo $text_my_newsletter; ?></span></h3>
+
+                <ul class="list-unstyled">
+                    <li><a href="<?php echo $newsletter; ?>"><?php echo $text_newsletter; ?></a></li>
+                </ul>
+
+                <?php echo $content_bottom; ?>
+            </div><!-- end col-sm-12 -->
+            <?php if ($column_right): ?>
+                <?php echo $column_right; ?>
+            <?php endif; ?>
+        </div><!-- end row -->
+    </div><!-- end container -->
+</section>
+<?php echo $column_bottom; ?>
+<?php echo $footer; ?>

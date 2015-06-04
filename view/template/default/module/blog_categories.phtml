@@ -1,0 +1,19 @@
+<div class="widget blog-category-widget">
+    <h4 class="heading"><?php echo $heading_title; ?></h4>
+    <ul class="list-unstyled">
+        <?php foreach ($category_tree as $category): ?>
+            <li><i class="fa fa-angle-right"></i><a href="<?php echo $category['href']; ?>"><?php echo $category['name']; ?></a> 
+                <?php if ($blog_categories_post_count): ?> (<?php echo $category['posts']; ?>) <?php endif; ?>
+                <?php if ($category['children']): ?>
+                    <ul class="list-unstyled">
+                        <?php foreach ($category['children'] as $child): ?>
+                            <li><i class="fa fa-angle-right"></i><a href="<?php echo $child['href']; ?>"><?php echo $child['name']; ?></a> 
+                                <?php if ($blog_categories_post_count): ?> (<?php echo $child['posts']; ?>) <?php endif; ?></li>
+                            <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+
+</div>

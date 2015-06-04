@@ -1,0 +1,33 @@
+<?php echo $header; ?>
+<?php echo $column_top; ?>
+<section class="content">
+    <div class="container">
+        <div class="row">
+            <?php if ($column_left): ?>
+                <?php echo $column_left; ?>
+            <?php endif; ?>
+            <?php if ($column_left && $column_right) { ?>
+                <?php $class = 'col-sm-6'; ?>
+            <?php } elseif ($column_left || $column_right) { ?>
+                <?php $class = 'col-sm-9'; ?>
+            <?php } else { ?>
+                <?php $class = 'col-sm-12'; ?>
+            <?php } ?>
+            <div class="<?php echo $class; ?>">
+                <?php echo $content_top; ?>
+                <div class="errors">
+                    <p class="error401">401</p>
+                    <h3 class="heading"><?php echo $heading_title; ?></h3>
+                    <p><?php echo $text_error; ?></p>
+                    <a href="<?php echo $continue; ?>" class="btn btn-lg btn-primary"><?php echo $button_continue; ?></a>
+                </div>
+                <?php echo $content_bottom; ?>
+            </div><!-- end col-sm-12 -->
+            <?php if ($column_right): ?>
+                <?php echo $column_right; ?>
+            <?php endif; ?>
+        </div><!-- end row -->
+    </div><!-- end container -->
+</section>
+<?php echo $column_bottom; ?>
+<?php echo $footer; ?>

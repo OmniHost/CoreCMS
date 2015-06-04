@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title><?php echo $title; ?></title>
+        <meta charset="utf-8">
+        <meta name="description" content="<?php echo $description; ?>">
+        <meta name="author" content="Amplifier International" />
+        <meta name="keywords" content="<?php echo $keywords; ?>" />
+        <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+        <base href="<?php echo $base; ?>" />
+        <link rel="stylesheet" href="view/plugins/bootstrap/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="view/plugins/font-awesome/css/font-awesome.min.css" />
+
+        <!-- Custom CSS -->
+         <link rel="stylesheet" href="view/template/default/assets/css/theme.css" />
+
+        <?php foreach ($links as $link) { ?>
+            <link href="<?php echo $link['href']; ?>" rel="<?php echo $link['rel']; ?>" />
+        <?php } ?>
+
+
+        <!-- HTML5 elements and media queries Support for IE8 : HTML5 shim and Respond.js -->
+        <!--[if lt IE 9]>
+            <script src="view/plugins/html5shiv/dist/html5shiv.min.js"></script>
+            <script src="view/plugins/Respond/dest/respond.min.js"></script>
+        <![endif]-->
+
+        <script type="text/javascript">
+            /** Hack to make sure that inline code can reference $.ready style functionality **/
+            var onReadyCallbacks = [];
+            var docReady = function (callback) {
+                onReadyCallbacks.push(callback);
+            }
+
+        </script>
+
+    </head>
+    <body>
+
+        <div class="navbar navbar-default" role="navigation">
+            <div class="container">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="fa fa-bars"></span>
+                    </button>
+                    <a class="navbar-brand" href="<?php echo $home; ?>">
+                        <img id="logo-header" src="<?php echo $config_logo; ?>" alt="<?php echo $site_name; ?>" />
+                    </a>
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse navbar-responsive-collapse">
+                    <ul class="nav navbar-nav">
+                        <?php if ($menu_items): ?>
+                            <?php foreach ($menu_items as $item): ?>
+                                <?php if (!empty($item['children'])): ?>
+                                    <li class="dropdown"><a href="<?php echo $item['link']; ?>" class="dropdown-toggle" data-toggle="dropdown"><?php echo $item['title']; ?></a>
+                                        <ul class="dropdown-menu">
+                                            <?php foreach ($item['children'] as $child): ?>
+                                                <?php if (!empty($child['children'])): ?>
+                                                    <li class="dropdown"><a href="<?php echo $child['link']; ?>" class="dropdown-toggle" data-toggle="dropdown"><?php echo $child['title']; ?></a>
+                                                        <ul class="dropdown-menu">
+                                                            <?php foreach ($child['children'] as $subchild): ?>
+                                                                <li><a href="<?php echo $subchild['link']; ?>"><?php echo $subchild['title']; ?></a></li>
+                                                            <?php endforeach; ?>
+                                                        </ul>
+                                                    </li>
+                                                <?php else: ?>
+                                                    <li><a href="<?php echo $child['link']; ?>"><?php echo $child['title']; ?></a></li>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                    </li>
+                                <?php else: ?>
+                                    <li><a href="<?php echo $item['link']; ?>"><?php echo $item['title']; ?></a></li>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </ul>
+                </div>
+            </div>
+        </div>

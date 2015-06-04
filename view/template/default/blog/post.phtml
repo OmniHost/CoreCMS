@@ -1,0 +1,63 @@
+<?php echo $header; ?>
+<div class="breadcrumbs">
+    <div class="container">
+        <h3 class="pull-left"><?php echo $heading_title; ?></h3>
+        <ul class="pull-right breadcrumb">
+            <?php foreach ($breadcrumbs as $breadcrumb) { ?>
+                <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
+            <?php } ?>
+        </ul>
+    </div>
+</div>
+<?php echo $column_top; ?>
+<section class="content">
+    <div class="container">
+        <div class="row">
+            <?php if ($column_left): ?>
+                <?php echo $column_left; ?>
+            <?php endif; ?>
+            <?php if ($column_left && $column_right) { ?>
+                <?php $class = 'col-sm-6'; ?>
+            <?php } elseif ($column_left || $column_right) { ?>
+                <?php $class = 'col-sm-9'; ?>
+            <?php } else { ?>
+                <?php $class = 'col-sm-12'; ?>
+            <?php } ?>
+            <div class="<?php echo $class; ?> ">
+                <?php echo $content_top; ?>
+                <div class="blog">
+                    <div class="blog-single-post">
+
+                        <div class="post-date">
+                            <h5><?php echo $page['name']; ?></h5>
+                            <ul class="list-unstyled list-inline blog-info">
+                                <li><i class="fa fa-calendar"></i> <?php echo DATE("F d,Y", $page['date_created']); ?></li>
+                                <?php if ($has_comments): ?>
+                                    <li><i class="fa fa-comments"></i> <a data-toggle="collapse" data-target="#commentsarea" href="<?php echo $page['href']; ?>#comment_number"><?php echo $comment_count; ?> Comments</a></li>
+                                <?php endif; ?>
+                                <li><i class="fa fa-tags"></i> <?php foreach ($page['categories'] as $ix => $cat): ?>
+                                        <?php echo ($ix) ? ', ' : ''; ?><a href="<?php echo $cat['href']; ?>"><?php echo $cat['name']; ?></a>
+                                    <?php endforeach; ?></li></li>
+                            </ul>
+                        </div><!-- end post-date -->
+                        <?php if ($page['featured_image']): ?>
+                            <div class="blog-img">
+                                <img class="img-responsive" src="img/<?php echo $page['featured_image']; ?>" alt="">
+                            </div>
+                        <?php endif; ?>
+                        <div class="blog-body">
+                            <?php echo $page['content']; ?>
+                        </div>
+                    </div>
+                </div>
+                <?php include __DIR__ . '/../cms/_comment.phtml'; ?>
+                <?php echo $content_bottom; ?>
+            </div><!-- end col-sm-12 -->
+            <?php if ($column_right): ?>
+                <?php echo $column_right; ?>
+            <?php endif; ?>
+        </div><!-- end row -->
+    </div><!-- end container -->
+</section>
+<?php echo $column_bottom; ?>
+<?php echo $footer; ?>
