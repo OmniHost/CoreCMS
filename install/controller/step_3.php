@@ -8,7 +8,7 @@ class ControllerStep3 extends \Core\Controller {
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->load->model('install');
 
-           $this->model_install->database($this->request->post);
+            $this->model_install->database($this->request->post);
 
 
             $admin_config = $front_config = '<?php ' . "\n";
@@ -57,7 +57,8 @@ class ControllerStep3 extends \Core\Controller {
                 'DB_DATABASE' => '" . addslashes($this->request->post['db_name']) . "',
                 'DB_PREFIX' => '" . addslashes($this->request->post['db_prefix']) . "',
                 'DB_LOG' => false,
-                'config_url' => '" . HTTP_CORECMS . "',
+                'config_catalog' => '" . HTTP_CORECMS . "',
+                    'config_catalog_ssl' => '" . HTTP_CORECMS . "',
                 'config_url' => '" . HTTP_CORECMS . "admin/',
                 'config_ssl' => '" . HTTP_CORECMS . "admin/',
                 );";

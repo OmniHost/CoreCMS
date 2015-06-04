@@ -3,9 +3,7 @@
 class ControllerCommonFooter extends \Core\Controller {
 
     public function index() {
-        $this->data['scripts'] = $this->document->getScripts();
-        $this->document->resetScripts();
-
+        
         if ($this->config->get('config_google_analytics_status')) {
             $this->data['google_analytics'] = $this->config->get('config_google_analytics');
         } else {

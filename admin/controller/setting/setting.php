@@ -89,6 +89,8 @@ class ControllerSettingSetting extends \Core\Controller {
         $data['help_ftp_root'] = $this->language->get('help_ftp_root');
         $data['tab_ftp'] = $this->language->get('tab_ftp');
         $data['entry_country'] = $this->language->get('entry_country');
+        $data['entry_width'] = $this->language->get('entry_width');
+        $data['entry_height'] = $this->language->get('entry_height');
 
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
@@ -151,6 +153,41 @@ class ControllerSettingSetting extends \Core\Controller {
             $data['error_ftp_password'] = '';
         }
 
+        if(isset($this->error['product_limit'])){
+            $data['error_product_limit'] = $this->error['product_limit'];
+        }else{
+            $data['error_product_limit'] = '';
+        }
+        
+        if(isset($this->error['blog_limit'])){
+            $data['error_blog_limit'] = $this->error['blog_limit'];
+        }else{
+            $data['error_blog_limit'] = '';
+        }
+        
+        if(isset($this->error['image_thumb'])){
+            $data['error_image_thumb'] = $this->error['image_thumb'];
+        }else{
+            $data['error_image_thumb'] = '';
+        }
+        
+         if(isset($this->error['image_popup'])){
+            $data['error_image_popup'] = $this->error['image_popup'];
+        }else{
+            $data['error_image_popup'] = '';
+        }
+        
+        if(isset($this->error['customer_group_display'])){
+            $data['error_customer_group_display'] = $this->error['customer_group_display'];
+        }else{
+            $data['error_customer_group_display'] = '';
+        }
+        
+        if(isset($this->error['login_attempts'])){
+            $data['error_login_attempts'] = $this->error['login_attempts'];
+        }else{
+            $data['error_login_attempts'] = '';
+        }
 
         $data['breadcrumbs'] = array();
 
@@ -366,12 +403,13 @@ class ControllerSettingSetting extends \Core\Controller {
     }
 
     public function template() {
-        if ($this->request->server['HTTPS']) {
+      
+         if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
             $server = HTTPS_CATALOG;
         } else {
             $server = HTTP_CATALOG;
         }
-
+        
         if (is_file(DIR_ROOT . 'view/template/' . basename($this->request->get['template']) . '/template.png')) {
             $this->response->setOutput($server . 'view/template/' . basename($this->request->get['template']) . '/template.png');
         } else {
