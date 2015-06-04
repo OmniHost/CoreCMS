@@ -13,7 +13,11 @@ class ModelDesignMenu extends \Core\Model {
             foreach ($query->rows as $row) {
                 $items[$row['parent_id']][] = $row;
             }
-            $tree = $this->_createTree($items, $items[0]); // changed
+            if ($items) {
+                $tree = $this->_createTree($items, $items[0]); // changed
+            } else {
+                $tree = false;
+            }
             $this->cache->set($cacheKey, $tree);
         }
         return $tree;
@@ -30,7 +34,11 @@ class ModelDesignMenu extends \Core\Model {
             foreach ($query->rows as $row) {
                 $items[$row['parent_id']][] = $row;
             }
-            $tree = $this->_createTree($items, $items[0]); // changed
+            if ($items) {
+                $tree = $this->_createTree($items, $items[0]); // changed
+            } else {
+                $tree = false;
+            }
             $this->cache->set($cacheKey, $tree);
         }
         return $tree;
@@ -47,7 +55,11 @@ class ModelDesignMenu extends \Core\Model {
             foreach ($query->rows as $row) {
                 $items[$row['parent_id']][] = $row;
             }
-            $tree = $this->_createTree($items, $items[0]); // changed
+            if ($items) {
+                $tree = $this->_createTree($items, $items[0]); // changed
+            } else {
+                $tree = false;
+            }
             $this->cache->set($cacheKey, $tree);
         }
         return $tree;
