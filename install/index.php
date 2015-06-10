@@ -110,19 +110,22 @@ $core->default_route = 'step_1';
 // Upgrade
 $upgrade = false;
 
-/*
 
-if (file_exists(DIR_CONFIG . 'config.php')) {
-	if (filesize(DIR_CONFIG . '/config.php') > 0) {
+if (file_exists(DIR_ROOT . 'config.php')) {
+    if (filesize(DIR_ROOT . '/config.php') > 0) {
 		$upgrade = true;
+        $core->default_route = 'upgrade';
 		
-		$lines = file(DIR_CONFIG . 'config.php');
+        $lines = file(DIR_ROOT . 'config.php');
 		
 		foreach ($lines as $line) {
 			if (strpos(strtoupper($line), 'DB_') !== false) {
-				eval($line);
+                $parts = explode("=>", $line);
+                $_k = str_replace(array("'", '"'), "", trim($parts[0]));
+                $_v = str_replace(array("'", '"'), "", trim($parts[1]));
+                $core->config->set($_k,$_v);
 			}
 		}
 	}
-}*/
+}
 $core->dispatch();
