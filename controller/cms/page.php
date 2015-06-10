@@ -17,28 +17,34 @@ class ControllerCmsPage extends \Core\Controller {
                 'link' => $this->url->link('common/contact'),
                 'ams_page_id' => "0"
             ),
+             array(
+                'name' => 'Blog Page',
+                'type' => 'core',
+                'link' => $this->url->link('blog/blog'),
+                'ams_page_id' => "0"
+            ),
             array(
                 'name' => 'Account Page',
                 'type' => 'core',
-                'link' => $this->url->link('account/account'),
+                'link' => $this->url->link('account/account','','SSL'),
                 'ams_page_id' => "0"
             ),
             array(
                 'name' => 'Login Page',
                 'type' => 'core',
-                'link' => $this->url->link('account/login'),
+                'link' => $this->url->link('account/login','','SSL'),
                 'ams_page_id' => "0"
             ),
             array(
                 'name' => 'Register Page',
                 'type' => 'core',
-                'link' => $this->url->link('account/register'),
+                'link' => $this->url->link('account/register','','SSL'),
                 'ams_page_id' => "0"
             ),
             array(
                 'name' => 'Logout Page',
                 'type' => 'core',
-                'link' => $this->url->link('account/logout'),
+                'link' => $this->url->link('account/logout','','SSL'),
                 'ams_page_id' => "0"
             )
         );
@@ -183,9 +189,12 @@ class ControllerCmsPage extends \Core\Controller {
 
         if ($allowed) {
 
+            
+            
             $this->model_cms_page->updateViews();
             $this->language->load('cms/page');
 
+            $page['comments'] = $this->load->controller('cms/page/commentblock', $page);
             $page['name'] = \Core\HookPoints::executeHooks('ams_page_name', $page['name']);
             $page['content'] = \Core\HookPoints::executeHooks('ams_page_content', html_entity_decode($page['content'], ENT_QUOTES, 'UTF-8'));
 
@@ -236,27 +245,7 @@ class ControllerCmsPage extends \Core\Controller {
                 $this->data['has_comments'] = false;
             }
 
-            if ($this->config->get('config_review_guest') || $this->customer->isLogged()) {
-                $this->data['can_comment'] = true;
-            } else {
-                $this->data['can_comment'] = false;
-            }
 
-            $this->data['comment_auto_approve'] = $this->config->get('config_comment_auto_approve');
-
-
-            if ($this->customer->isLogged()) {
-                $this->data['customer_name'] = $this->customer->getFirstName() . '&nbsp;' . $this->customer->getLastName();
-            } else {
-                $this->data['customer_name'] = '';
-            }
-
-            $this->data['ams_page_id'] = $this->model_cms_page->id;
-
-            $this->load->model('cms/comment');
-            $this->language->load('cms/comment');
-            $this->data['text_comments'] = $this->language->get('text_comments');
-            $this->data['comment_count'] = $this->model_cms_comment->countComments($this->model_cms_page->id);
 
 
             $this->template = 'cms/page.phtml';
@@ -399,6 +388,47 @@ class ControllerCmsPage extends \Core\Controller {
             $this->response->addHeader('Content-Type: application/json');
             $this->response->setOutput(json_encode($json));
         }
+    }
+    
+    
+    public function commentblock($page){
+        
+        if(!$page['comments']){
+            return '';
+        }
+        
+            if ($page['comments'] && $this->config->get('config_review_status')) {
+                $this->data['has_comments'] = true;
+            } else {
+                $this->data['has_comments'] = false;
+            }
+
+            if ($this->config->get('config_review_guest') || $this->customer->isLogged()) {
+                $this->data['can_comment'] = true;
+            } else {
+                $this->data['can_comment'] = false;
+            }
+
+            $this->data['comment_auto_approve'] = $this->config->get('config_comment_auto_approve');
+
+
+            if ($this->customer->isLogged()) {
+                $this->data['customer_name'] = $this->customer->getFirstName() . '&nbsp;' . $this->customer->getLastName();
+            } else {
+                $this->data['customer_name'] = '';
+            }
+
+            $this->data['ams_page_id'] = $page['id'];
+
+            $this->load->model('cms/comment');
+            $this->language->load('cms/comment');
+            $this->data['text_comments'] = $this->language->get('text_comments');
+            $this->data['comment_count'] = $this->model_cms_comment->countComments($page['id']);
+
+                       
+            $this->template = 'cms/commentblock.phtml';
+            return $this->render();
+        
     }
 
 }

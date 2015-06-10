@@ -14,7 +14,15 @@ class ControllerCommonContact extends \Core\Controller {
 
             $this->language->load('common/contact');
 
-            $mail = new \Core\Mail($this->config->get('config_mail'));
+            $mail = new \Core\Mail();
+            $mail->protocol = $this->config->get('config_mail_protocol');
+            $mail->parameter = $this->config->get('config_mail_parameter');
+            $mail->hostname = $this->config->get('config_mail_smtp_hostname');
+            $mail->username = $this->config->get('config_mail_smtp_username');
+            $mail->password = $this->config->get('config_mail_smtp_password');
+            $mail->port = $this->config->get('config_mail_smtp_port');
+            $mail->timeout = $this->config->get('config_mail_smtp_timeout');
+
             $mail->setTo($this->config->get('config_email'));
             $mail->setFrom($this->request->post['email']);
             $mail->setSender($this->request->post['name']);

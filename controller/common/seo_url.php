@@ -4,8 +4,10 @@ class ControllerCommonSeoUrl extends \Core\Controller {
 
     protected $_internals = array(
         'account' => 'account/account',
+        'blog' => 'blog/blog',
         'contact-us' => 'common/contact',
-        'maintenance' => 'common/maintenance'
+        'maintenance' => 'common/maintenance',
+        
     );
 
     public function index() {
@@ -17,6 +19,13 @@ class ControllerCommonSeoUrl extends \Core\Controller {
 
         if (isset($this->request->get['_route_'])) {
             unset($this->request->get['p']);
+
+            if($this->request->get['_route_'] == 'robots.txt'){
+                 header('X-Powered-By: CoreCMS - http://www.omnihost.co.nz');
+                 header('Content-Type: text/plain; charset=utf-8;');
+                 echo $this->config->get('config_robots');
+                 exit;
+            }
 
             if (isset($this->_internals[$this->request->get['_route_']])) {
                 $this->request->get['p'] = $this->_internals[$this->request->get['_route_']];
@@ -43,6 +52,7 @@ class ControllerCommonSeoUrl extends \Core\Controller {
             }
 
             if (isset($this->request->get['p'])) {
+                unset($this->request->get['_route_']);
                 return $this->forward($this->request->get['p']);
             }
         }
@@ -57,10 +67,12 @@ class ControllerCommonSeoUrl extends \Core\Controller {
 
         parse_str($url_info['query'], $data);
 
+
+        
         foreach ($data as $key => $value) {
             if (isset($data['p'])) {
                 if ($key == 'ams_page_id') {
-                    $query = $this->db->query("SELECT * FROM url_alias WHERE `query` = '" . $this->db->escape($key . '=' . (int) $value) . "'");
+                    $query = $this->db->query("SELECT * FROM #__url_alias WHERE `query` = '" . $this->db->escape($key . '=' . (int) $value) . "'");
 
                     if ($query->num_rows) {
                         $url .= '/' . $query->row['keyword'];

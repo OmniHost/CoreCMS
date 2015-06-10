@@ -18,6 +18,7 @@ class ControllerBlogPost extends \Core\Controller {
             $this->model_blog_post->updateViews();
             $this->language->load('blog/post');
 
+            $page['comments'] = $this->load->controller('cms/page/commentblock', $page);
             $page['name'] = \Core\HookPoints::executeHooks('ams_page_name', $page['name']);
             $page['content'] = \Core\HookPoints::executeHooks('ams_page_content', html_entity_decode($page['content'], ENT_QUOTES, 'UTF-8'));
             $page['href'] = $this->url->link('blog/post', 'ams_page_id=' . $page['id']);
