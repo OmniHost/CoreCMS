@@ -30,25 +30,25 @@
                     <?php foreach ($posts as $post): ?>
                         <div class="row blog-category">
                             <div class="col-sm-4">
-                                <?php if ($post->featured_image): ?>
-                                    <img class="img-responsive img-rounded" src="<?php echo $post->featured_image; ?>" alt="">
+                                <?php if ($post['featured_image']): ?>
+                                    <img class="img-responsive img-rounded" src="<?php echo $post['featured_image']; ?>" alt="">
                                 <?php endif; ?>
                             </div>    
                             <div class="col-sm-8">
-                                <h3 class="heading"><?php echo $post->name; ?></h3>
+                                <h3 class="heading"><?php echo $post['name']; ?></h3>
                                 <ul class="list-unstyled list-inline blog-info">
-                                    <li><i class="fa fa-calendar"></i> <?php echo DATE("F d,Y", $post->date_created); ?></li>
-                                    <li><i class="fa fa-comments"></i> <a href="<?php echo $post->href; ?>#commentsarea"><?php echo $post->total_comments; ?> Comments</a></li>
-                                    <li><i class="fa fa-tags"></i> <?php foreach ($post->categories as $ix => $cat): ?>
+                                    <li><i class="fa fa-calendar"></i> <?php echo DATE("F d,Y", $post['date_created']); ?></li>
+                                    <li><i class="fa fa-comments"></i> <a href="<?php echo $post->href; ?>#commentsarea"><?php echo $post['total_comments']; ?> Comments</a></li>
+                                    <li><i class="fa fa-tags"></i> <?php foreach ($post['categories'] as $ix => $cat): ?>
                                             <?php echo ($ix) ? ', ' : ''; ?><a href="<?php echo $cat['href']; ?>"><?php echo $cat['name']; ?></a>
                                         <?php endforeach; ?></li>
                                 </ul>
-                                <p><?php echo substr($post->blurb, 0, 500); ?></p>
-                                <p><a class="btn btn-sm" href="<?php echo $post->href; ?>"><i class="fa fa-location-arrow"></i> Read More</a></p>
+                                <p><?php echo substr($post['blurb'], 0, 500); ?></p>
+                                <p><a class="btn btn-sm" href="<?php echo $post['href']; ?>"><i class="fa fa-location-arrow"></i> Read More</a></p>
                             </div>    
                         </div>
                     <?php endforeach; ?>
-                <?php echo $pagination->render(); ?>
+                    <?php echo $pagination->render(); ?>
                 <?php else: ?>
                     <div class="row blog-category">
                         Sorry No Posts in this category

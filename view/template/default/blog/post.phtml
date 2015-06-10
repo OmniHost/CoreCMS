@@ -1,7 +1,7 @@
 <?php echo $header; ?>
 <div class="breadcrumbs">
     <div class="container">
-        <h3 class="pull-left"><?php echo $heading_title; ?></h3>
+        <h1 class="pull-left"><?php echo $page['name']; ?></h1>
         <ul class="pull-right breadcrumb">
             <?php foreach ($breadcrumbs as $breadcrumb) { ?>
                 <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
@@ -29,7 +29,7 @@
                     <div class="blog-single-post">
 
                         <div class="post-date">
-                            <h5><?php echo $page['name']; ?></h5>
+                            <h3><?php echo $page['name']; ?></h3>
                             <ul class="list-unstyled list-inline blog-info">
                                 <li><i class="fa fa-calendar"></i> <?php echo DATE("F d,Y", $page['date_created']); ?></li>
                                 <?php if ($has_comments): ?>
@@ -50,7 +50,7 @@
                         </div>
                     </div>
                 </div>
-                <?php include __DIR__ . '/../cms/_comment.phtml'; ?>
+                 <?php echo $page['comments']; ?>
                 <?php echo $content_bottom; ?>
             </div><!-- end col-sm-12 -->
             <?php if ($column_right): ?>

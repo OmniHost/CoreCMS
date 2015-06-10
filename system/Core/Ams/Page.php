@@ -88,6 +88,7 @@ Abstract class Page {
      */
     protected $_db;
     protected $_load;
+    protected $_customer;
 
     /**
      *
@@ -110,6 +111,7 @@ Abstract class Page {
         $this->_db = \Core\Core::$registry->get('db');
         $this->_load = \Core\Core::$registry->get('load');
         $this->_language = \Core\Core::$registry->get('language');
+        $this->_customer = \Core\Core::$registry->get('customer');
         $this->_pageModel = new \Core\Ams\Node();
         if (null !== $ams_page_id) {
             $this->loadPageObject($ams_page_id);

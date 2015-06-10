@@ -31,5 +31,9 @@ abstract class Hook {
     public function addHook($tag, $callback, $priority = 10, $args = 1) {
         \Core\HookPoints::addHook($tag, $callback, $priority, $args);
     }
+    
+    public function isAdmin() {
+        return CORE_IS_ADMIN;
+    }
 
 }

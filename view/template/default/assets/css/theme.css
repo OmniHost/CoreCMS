@@ -11,3 +11,21 @@ and open the template in the editor.
 .navbar-brand {
     padding: 0 15px 0 0;
 }
+
+video {
+    max-width: 100%;
+    height: auto;
+}
+
+iframe,
+embed,
+object {
+    max-width: 100%;
+}
+
+
+.resp-video-wrapper {
+    padding: 2%;
+    background: #d1eed1;
+    margin-bottom: 2em;
+}

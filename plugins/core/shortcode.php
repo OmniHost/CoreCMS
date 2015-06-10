@@ -399,11 +399,25 @@ CAROUSEL;
         return $this->load->controller('module/gallery', $filter);
     }
 
+    public function script($attrs){
+       
+        if(!empty($attrs['src'])){
+            $this->document->addScript($attrs['src']);
+        }
+        return '';
+    }
+    
+    public function inlinescript($attrs,$script){
+        return '<script>' . html_entity_decode($script, ENT_QUOTES, 'UTF-8') . '</script>';
+    }
+
     public function init() {
         if (!$this->isAdmin()) {
             add_shortcode('bootstrap_alert', array($this, 'alert'));
             add_shortcode('bootstrap_align', array($this, 'align'));
             add_shortcode('gallery' , array($this, 'gallery'));
+            add_shortcode('script' , array($this, 'script'));
+            add_shortcode('inlinescript' , array($this, 'inlinescript'));
         }
     }
 

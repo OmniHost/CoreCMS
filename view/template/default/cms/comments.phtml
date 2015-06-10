@@ -1,0 +1,16 @@
+<?php if ($comments) { ?>
+    <?php foreach ($comments as $comment) { ?>
+        <div class="media">
+
+            <div class="media-body">
+                <h6 class="media-heading"><?php echo $comment['author']; ?><span class="pull-right"><?php echo $comment['date_added']; ?></span></h6>
+                <p><?php echo $comment['text']; ?></p>
+            </div>
+        </div>
+<hr class="divider-dashed">
+    <?php } ?>
+
+    <div class="clearfix"><?php echo $pagination; ?></div>
+<?php } else { ?>
+    <p><?php echo $text_no_reviews; ?></p>
+<?php } ?>

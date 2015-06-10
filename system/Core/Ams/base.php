@@ -56,8 +56,13 @@ Abstract class Base extends \Core\Controller {
             if (isset($this->request->get['page'])) {
                 $url .= '&page=' . $this->request->get['page'];
             }
+             if (isset($this->request->get['update'])) {
+                $this->redirect(fixajaxurl($this->url->link($this->_namespace . '/update', 'ams_page_id=' . 'ams_page_id=' . $this->_pageModel->id . '&token=' . $this->session->data['token'] . $url, 'SSL')));
+            } else {
+                $this->redirect(fixajaxurl($this->url->link($this->_namespace, 'token=' . $this->session->data['token'] . $url, 'SSL')));
+            }
 
-            $this->redirect(fixajaxurl($this->url->link($this->_namespace, 'token=' . $this->session->data['token'] . $url, 'SSL')));
+         //   $this->redirect(fixajaxurl($this->url->link($this->_namespace, 'token=' . $this->session->data['token'] . $url, 'SSL')));
         }
 
         $this->getForm();
@@ -100,7 +105,11 @@ Abstract class Base extends \Core\Controller {
             if (isset($this->request->get['page'])) {
                 $url .= '&page=' . $this->request->get['page'];
             }
+            if (isset($this->request->get['update'])) {
+                $this->redirect(fixajaxurl($this->url->link($this->_namespace . '/update', 'ams_page_id=' . 'ams_page_id=' . $this->_pageModel->id . '&token=' . $this->session->data['token'] . $url, 'SSL')));
+            } else {
             $this->redirect(fixajaxurl($this->url->link($this->_namespace, 'token=' . $this->session->data['token'] . $url, 'SSL')));
+        }
         }
 
         $this->getForm();
@@ -594,11 +603,15 @@ Abstract class Base extends \Core\Controller {
 
             $new[$a['parentid']][] = $a;
         }
-        return $this->_createTree($new, $new[0]); // changed
+       
+        $tree = $this->_createTree($new, $new[0]); // changed
+        return $tree;
     }
 
     private function _createTree(&$list, $parent) {
         $tree = array();
+      
+        
         foreach ($parent as $k => $l) {
             if (isset($list[$l['id']])) {
                 $l['children'] = $this->_createTree($list, $list[$l['id']]);

@@ -17,7 +17,7 @@ class Pagination {
     public $style_results = 'results';
     public $rows = array();
 
-    public function render() {
+    public function render($template = false) {
         $total = $this->total;
         
         $this->url = str_replace('%7Bpage%7D', '{page}', $this->url);
@@ -69,7 +69,7 @@ class Pagination {
 
             for ($i = $start; $i <= $end; $i++) {
                 if ($page == $i) {
-                    $output .= '<li class="disabled"><a href="#">' . $i . '</a></li>';
+                    $output .= '<li class="disabled"><a>' . $i . '</a></li>';
                 } else {
                     $output .= '<li><a href="' . str_replace('{page}', $i, $this->url) . '">' . $i . '</a></li>';
                 }
@@ -98,7 +98,14 @@ class Pagination {
             $num_pages
         );
 
+        if ($template) {
+            $find[] = '{output}';
+            $replace[] = $output;
+            return str_replace($find, $replace, $template);
+            
+        } else {
         return '<div class="' . $this->style_results . ' col-sm-5">' . str_replace($find, $replace, $this->text) . '</div>' . ($output ? '<div class="col-sm-7 text-right"><ul class="' . $this->style_links . '">' . $output . '</ul></div>' : '');
+        }
     }
 
 }

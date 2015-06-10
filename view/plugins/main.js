@@ -4,4 +4,11 @@ $(document).ready(function () {
             callback();
         }
     });
+    
+    try {
+        $(".vid-container").fitVids();
+    }catch(err){
+        
+    }
+    
 });

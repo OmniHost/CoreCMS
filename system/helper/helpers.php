@@ -378,7 +378,7 @@ function render_select($arr, $selected = 0, $level = 0) {
         $iselected = ($opt['id'] == $selected) ? 'selected' : '';
         $html .= '<option value="' . $opt['id'] . '" ' . $iselected . '>' . str_repeat('-', $level) . ' ' . $opt['name'] . '</option>';
         if (isset($opt['children']) && count($opt['children'])) {
-            $html .= render_select($opt['children'], $selected, ++$level);
+            $html .= render_select($opt['children'], $selected, $level + 1);
         }
     }
     return $html;

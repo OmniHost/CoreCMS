@@ -28,6 +28,69 @@ class Image {
         }
     }
 
+    public function resizeDimensions($dest_w, $dest_h) {
+
+        $orig_w = $this->info['width'];
+        $orig_h = $this->info['height'];
+
+        if ($orig_w <= 0 || $orig_h <= 0)
+            return false;
+        // at least one of dest_w or dest_h must be specific
+        if ($dest_w <= 0 && $dest_h <= 0)
+            return false;
+
+
+
+        // crop the largest possible portion of the original image that we can size to $dest_w x $dest_h
+        $aspect_ratio = $orig_w / $orig_h;
+        $new_w = min($dest_w, $orig_w);
+        $new_h = min($dest_h, $orig_h);
+
+        if (!$new_w) {
+            $new_w = intval($new_h * $aspect_ratio);
+        }
+
+        if (!$new_h) {
+            $new_h = intval($new_w / $aspect_ratio);
+        }
+
+        $size_ratio = max($new_w / $orig_w, $new_h / $orig_h);
+
+        $crop_w = round($new_w / $size_ratio);
+        $crop_h = round($new_h / $size_ratio);
+
+        if (!is_array($crop) || count($crop) !== 2) {
+            $crop = array('center', 'center');
+        }
+
+        list( $x, $y ) = $crop;
+
+        if ('left' === $x) {
+            $s_x = 0;
+        } elseif ('right' === $x) {
+            $s_x = $orig_w - $crop_w;
+        } else {
+            $s_x = floor(( $orig_w - $crop_w ) / 2);
+        }
+
+        if ('top' === $y) {
+            $s_y = 0;
+        } elseif ('bottom' === $y) {
+            $s_y = $orig_h - $crop_h;
+        } else {
+            $s_y = floor(( $orig_h - $crop_h ) / 2);
+        }
+
+
+        // if the resulting image would be the same size or larger we don't want to resize it
+        if ($new_w >= $orig_w && $new_h >= $orig_h)
+            return false;
+
+        // the return array matches the parameters to imagecopyresampled()
+        // int dst_x, int dst_y, int src_x, int src_y, int dst_w, int dst_h, int src_w, int src_h
+        return array(0, 0, (int) $s_x, (int) $s_y, (int) $new_w, (int) $new_h, (int) $crop_w, (int) $crop_h);
+    }
+
     private function create($image) {
         $mime = $this->info['mime'];
 
@@ -79,10 +142,9 @@ class Image {
             imagedestroy($this->image);
             
             $return['img'] = ob_get_clean();
-            
         }
         
-        return $return;;
+        return $return;
     }
 
     public function resize($width = 0, $height = 0, $default = '') {
@@ -174,6 +236,15 @@ class Image {
 
         $this->info['width'] = $bottom_x - $top_x;
         $this->info['height'] = $bottom_y - $top_y;
+    }
+    
+    public function resizeCrop($dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h){
+        $image_old = $this->image;
+        $this->image = imagecreatetruecolor($dst_w, $dst_h);
+        imagecopyresampled( $this->image, $image_old, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h );
+        imagedestroy($image_old);
+        $this->info['width'] = $dst_w;
+        $this->info['height'] = $dst_h;
     }
 
     public function rotate($degree, $color = 'FFFFFF') {

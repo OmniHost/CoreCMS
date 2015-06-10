@@ -73,28 +73,38 @@ class Response {
 
         if ($this->output) {
 
-           
+
             $output = \Core\Shortcode::doShortcode($this->output);
-            
+
             $doc = \Core\Registry::getInstance()->get('document');
             $scripts = $doc->getScripts();
-            if($scripts){
+            if ($scripts) {
                 $html = '';
-                foreach($scripts as $script){
+                foreach ($scripts as $script) {
                     $html .= '<script type="text/javascript" src="' . $script . '"></script>';
                 }
-                $output = str_replace('<!-- Custom JS -->',$html,$output);
+                $output = str_replace('<!-- Custom JS -->', $html, $output);
             }
             $styles = $doc->getStyles();
-            if($styles){
+            if ($styles) {
                 $html = '';
-                foreach($styles as $style){
-                       $html .=  '<link rel="' .$style['rel'] . '" type="text/css" href="' . $style['href'] . '" media="' . $style['media'] . '" />';
+                foreach ($styles as $style) {
+                    $html .= '<link rel="' . $style['rel'] . '" type="text/css" href="' . $style['href'] . '" media="' . $style['media'] . '" />';
                 }
-                $output = str_replace('<!-- Custom CSS -->',$html, $output);
+                $output = str_replace('<!-- Custom CSS -->', $html, $output);
             }
-           
             
+            $metas = $doc->getMeta();
+            if ($metas) {
+                $html = '';
+                foreach ($metas as $meta) {
+                    $html .= $meta;
+                }
+                $output = str_replace('<!-- Custom META -->', $html, $output);
+            }
+
+            $output = \Core\HookPoints::executeHooks('before_render', $output);
+
 
             if ($this->level) {
 

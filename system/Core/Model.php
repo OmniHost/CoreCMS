@@ -7,12 +7,6 @@ namespace Core;
 abstract class Model {
 
    
-
-  
-    public function __construct() {
-       
-    }
-
     /**
      * Returns object from registry
      * @param string $key
