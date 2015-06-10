@@ -90,9 +90,9 @@ class ControllerCommonFileManager extends \Core\Controller {
                     $server = HTTP_CATALOG;
                 }*/
                 if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
-            $server = HTTPS_SERVER;
+            $server = HTTPS_CATALOG;
         } else {
-            $server = HTTP_SERVER;
+            $server = HTTP_CATALOG;
         }
 
                 $data['images'][] = array(

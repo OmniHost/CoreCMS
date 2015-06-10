@@ -34,13 +34,14 @@ CKEDITOR.editorConfig = function (config) {
     config.format_tags = 'p;h2;h3;h4;h5;pre';
     config.skin = 'minimalist';
     // Simplify the dialog windows.
-    config.removeDialogTabs = 'image:advanced;link:advanced:image:Upload';
+    config.removeDialogTabs = 'link:advanced:image:Upload';
     
     config.autoGrow_maxHeight= 500;
     config.allowedContent= true;
     CKEDITOR.dtd.$removeEmpty['i'] = false
     CKEDITOR.dtd.$removeEmpty['span'] = false
     config.extraPlugins= 'bootstrap,autogrow,justify';
+    config.contentsCss = 'view/bootstrap/css/bootstrap.min.css';
     
 };
 

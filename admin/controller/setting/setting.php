@@ -12,6 +12,13 @@ class ControllerSettingSetting extends \Core\Controller {
         $this->load->model('setting/setting');
 
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            
+            if ($this->config->get('config_currency_auto')) {
+				$this->load->model('localisation/currency');
+
+				$this->model_localisation_currency->refresh();
+			}
+            
             $this->model_setting_setting->editSetting('config', $this->request->post);
 
             \Core\HookPoints::executeHooks('admin_settings_save');
@@ -73,6 +80,11 @@ class ControllerSettingSetting extends \Core\Controller {
         $data['help_mail_smtp_hostname'] = $this->language->get('help_mail_smtp_hostname');
         $data['help_mail_alert'] = $this->language->get('help_mail_alert');
         $data['help_secure'] = $this->language->get('help_secure');
+        $data['entry_currency'] = $this->language->get('entry_currency');
+        $data['help_currency'] = $this->language->get('help_currency');
+        $data['entry_currency_auto'] = $this->language->get('entry_currency_auto'); 
+        $data['help_currency_auto'] = $this->language->get('help_currency_auto');
+        $data['entry_robots'] = $this->language->get('entry_robots');
 
         $data['help_maintenance'] = $this->language->get('help_maintenance');
         $data['help_encryption'] = $this->language->get('help_encryption');
@@ -177,6 +189,12 @@ class ControllerSettingSetting extends \Core\Controller {
             $data['error_image_popup'] = '';
         }
         
+         if(isset($this->error['image_blogcat'])){
+            $data['error_image_blogcat'] = $this->error['image_blogcat'];
+        }else{
+            $data['error_image_blogcat'] = '';
+        }
+        
         if(isset($this->error['customer_group_display'])){
             $data['error_customer_group_display'] = $this->error['customer_group_display'];
         }else{
@@ -259,6 +277,21 @@ class ControllerSettingSetting extends \Core\Controller {
         $this->load->model('localisation/country');
 
         $data['countries'] = $this->model_localisation_country->getCountries();
+
+        if (isset($this->request->post['config_currency'])) {
+            $data['config_currency'] = $this->request->post['config_currency'];
+        } else {
+            $data['config_currency'] = $this->config->get('config_currency');
+        }
+        $this->load->model('localisation/currency');
+
+        $data['currencies'] = $this->model_localisation_currency->getCurrencies();
+        
+        if (isset($this->request->post['config_currency_auto'])) {
+			$data['config_currency_auto'] = $this->request->post['config_currency_auto'];
+		} else {
+			$data['config_currency_auto'] = $this->config->get('config_currency_auto');
+		}
 
 
         if (isset($this->request->post['config_mail_smtp_port'])) {

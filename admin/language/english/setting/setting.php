@@ -124,3 +124,8 @@ $_['help_account_mail']                = 'Send an email to the site owner when a
 
 $_['entry_login_attempts']             = 'Max Login Attempts';
 $_['help_login_attempts']              = 'Maximum login attempts allowed before the account is locked for 1 hour. User accounts can be unlocked on the user pages.';
+$_['entry_currency']                   = 'Currency';
+$_['help_currency']                    = 'Change the default currency. Clear your browser cache to see the change and reset your existing cookie.';
+$_['help_currency_auto']               = 'Set your store to automatically update currencies daily.';
+$_['entry_currency_auto']              = 'Auto Update Currency';
+$_['entry_robots'] = 'Robots.txt contents';

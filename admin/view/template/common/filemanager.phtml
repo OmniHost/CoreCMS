@@ -114,6 +114,10 @@ $('a.thumbnail').on('click', function (e) {
 <?php if ($target) { ?>
             url += '&target=' + '<?php echo $target; ?>';
 <?php } ?>
+    <?php if ($ckeditor) { ?>
+            url += '&ckeditor=' + '<?php echo $ckeditor; ?>';
+<?php } ?>
+
 
         $('#modal-image').load(url);
     });
