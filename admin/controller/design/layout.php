@@ -167,8 +167,8 @@ class ControllerDesignLayout extends \Core\Controller {
         $data = array(
             'sort' => $sort,
             'order' => $order,
-            'start' => ($page - 1) * $this->config->get('config_admin_limit'),
-            'limit' => $this->config->get('config_admin_limit')
+            'start' => ($page - 1) * $this->config->get('config_limit_admin'),
+            'limit' => $this->config->get('config_limit_admin')
         );
 
         $layout_total = $this->model_design_layout->getTotalLayouts();
@@ -242,7 +242,7 @@ class ControllerDesignLayout extends \Core\Controller {
         $pagination = new \Core\Pagination();
         $pagination->total = $layout_total;
         $pagination->page = $page;
-        $pagination->limit = $this->config->get('config_admin_limit');
+        $pagination->limit = $this->config->get('config_limit_admin');
         $pagination->text = $this->language->get('text_pagination');
         $pagination->url = $this->url->link('design/layout', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
 

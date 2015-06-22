@@ -19,7 +19,7 @@ class ControllerCommonSeoUrl extends \Core\Controller {
 
         if (isset($this->request->get['_route_'])) {
             unset($this->request->get['p']);
-
+            
             if($this->request->get['_route_'] == 'robots.txt'){
                  header('X-Powered-By: CoreCMS - http://www.omnihost.co.nz');
                  header('Content-Type: text/plain; charset=utf-8;');

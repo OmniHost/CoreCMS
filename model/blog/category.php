@@ -9,43 +9,53 @@ class ModelBlogCategory extends \Core\Ams\Page {
     protected $_namespace = 'blog.category';
     public $content;
 
-    
-    public function countLatestPosts(){
-         $group_id = $this->_customer->getGroupId();
-         if($this->_customer->getId()){
-             $groups = "-1,-3," . $group_id;
-         }else{
-              $groups = "-1,-2";
-         }
+    public function countLatestPosts() {
+        $group_id = $this->_customer->getGroupId();
+        if ($this->_customer->getId()) {
+            $groups = "-1,-3," . $group_id;
+        } else {
+            $groups = "-1,-2";
+        }
 
-        $sql = "select count(*) as total from #__ams_pages where status='1' and public='1' and namespace='blog.post' and ams_page_id in (select object_id from sba_allowed_groups where object_type='ams_page' and group_id in ($groups)) and ams_page_id not in(select object_id from sba_denied_groups where object_type='ams_page' and group_id in ($groups))";
+        $sql = "select count(*) as total from #__ams_pages a inner join #__ams_nodes n on a.ams_page_id = n.ams_page_id and n.node='publish_date' where a.status='1' and a.public='1' and a.namespace='blog.post' and a.ams_page_id in (select object_id from sba_allowed_groups where object_type='ams_page' and group_id in ($groups)) and a.ams_page_id not in(select object_id from sba_denied_groups where object_type='ams_page' and group_id in ($groups)) and n.content < '" . time() . "'";
 
         $row = $this->_db->query($sql);
         return $row->row['total'];
     }
-    
-     public function getLatestPosts($data = array()) {
 
-         $group_id = $this->_customer->getGroupId();
-         if($this->_customer->getId()){
-             $groups = "-1,-3," . $group_id;
-         }else{
-              $groups = "-1,-2";
-         }
+    public function getLatestPosts($data = array()) {
 
-        $sql = "select ams_page_id from #__ams_pages where status='1' and public='1' and namespace='blog.post' and ams_page_id in (select object_id from sba_allowed_groups where object_type='ams_page' and group_id in ($groups)) and ams_page_id not in(select object_id from sba_denied_groups where object_type='ams_page' and group_id in ($groups))";
-
-        
-        $sorts = array(
-            'name',
-            'date_created',
-            'date_modified',
-        );
-        if (empty($data['sort']) || !in_array($data['sort'], $sorts)) {
-            $sort = 'date_created';
+        $group_id = $this->_customer->getGroupId();
+        if ($this->_customer->getId()) {
+            $groups = "-1,-3," . $group_id;
         } else {
+            $groups = "-1,-2";
+        }
+
+        $sql = "select a.ams_page_id, n.content as publish_date from #__ams_pages a "
+                . " inner join #__ams_nodes n on a.ams_page_id = n.ams_page_id and n.node='publish_date' "
+                . " where a.status='1' and a.public='1' and a.namespace='blog.post' "
+                . " and a.ams_page_id in (select object_id from sba_allowed_groups where object_type='ams_page' and group_id in ($groups)) "
+                . " and a.ams_page_id not in(select object_id from sba_denied_groups where object_type='ams_page' and group_id in ($groups))"
+                . " and n.content < '" . time() . "'";
+
+
+        $sorts = array(
+            'a.name',
+            'n.content',
+            'a.date_modified',
+            'publish_date'
+        );
+
+        if (empty($data['sort']) || !in_array($data['sort'], $sorts)) {
+            $sort = 'publish_date';
+        } else {
+
             $sort = $data['sort'];
         }
+
+
+
 
         if (empty($data['order']) || $data['order'] == 'DESC') {
             $order = 'DESC';
@@ -72,8 +82,16 @@ class ModelBlogCategory extends \Core\Ams\Page {
         return $query->rows;
         // return $query->rows;
     }
-    
+
     public function getActivePosts($data = array()) {
+
+
+        $group_id = $this->_customer->getGroupId();
+        if ($this->_customer->getId()) {
+            $groups = "-1,-3," . $group_id;
+        } else {
+            $groups = "-1,-2";
+        }
 
 
         if ($data['ams_page_id']) {
@@ -86,13 +104,25 @@ class ModelBlogCategory extends \Core\Ams\Page {
             return false;
         }
 
-        $sql = "Select p.ams_page_id from #__ams_pages p inner join #__ams_nodes n on p.ams_page_id = n.ams_page_id where"
-                . " p.status = 1 and p.namespace='blog.post' and n.node='categories' and n.content like '%\"" . $id . "\"%'";
+        $sql = "Select p.ams_page_id, n.content as publish_date from #__ams_pages p "
+                . " inner join #__ams_nodes n on p.ams_page_id = n.ams_page_id "
+                . " inner join #__ams_nodes d on p.ams_page_id = d.ams_page_id and d.node='publish_date' "
+                . " where"
+                . " p.status = 1 and p.namespace='blog.post' and n.node='categories' and n.content like '%\"" . $id . "\"%'"
+                . " and p.ams_page_id in (select object_id from sba_allowed_groups where object_type='ams_page' and group_id in ($groups)) "
+                . " and p.ams_page_id not in(select object_id from sba_denied_groups where object_type='ams_page' and group_id in ($groups))"
+                . " and d.content < '" . time() . "'";
+
+
+        if (!empty($data['sort']) && $data['sort'] == 'p.date_created') {
+            $data['sort'] = 'd.content';
+        }
 
         $sorts = array(
             'p.name',
-            'p.date_created',
+            'd.content',
             'p.date_modified',
+            'publish_date'
         );
         if (empty($data['sort']) || !in_array($data['sort'], $sorts)) {
             $sort = 'p.name';
@@ -138,8 +168,11 @@ class ModelBlogCategory extends \Core\Ams\Page {
             return false;
         }
 
-        $sql = "Select count(p.ams_page_id) as total from #__ams_pages p inner join #__ams_nodes n on p.ams_page_id = n.ams_page_id where"
-                . " p.status = 1 and p.namespace='blog.post' and n.node='categories' and n.content like '%\"" . $id . "\"%'";
+        $sql = "Select count(p.ams_page_id) as total from #__ams_pages p inner join #__ams_nodes n on p.ams_page_id = n.ams_page_id "
+                . " inner join #__ams_nodes d on p.ams_page_id = d.ams_page_id and d.node='publish_date' "
+                . " where"
+                . " p.status = 1 and p.namespace='blog.post' and n.node='categories' and n.content like '%\"" . $id . "\"%'"
+                . " and d.content < '" . time() . "'";
 
 
         $query = $this->_db->query($sql);

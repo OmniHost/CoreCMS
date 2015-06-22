@@ -35,7 +35,7 @@ Abstract class Base extends \Core\Controller {
             $this->_pageModel->save();
 
             $this->model_tool_seo->setUrl('ams_page_id=' . $this->_pageModel->id, $this->request->post['slug']);
-            
+
             $this->load->model('setting/rights');
             $this->model_setting_rights->setAllowedGroups($this->_pageModel->id, 'ams_page', $this->request->post['allowed_groups']);
             $this->model_setting_rights->setDeniedGroups($this->_pageModel->id, 'ams_page', $this->request->post['denied_groups']);
@@ -61,6 +61,7 @@ Abstract class Base extends \Core\Controller {
             } else {
                 $this->redirect(fixajaxurl($this->url->link($this->_namespace, 'token=' . $this->session->data['token'] . $url, 'SSL')));
             }
+            
 
          //   $this->redirect(fixajaxurl($this->url->link($this->_namespace, 'token=' . $this->session->data['token'] . $url, 'SSL')));
         }
@@ -85,8 +86,8 @@ Abstract class Base extends \Core\Controller {
             $this->_pageModel->populate($this->request->post);
             $this->_pageModel->save();
             $this->model_tool_seo->setUrl('ams_page_id=' . $this->_pageModel->id, $this->request->post['slug']);
-            
-                $this->load->model('setting/rights');
+
+            $this->load->model('setting/rights');
             $this->model_setting_rights->setAllowedGroups($this->_pageModel->id, 'ams_page', $this->request->post['allowed_groups']);
             $this->model_setting_rights->setDeniedGroups($this->_pageModel->id, 'ams_page', $this->request->post['denied_groups']);
 
@@ -108,8 +109,8 @@ Abstract class Base extends \Core\Controller {
             if (isset($this->request->get['update'])) {
                 $this->redirect(fixajaxurl($this->url->link($this->_namespace . '/update', 'ams_page_id=' . 'ams_page_id=' . $this->_pageModel->id . '&token=' . $this->session->data['token'] . $url, 'SSL')));
             } else {
-            $this->redirect(fixajaxurl($this->url->link($this->_namespace, 'token=' . $this->session->data['token'] . $url, 'SSL')));
-        }
+                $this->redirect(fixajaxurl($this->url->link($this->_namespace, 'token=' . $this->session->data['token'] . $url, 'SSL')));
+            }
         }
 
         $this->getForm();
@@ -162,7 +163,7 @@ Abstract class Base extends \Core\Controller {
     }
 
     protected function getForm() {
-    //    $this->language->load('cms/page');
+        //    $this->language->load('cms/page');
 
         $this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -253,7 +254,7 @@ Abstract class Base extends \Core\Controller {
         $this->data['cancel'] = $this->url->link($this->_namespace, 'token=' . $this->session->data['token'] . $url, 'SSL');
 
         $this->data['namespace'] = $this->_namespace;
-        
+
 
         $this->load->model($this->_namespace);
         $this->load->model('tool/seo');
@@ -324,7 +325,7 @@ Abstract class Base extends \Core\Controller {
         } else {
             $this->data['meta_keywords'] = '';
         }
-        
+
 
 
         if (isset($this->request->post['meta_description'])) {
@@ -378,8 +379,8 @@ Abstract class Base extends \Core\Controller {
 
 
         $this->data['parents'] = $this->getPageTree();
-        
-        $this->data['ams_commentable'] = $this->_enableComments;//$_enableComments
+
+        $this->data['ams_commentable'] = $this->_enableComments; //$_enableComments
 
         $tabs = array(
             'general' => array(),
@@ -403,7 +404,7 @@ Abstract class Base extends \Core\Controller {
 
     protected function getList() {
         $page = isset($this->request->get['page']) ? (int) $this->request->get['page'] : 1;
-        $limit = $this->config->get('config_admin_limit');
+        $limit = $this->config->get('config_limit_admin');
         $filter = array();
 
         if (isset($this->request->get['sort'])) {
@@ -458,6 +459,7 @@ Abstract class Base extends \Core\Controller {
 
 
         $pages = $this->_pageModel->getPages($filter, $sort, $order, $page, $limit);
+        
 
         $this->data['pages'] = array();
         foreach ($pages->rows as $_page) {
@@ -475,11 +477,21 @@ Abstract class Base extends \Core\Controller {
             $this->data['pages'][] = $_page;
         }
 
+        $url = '';
+
+        if (isset($this->request->get['sort'])) {
+            $url .= '&sort=' . $this->request->get['sort'];
+        }
+
+        if (isset($this->request->get['order'])) {
+            $url .= '&order=' . $this->request->get['order'];
+        }
+
 
         $pagination = new \Core\Pagination();
         $pagination->total = $pages->total;
         $pagination->page = $page;
-        $pagination->limit = $limit;
+        $pagination->limit = $this->config->get('config_limit_admin');
         $pagination->text = $this->language->get('text_pagination');
         $pagination->url = $this->url->link($this->_namespace, 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
 

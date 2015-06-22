@@ -365,6 +365,19 @@ function formfield($field) {
                     . '<input type="hidden" name="' . $field['key'] . '" value="' . $field['value'] . '" id="input-' . slug($field['key']) . '" />';
 
             break;
+        case "datetime":
+            registry('document')->addScript('view/plugins/datetimepicker/moment.min.js');
+            \Core\Registry::getInstance()->get('document')->addScript('view/plugins/datetimepicker/bootstrap-datetimepicker.min.js');
+            \Core\Registry::getInstance()->get('document')->addStyle('view/plugins/datetimepicker/bootstrap-datetimepicker.min.css');
+            $dateformat = dateformat_PHP_to_MomentJs(\Core\Registry::getInstance()->get('language')->get('date_time_format_short'));
+            $id = !empty($field['id'])? $field['id'] : slug('input-' . $field['key']);
+            
+            return '<input id="' . $id . '" data-date-format="' . $dateformat . '" type="text" name="' . $field['key'] . '" class="' . $class . ' datetimeinput" value="' . $field['value'] . '" />'
+                    . ''
+                    . '<script>docReady(function () {'
+                    . '$(\'#' . $id . '\').datetimepicker({format: "' . $dateformat . '"});});'
+                    . '</script>';
+            break;
         case "text":
         default:
             return '<input type="' . $field['type'] . '" name="' . $field['key'] . '" class="' . $class . '" value="' . $field['value'] . '" />';
@@ -382,4 +395,84 @@ function render_select($arr, $selected = 0, $level = 0) {
         }
     }
     return $html;
+}
+
+
+function registry($key = false){
+    if($key){
+        return \Core\Registry::getInstance()->get($key);
+    }
+    return \Core\Registry::getInstance();
+}
+
+function dateformat_PHP_to_MomentJs($php_format) {
+    $SYMBOLS_MATCHING = array(
+        // Day
+        'd' => 'DD',
+        'D' => 'ddd',
+        'j' => 'D',
+        'l' => 'dddd',
+        'N' => 'E',
+        'S' => '', //No Translation
+        'w' => 'e',
+        'z' => 'DDDD',
+        // Week
+        'W' => 'w',
+        // Month
+        'F' => 'MMMM',
+        'm' => 'MM',
+        'M' => 'MMM',
+        'n' => 'M',
+        't' => '', //No Translation
+        // Year
+        'L' => '', //No Translation
+        'o' => 'gggg',
+        'Y' => 'YYYY',
+        'y' => 'YY',
+        // Time
+        'a' => 'a',
+        'A' => 'A',
+        'B' => '', //No Translation
+        'g' => 'h',
+        'G' => 'H',
+        'h' => 'hh',
+        'H' => 'HH',
+        'i' => 'mm',
+        's' => 'ss',
+        'u' => '', //No Translation
+        //Timezone
+        'e' => '',
+        'I' => '',
+        'O' => 'ZZ',
+        'P' => 'Z',
+        'T' => '',
+        'Z' => '',
+        'c' => 'YYYY-MM-DD\THH:i:sZ', //2004-02-12T15:19:21+00:00
+        'r' => 'ddd, D MMM HH:i:s Z', //Thu, 21 Dec 2000 16:01:07 +0200
+        'U' => 'X'
+    );
+    $jqueryui_format = "";
+    $escaping = false;
+    for ($i = 0; $i < strlen($php_format); $i++) {
+        $char = $php_format[$i];
+        if ($char === '\\') { // PHP date format escaping character
+            $i++;
+            if ($escaping)
+                $jqueryui_format .= $php_format[$i];
+            else
+                $jqueryui_format .= '\'' . $php_format[$i];
+            $escaping = true;
+        }
+        else {
+            if ($escaping) {
+                $jqueryui_format .= "'";
+                $escaping = false;
+            }
+            if (isset($SYMBOLS_MATCHING[$char]))
+                $jqueryui_format .= $SYMBOLS_MATCHING[$char];
+            else
+                $jqueryui_format .= $char;
+        }
+    }
+    return $jqueryui_format;
 }

@@ -165,6 +165,47 @@ class ControllerSettingSetting extends \Core\Controller {
             $data['error_ftp_password'] = '';
         }
 
+        if (isset($this->error['product_limit'])) {
+            $data['error_product_limit'] = $this->error['product_limit'];
+        } else {
+            $data['error_product_limit'] = '';
+        }
+
+        if (isset($this->error['blog_limit'])) {
+            $data['error_blog_limit'] = $this->error['blog_limit'];
+        } else {
+            $data['error_blog_limit'] = '';
+        }
+
+        if (isset($this->error['image_thumb'])) {
+            $data['error_image_thumb'] = $this->error['image_thumb'];
+        } else {
+            $data['error_image_thumb'] = '';
+        }
+
+        if (isset($this->error['image_popup'])) {
+            $data['error_image_popup'] = $this->error['image_popup'];
+        } else {
+            $data['error_image_popup'] = '';
+        }
+
+        if (isset($this->error['image_blogcat'])) {
+            $data['error_image_blogcat'] = $this->error['image_blogcat'];
+        } else {
+            $data['error_image_blogcat'] = '';
+        }
+
+        if (isset($this->error['customer_group_display'])) {
+            $data['error_customer_group_display'] = $this->error['customer_group_display'];
+        } else {
+            $data['error_customer_group_display'] = '';
+        }
+
+        if (isset($this->error['login_attempts'])) {
+            $data['error_login_attempts'] = $this->error['login_attempts'];
+        } else {
+            $data['error_login_attempts'] = '';
+        }
         if(isset($this->error['product_limit'])){
             $data['error_product_limit'] = $this->error['product_limit'];
         }else{
@@ -436,8 +477,8 @@ class ControllerSettingSetting extends \Core\Controller {
     }
 
     public function template() {
-      
-         if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
+
+        if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
             $server = HTTPS_CATALOG;
         } else {
             $server = HTTP_CATALOG;

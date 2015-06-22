@@ -31,15 +31,15 @@ class ControllerBlogBlog extends \Core\Controller {
 
 
 
-        $this->data['ams_page_id'] = $this->model_cms_page->id;
+        $this->data['ams_page_id'] = '0';
 
         $pg = isset($this->request->get['page'])?$this->request->get['page']:1;
          $start = ($pg - 1) * $this->config->get('config_blog_limit');
 
-        $posts = $this->model_blog_category->getLatestPosts(array('sort' => 'date_created', 'order' => 'DESC', 'start' => $start, 'limit' => $this->config->get('config_blog_limit')));
+        $posts = $this->model_blog_category->getLatestPosts(array('sort' => 'publish_date', 'order' => 'DESC', 'start' => $start, 'limit' => $this->config->get('config_blog_limit')));
         $total = $this->model_blog_category->countLatestPosts();
 
-        
+   
         
         
         $this->data['posts'] = array();

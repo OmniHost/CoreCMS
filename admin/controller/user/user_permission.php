@@ -164,8 +164,8 @@ class ControllerUserUserPermission extends \Core\Controller {
         $data = array(
             'sort' => $sort,
             'order' => $order,
-            'start' => ($page - 1) * $this->config->get('config_admin_limit'),
-            'limit' => $this->config->get('config_admin_limit')
+            'start' => ($page - 1) * $this->config->get('config_limit_admin'),
+            'limit' => $this->config->get('config_limit_admin')
         );
 
         $user_group_total = $this->model_user_user_group->getTotalUserGroups();
@@ -240,7 +240,7 @@ class ControllerUserUserPermission extends \Core\Controller {
         $pagination = new \Core\Pagination();
         $pagination->total = $user_group_total;
         $pagination->page = $page;
-        $pagination->limit = $this->config->get('config_admin_limit');
+        $pagination->limit = $this->config->get('config_limit_admin');
         $pagination->text = $this->language->get('text_pagination');
         $pagination->url = $this->url->link('user/user_permission', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
 

@@ -15,3 +15,4 @@ $_['entry_parent'] = 'Parent Post';
 $_['entry_featured_image'] = 'Featured Image';
 $_['entry_blurb'] = 'Blurb';
 $_['entry_categories'] = 'Categories';
+$_['entry_publish_date'] = 'Post Date';

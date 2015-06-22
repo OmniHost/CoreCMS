@@ -10,7 +10,7 @@ class Image {
 
     public function __construct($file) {
         if (file_exists($file)) {
-            ini_set("memory_limit","256M");
+            ini_set("memory_limit", "256M");
             $this->file = $file;
 
             $info = getimagesize($file);
@@ -140,10 +140,10 @@ class Image {
             }
 
             imagedestroy($this->image);
-            
+
             $return['img'] = ob_get_clean();
         }
-        
+
         return $return;
     }
 

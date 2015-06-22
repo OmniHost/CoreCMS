@@ -11,7 +11,7 @@ class ModelBlogPost extends \Core\Ams\Page {
     public $content;
     public $categories;
     public $featured_image;
-    public $date_created;
+    public $publish_date;
 
    
 
@@ -29,12 +29,7 @@ class ModelBlogPost extends \Core\Ams\Page {
         
     }
 
-    public function loadPageObject($id) {
-        parent::loadPageObject($id);
-        $row = $this->_getInnerRow($id);
-        $this->date_created = $row['date_created'];
-        return $this;
-    }
+    
 
     
     

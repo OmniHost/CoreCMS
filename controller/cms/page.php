@@ -198,6 +198,7 @@ class ControllerCmsPage extends \Core\Controller {
             $page['name'] = \Core\HookPoints::executeHooks('ams_page_name', $page['name']);
             $page['content'] = \Core\HookPoints::executeHooks('ams_page_content', html_entity_decode($page['content'], ENT_QUOTES, 'UTF-8'));
 
+      
 
             $this->document->setTitle(strip_tags($page['meta_title']));
             $this->document->setKeywords($page['meta_keywords']);
@@ -237,6 +238,7 @@ class ControllerCmsPage extends \Core\Controller {
 
             $this->data['page'] = $page;
 
+            
 
 
             if ($page['comments'] && $this->config->get('config_review_status')) {
@@ -245,8 +247,8 @@ class ControllerCmsPage extends \Core\Controller {
                 $this->data['has_comments'] = false;
             }
 
-
-
+            
+           
 
             $this->template = 'cms/page.phtml';
 

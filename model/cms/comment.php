@@ -23,8 +23,8 @@ class ModelCmsComment extends \Core\Model {
 
     public function addComment($ams_page_id, $data) {
         //Akismet to get plugged in here! :-)
-        
-        
+
+
         $this->db->query("INSERT INTO #__comments SET author = '" . $this->db->escape($data['name']) . "', "
                 . "customer_id = '" . (int) $this->customer->getId() . "', ams_page_id = '" . (int) $ams_page_id . "',"
                 . " text = '" . $this->db->escape($data['text']) . "', "

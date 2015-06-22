@@ -1,4 +1,5 @@
 <?php
+
 namespace Core;
 
 class Pagination {
@@ -18,11 +19,12 @@ class Pagination {
     public $rows = array();
 
     public function render($template = false) {
+
         $total = $this->total;
-        
+
         $this->url = str_replace('%7Bpage%7D', '{page}', $this->url);
-                
-               
+
+
         if ($this->page < 1) {
             $page = 1;
         } else {
@@ -104,7 +106,7 @@ class Pagination {
             return str_replace($find, $replace, $template);
             
         } else {
-        return '<div class="' . $this->style_results . ' col-sm-5">' . str_replace($find, $replace, $this->text) . '</div>' . ($output ? '<div class="col-sm-7 text-right"><ul class="' . $this->style_links . '">' . $output . '</ul></div>' : '');
+            return '<div class="' . $this->style_results . ' col-sm-5">' . str_replace($find, $replace, $this->text) . '</div>' . ($output ? '<div class="col-sm-7 text-right"><ul class="' . $this->style_links . '">' . $output . '</ul></div>' : '');
         }
     }
 

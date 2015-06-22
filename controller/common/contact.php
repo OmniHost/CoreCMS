@@ -181,7 +181,7 @@ class ControllerCommonContact extends \Core\Controller {
 
         $this->template = 'common/success.phtml';
 
-$this->data = $data;
+        $this->data = $data;
         $this->response->setOutput($this->render());
     }
 

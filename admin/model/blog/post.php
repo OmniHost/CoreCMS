@@ -11,23 +11,35 @@ class ModelBlogPost extends \Core\Ams\Page {
     public $content;
     public $categories;
     public $featured_image;
-    
-    
-    protected function _setcategories($data){
-        return json_decode($data['content'],1);
+    public $publish_date;
+
+    protected function _setcategories($data) {
+
+        return json_decode($data['content'], 1);
     }
-    
-    protected function _populatecategories($data){
-        
+
+    protected function _populatecategories($data) {
+
         return json_encode($data['categories']);
     }
+
+    protected function _setpublish_date($data) {
+        return date($this->_language->get("date_time_format_short"), $data['content']);
+         }
     
-   
-    
+     protected function _populatepublish_date($data) {
+         if($data['publish_date'] > 0){
+             return strtotime($data['publish_date']);
+         }else{
+             return time();
+         }
+         
+     }
+
     public function getFormFields($tabs) {
-        
-      
-       
+
+
+
         // Blurb
         if (isset($this->request->post['blurb'])) {
             $data['blurb'] = $this->request->post['blurb'];
@@ -72,8 +84,8 @@ class ModelBlogPost extends \Core\Ams\Page {
             $data['categories'] = array();
         }
 
-        
-       
+
+
         $category_model = $this->_load->model('blog/category');
 
         $categories = $category_model->getPages();
@@ -83,7 +95,7 @@ class ModelBlogPost extends \Core\Ams\Page {
         }
         $tree = $this->_createTree($new, $new[0]);
         $options = $this->_indent($tree);
-     
+
 
         $tabs['general']['categories'] = array(
             'key' => 'categories',
@@ -91,6 +103,25 @@ class ModelBlogPost extends \Core\Ams\Page {
             'value' => $data['categories'],
             'options' => $options,
             'label' => $this->_language->get('entry_categories'),
+            'required' => false
+        );
+
+
+
+        // publish date
+        if (isset($this->request->post['publish_date'])) {
+            $data['publish_date'] = $this->request->post['publish_date'];
+        } elseif ($this->publish_date > 0) {
+            $data['publish_date'] = DATE($this->_language->get("date_time_format_short"), strtotime($this->publish_date));
+        } else {
+            $data['publish_date'] = DATE($this->_language->get("date_time_format_short"));
+        }
+
+        $tabs['general_details']['publish_date'] = array(
+            'key' => 'publish_date',
+            'type' => 'datetime',
+            'value' => $data['publish_date'],
+            'label' => $this->_language->get('entry_publish_date'),
             'required' => false
         );
 
@@ -118,6 +149,7 @@ class ModelBlogPost extends \Core\Ams\Page {
             'label' => $this->_language->get('entry_featured_image'),
             'required' => false
         );
+
 
 
 

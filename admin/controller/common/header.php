@@ -49,15 +49,15 @@ class ControllerCommonHeader extends \Core\Controller {
         $this->data['menu_modules'] = $this->language->get('menu_modules');
         $this->data['menu_content'] = $this->language->get('menu_content');
         $this->data['menu_pages'] = $this->language->get('menu_pages');
-         $this->data['menu_banners'] = $this->language->get('menu_banners');
+        $this->data['menu_banners'] = $this->language->get('menu_banners');
         $this->data['menu_menus'] = $this->language->get('menu_menus');
         $this->data['menu_posts'] = $this->language->get('menu_posts');
         $this->data['menu_blog_category'] = $this->language->get('menu_blog_category');
         $this->data['menu_reports'] = $this->language->get('menu_reports');
         $this->data['menu_report_user_activity'] = $this->language->get('menu_report_user_activity');
         $this->data['menu_report_user_online'] = $this->language->get('menu_report_user_online');
-        
-        
+
+
 
 
         $data['text_customer'] = $this->language->get('text_customer');
@@ -114,7 +114,7 @@ class ControllerCommonHeader extends \Core\Controller {
         $this->data['comments'] = $this->url->link('cms/comment', 'token=' . $this->session->data['token'], 'SSL');
         $this->data['total_comments'] = $alerts['comments']['total'];
 
-    
+
 
         $data['header_navs'] = array(
             'alerts' => array(

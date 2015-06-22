@@ -6,7 +6,7 @@ class ControllerBlogPost extends \Core\Controller {
         $this->load->model('blog/post');
         $page = $this->model_blog_post->loadPageObject($this->request->get['ams_page_id'])->toArray();
 
-        if (!$page || !$page['status']) {
+        if (!$page || !$page['status'] || $page['publish_date'] > time()) {
             return $this->not_found();
         }
 
@@ -22,7 +22,6 @@ class ControllerBlogPost extends \Core\Controller {
             $page['name'] = \Core\HookPoints::executeHooks('ams_page_name', $page['name']);
             $page['content'] = \Core\HookPoints::executeHooks('ams_page_content', html_entity_decode($page['content'], ENT_QUOTES, 'UTF-8'));
             $page['href'] = $this->url->link('blog/post', 'ams_page_id=' . $page['id']);
-
 
             $this->document->setTitle(strip_tags($page['meta_title']));
             $this->document->setKeywords($page['meta_keywords']);
@@ -92,7 +91,7 @@ class ControllerBlogPost extends \Core\Controller {
             $this->data['text_comments'] = $this->language->get('text_comments');
             $this->data['comment_count'] = $this->model_cms_comment->countComments($this->model_cms_page->id);
 
-      
+
 
             $this->template = 'blog/post.phtml';
 

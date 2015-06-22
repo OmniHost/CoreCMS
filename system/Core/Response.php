@@ -102,7 +102,7 @@ class Response {
                 }
                 $output = str_replace('<!-- Custom META -->', $html, $output);
             }
-
+            
             $output = \Core\HookPoints::executeHooks('before_render', $output);
 
 
@@ -126,3 +126,5 @@ class Response {
     }
 
 }
+            $output = \Core\HookPoints::executeHooks('before_render', $output);
+

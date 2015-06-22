@@ -73,6 +73,8 @@ class Node {
                 . "public = '" . $data['public'] . "', "
                 . "status = '" . (int) $data['status'] . "' where ams_page_id='" . (int) $page_id . "'");
         unset($data['id'], $data['ams_page_id'], $data['parent_id'], $data['name'], $data['status'], $data['user_id']);
+   
+        
         if (count($data) > 0) {
 
             foreach ($data as $key => $value) {
