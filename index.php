@@ -4,6 +4,9 @@ define('NS', 'front');
 define('VERSION', '1.2.0');
 error_reporting(E_ALL);
 
+if(!is_file('config.php')){
+    header("location: install/");
+}
 require('config.php');
 if (!defined('DIR_APPLICATION')) {
     header('Location: install/index.php');

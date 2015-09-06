@@ -22,7 +22,7 @@ class ModelInstall extends \Core\Model {
 
                     if (preg_match('/;\s*$/', $line)) {
                         $sql = str_replace("#__", $data['db_prefix'], $sql);
-                        $sql = str_replace("{{{config_url}}}", HTTP_SERVER);
+                        $sql = str_replace("{{{config_url}}}", HTTP_SERVER, $sql);
                         $db->query($sql);
 
                         $sql = '';
