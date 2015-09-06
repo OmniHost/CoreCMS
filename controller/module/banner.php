@@ -10,14 +10,13 @@ class ControllerModuleBanner extends \Core\Controller {
         $this->load->model('cms/banner');
         $this->load->model('tool/image');
 
-        $this->document->addStyle('view/css/owl.carousel.css');
-        //  $this->document->addStyle('catalog/view/javascript/jquery/owl-carousel/owl.transitions.css');
-        $this->document->addScript('view/js/owl.carousel.js');
+        $this->document->addStyle('view/plugins/owl-carousel/owl.carousel.css');
+        $this->document->addStyle('view/plugins/owl-carousel/owl.transitions.css');
+        $this->document->addScript('view/plugins/owl-carousel/owl.carousel.js');
 
         $data['banners'] = array();
 
         $results = $this->model_cms_banner->getBanner($setting['banner_id']);
-
 
 
         foreach ($results as $result) {
@@ -32,7 +31,8 @@ class ControllerModuleBanner extends \Core\Controller {
                 $data['banners'][] = array(
                     'title' => $result['title'],
                     'link' => $result['link'],
-                    'image' => $image
+                    'image' => $image,
+                    'description' => html_entity_decode($result['description'],ENT_QUOTES, 'UTF-8')
                 );
             }
         }

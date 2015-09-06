@@ -769,6 +769,12 @@ class ControllerSaleCustomer extends \Core\Controller {
         } else {
             $data['error_confirm'] = '';
         }
+        
+        if (isset($this->error['custom_field'])) {
+			$data['error_custom_field'] = $this->error['custom_field'];
+		} else {
+			$data['error_custom_field'] = array();
+		}
 
         $url = '';
 
@@ -856,7 +862,7 @@ class ControllerSaleCustomer extends \Core\Controller {
         } elseif (!empty($customer_info)) {
             $data['country_id'] = $customer_info['country_id'];
         } else {
-            $data['country_id'] = 0;
+            $data['country_id'] = $this->config->get('config_country_id');
         }
 
         if (isset($this->request->post['firstname'])) {
@@ -890,6 +896,40 @@ class ControllerSaleCustomer extends \Core\Controller {
         } else {
             $data['telephone'] = '';
         }
+        
+        // Custom Fields
+		$this->load->model('sale/custom_field');
+
+		$data['custom_fields'] = array();
+
+		$filter_data = array(
+			'sort'  => 'cf.sort_order',
+			'order' => 'ASC'
+		);
+
+		$custom_fields = $this->model_sale_custom_field->getCustomFields($filter_data);
+
+		foreach ($custom_fields as $custom_field) {
+			$data['custom_fields'][] = array(
+				'custom_field_id'    => $custom_field['custom_field_id'],
+				'custom_field_value' => $this->model_sale_custom_field->getCustomFieldValues($custom_field['custom_field_id']),
+				'name'               => $custom_field['name'],
+				'value'              => $custom_field['value'],
+				'type'               => $custom_field['type'],
+				'location'           => $custom_field['location'],
+				'sort_order'         => $custom_field['sort_order']
+			);
+		}
+
+		if (isset($this->request->post['custom_field'])) {
+			$data['account_custom_field'] = $this->request->post['custom_field'];
+		} elseif (!empty($customer_info)) {
+			$data['account_custom_field'] = unserialize($customer_info['custom_field']);
+		} else {
+			$data['account_custom_field'] = array();
+		}
+                
+                
 
         if (isset($this->request->post['newsletter'])) {
             $data['newsletter'] = $this->request->post['newsletter'];
@@ -933,7 +973,9 @@ class ControllerSaleCustomer extends \Core\Controller {
 
         $data['countries'] = $this->model_localisation_country->getCountries();
 
-        
+         $this->document->addScript('view/plugins/datetimepicker/moment.min.js');
+		$this->document->addScript('view/plugins/datetimepicker/bootstrap-datetimepicker.min.js');
+		$this->document->addStyle('view/plugins/datetimepicker/bootstrap-datetimepicker.min.css');
        
         $this->children = array(
             'common/header',
@@ -985,6 +1027,17 @@ class ControllerSaleCustomer extends \Core\Controller {
                 $this->error['confirm'] = $this->language->get('error_confirm');
             }
         }
+        
+        // Custom field validation
+		$this->load->model('sale/custom_field');
+
+		$custom_fields = $this->model_sale_custom_field->getCustomFields(array('filter_customer_group_id' => $this->request->post['customer_group_id']));
+
+		foreach ($custom_fields as $custom_field) {
+			if (($custom_field['location'] == 'account') && $custom_field['required'] && empty($this->request->post['custom_field'][$custom_field['custom_field_id']])) {
+				$this->error['custom_field'][$custom_field['custom_field_id']] = sprintf($this->language->get('error_custom_field'), $custom_field['name']);
+			}
+		}
 
         if ($this->error && !isset($this->error['warning'])) {
             $this->error['warning'] = $this->language->get('error_warning');
@@ -1245,7 +1298,8 @@ class ControllerSaleCustomer extends \Core\Controller {
                     'firstname' => $result['firstname'],
                     'lastname' => $result['lastname'],
                     'email' => $result['email'],
-                    'telephone' => $result['telephone']
+                    'telephone' => $result['telephone'],
+                    'custom_field'      => unserialize($result['custom_field'])
                 );
             }
         }
@@ -1261,5 +1315,30 @@ class ControllerSaleCustomer extends \Core\Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+    
+    public function customfield() {
+		$json = array();
+
+		$this->load->model('sale/custom_field');
+
+		// Customer Group
+		if (isset($this->request->get['customer_group_id'])) {
+			$customer_group_id = $this->request->get['customer_group_id'];
+		} else {
+			$customer_group_id = $this->config->get('config_customer_group_id');
+		}
+
+		$custom_fields = $this->model_sale_custom_field->getCustomFields(array('filter_customer_group_id' => $customer_group_id));
+
+		foreach ($custom_fields as $custom_field) {
+			$json[] = array(
+				'custom_field_id' => $custom_field['custom_field_id'],
+				'required'        => empty($custom_field['required']) || $custom_field['required'] == 0 ? false : true
+			);
+		}
+
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($json));
+	}
 
 }

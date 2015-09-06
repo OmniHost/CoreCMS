@@ -33,6 +33,8 @@ class ControllerCommonFooter extends \Core\Controller {
 
         $this->model_tool_online->whosonline($ip, $this->customer->getId(), $url, $referer);
 
+         $this->load->model('tool/image');
+        $this->data['config_logo'] = $this->model_tool_image->resize($this->config->get('config_logo'), 0, 100);
         
            //Header menu
         $this->load->model('design/menu');

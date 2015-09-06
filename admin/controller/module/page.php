@@ -31,6 +31,7 @@ class ControllerModulePage extends \Core\Controller {
 
         $data['entry_page'] = $this->language->get('entry_page');
         $data['entry_status'] = $this->language->get('entry_status');
+        $data['entry_title'] = $this->language->get('entry_title');
 
         $data['button_save'] = $this->language->get('button_save');
         $data['button_cancel'] = $this->language->get('button_cancel');
@@ -106,7 +107,15 @@ class ControllerModulePage extends \Core\Controller {
         } elseif (!empty($module_info)) {
             $data['status'] = $module_info['status'];
         } else {
-            $data['status'] = '';
+            $data['status'] = '0';
+        }
+
+        if (isset($this->request->post['title'])) {
+            $data['title'] = $this->request->post['title'];
+        } elseif (!empty($module_info)) {
+            $data['title'] = $module_info['title'];
+        } else {
+            $data['title'] = '1';
         }
 
 

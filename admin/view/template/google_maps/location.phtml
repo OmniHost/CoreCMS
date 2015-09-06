@@ -1,0 +1,274 @@
+<?php echo $header; ?>
+<?php include(__DIR__ . '/../common/page-header.phtml'); ?>
+
+<!-- Main content -->
+<section class="content">
+
+    <div class="box">
+        <div class="box-header text-right">
+
+            <button type="submit" form="form-google-maps" data-toggle="tooltip" title="<?php echo $button_save; ?>" class="btn btn-app"><i class="fa fa-save text-primary"></i> <?php echo $button_save; ?></button>
+            <a href="<?php echo $cancel; ?>" data-toggle="tooltip" title="<?php echo $button_cancel; ?>" class="btn btn-app"><i class="fa fa-reply"></i> <?php echo $button_cancel; ?></a>
+        </div>
+
+
+
+        <form  action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form-google-maps" class="form-horizontal">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <ul class="nav nav-pills nav-stacked" id="maps">
+                            <?php $map_row = 1; ?>
+                            <?php
+                            $gmap_first = true;
+                            foreach ($gmaps as $gmap) {
+                                ?>
+                                <li<?php
+                                if ($gmap_first) {
+                                    echo ' class="active"';
+                                    $gmap_first = false;
+                                }
+                                ?>><a href="#tab-maps<?php echo $map_row; ?>" data-toggle="tab"><i class="fa fa-minus-circle" style="color: red; cursor: pointer;" onclick=" if (confirm('<?php echo $confirm_mapid; ?> (<?php echo $gmap['latitude'] . ',' . $gmap['longitude']; ?>) ?')) {
+                                                $('a[href=\'#tab-maps<?php echo $map_row; ?>\']').parent().remove();
+                                                $('#tab-maps<?php echo $map_row; ?>').remove();
+                                                $('#maps a:first').tab('show');
+                                            }
+                                                                                                 "></i> <?php echo isset($gmap['id']) ? strlen($gmap['id']) > 0 ?  $gmap['alias'] : 'Map ' . $map_row : 'Map ' . $map_row; ?></a></li>
+                                    <?php $map_row++; ?>
+                                <?php } ?>
+                            <li onclick="addGMap();" style="cursor: pointer;"><a><i class="fa fa-plus-circle" style="color: green;"></i> <?php echo $button_new_map; ?></a></li>
+                        </ul>
+                    </div>
+
+                    <div class="col-sm-10">
+                        <div class="tab-content" id="gform">
+                            <?php $map_row = 1; ?>
+                            <?php
+                            $gmap_first = true;
+                            foreach ($gmaps as $gmap) {
+                                ?>
+                                <div class="tab-pane<?php
+                                if ($gmap_first) {
+                                    echo ' active';
+                                    $gmap_first = false;
+                                }
+                                ?>" id="tab-maps<?php echo $map_row; ?>">
+                                    
+                                    <div class="tab-content">
+                                        <div class="form-group required hidden">
+                                            <label class="col-sm-2 control-label" for="input-id-<?php echo $map_row; ?>"><?php echo $entry_id; ?></label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="google_maps_module_map[<?php echo $map_row; ?>][id]" value="<?php echo isset($gmap['id']) ? $gmap['id'] : ''; ?>" placeholder="<?php echo $placeholder_id; ?>" id="input-id-<?php echo $map_row; ?>" class="form-control gmap_id" />
+                                                <?php if ($error_id) { ?>
+                                                    <div class="text-danger"><?php echo $error_id; ?></div>
+                                                <?php } ?>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label" for="input-alias-<?php echo $map_row; ?>"><?php echo $entry_alias; ?></label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="google_maps_module_map[<?php echo $map_row; ?>][alias]" value="<?php echo isset($gmap['alias']) ? $gmap['alias'] : ''; ?>" placeholder="<?php echo $placeholder_alias; ?>" id="input-alias-<?php echo $map_row; ?>" class="form-control gmap_alias" />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label" for="input-address-<?php echo $map_row; ?>"><?php echo $entry_address; ?></label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="google_maps_module_map[<?php echo $map_row; ?>][address]" value="<?php echo isset($gmap['address']) ? $gmap['address'] : ''; ?>" placeholder="<?php echo $placeholder_address; ?>" id="input-address-<?php echo $map_row; ?>" class="form-control gmap_address" />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-sm-2"></div>
+                                            <div class="col-sm-10">
+                                                <div id="gmap-location-picker-<?php echo $map_row; ?>" class="gmap-location-picker"><img src="view/img/activate_map.jpg" style="cursor:pointer;" onclick="activateGMap('gmap-location-picker-<?php echo $map_row; ?>', <?php echo isset($gmap['latitude']) ? $gmap['latitude'] : '0'; ?>, <?php echo isset($gmap['longitude']) ? $gmap['longitude'] : '0'; ?>, <?php echo $map_row; ?>, '<?php echo isset($gmap['address']) ? $gmap['address'] : ''; ?>');" /></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group required">
+                                            <label class="col-sm-2 control-label" for="input-latitude-<?php echo $map_row; ?>"><?php echo $entry_latitude; ?></label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="google_maps_module_map[<?php echo $map_row; ?>][latitude]" value="<?php echo isset($gmap['latitude']) ? $gmap['latitude'] : ''; ?>" placeholder="<?php echo $placeholder_latitude; ?>" id="input-latitude-<?php echo $map_row; ?>" class="form-control gmap_latitude" />
+                                                <?php if ($error_latitude) { ?>
+                                                    <div class="text-danger"><?php echo $error_latitude; ?></div>
+                                                <?php } ?>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group required">
+                                            <label class="col-sm-2 control-label" for="input-longitude-<?php echo $map_row; ?>"><?php echo $entry_longitude; ?></label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="google_maps_module_map[<?php echo $map_row; ?>][longitude]" value="<?php echo isset($gmap['longitude']) ? $gmap['longitude'] : ''; ?>" placeholder="<?php echo $placeholder_longitude; ?>" id="input-longitude-<?php echo $map_row; ?>" class="form-control gmap_longitude" />
+                                                <?php if ($error_longitude) { ?>
+                                                    <div class="text-danger"><?php echo $error_longitude; ?></div>
+                                                <?php } ?>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label" for="input-balloon_width<?php echo $map_row; ?>"><?php echo $entry_balloon_width; ?></label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="google_maps_module_map[<?php echo $map_row; ?>][balloon_width]" value="<?php echo isset($gmap['balloon_width']) ? $gmap['balloon_width'] : ''; ?>" placeholder="<?php echo $entry_balloon_width; ?>" id="input-balloon_width<?php echo $map_row; ?>" class="form-control gmap_balloon_width" />
+                                            </div>
+                                        </div>
+
+
+                                        <div class="tab-pane" id="tab-htexts-<?php $map_row ?>">
+                                            <ul class="nav nav-tabs" id="htexts">
+                                                <li class="active"><a href="#htexts-<?php echo $map_row; ?>-1" data-toggle="tab">Text Editor</a></li>
+                                                <li><a href="#htexts-<?php echo $map_row; ?>-2" data-toggle="tab">One Line HTML</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="tab-content">
+                                            <div class="tab-pane active" id="htexts-<?php echo $map_row; ?>-1">
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label" for="input-maptext-<?php echo $map_row; ?>"><?php echo $entry_ballon_text; ?></label>
+                                                    <div class="col-sm-10">
+                                                        <textarea class="jqte-textarea form-control" name="google_maps_module_map[<?php echo $map_row; ?>][maptext]" placeholder="<?php echo $entry_ballon_text; ?>" id="input-maptext-<?php echo $map_row; ?>"><?php echo isset($gmap['maptext']) ? $gmap['maptext'] : ''; ?></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane" id="htexts-<?php echo $map_row; ?>-2">
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label" for="input-onlinetext"><?php echo $entry_ballon_text; ?></label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" name="google_maps_module_map[<?php echo $map_row; ?>][onelinetext]" value="<?php echo isset($gmap['onelinetext']) ? $gmap['onelinetext'] : ''; ?>" placeholder="<?php echo $entry_ballon_text; ?>" id="input-onlinetext" class="form-control" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <?php $map_row++; ?>
+                            <?php } ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+
+</section>
+
+
+<script type="text/javascript">
+    docReady(function () {
+        $('.jqte-textarea').wysihtml5();
+        $('.gmap_id').iInt({disallow: '+-'});
+        $('.gmap_alias').iAlphaNumeric({allow: '_', space: true});
+        $('.gmap_balloon_width').iInt({disallow: '+-'});
+        $('.gmap_latitude').iNumeric({allow: '-', disallow: '+', comma: false});
+        $('.gmap_longitude').iNumeric({allow: '-', disallow: '+', comma: false});
+    });
+
+    if (!Date.now) {
+        Date.now = function () {
+            return new Date().getTime();
+        }
+    }
+
+    function activateGMap(id, lat, long, mp_rw, addressVal)
+    {
+        var map = $('#' + id);
+        if (map.html() == '' || map.html().indexOf('activate_map') > 0) {
+            map.empty().width(550).height(400).locationpicker({
+                location: {latitude: lat, longitude: long},
+                radius: 0,
+                zoom: 1,
+                inputBinding: {
+                    latitudeInput: $('input[name="google_maps_module_map[' + mp_rw + '][latitude]"]'),
+                    longitudeInput: $('input[name="google_maps_module_map[' + mp_rw + '][longitude]"]'),
+                    locationNameInput: $('input[name="google_maps_module_map[' + mp_rw + '][address]"]')
+                },
+                enableAutocomplete: true, enableReverseGeocode: false
+            });
+            //$('input[name="google_maps_module_map[' + mp_rw + '][address]"]').val(addressVal);
+        }
+    }
+
+    var map_row = <?php echo $map_row; ?>;
+
+    function addGMap()
+    {
+
+        var _mid = Math.floor(Date.now() / 10);
+
+        var html = '';
+        html += '<div class="tab-pane" id="tab-maps' + map_row + '">';
+
+        html += '	<div class="tab-content">';
+        html += '		<div class="form-group required hidden">';
+        html += '			<label class="col-sm-2 control-label" for="input-id-' + map_row + '"><?php echo $entry_id; ?></label>';
+        html += '			<div class="col-sm-10">';
+        html += '				<input type="text" name="google_maps_module_map[' + map_row + '][id]" value="' + _mid + '" placeholder="<?php echo $placeholder_id; ?>" id="input-id-' + map_row + '" class="form-control gmap_id" />';
+        html += '			</div>';
+        html += '		</div>';
+        html += '		<div class="form-group">';
+        html += '			<label class="col-sm-2 control-label" for="input-alias-' + map_row + '"><?php echo $entry_alias; ?></label>';
+        html += '			<div class="col-sm-10">';
+        html += '				<input type="text" name="google_maps_module_map[' + map_row + '][alias]" value="" placeholder="<?php echo $placeholder_alias; ?>" id="input-alias-' + map_row + '" class="form-control gmap_alias" />';
+        html += '			</div>';
+        html += '		</div>';
+        html += '		<div class="form-group">';
+        html += '			<label class="col-sm-2 control-label" for="input-address-' + map_row + '"><?php echo $entry_address; ?></label>';
+        html += '			<div class="col-sm-10">';
+        html += '				<input type="text" name="google_maps_module_map[' + map_row + '][address]" value="" placeholder="<?php echo $placeholder_address; ?>" id="input-address-' + map_row + '" class="form-control gmap_address" />';
+        html += '			</div>';
+        html += '		</div>';
+        html += '		<div class="form-group">';
+        html += '			<div class="col-sm-2"></div>';
+        html += '			<div class="col-sm-10">';
+        html += '				<div id="gmap-location-picker-' + map_row + '" class="gmap-location-picker"><img src="view/img/activate_map.jpg" style="cursor:pointer;" onclick="activateGMap(\'gmap-location-picker-' + map_row + '\', 0, 0, ' + map_row + ', \'\');" /></div>';
+        html += '			</div>';
+        html += '		</div>';
+        html += '		<div class="form-group required">';
+        html += '			<label class="col-sm-2 control-label" for="input-latitude-' + map_row + '"><?php echo $entry_latitude; ?></label>';
+        html += '			<div class="col-sm-10">';
+        html += '				<input type="text" name="google_maps_module_map[' + map_row + '][latitude]" value="" placeholder="<?php echo $placeholder_latitude; ?>" id="input-latitude-' + map_row + '" class="form-control gmap_latitude" />';
+        html += '			</div>';
+        html += '		</div>';
+        html += '		<div class="form-group required">';
+        html += '			<label class="col-sm-2 control-label" for="input-longitude-' + map_row + '"><?php echo $entry_longitude; ?></label>';
+        html += '			<div class="col-sm-10">';
+        html += '				<input type="text" name="google_maps_module_map[' + map_row + '][longitude]" value="" placeholder="<?php echo $placeholder_longitude; ?>" id="input-longitude-' + map_row + '" class="form-control gmap_longitude" />';
+        html += '			</div>';
+        html += '		</div>';
+        html += '		<div class="form-group">';
+        html += '			<label class="col-sm-2 control-label" for="input-balloon_width' + map_row + '"><?php echo $entry_balloon_width; ?></label>';
+        html += '			<div class="col-sm-10">';
+        html += '				<input type="text" name="google_maps_module_map[' + map_row + '][balloon_width]" value="150px" placeholder="<?php echo $entry_balloon_width; ?>" id="input-balloon_width' + map_row + '" class="form-control gmap_balloon_width" />';
+        html += '			</div>';
+        html += '		</div>';
+
+        html += '		<div class="form-group">';
+        html += '                   <label class="col-sm-2 control-label" for="input-maptext-' + map_row + '"><?php echo $entry_ballon_text; ?></label>';
+        html += '                       <div class="col-sm-10">';
+        html += '                           <textarea id="gmap-jqte-' + map_row + '" class="jqte-textarea form-control" name="google_maps_module_map[' + map_row + '][maptext]" placeholder="<?php echo $entry_ballon_text; ?>" id="input-maptext-' + map_row + '"></textarea>';
+        html += '                       </div>';
+        html += '                  </div>';
+
+
+        html += '	</div>';
+        html += '</div>';
+
+        $('#gform').append(html);
+        $('#gmap-jqte-' + map_row).wysihtml5();
+
+        $('.gmap_id').iInt({disallow: '+-'});
+        $('.gmap_alias').iAlphaNumeric({allow: '_', space: true});
+        $('.gmap_balloon_width').iInt({disallow: '+-'});
+
+        $('#maps > li:last-child').before('<li><a href="#tab-maps' + map_row + '" data-toggle="tab"><i class="fa fa-minus-circle" style="color: red; cursor: pointer;" onclick=" $(\'a[href=\\\'#tab-maps' + map_row + '\\\']\').parent().remove(); $(\'#tab-maps' + map_row + '\').remove(); $(\'#maps a:first\').tab(\'show\'); "></i> Map ' + map_row + '</a></li>');
+
+
+        $('#maps a[href=\'#tab-maps' + map_row + '\']').tab('show');
+        $('#language a[href=\'#language-' + map_row + '-<?php echo $first_language; ?>\']').tab('show');
+        $('#htexts a[href=\'#htexts-' + map_row + '-<?php echo $first_language; ?>-1\']').tab('show');
+
+        map_row++;
+    }
+</script>
+<?php echo $footer; ?>

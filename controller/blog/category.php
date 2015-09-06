@@ -17,8 +17,6 @@ class ControllerBlogCategory extends \Core\Controller {
             
             $pg = isset($this->request->get['page'])?$this->request->get['page']:1;
 
-            $pg = isset($this->request->get['page'])?$this->request->get['page']:1;
-
             $this->model_blog_category->updateViews();
             $this->language->load('blog/category');
 
@@ -68,7 +66,6 @@ class ControllerBlogCategory extends \Core\Controller {
             $this->data['ams_page_id'] = $this->model_cms_page->id;
 
 
-            $start = ($pg - 1) * $this->config->get('config_blog_limit');
             $start = ($pg - 1) * $this->config->get('config_blog_limit');
             
 

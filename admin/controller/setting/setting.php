@@ -12,13 +12,13 @@ class ControllerSettingSetting extends \Core\Controller {
         $this->load->model('setting/setting');
 
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            
-            if ($this->config->get('config_currency_auto')) {
-				$this->load->model('localisation/currency');
 
-				$this->model_localisation_currency->refresh();
-			}
-            
+            if ($this->config->get('config_currency_auto')) {
+                $this->load->model('localisation/currency');
+
+                $this->model_localisation_currency->refresh();
+            }
+
             $this->model_setting_setting->editSetting('config', $this->request->post);
 
             \Core\HookPoints::executeHooks('admin_settings_save');
@@ -82,7 +82,7 @@ class ControllerSettingSetting extends \Core\Controller {
         $data['help_secure'] = $this->language->get('help_secure');
         $data['entry_currency'] = $this->language->get('entry_currency');
         $data['help_currency'] = $this->language->get('help_currency');
-        $data['entry_currency_auto'] = $this->language->get('entry_currency_auto'); 
+        $data['entry_currency_auto'] = $this->language->get('entry_currency_auto');
         $data['help_currency_auto'] = $this->language->get('help_currency_auto');
         $data['entry_robots'] = $this->language->get('entry_robots');
 
@@ -91,6 +91,13 @@ class ControllerSettingSetting extends \Core\Controller {
         $data['help_compression'] = $this->language->get('help_compression');
         $data['help_google_analytics'] = $this->language->get('help_google_analytics');
         $data['help_google_captcha'] = $this->language->get('help_google_captcha');
+        $data['help_file_max_size'] = $this->language->get('help_file_max_size');
+		$data['help_file_ext_allowed'] = $this->language->get('help_file_ext_allowed');
+		$data['help_file_mime_allowed'] = $this->language->get('help_file_mime_allowed');
+
+        $data['entry_file_max_size'] = $this->language->get('entry_file_max_size');
+        $data['entry_file_ext_allowed'] = $this->language->get('entry_file_ext_allowed');
+        $data['entry_file_mime_allowed'] = $this->language->get('entry_file_mime_allowed');
 
         $data['entry_ftp_hostname'] = $this->language->get('entry_ftp_hostname');
         $data['entry_ftp_port'] = $this->language->get('entry_ftp_port');
@@ -103,6 +110,12 @@ class ControllerSettingSetting extends \Core\Controller {
         $data['entry_country'] = $this->language->get('entry_country');
         $data['entry_width'] = $this->language->get('entry_width');
         $data['entry_height'] = $this->language->get('entry_height');
+        
+        $data['text_autosave'] = $this->language->get('text_autosave');
+        $data['help_autosave'] = $this->language->get('help_autosave');
+        $data['entry_autosave'] = $this->language->get('entry_autosave');
+        $data['help_autosave_time'] = $this->language->get('help_autosave_time');
+        $data['entry_autosave_time'] = $this->language->get('entry_autosave_time');
 
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
@@ -206,47 +219,70 @@ class ControllerSettingSetting extends \Core\Controller {
         } else {
             $data['error_login_attempts'] = '';
         }
-        if(isset($this->error['product_limit'])){
+        if (isset($this->error['product_limit'])) {
             $data['error_product_limit'] = $this->error['product_limit'];
-        }else{
+        } else {
             $data['error_product_limit'] = '';
         }
-        
-        if(isset($this->error['blog_limit'])){
+
+        if (isset($this->error['blog_limit'])) {
             $data['error_blog_limit'] = $this->error['blog_limit'];
-        }else{
+        } else {
             $data['error_blog_limit'] = '';
         }
-        
-        if(isset($this->error['image_thumb'])){
+
+        if (isset($this->error['image_thumb'])) {
             $data['error_image_thumb'] = $this->error['image_thumb'];
-        }else{
+        } else {
             $data['error_image_thumb'] = '';
         }
-        
-         if(isset($this->error['image_popup'])){
+
+        if (isset($this->error['image_popup'])) {
             $data['error_image_popup'] = $this->error['image_popup'];
-        }else{
+        } else {
             $data['error_image_popup'] = '';
         }
-        
-         if(isset($this->error['image_blogcat'])){
+
+        if (isset($this->error['image_blogcat'])) {
             $data['error_image_blogcat'] = $this->error['image_blogcat'];
-        }else{
+        } else {
             $data['error_image_blogcat'] = '';
         }
-        
-        if(isset($this->error['customer_group_display'])){
+
+        if (isset($this->error['customer_group_display'])) {
             $data['error_customer_group_display'] = $this->error['customer_group_display'];
-        }else{
+        } else {
             $data['error_customer_group_display'] = '';
         }
-        
-        if(isset($this->error['login_attempts'])){
+
+        if (isset($this->error['login_attempts'])) {
             $data['error_login_attempts'] = $this->error['login_attempts'];
-        }else{
+        } else {
             $data['error_login_attempts'] = '';
         }
+
+
+
+        if (isset($this->request->post['config_file_max_size'])) {
+            $data['config_file_max_size'] = $this->request->post['config_file_max_size'];
+        } elseif ($this->config->get('config_file_max_size')) {
+            $data['config_file_max_size'] = $this->config->get('config_file_max_size');
+        } else {
+            $data['config_file_max_size'] = 300000;
+        }
+
+        if (isset($this->request->post['config_file_ext_allowed'])) {
+            $data['config_file_ext_allowed'] = $this->request->post['config_file_ext_allowed'];
+        } else {
+            $data['config_file_ext_allowed'] = $this->config->get('config_file_ext_allowed');
+        }
+
+        if (isset($this->request->post['config_file_mime_allowed'])) {
+            $data['config_file_mime_allowed'] = $this->request->post['config_file_mime_allowed'];
+        } else {
+            $data['config_file_mime_allowed'] = $this->config->get('config_file_mime_allowed');
+        }
+
 
         $data['breadcrumbs'] = array();
 
@@ -314,6 +350,14 @@ class ControllerSettingSetting extends \Core\Controller {
         } else {
             $data['config_country_id'] = $this->config->get('config_country_id');
         }
+        
+        if (isset($this->request->post['config_facebook_ogimage']) && is_file(DIR_IMAGE . $this->request->post['config_facebook_ogimage'])) {
+            $data['config_facebook_ogimage'] = $this->model_tool_image->resize($this->request->post['config_facebook_ogimage'], 100, 100);
+        } elseif ($this->config->get('config_logo') && is_file(DIR_IMAGE . $this->config->get('config_facebook_ogimage'))) {
+            $data['config_facebook_ogimage'] = $this->model_tool_image->resize($this->config->get('config_facebook_ogimage'), 100, 100);
+        } else {
+            $data['config_facebook_ogimage'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
+        }
 
         $this->load->model('localisation/country');
 
@@ -327,12 +371,12 @@ class ControllerSettingSetting extends \Core\Controller {
         $this->load->model('localisation/currency');
 
         $data['currencies'] = $this->model_localisation_currency->getCurrencies();
-        
+
         if (isset($this->request->post['config_currency_auto'])) {
-			$data['config_currency_auto'] = $this->request->post['config_currency_auto'];
-		} else {
-			$data['config_currency_auto'] = $this->config->get('config_currency_auto');
-		}
+            $data['config_currency_auto'] = $this->request->post['config_currency_auto'];
+        } else {
+            $data['config_currency_auto'] = $this->config->get('config_currency_auto');
+        }
 
 
         if (isset($this->request->post['config_mail_smtp_port'])) {
@@ -367,6 +411,23 @@ class ControllerSettingSetting extends \Core\Controller {
             $data['config_ftp_port'] = 21;
         }
 
+        
+         if (isset($this->request->post['config_autosave_status'])) {
+            $data['config_autosave_status'] = (int)$this->request->post['config_autosave_status'];
+        } elseif ($this->config->get('config_autosave_status')) {
+            $data['config_autosave_status'] = $this->config->get('config_autosave_status');
+        } else {
+            $data['config_autosave_status'] = '0';
+        }
+        
+         if (isset($this->request->post['config_autosave_time'])) {
+            $data['config_autosave_time'] = (int)$this->request->post['config_autosave_time'];
+        } elseif ($this->config->get('config_autosave_time')) {
+            $data['config_autosave_time'] = $this->config->get('config_autosave_time');
+        } else {
+            $data['config_autosave_time'] = '120';
+        }
+        
 
         $this->load->model('sale/customer_group');
 
@@ -483,7 +544,7 @@ class ControllerSettingSetting extends \Core\Controller {
         } else {
             $server = HTTP_CATALOG;
         }
-        
+
         if (is_file(DIR_ROOT . 'view/template/' . basename($this->request->get['template']) . '/template.png')) {
             $this->response->setOutput($server . 'view/template/' . basename($this->request->get['template']) . '/template.png');
         } else {

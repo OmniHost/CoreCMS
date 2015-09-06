@@ -266,7 +266,7 @@ function buildMenuTree($mi, &$_id = 0) {
             /* on change event */
         });
 
-        $('#linkInput').on("keydown", function () {
+        $('#linkLabelInput').on("keyup", function () {
             $('#amsPageIdInput').val('0');
             $('#linkInput').val($(this).val());
         });
@@ -393,6 +393,7 @@ function buildMenuTree($mi, &$_id = 0) {
                 ddcontent.append('<div class="tools"><i class="fa fa-edit"></i><i class="fa fa-trash-o"></i></div>');
                 newitem.append(ddcontent);
                 $('#nestable > ol').append(newitem);
+                
 
             } else {
                 $('li[data-id=' + theId + ']').attr('data-ams_page_id', thePage)
@@ -414,6 +415,7 @@ function buildMenuTree($mi, &$_id = 0) {
         $('#nestable .fa-trash-o').on("click", function () {
             if (confirm('<?php echo $text_confirm; ?>')) {
                 $(this).closest('li').remove();
+                $('#menu_items_input').val(JSON.stringify($('#nestable').nestable('serialize')));
             }
         });
         /*

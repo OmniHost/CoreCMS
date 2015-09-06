@@ -56,9 +56,11 @@ class ControllerCommonFileManager extends \Core\Controller {
 
         // Split the array based on current page number and max number of items per page of 10
         $images = array_splice($images, ($page - 1) * 16, 16);
+        
+     
 
         foreach ($images as $image) {
-            $name = str_split(basename($image), 14);
+            $name = basename($image);
 
             if (is_dir($image)) {
                 $url = '';
@@ -77,7 +79,7 @@ class ControllerCommonFileManager extends \Core\Controller {
 
                 $data['images'][] = array(
                     'thumb' => '',
-                    'name' => implode(' ', $name),
+                    'name' => $name,
                     'type' => 'directory',
                     'path' => utf8_substr($image, utf8_strlen(DIR_IMAGE)),
                     'href' => $this->url->link('common/filemanager', 'token=' . $this->session->data['token'] . '&directory=' . urlencode(utf8_substr($image, utf8_strlen(DIR_IMAGE . 'uploads/'))) . $url, 'SSL')
@@ -97,7 +99,7 @@ class ControllerCommonFileManager extends \Core\Controller {
 
                 $data['images'][] = array(
                     'thumb' => $this->model_tool_image->resizeExact(utf8_substr($image, utf8_strlen(DIR_IMAGE)), 100, 100),
-                    'name' => implode(' ', $name),
+                    'name' => $name,
                     'type' => 'image',
                     'path' => utf8_substr($image, utf8_strlen(DIR_IMAGE)),
                     'href' => $server . 'img/' . utf8_substr($image, utf8_strlen(DIR_IMAGE))
@@ -261,6 +263,8 @@ class ControllerCommonFileManager extends \Core\Controller {
             if (!empty($this->request->files['file']['name']) && is_file($this->request->files['file']['tmp_name'])) {
                 // Sanitize the filename
                 $filename = basename(html_entity_decode($this->request->files['file']['name'], ENT_QUOTES, 'UTF-8'));
+                
+                $filename = filenameslug($filename);
 
                 // Validate the filename length
                 if ((utf8_strlen($filename) < 3) || (utf8_strlen($filename) > 255)) {

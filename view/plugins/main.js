@@ -11,4 +11,9 @@ $(document).ready(function () {
         
     }
     
+    $(document).on("click","#img_cap_reload", function(e) { 
+        e.preventDefault();
+        $('#captcha').attr('src', '?p=common/captcha&ts=' + new Date().getTime());
+    });
+    
 });

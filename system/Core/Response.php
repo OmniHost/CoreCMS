@@ -25,8 +25,12 @@ class Response {
         $this->level = $level;
     }
 
-    public function setOutput($output) {
+    public function setOutput($output, $end = false) {
         $this->output = $output;
+        if($end){
+            $this->output();
+            exit;
+        }
     }
 
     private function compress($data, $level = 0) {
@@ -98,7 +102,7 @@ class Response {
             if ($metas) {
                 $html = '';
                 foreach ($metas as $meta) {
-                    $html .= $meta;
+                    $html .= '<meta ' . $meta['meta'] . '="' . $meta['key'] . '" content="' . $meta['value'] . '" />' . "\n";
                 }
                 $output = str_replace('<!-- Custom META -->', $html, $output);
             }
@@ -126,5 +130,3 @@ class Response {
     }
 
 }
-            $output = \Core\HookPoints::executeHooks('before_render', $output);
-

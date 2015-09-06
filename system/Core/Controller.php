@@ -150,7 +150,16 @@ abstract class Controller {
      * Returns the output
      * @return string
      */
-    protected function render() {
+    protected function render($tpl = false, $data = array()) {
+        
+        if($tpl){
+            $this->template = $tpl;
+        }
+        
+        if($data){
+            $this->data = array_deap_merge($data, $this->data);
+        }
+        
         foreach ($this->children as $child) {
             $this->data[basename($child)] = $this->getChild($child);
         }

@@ -3,11 +3,15 @@
 class ControllerCommonMaintenance extends \Core\Controller {
 
     public function index() {
+        
+        
+        
         if ($this->config->get('config_maintenance')) {
 
             $this->user = new \Core\User();
+           
             if (!$this->user->isLogged()) {
-            return new \Core\Action('common/maintenance/info');
+                return new \Core\Action('common/maintenance/info');
             }
         }
     }
@@ -36,22 +40,13 @@ class ControllerCommonMaintenance extends \Core\Controller {
 
         $data['message'] = $this->language->get('text_message');
 
-        $data['header'] = $this->load->controller('common/header');
-        $data['footer'] = $this->load->controller('common/footer');
+        $data['header'] = $this->getChild('common/header');
+        $data['footer'] = $this->getChild('common/footer');
 
         $this->data = $data;
-        $this->children = array(
-            'common/column_top',
-            'common/column_bottom',
-            'common/column_left',
-            'common/column_right',
-            'common/content_top',
-            'common/content_bottom',
-            'common/footer',
-            'common/header'
-        );
+      
         $this->template = 'common/maintenance.phtml';
-        $this->response->setoutput($this->render());
+        $this->response->setOutput($this->render());
     }
 
 }

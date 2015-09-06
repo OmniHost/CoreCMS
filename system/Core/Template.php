@@ -42,7 +42,6 @@ class Template {
         $file = $template . $filename;
 
                     
-
         if (file_exists($file)) {
             extract($this->data);
             ob_start();

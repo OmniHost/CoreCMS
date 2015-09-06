@@ -237,9 +237,9 @@ function nicetime($unix_date, $format = "Y-m-d h:i a", $bad_date = 'Bad Date', $
 }
 
 function filenameslug($input, $whitespace = '-') {
-    $input = str_replace(array("&amp;", '&'), "", $input);
+    $input = str_replace(array("&amp;", ' '), "", $input);
     $string = strtolower(strip_tags($input));
-    $string = preg_replace("/[^a-z0-9\/\s-]/", " ", $string);
+    $string = preg_replace("/[^a-z0-9\/\s-.]/", " ", $string);
     $slug = preg_replace("/[\s-]+/", " ", $string);
     $slug = strtolower(str_replace(' ', $whitespace, $slug));
     return $slug;
@@ -323,6 +323,22 @@ function formfield($field) {
             return '<textarea id="' . $field['id'] . '"  name="' . $field['key'] . '" class="' . $class . '" rows="' . $rows . '">' . $field['value'] . '</textarea>';
             break;
 
+        case 'autocomplete_list':
+            $html = '<input type="autocomplete" data-key="' . $field['key'] . '" data-target="' . $field['id'] . '" data-url="' . $field['url'] . '" value="" placeholder="' . $field['label'] . '" id="input-' . $field['id'] . '" class="form-control" />';
+            $html .= '<div id="' . $field['id'] . '" class="well well-sm autocomplete-list" style="height: 150px; overflow: auto;">';
+            //$html .= print_r($field['value'], 1);
+            foreach($field['value'] as $download){
+                $html .= '<div class="list-group-item" id="' . $field['id'] . '-' . $download['download_id'] . '"><i class="fa fa-minus-circle text-danger"></i> ' . $download['name'] . '<input type="hidden" name="' . $field['key'].'[]" value="' . $download['id'] . '"></div>';
+            }
+
+            /*
+             * <div id="downloadsInput1"><i class="fa fa-minus-circle text-danger"></i> TenXIcon<input type="hidden" name="downloads[]" value="1"></div>
+             */
+            
+            $html .= '</div>';
+
+            return $html;
+            break;
 
         case 'scrollbox':
 
@@ -370,8 +386,8 @@ function formfield($field) {
             \Core\Registry::getInstance()->get('document')->addScript('view/plugins/datetimepicker/bootstrap-datetimepicker.min.js');
             \Core\Registry::getInstance()->get('document')->addStyle('view/plugins/datetimepicker/bootstrap-datetimepicker.min.css');
             $dateformat = dateformat_PHP_to_MomentJs(\Core\Registry::getInstance()->get('language')->get('date_time_format_short'));
-            $id = !empty($field['id'])? $field['id'] : slug('input-' . $field['key']);
-            
+            $id = !empty($field['id']) ? $field['id'] : slug('input-' . $field['key']);
+
             return '<input id="' . $id . '" data-date-format="' . $dateformat . '" type="text" name="' . $field['key'] . '" class="' . $class . ' datetimeinput" value="' . $field['value'] . '" />'
                     . ''
                     . '<script>docReady(function () {'
@@ -397,9 +413,8 @@ function render_select($arr, $selected = 0, $level = 0) {
     return $html;
 }
 
-
-function registry($key = false){
-    if($key){
+function registry($key = false) {
+    if ($key) {
         return \Core\Registry::getInstance()->get($key);
     }
     return \Core\Registry::getInstance();

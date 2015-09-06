@@ -1,0 +1,41 @@
+<div class="widget newsletter-widget">
+    <h4 class="heading"><?php echo $heading_title; ?></h4>
+    <form action="" method="post" >
+        <div class="form-group required">
+            <label class="control-label" for="input-nl-email"><?php echo $entry_email; ?></label>
+            <input type="email" name="nl-email" id="input-nl-mail" value="" placeholder="<?php echo $entry_email; ?>" class="form-control"  /> 
+
+        </div>
+        <div class="form-group">
+            <button type="button" class="btn btn-primary" onclick="return nl_subscribe('1');"><?php echo $button_subscribe; ?></i></button>  
+            <button type="button" class="btn btn-default" onclick="return nl_subscribe('0');"><?php echo $button_unsubscribe; ?></i></button>  
+
+        </div>
+    </form>
+</div>
+<script>
+    function nl_subscribe(optin) {
+        var emailpattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        var email = $('#input-nl-mail').val();
+        if (email != "" && emailpattern.test(email))
+        {
+            $.ajax({
+                url: 'index.php?p=module/newsletters/subscribe',
+                type: 'post',
+                data: 'email=' + email + '&optin=' + optin,
+                dataType: 'json',
+                success: function (json) {
+                    alert(json.message);
+                }
+
+            });
+            return false;
+        }
+        else
+        {
+            alert("<?php echo $error_email; ?>");
+            $('#input-nl-mail').focus();
+            return false;
+        }
+    }
+</script>

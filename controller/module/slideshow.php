@@ -8,8 +8,9 @@ class ControllerModuleSlideshow extends \Core\Controller {
         $this->load->model('cms/banner');
         $this->load->model('tool/image');
 
-        $this->document->addStyle('view/css/owl.carousel.css');
-        $this->document->addScript('view/js/owl.carousel.js');
+       $this->document->addStyle('view/plugins/owl-carousel/owl.carousel.css');
+        $this->document->addStyle('view/plugins/owl-carousel/owl.transitions.css');
+        $this->document->addScript('view/plugins/owl-carousel/owl.carousel.js');
 
         $data['banners'] = array();
 

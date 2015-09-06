@@ -1,12 +1,15 @@
 <?php
-
+/**
+ * @todo - Should start tracking additional metrics
+ * @todo - such as referrer, time, pages visited etc going forward;;;; V2 ?
+ */
 class ControllerCommonHome extends \Core\Controller {
 
     public function index() {
 
-        $this->document->setTitle($this->config->get('config_name'));
-        $this->document->addLink($this->url->link('common/home'), 'canonical');
         
+        $this->document->addLink($this->url->link('common/home'), 'canonical');
+
         $this->template = "common/home.phtml";
         $this->children = array(
             'common/column_top',
@@ -18,8 +21,15 @@ class ControllerCommonHome extends \Core\Controller {
             'common/footer',
             'common/header'
         );
-        
+
         $this->response->setOutput($this->render());
+    }
+
+    public function marketing() {
+        if (isset($request->get['tracking'])) {
+            setcookie('tracking', $request->get['tracking'], time() + 3600 * 24 * 1000, '/');
+            $db->query("UPDATE `#__marketing` SET clicks = (clicks + 1) WHERE code = '" . $db->escape($request->get['tracking']) . "'");
+        }
     }
 
 }

@@ -10,6 +10,7 @@ class ControllerCommonContentTop extends \Core\Controller {
         } else {
             $route = 'common/home';
         }
+        
 
         $layout_id = 0;
 
@@ -22,6 +23,7 @@ class ControllerCommonContentTop extends \Core\Controller {
         if (!$layout_id) {
             $layout_id = $this->config->get('config_layout_id');
         }
+        
 
         $this->load->model('extension/module');
 

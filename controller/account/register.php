@@ -8,6 +8,10 @@ class ControllerAccountRegister extends \Core\Controller {
         if ($this->customer->isLogged()) {
             $this->redirect($this->url->link('account/account', '', 'SSL'));
         }
+        
+        if(!$this->config->get('config_account_register')){
+             $this->redirect($this->url->link('common/home', '', 'SSL'));
+        }
 
         $this->load->language('account/register');
 
@@ -134,6 +138,12 @@ class ControllerAccountRegister extends \Core\Controller {
             $data['error_confirm'] = '';
         }
 
+        if (isset($this->error['custom_field'])) {
+            $data['error_custom_field'] = $this->error['custom_field'];
+        } else {
+            $data['error_custom_field'] = array();
+        }
+
         $data['action'] = $this->url->link('account/register', '', 'SSL');
 
         $data['customer_groups'] = array();
@@ -202,6 +212,28 @@ class ControllerAccountRegister extends \Core\Controller {
 
         $data['countries'] = $this->model_localisation_country->getCountries();
 
+        
+        $this->load->model('account/custom_field');
+        $data['custom_fields'] = $this->model_account_custom_field->getCustomFields();
+
+        if (isset($this->request->post['custom_field'])) {
+            if (isset($this->request->post['custom_field']['account'])) {
+                $account_custom_field = $this->request->post['custom_field']['account'];
+            } else {
+                $account_custom_field = array();
+            }
+
+            if (isset($this->request->post['custom_field']['address'])) {
+                $address_custom_field = $this->request->post['custom_field']['address'];
+            } else {
+                $address_custom_field = array();
+            }
+
+            $data['register_custom_field'] = $account_custom_field + $address_custom_field;
+        } else {
+            $data['register_custom_field'] = array();
+        }
+
         if (isset($this->request->post['password'])) {
             $data['password'] = $this->request->post['password'];
         } else {
@@ -243,6 +275,11 @@ class ControllerAccountRegister extends \Core\Controller {
         $this->template = 'account/register.phtml';
         $this->data = $data;
 
+        
+            $this->document->addScript('view/plugins/datetimepicker/moment.js');
+		$this->document->addScript('view/plugins/datetimepicker/bootstrap-datetimepicker.min.js');
+		$this->document->addStyle('view/plugins/datetimepicker/bootstrap-datetimepicker.min.css');
+        
 
         $this->children = array(
             'common/column_top',
@@ -290,6 +327,17 @@ class ControllerAccountRegister extends \Core\Controller {
             $customer_group_id = $this->config->get('config_customer_group_id');
         }
 
+        $this->load->model('account/custom_field');
+
+        $custom_fields = $this->model_account_custom_field->getCustomFields($customer_group_id);
+
+        foreach ($custom_fields as $custom_field) {
+            if ($custom_field['required'] && empty($this->request->post['custom_field'][$custom_field['location']][$custom_field['custom_field_id']])) {
+                $this->error['custom_field'][$custom_field['custom_field_id']] = sprintf($this->language->get('error_custom_field'), $custom_field['name']);
+            }
+        }
+
+
         if ((utf8_strlen($this->request->post['password']) < 4) || (utf8_strlen($this->request->post['password']) > 20)) {
             $this->error['password'] = $this->language->get('error_password');
         }
@@ -302,7 +350,7 @@ class ControllerAccountRegister extends \Core\Controller {
         if ($this->config->get('config_account_id')) {
             $this->load->model('cms/page');
 
-            $information_info =$this->model_cms_page->loadPageObject($this->config->get('config_account_id'));
+            $information_info = $this->model_cms_page->loadPageObject($this->config->get('config_account_id'));
 
             if ($information_info && !isset($this->request->post['agree'])) {
                 $this->error['warning'] = sprintf($this->language->get('error_agree'), $information_info->name);
@@ -310,6 +358,31 @@ class ControllerAccountRegister extends \Core\Controller {
         }
 
         return !$this->error;
+    }
+
+    public function customfield() {
+        $json = array();
+
+        $this->load->model('account/custom_field');
+
+        // Customer Group
+        if (isset($this->request->get['customer_group_id']) && is_array($this->config->get('config_customer_group_display')) && in_array($this->request->get['customer_group_id'], $this->config->get('config_customer_group_display'))) {
+            $customer_group_id = $this->request->get['customer_group_id'];
+        } else {
+            $customer_group_id = $this->config->get('config_customer_group_id');
+        }
+
+        $custom_fields = $this->model_account_custom_field->getCustomFields($customer_group_id);
+
+        foreach ($custom_fields as $custom_field) {
+            $json[] = array(
+                'custom_field_id' => $custom_field['custom_field_id'],
+                'required' => $custom_field['required']
+            );
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
 }

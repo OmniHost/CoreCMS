@@ -23,6 +23,9 @@ class ControllerCommonHeader extends \Core\Controller {
         $this->data['pages'] = $this->url->link('cms/page', 'token=' . $this->session->data['token'], 'SSL');
         $this->data['posts'] = $this->url->link('blog/post', 'token=' . $this->session->data['token'], 'SSL');
         $this->data['banner'] = $this->url->link('cms/banner', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['feeds'] = $this->url->link('extension/feed', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['download'] = $this->url->link('cms/download', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['country'] = $this->url->link('localisation/country', 'token=' . $this->session->data['token'], 'SSL');
         $this->data['blog_category'] = $this->url->link('blog/category', 'token=' . $this->session->data['token'], 'SSL');
         $this->data['layout'] = $this->url->link('design/layout', 'token=' . $this->session->data['token'], 'SSL');
         $this->data['menu'] = $this->url->link('design/menu', 'token=' . $this->session->data['token'], 'SSL');
@@ -32,7 +35,19 @@ class ControllerCommonHeader extends \Core\Controller {
         $this->data['modifications'] = $this->url->link('extension/modification', 'token=' . $this->session->data['token'], 'SSL');
         $this->data['report_user_online'] = $this->url->link('report/customer_online', 'token=' . $this->session->data['token'], 'SSL');
         $this->data['report_user_activity'] = $this->url->link('report/customer_activity', 'token=' . $this->session->data['token'], 'SSL');
-
+        $this->data['currency'] = $this->url->link('localisation/currency', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['backup'] = $this->url->link('tool/backup', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['language'] = $this->url->link('localisation/language', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['api_user'] = $this->url->link('user/api', 'token=' . $this->session->data['token'], 'SSL');
+$this->data['marketing'] = $this->url->link('marketing/marketing', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['zone'] = $this->url->link('localisation/zone', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['custom_field'] = $this->url->link('sale/custom_field', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['upload'] = $this->url->link('tool/upload', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['contact_us'] = $this->url->link('sale/contact', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['subscriber'] = $this->url->link('marketing/subscriber', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['newsletter'] = $this->url->link('marketing/contact', 'token=' . $this->session->data['token'], 'SSL');
+        
+        
         $this->data['menu_dashboard'] = $this->language->get('menu_dashboard');
         $this->data['menu_logout'] = $this->language->get('menu_logout');
         $this->data['menu_user'] = $this->language->get('menu_user');
@@ -50,14 +65,28 @@ class ControllerCommonHeader extends \Core\Controller {
         $this->data['menu_content'] = $this->language->get('menu_content');
         $this->data['menu_pages'] = $this->language->get('menu_pages');
         $this->data['menu_banners'] = $this->language->get('menu_banners');
+        $this->data['menu_feeds'] = $this->language->get('menu_feeds');
+        $this->data['menu_country'] = $this->language->get('menu_country');
+        $this->data['menu_api_user'] = $this->language->get('menu_api_user');
+        $this->data['menu_localisation'] = $this->language->get('menu_localisation');
+
+        $this->data['menu_download'] = $this->language->get('menu_download');
         $this->data['menu_menus'] = $this->language->get('menu_menus');
         $this->data['menu_posts'] = $this->language->get('menu_posts');
         $this->data['menu_blog_category'] = $this->language->get('menu_blog_category');
         $this->data['menu_reports'] = $this->language->get('menu_reports');
         $this->data['menu_report_user_activity'] = $this->language->get('menu_report_user_activity');
         $this->data['menu_report_user_online'] = $this->language->get('menu_report_user_online');
+        $this->data['menu_marketing'] = $this->language->get('menu_marketing');
 
 
+        $this->data['menu_currency'] = $this->language->get('menu_currency');
+        $this->data['menu_backup'] = $this->language->get('menu_backup');
+        $this->data['menu_language'] = $this->language->get('menu_language');
+
+        $this->data['menu_zone'] = $this->language->get('menu_zone');
+        $this->data['menu_upload'] = $this->language->get('menu_upload');
+        $this->data['menu_custom_field'] = $this->language->get('menu_custom_field');
 
 
         $data['text_customer'] = $this->language->get('text_customer');
@@ -67,8 +96,6 @@ class ControllerCommonHeader extends \Core\Controller {
 
 
         $this->data['links'] = $this->document->getLinks();
-        $this->data['styles'] = $this->document->getStyles();
-        $this->document->resetStyles();
 
         $this->load->model('user/user');
         $user = $this->model_user_user->getUser($this->user->getId());
@@ -87,26 +114,38 @@ class ControllerCommonHeader extends \Core\Controller {
 
         $this->load->model('report/customer');
         $alerts = array();
+        $countonline = $this->model_report_customer->getTotalCustomersOnline();
         $alerts['online'] = array(
             'href' => $this->url->link('report/customer_online', 'token=' . $this->session->data['token'], 'SSL'),
             'text' => $this->language->get('text_user_online'),
-            'class' => 'success',
-            'total' => $this->model_report_customer->getTotalCustomersOnline());
+            'class' => $countonline ? 'success' : 'warning',
+            'total' => $countonline);
 
         $this->load->model('sale/customer');
+        $toapprove = $this->model_sale_customer->getTotalCustomers(array('filter_approved' => false));
         $alerts['customers'] = array(
             'href' => $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_approved=0', 'SSL'),
             'text' => $this->language->get('text_user_approve'),
-            'class' => 'danger',
-            'total' => $this->model_sale_customer->getTotalCustomers(array('filter_approved' => false))
+            'class' => ($toapprove) ? 'danger' : 'success',
+            'total' => $toapprove
         );
 
         $this->load->model('cms/comment');
+        $tomoderate = $this->model_cms_comment->getTotalComments(array('filter_status' => false));
         $alerts['comments'] = array(
             'href' => $this->url->link('cms/comment', 'token=' . $this->session->data['token'] . '&filter_status=0', 'SSL'),
             'text' => $this->language->get('text_comment'),
-            'class' => 'danger',
-            'total' => $this->model_cms_comment->getTotalComments(array('filter_status' => false))
+            'class' => ($tomoderate) ? 'danger' : 'success',
+            'total' => $tomoderate
+        );
+
+        $query = $this->db->query("select count(*) as total from #__contact where is_read = 0");
+        $contacts = $this->data['total_contact_us'] = $query->row['total'];
+        $alerts['contacts'] = array(
+            'href' => $this->url->link('sale/contact', 'token=' . $this->session->data['token'] . '&filter_status=0', 'SSL'),
+            'text' => $this->language->get('text_contacts'),
+            'class' => ($contacts) ? 'danger' : 'success',
+            'total' => $contacts
         );
 
 
@@ -121,7 +160,7 @@ class ControllerCommonHeader extends \Core\Controller {
                 'title' => $this->language->get('alert_user'),
                 'icon' => 'fa fa-bell-o',
                 'class' => 'warning',
-                'total' => $alerts['customers']['total'] + $alerts['comments']['total'],
+                'total' => $alerts['customers']['total'] + $alerts['comments']['total'] + $alerts['contacts']['total'],
                 'items' => $alerts
             )
         );

@@ -104,7 +104,7 @@ class ModelBlogCategory extends \Core\Ams\Page {
             return false;
         }
 
-        $sql = "Select p.ams_page_id, n.content as publish_date from #__ams_pages p "
+        $sql = "Select p.ams_page_id, d.content as publish_date from #__ams_pages p "
                 . " inner join #__ams_nodes n on p.ams_page_id = n.ams_page_id "
                 . " inner join #__ams_nodes d on p.ams_page_id = d.ams_page_id and d.node='publish_date' "
                 . " where"
@@ -114,27 +114,31 @@ class ModelBlogCategory extends \Core\Ams\Page {
                 . " and d.content < '" . time() . "'";
 
 
-        if (!empty($data['sort']) && $data['sort'] == 'p.date_created') {
-            $data['sort'] = 'd.content';
-        }
-
+      
         $sorts = array(
             'p.name',
             'd.content',
             'p.date_modified',
             'publish_date'
         );
+        
+
         if (empty($data['sort']) || !in_array($data['sort'], $sorts)) {
-            $sort = 'p.name';
+            $sort = 'publish_date';
         } else {
+
             $sort = $data['sort'];
         }
+
+
+
 
         if (empty($data['order']) || $data['order'] == 'DESC') {
             $order = 'DESC';
         } else {
             $order = 'ASC';
         }
+        
 
         if (empty($data['limit'])) {
             $limit = 5;

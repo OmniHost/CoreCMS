@@ -10,13 +10,16 @@ AddDefaultCharset utf-8
 # SEO URL Settings
 RewriteEngine On
 # If your CoreCMS installation does not run on the main web folder make sure you folder it does run in ie. / becomes /cms/ 
-RewriteBase /ocms/
+RewriteBase /
 #css / js compressors
 RewriteRule ^view/(.*\.css) cssjs.php?type=css&files=$1 [L]
 RewriteRule ^view/(.*\.js) cssjs.php?type=javascript&files=$1 [L]
 RewriteRule ^admin/view/(.*\.css) admin/cssjs.php?type=css&files=$1 [L]
-#RewriteRule ^admin/view/(.*\.js) admin/cssjs.php?type=javascript&files=$1 [L]
+
+RewriteRule ^sitemap.xml$ index.php?p=feed/google_sitemap [L]
 #reroute everything to the index file :-)
+RewriteRule ^system/downloads/(.*) /index.php?p=error/not_found [L]
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_URI} !.*\.(ico|gif|jpg|jpeg|png|js|css)

@@ -1,0 +1,116 @@
+<?php echo $header; ?>
+<?php include(__DIR__ . '/../common/page-header.phtml'); ?>
+
+<section class="content">
+
+    <div class="box">
+        <div class="box-header text-right">
+            <a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-app"><i class="fa fa-plus text-primary"></i> <?php echo $button_add; ?></a>
+            <button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-app" onclick="confirm('<?php echo $text_confirm; ?>') ? $('#form-marketing').submit() : false;"><i class="fa fa-trash-o text-danger"></i><?php echo $button_delete; ?></button>
+        </div>
+        <div class="box-body">
+            <div class="well">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label" for="input-name"><?php echo $entry_email; ?></label>
+                            <input type="text" name="filter_email" value="<?php echo $filter_email; ?>" placeholder="<?php echo $entry_email; ?>" id="input-email" class="form-control" />
+                        </div>
+                        
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label" for="input-date-added"><?php echo $entry_date_created; ?></label>
+                            <div class="input-group date">
+                                <input type="text" name="filter_date_created" value="<?php echo $filter_date_added; ?>" placeholder="<?php echo $entry_date_created; ?>" data-date-format="YYYY-MM-DD" class="form-control" />
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                </span></div>
+                        </div>
+                        <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
+                    </div>
+                </div>
+            </div>
+            <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form-marketing">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
+                                <td class="text-left"><?php if ($sort == 'email') { ?>
+                                        <a href="<?php echo $sort_email; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_email; ?></a>
+                                    <?php } else { ?>
+                                        <a href="<?php echo $sort_email; ?>"><?php echo $column_email; ?></a>
+                                    <?php } ?></td>
+                                <td class="text-left"><?php if ($sort == 'ip_address') { ?>
+                                        <a href="<?php echo $sort_ip; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_ip; ?></a>
+                                    <?php } else { ?>
+                                        <a href="<?php echo $sort_ip; ?>"><?php echo $column_ip; ?></a>
+                                    <?php } ?></td>
+                                <td class="text-center"><?php echo $column_opt_in; ?></td>
+                                <td class="text-left"><?php if ($sort == 'm.date_added') { ?>
+                                        <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
+                                    <?php } else { ?>
+                                        <a href="<?php echo $sort_date_added; ?>"><?php echo $entry_date_created; ?></a>
+                                    <?php } ?></td>
+                                <td class="text-right"><?php echo $column_action; ?></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if ($subscribers) { ?>
+                                <?php foreach ($subscribers as $subscriber) { ?>
+                                    <tr>
+                                        <td class="text-center"><?php if (in_array($subscriber['subscriber_id'], $selected)) { ?>
+                                                <input type="checkbox" name="selected[]" value="<?php echo $subscriber['subscriber_id']; ?>" checked="checked" />
+                                            <?php } else { ?>
+                                                <input type="checkbox" name="selected[]" value="<?php echo $subscriber['subscriber_id']; ?>" />
+                                            <?php } ?></td>
+                                        <td class="text-left"><?php echo $subscriber['email']; ?></td>
+                                        <td class="text-left"><?php echo $subscriber['ip_address']; ?></td>
+                                        <td class="text-center"><?php echo $subscriber['opt_in']; ?></td>
+                                        <td class="text-left"><?php echo $subscriber['date_added']; ?></td>
+                                        <td class="text-right"><a href="<?php echo $subscriber['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
+                                    </tr>
+                                <?php } ?>
+                            <?php } else { ?>
+                                <tr>
+                                    <td class="text-center" colspan="7"><?php echo $text_no_results; ?></td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                        <tfoot><tr><td colspan="7"><?php echo $pagination; ?></td></tr></tfoot>
+                    </table>
+                </div>
+            </form>
+           
+        </div>
+    </div>
+</section>
+<script type="text/javascript"><!--
+    docReady(function () {
+        $('#button-filter').on('click', function () {
+            url = 'index.php?p=marketing/subscriber&token=<?php echo $token; ?>';
+
+            var filter_email = $('input[name=\'filter_email\']').val();
+
+            if (filter_email) {
+                url += '&filter_email=' + encodeURIComponent(filter_email);
+            }
+
+         
+
+            var filter_date_added = $('input[name=\'filter_date_added\']').val();
+
+            if (filter_date_added) {
+                url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
+            }
+
+            location = url;
+        });
+
+        $('.date').datetimepicker({
+            pickTime: false
+        });
+    });
+//--></script>
+<?php echo $footer; ?>

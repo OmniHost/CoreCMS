@@ -1,0 +1,66 @@
+<?php echo $header; ?>
+<?php include(__DIR__ . '/../common/page-header.phtml'); ?>
+<section class="content">
+
+    <div class="box">
+        <div class="box-header text-right">
+            <a href="<?php echo $cancel; ?>" data-toggle="tooltip" title="<?php echo $button_cancel; ?>" class="btn btn-app"><i class="fa fa-reply"></i> <?php echo $button_cancel; ?></a>
+            <div class="box-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th class="text-left"><?php echo $column_name; ?></th>
+                                <th class="text-right"><?php echo $column_count; ?></th>
+                                <th class="text-right"><?php echo $column_action; ?></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-left"><?php
+                                    echo $text_add_marker;
+                                    if (!$wlocation) {
+                                        echo '&nbsp;&nbsp;<span class="text-warning"><i class="fa fa-exclamation-triangle"></i> ' . $permission_location . '</span>';
+                                    }
+                                    ?></td>
+                                <td class="text-right"><?php echo count($gmaps); ?></td>
+                                <td class="text-right"><?php if (!$wlocation) { ?><a class="btn btn-warning"><i class="fa fa-exclamation-triangle"></i></a><?php } else { ?><a href="<?php echo $action_add_marker; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a><?php } ?></td>
+                            </tr>
+                            <tr>
+                                <td class="text-left"><?php
+                                    echo $text_add_module;
+                                    if (!$wmapmodule) {
+                                        echo '&nbsp;&nbsp;<span class="text-warning"><i class="fa fa-exclamation-triangle"></i> ' . $permission_mapmodule . '</span>';
+                                    }
+                                    ?></td>
+                                <td class="text-right"><?php echo count($module_data); ?></td>
+                                <td class="text-right"><?php if (!$wmapmodule) { ?><a class="btn btn-warning"><i class="fa fa-exclamation-triangle"></i></a><?php } else { ?><a href="<?php echo $action_add_module; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-success"><i class="fa fa-plus-circle"></i></a><?php } ?></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+<?php if (isset($module_data) and ! empty($module_data)) { ?>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="text-left"><?php echo $column_module; ?></th>
+                                    <th class="text-right"><?php echo $column_action; ?></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($module_data as $module) { ?>
+                                    <tr>
+                                        <td class="text-left"><?php echo $module['name']; ?></td>
+                                        <td class="text-right"><?php if (!$wmapmodule) { ?><a class="btn btn-warning"><i class="fa fa-exclamation-triangle"></i></a><?php } else { ?><a onclick="confirm('<?php echo $text_confirm; ?>') ? location.href = '<?php echo $module['delete']; ?>' : false;" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger"><i class="fa fa-trash-o"></i></a> <a href="<?php echo $module['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a><?php } ?></td>
+                                    </tr>
+                    <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
+<?php } ?>
+            </div>
+        </div>
+    </div>
+</section>
+<?php echo $footer; ?>

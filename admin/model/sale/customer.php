@@ -1,7 +1,19 @@
 <?php
 class ModelSaleCustomer extends \Core\Model {
 	public function addCustomer($data) {
-		$this->db->query("INSERT INTO #__customer SET customer_group_id = '" . (int)$data['customer_group_id'] . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', newsletter = '" . (int)$data['newsletter'] . "', salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', status = '" . (int)$data['status'] . "', approved = '" . (int)$data['approved'] . "', country_id = '" . (int)$data['country_id'] . "', date_added = NOW()");
+		$this->db->query("INSERT INTO #__customer SET customer_group_id = '" . (int)$data['customer_group_id'] . "', "
+                        . " firstname = '" . $this->db->escape($data['firstname']) . "', "
+                        . " lastname = '" . $this->db->escape($data['lastname']) . "', "
+                        . " email = '" . $this->db->escape($data['email']) . "', "
+                        . " telephone = '" . $this->db->escape($data['telephone']) . "', "
+                        . " newsletter = '" . (int)$data['newsletter'] . "', "
+                        . " salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', "
+                        . " password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', "
+                        . " status = '" . (int)$data['status'] . "', "
+                        . " approved = '" . (int)$data['approved'] . "', "
+                        . " country_id = '" . (int)$data['country_id'] . "', "
+                        . " custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', "
+                        . " date_added = NOW()");
 
 		$customer_id = $this->db->getLastId();
 
@@ -9,7 +21,15 @@ class ModelSaleCustomer extends \Core\Model {
 
 	public function editCustomer($customer_id, $data) {
 
-		$this->db->query("UPDATE #__customer SET customer_group_id = '" . (int)$data['customer_group_id'] . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', newsletter = '" . (int)$data['newsletter'] . "', status = '" . (int)$data['status'] . "', approved = '" . (int)$data['approved'] . "', country_id = '" . (int)$data['country_id'] . "' WHERE customer_id = '" . (int)$customer_id . "'");
+		$this->db->query("UPDATE #__customer SET customer_group_id = '" . (int)$data['customer_group_id'] . "', "
+                        . " firstname = '" . $this->db->escape($data['firstname']) . "', "
+                        . " lastname = '" . $this->db->escape($data['lastname']) . "', "
+                        . " email = '" . $this->db->escape($data['email']) . "', "
+                        . " telephone = '" . $this->db->escape($data['telephone']) . "', "
+                        . " newsletter = '" . (int)$data['newsletter'] . "', status = '" . (int)$data['status'] . "', "
+                        . " approved = '" . (int)$data['approved'] . "', "
+                        . " custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', "
+                        . " country_id = '" . (int)$data['country_id'] . "' WHERE customer_id = '" . (int)$customer_id . "'");
 
 		if ($data['password']) {
 			$this->db->query("UPDATE #__customer SET salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "' WHERE customer_id = '" . (int)$customer_id . "'");
@@ -26,9 +46,7 @@ class ModelSaleCustomer extends \Core\Model {
 		$this->db->query("DELETE FROM #__customer_history WHERE customer_id = '" . (int)$customer_id . "'");
 		$this->db->query("DELETE FROM #__customer_ip WHERE customer_id = '" . (int)$customer_id . "'");
     
-    $this->db->query("DELETE FROM #__allowed_users WHERE user_id = '" . (int)$customer_id . "'");
-    $this->db->query("DELETE FROM #__denied_users WHERE user_id = '" . (int)$customer_id . "'");
-	}
+    	}
 
 	public function getCustomer($customer_id) {
 		$query = $this->db->query("SELECT DISTINCT * FROM #__customer WHERE customer_id = '" . (int)$customer_id . "'");
@@ -43,7 +61,7 @@ class ModelSaleCustomer extends \Core\Model {
 	}
 
 	public function getCustomers($data = array()) {
-		$sql = "SELECT *, CONCAT(c.firstname, ' ', c.lastname) AS name, cgd.name AS customer_group FROM #__customer c LEFT JOIN #__customer_group_description cgd ON (c.customer_group_id = cgd.customer_group_id) WHERE cgd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+		$sql = "SELECT *, CONCAT(c.firstname, ' ', c.lastname) AS name, cgd.name AS customer_group FROM #__customer c LEFT JOIN #__customer_group cgd ON (c.customer_group_id = cgd.customer_group_id) WHERE 1";
 
 		$implode = array();
 

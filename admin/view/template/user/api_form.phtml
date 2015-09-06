@@ -1,0 +1,87 @@
+<?php echo $header; ?>
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1><i class="fa fa-user"></i> <?php echo $heading_title; ?><small></small>
+    </h1>
+    <ol class="breadcrumb">
+        <?php foreach ($breadcrumbs as $i => $breadcrumb) { ?>
+            <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo ($i == 0) ? '<i class="fa fa-dashboard"></i> ' : ''; ?><?php echo $breadcrumb['text']; ?></a></li>
+        <?php } ?>
+    </ol>
+</section>
+
+
+<!-- Main content -->
+<section class="content">
+
+    <div class="box">
+        <div class="box-header text-right">
+            <button type="submit" form="form-api" data-toggle="tooltip" title="<?php echo $button_save; ?>" class="btn btn-app"><i class="fa fa-save text-primary"></i> <?php echo $button_save; ?></button>
+            <a href="<?php echo $cancel; ?>" data-toggle="tooltip" title="<?php echo $button_cancel; ?>" class="btn btn-app"><i class="fa fa-reply"></i> <?php echo $button_cancel; ?></a>
+
+
+        </div>
+
+        <div class="box-body">
+
+
+
+            <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form-api" class="form-horizontal">
+                <div class="form-group required">
+                    <label class="col-sm-2 control-label" for="input-username"><?php echo $entry_username; ?></label>
+                    <div class="col-sm-10">
+                        <input type="text" name="username" value="<?php echo $username; ?>" placeholder="<?php echo $entry_username; ?>" id="input-username" class="form-control" />
+                        <?php if ($error_username) { ?>
+                            <div class="text-danger"><?php echo $error_username; ?></div>
+                        <?php } ?>
+                    </div>
+                </div>
+                <div class="form-group required">
+                    <label class="col-sm-2 control-label" for="input-password"><?php echo $entry_password; ?></label>
+                    <div class="col-sm-10">
+                        <textarea name="password" placeholder="<?php echo $entry_password; ?>" rows="5" id="input-password" class="form-control"><?php echo $password; ?></textarea>
+                        <br />
+                        <button type="button" id="button-generate" class="btn btn-primary"><i class="fa fa-refresh"></i> <?php echo $button_generate; ?></button>
+                        <?php if ($error_password) { ?>
+                            <div class="text-danger"><?php echo $error_password; ?></div>
+                        <?php } ?>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-status"><?php echo $entry_status; ?></label>
+                    <div class="col-sm-10">
+                        <select name="status" id="input-status" class="form-control">
+                            <?php if ($status) { ?>
+                                <option value="0"><?php echo $text_disabled; ?></option>
+                                <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+                            <?php } else { ?>
+                                <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+                                <option value="1"><?php echo $text_enabled; ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</section><!-- /.content -->
+<script type="text/javascript"><!--
+    docReady(function () {
+$('#button-generate').on('click', function() {
+	rand = '';
+	
+	string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+	for (i = 0; i < 256; i++) {
+		rand += string[Math.floor(Math.random() * (string.length - 1))];
+	}
+	
+	$('#input-password').val(rand);
+});
+    });
+//-->
+</script>
+
+
+<?php echo $footer; ?>

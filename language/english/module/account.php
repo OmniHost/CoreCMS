@@ -10,4 +10,4 @@ $_['text_forgotten']   = 'Forgotten Password';
 $_['text_account']     = 'My Account';
 $_['text_edit']        = 'Edit Account';
 $_['text_password']    = 'Password';
-$_['text_newsletter']  = 'Newsletter';
+$_['text_newsletter']  = 'Communication';

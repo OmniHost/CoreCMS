@@ -21,6 +21,7 @@ class ControllerStep3 extends \Core\Controller {
             $front_config .= "define('DIR_LANGUAGE', DIR_APPLICATION . 'language/'); \n";
             $front_config .= "define('DIR_TEMPLATE', DIR_APPLICATION . 'view/template/'); \n";
             $front_config .= "define('DIR_SYSTEM', DIR_ROOT . 'system/'); \n";
+            $front_config .= "define('DIR_DOWNLOAD', DIR_ROOT . 'system/downloads/'); \n";
             $front_config .= "define('DIR_VENDOR', DIR_ROOT . 'vendor/'); \n";
             $front_config .= "define('DIR_IMAGE', DIR_ROOT . 'img/'); \n";
             $front_config .= "define('DIR_CONFIG', DIR_APPLICATION . '_configs/'); \n";
@@ -43,6 +44,7 @@ class ControllerStep3 extends \Core\Controller {
             $admin_config .= "define('DIR_LANGUAGE', DIR_APPLICATION . 'language/');\n";
             $admin_config .= "define('DIR_TEMPLATE', DIR_APPLICATION . 'view/template/');\n";
             $admin_config .= "define('DIR_SYSTEM', DIR_ROOT . 'system/');\n";
+            $admin_config .= "define('DIR_DOWNLOAD', DIR_ROOT . 'system/downloads/'); \n";
             $admin_config .= "define('DIR_VENDOR', DIR_ROOT . 'vendor/');\n";
             $admin_config .= "define('DIR_IMAGE', DIR_ROOT . 'img/');\n";
             $admin_config .= "define('DIR_CONFIG', DIR_ROOT . '_configs/');\n";

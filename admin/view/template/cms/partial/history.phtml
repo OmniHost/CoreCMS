@@ -1,0 +1,34 @@
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <td class="text-left"><?php echo $column_revision_date; ?></td>
+                <td class="text-left"><?php echo $column_autosave; ?></td>
+                <td class="text-left"><?php echo $column_author; ?></td>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if ($histories) { ?>
+                <?php foreach ($histories as $history) { ?>
+                    <tr>
+                        <td><?php echo $history['date_added']; ?></td>
+                        <td><?php echo $history['autosave']; ?></td>
+                        <td><?php echo $history['author']; ?></td>
+                        <td class="text-right"><a href="<?php echo $history['action']; ?>" class="btn btn-sm btn-primary"><?php echo $button_load_revision; ?></a></td>
+                    </tr>
+                <?php } ?>
+            <?php } else { ?>
+                <tr>
+                    <td class="text-center" colspan="4"><?php echo $text_no_results; ?></td>
+                </tr>
+            <?php } ?>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="4"><?php echo $pagination; ?></td>
+            </tr>
+        </tfoot>
+    </table>
+
+</div>

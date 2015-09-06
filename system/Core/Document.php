@@ -115,9 +115,18 @@ class Document {
      * @param string $key eg :og:name etc!!
      * @param string $meta
      */
-    public function addMeta($key, $meta) {
+    public function addMeta($key, $value, $meta = 'property') {
 
-        $this->meta[md5($key)] = $meta;
+        $this->meta[md5($key)] = array(
+            'meta' => $meta,
+            'key' => $key,
+            'value' => $value
+        );
+        //[$meta] = $value;
+    }
+    
+    public function hasMeta($key){
+        return isset($this->meta[md5($key)]);
     }
 
     public function getMeta() {

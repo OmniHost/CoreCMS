@@ -24,7 +24,7 @@ class ControllerModuleGallery extends \Core\Controller {
                 $data['images'][] = array(
                     'title' => $result['title'],
                     'link' => $result['link'],
-                    'thumb' => $this->model_tool_image->resizeExact($result['image'], $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height')),
+                    'thumb' => $this->model_tool_image->resize($result['image'], $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height')),
                     'image' => ($setting['resize'] ? $this->model_tool_image->resize($result['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')) : $this->model_tool_image->realname($result['image']))
                 );
             }

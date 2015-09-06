@@ -29,3 +29,12 @@ object {
     background: #d1eed1;
     margin-bottom: 2em;
 }
+
+.input-captcha {
+    padding:0;
+    margin:0;
+}
+
+.input-captcha #captcha {
+    height: 32px;
+}

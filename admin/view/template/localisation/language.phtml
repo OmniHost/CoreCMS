@@ -1,0 +1,180 @@
+<?php echo $header; ?>
+<?php include(__DIR__ . '/../common/page-header.phtml'); ?>
+
+<section class="content">
+
+    <div class="box">
+        <div class="box-header">
+            <h3 class="box-title"><?php echo $selectedfile ?> </h3>    </div>
+
+        <div class="box-body">
+            <form action="<?php echo $action_select; ?>" method = "POST" id="form" class="form-horizontal">
+                <div class="row">
+                    <div class="col-md-5 col-md-offset-1">
+
+                        <input name="listlanguages" class="form-control hidden" type="hidden" value="<?php echo $name_language; ?>" />
+
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="sectionlist" class="col-md-4">
+                                <?php echo $entry_selectSection; ?>
+                            </label>
+                            <div class="col-md-8">
+                                <?php
+                                $selected_back_end = null;
+                                $selected_front_end = null;
+                                if ($section == $menu_frontend) {
+                                    $selected_front_end = ' selected="selected"';
+                                } else {
+                                    $selected_back_end = ' selected="selected"';
+                                }
+                                ?>
+                                <select name="sectionlist" class="form-control">
+                                    <option value="catalog"<?php echo $selected_front_end; ?>><?php echo ucwords($menu_frontend); ?></option>
+                                    <option value="admin"<?php echo $selected_back_end; ?>><?php echo ucwords($menu_backend); ?></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-1">
+                        <a class="btn btn-primary pull-right" onclick = "$('#form').submit()"><span><?php echo $btn_select; ?></span></a>
+                    </div>
+                </div>
+            </form>
+
+
+            <div class="row">
+                <div class="col-md-4 right">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+
+                            <?php if (is_file(DIR_ROOT . "language/" . $name_language . "/" . $name_language . ".php")) : ?>
+                                <tr>
+                                    <th colspan="3" class="text-center">Core Language File</th>
+                                </tr>
+                                <tr>
+                                    <td colspan="3"><a href = "<?php echo $file_link . './' . $name_language; ?>"><?php echo $name_language; ?></a></td>
+
+                                </tr>
+
+                            <?php endif; ?>
+
+                            <?php foreach ($files as $key => $value) : ?>
+                                <?php foreach ($value as $dir => $filenames) : ?>
+                                    <?php
+                                    if ($dir == ".") {
+                                        continue;
+                                    }
+                                    ?>
+                                    <tr>
+                                        <th colspan="3" class="text-center"><?php echo ucfirst($dir); ?></th>
+                                    </tr>
+                                    <tr>
+                                        <?php
+                                        $i = 0;
+                                        $passes = 0;
+                                        ?>
+                                        <?php foreach ($filenames as $filename) : ?>
+                                            <td width = "33%"><a href = "<?php echo $file_link . $dir . '/' . $filename; ?>" ><?php echo $filename; ?></a></td>
+                                            <?php
+                                            $i++;
+                                            $passes++;
+                                            if ($i % 3 == 0 && $passes < count($filenames)) {
+                                                echo "</tr><tr>";
+                                                $i = 0;
+                                            } else {
+                                                if ($passes == count($filenames) && $i % 3 == 2) {
+                                                    echo "<td></td>";
+                                                }
+
+
+                                                if ($passes == count($filenames) && $i % 3 == 1) {
+                                                    echo "<td></td><td></td>";
+                                                }
+                                            }
+                                            ?>
+                                        <?php endforeach; ?>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endforeach; ?>
+
+
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <table  class="table table-responsive table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="left"><?php echo $menu_variable; ?></th>
+                                <th class="left"><?php echo $menu_value; ?></th>
+                                <?php
+                                if (!isset($string)) {
+                                    ?>
+                                    <th align = "center"><?php echo $menu_edit; ?></th>
+                                    <?php
+                                } else {
+                                    ?>
+                                    <th align = "center" ><?php echo $menu_action; ?></th>
+                                    <?php
+                                }
+                                ?>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            if ($file_vars) {
+
+                                if (!isset($string)) {
+
+                                    foreach ($file_vars as $key => $val) {
+                                        ?>
+                                        <tr>
+                                            <td class="left"><?php echo $key; ?></td>
+                                            <td class="left"><?php echo $val; ?></td>
+                                            <td align = "center"><a class="btn btn-primary btn-sm" href = "<?php echo $action_edit . $key; ?>"><?php echo $entry_edit; ?></a></td>
+                                        </tr>
+                                        <?php
+                                    }
+                                } else {
+                                    ?>
+                                    <tr>
+                                        <td colspan="3">
+
+                                            <form id="updateform" action="<?php echo $viewing_file_link; ?>" method = "POST" class="form-horizontal">
+                                                <div class="form-group">
+                                                    <label class="col-xs-12"><?php echo $string; ?></label>
+                                                    <div class="col-xs-12">
+                                                        <textarea name="strvalue" rows = "10" class="form-control"><?php echo $file_vars[$string]; ?></textarea>
+                                                        <input type = "hidden" name = "poststr" value = "<?PHP echo $string; ?>">
+                                                        
+                                                    </div></div>
+                                                <div class="form-group text-right">
+                                                    <a class="btn btn-primary btn-sm" onclick = "$('#updateform').submit()"><span><?php echo $btn_save; ?></span></a> 
+                                                    <a class="btn btn-default btn-sm" href = "<?php echo $viewing_file_link; ?>"><span><?php echo $btn_back; ?></span></a>
+                                                </div>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    
+                                    <?php
+                                }
+                            } else {
+                                ?>
+                                <tr>
+                                    <td class="left" colspan = "3"><?php echo $msg_nofile; ?></td>
+                                </tr>
+                                <?php
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<?php echo $footer; ?>

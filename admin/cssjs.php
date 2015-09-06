@@ -154,21 +154,7 @@ if (isset($_SERVER['HTTP_IF_NONE_MATCH']) &&
             // $contents .= "\n\n" . file_get_contents($path);
         }
 
-        $contents = preg_replace_callback("/" . $pattern2 . "/", function($input) use ($contents, $base, $pattern) {
-            $file = ltrim($input[1], '/view');
-            $path = $base . '/' . ltrim($input[1], '/view');
-            $path = realpath($path);
-            if (is_file($path)) {
-                // $temp =  "/**@import - " . $input[1] . "*/\n" . file_get_contents($path) . "\n";
-                $temp = preg_replace_callback('/' . $pattern . '/', function($input2) use($file) {
-                            return fix_path($input2, $file);
-                        }, file_get_contents($path)) . "\n";
-                return "/**@import - " . $input[1] . "*/\n" . $temp;
-                //              exit
-                //                return str_replace($input[0], "\n" . file_get_contents($path) . "\n", $content);
-            }
-        }, $contents);
-
+      
 
 
         if ($compress) {

@@ -30,9 +30,13 @@ Abstract class Base extends \Core\Controller {
         $this->_pageModel = \Core\Core::$registry->get($_model);
 
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            
+            
+            
             $this->_pageModel->populate($this->request->post);
             $this->_pageModel->user_id = $this->user->getId();
             $this->_pageModel->save();
+            $this->_pageModel->storeRevision($this->request->post,$this->user->getId());
 
             $this->model_tool_seo->setUrl('ams_page_id=' . $this->_pageModel->id, $this->request->post['slug']);
 
@@ -56,14 +60,15 @@ Abstract class Base extends \Core\Controller {
             if (isset($this->request->get['page'])) {
                 $url .= '&page=' . $this->request->get['page'];
             }
-             if (isset($this->request->get['update'])) {
+            if (isset($this->request->get['update'])) {
                 $this->redirect(fixajaxurl($this->url->link($this->_namespace . '/update', 'ams_page_id=' . 'ams_page_id=' . $this->_pageModel->id . '&token=' . $this->session->data['token'] . $url, 'SSL')));
             } else {
                 $this->redirect(fixajaxurl($this->url->link($this->_namespace, 'token=' . $this->session->data['token'] . $url, 'SSL')));
             }
             
 
-         //   $this->redirect(fixajaxurl($this->url->link($this->_namespace, 'token=' . $this->session->data['token'] . $url, 'SSL')));
+
+            //   $this->redirect(fixajaxurl($this->url->link($this->_namespace, 'token=' . $this->session->data['token'] . $url, 'SSL')));
         }
 
         $this->getForm();
@@ -83,6 +88,7 @@ Abstract class Base extends \Core\Controller {
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             // $this->model_user_user->editUser($this->request->get['user_id'], $this->request->post);
             $this->_pageModel->loadPageObject($this->request->get['ams_page_id']);
+            $this->_pageModel->storeRevision($this->request->post,$this->user->getId());
             $this->_pageModel->populate($this->request->post);
             $this->_pageModel->save();
             $this->model_tool_seo->setUrl('ams_page_id=' . $this->_pageModel->id, $this->request->post['slug']);
@@ -185,6 +191,7 @@ Abstract class Base extends \Core\Controller {
         $this->data['tab_general'] = $this->language->get('tab_general');
         $this->data['tab_meta'] = $this->language->get('tab_meta');
         $this->data['tab_permission'] = $this->language->get('tab_permission');
+        $this->data['tab_revision'] = $this->language->get('tab_revision');
 
         $this->data['button_save'] = $this->language->get('button_save');
         $this->data['button_cancel'] = $this->language->get('button_cancel');
@@ -246,9 +253,13 @@ Abstract class Base extends \Core\Controller {
         if (!isset($this->request->get['ams_page_id'])) {
             $this->data['action'] = $this->url->link($this->_namespace . '/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
             $this->data['doslug'] = true;
+            $this->data['autosave'] = fixajaxurl($this->url->link($this->_namespace . '/autosave', 'token=' . $this->session->data['token'] . '&_autosave_=1&ams_page_id=0', 'SSL'));
+            $this->data['history'] = fixajaxurl($this->url->link($this->_namespace . '/get_revisions', 'token=' . $this->session->data['token'] . '&page=1&ams_page_id=0', 'SSL'));
         } else {
             $this->data['action'] = $this->url->link($this->_namespace . '/update', 'token=' . $this->session->data['token'] . '&ams_page_id=' . $this->request->get['ams_page_id'] . $url, 'SSL');
             $this->data['doslug'] = false;
+            $this->data['autosave'] = fixajaxurl($this->url->link($this->_namespace . '/autosave', 'token=' . $this->session->data['token'] . '&_autosave_=1&ams_page_id=' . $this->request->get['ams_page_id'], 'SSL'));
+            $this->data['history'] = fixajaxurl($this->url->link($this->_namespace . '/get_revisions', 'token=' . $this->session->data['token'] . '&page=1&ams_page_id='. $this->request->get['ams_page_id'], 'SSL'));
         }
 
         $this->data['cancel'] = $this->url->link($this->_namespace, 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -262,10 +273,17 @@ Abstract class Base extends \Core\Controller {
         $this->_pageModel = \Core\Core::$registry->get($_model);
 
         if (isset($this->request->get['ams_page_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $page_info = $this->_pageModel->loadPageObject($this->request->get['ams_page_id'])->toArray();
-
+            
+            if(isset($this->request->get['revision_id'])){
+                $page_info = $this->_pageModel->loadPageRevision($this->request->get['revision_id']);
+            }else{
+                $page_info = $this->_pageModel->loadPageObject($this->request->get['ams_page_id'])->toArray();
+            }
             $page_info['slug'] = $this->model_tool_seo->getUrl('ams_page_id=' . $page_info['id']);
             $this->_pageInfo = $page_info;
+        }elseif(!isset($this->request->get['ams_page_id']) && isset($this->request->get['revision_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')){
+            $page_info = $this->_pageModel->loadPageRevision($this->request->get['revision_id']);
+            $this->request->post = $page_info;
         }
 
 
@@ -317,6 +335,42 @@ Abstract class Base extends \Core\Controller {
         } else {
             $this->data['meta_title'] = '';
         }
+        
+        if (isset($this->request->post['meta_og_description'])) {
+            $this->data['meta_og_description'] = $this->request->post['meta_og_description'];
+        } elseif (!empty($page_info)) {
+            $this->data['meta_og_description'] = $page_info['meta_og_description'];
+        } else {
+            $this->data['meta_og_description'] = '';
+        }
+        
+        if (isset($this->request->post['meta_og_title'])) {
+            $this->data['meta_og_title'] = $this->request->post['meta_og_title'];
+        } elseif (!empty($page_info)) {
+            $this->data['meta_og_title'] = $page_info['meta_og_title'];
+        } else {
+            $this->data['meta_og_title'] = '';
+        }
+        
+        if (isset($this->request->post['meta_og_image'])) {
+            $this->data['meta_og_image'] = $this->request->post['meta_og_title'];
+        } elseif (!empty($page_info)) {
+            $this->data['meta_og_image'] = $page_info['meta_og_image'];
+        } else {
+            $this->data['meta_og_image'] = '';
+        }
+        
+        
+        
+         $image_model = $this->load->model('tool/image');
+        if ($this->data['meta_og_image']) {
+            $src_og_image = $image_model->resizeExact($this->data['meta_og_image'], 100, 100);
+        } else {
+            $src_og_image = $image_model->resizeExact('no_image.jpg', 100, 100);
+        }
+        $this->data['src_og_image'] = $src_og_image;
+        $this->data['placeholder'] = $image_model->resizeExact('no_image.jpg', 100, 100);
+        $this->data['meta_og_image'] = $meta_og_image;
 
         if (isset($this->request->post['meta_keywords'])) {
             $this->data['meta_keywords'] = $this->request->post['meta_keywords'];
@@ -391,6 +445,11 @@ Abstract class Base extends \Core\Controller {
         $this->data['tabs'] = $this->_pageModel->getFormFields($tabs);
 
 
+        
+        //Autosave::
+        $this->data['autosave_enabled'] = $this->config->get('config_autosave_status');
+        $this->data['autosave_time'] = ($this->config->get('config_autosave_time') && (int)$this->config->get('config_autosave_time') > 30)? (int)$this->config->get('config_autosave_time') : 120;
+        
 
         // $this->document->addScript('view/plugins/ckeditor/ckeditor.js');
         init_wysiwyg();
@@ -459,7 +518,7 @@ Abstract class Base extends \Core\Controller {
 
 
         $pages = $this->_pageModel->getPages($filter, $sort, $order, $page, $limit);
-        
+
 
         $this->data['pages'] = array();
         foreach ($pages->rows as $_page) {
@@ -615,15 +674,15 @@ Abstract class Base extends \Core\Controller {
 
             $new[$a['parentid']][] = $a;
         }
-       
+
         $tree = $this->_createTree($new, $new[0]); // changed
         return $tree;
     }
 
     private function _createTree(&$list, $parent) {
         $tree = array();
-      
-        
+
+
         foreach ($parent as $k => $l) {
             if (isset($list[$l['id']])) {
                 $l['children'] = $this->_createTree($list, $list[$l['id']]);
@@ -631,6 +690,43 @@ Abstract class Base extends \Core\Controller {
             $tree[] = $l;
         }
         return $tree;
+    }
+
+    
+    
+    public function autosave() {
+        $id = isset($this->request->get['ams_page_id']) ? (int) $this->request->get['ams_page_id'] : '0';
+        $page_data = $this->request->post;
+        $autosave = isset($this->request->get['_autosave_']) ? 1 : 0;
+        if (!$autosave) {
+            $this->db->query("delete from #__ams_revisions where ams_page_id = '" . (int) $id . "' and autosave = '1'");
+        }
+        $version = 0;
+        $last_pagedata = '';
+        if ($id) {
+            $q = $this->db->query("select * from #__ams_revisions where ams_page_id = '" . (int) $id . "' and autosave = '0' order by version desc limit 1");
+            if ($q->row) {
+                $version = $q->row['version'];
+                $last_pagedata = $q->row['pagedata'];
+            }
+        }
+        $version++;
+        $this->response->addHeader('Content-Type: application/json');
+        try {
+            if ($last_pagedata != $this->db->escape(json_encode($page_data))) {
+                $this->db->query("insert into #__ams_revisions set ams_page_id = '" . (int) $id . "', "
+                        . " user_id = '" . (int)$this->user->getId() . "', "
+                        . " autosave = '" . (int) $autosave . "', "
+                        . " pagedata = '" . $this->db->escape(json_encode($page_data)) . "', "
+                        . " created = '" . time() . "', "
+                        . " version = '" . $version . "'");
+                $this->response->setOutput(json_encode(array('saved' => $this->db->insertId())));
+            } else {
+                $this->response->setOutput(json_encode(array('saved' => '1')));
+            }
+        } catch (Exception $e) {
+            $this->response->setOutput(json_encode(array('saved' => '0')));
+        }
     }
 
     public function autocomplete() {
@@ -658,6 +754,53 @@ Abstract class Base extends \Core\Controller {
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
+    }
+    
+    
+    public function get_revisions(){
+        $this->language->load('cms/page');
+        
+        
+        $ams_page_id = $this->request->get['ams_page_id'];
+        $page = isset($this->request->get['page'])?$this->request->get['page']:1;
+        $start = ($page - 1) * 20;
+
+        $countq = $this->db->query("select count(*) as total from #__ams_revisions where ams_page_id = '" . (int)$ams_page_id . "'");
+        $total = $countq->row['total'];
+        $q = $this->db->query("select r.*, u.firstname, u.lastname from #__ams_revisions r left join #__user u on u.user_id = r.user_id where r.ams_page_id = '" . (int) $ams_page_id . "' order by r.ams_revision_id desc limit $start, 20");
+        $this->data['histories'] = array();
+        foreach($q->rows as $row){
+            $row['author'] = $row['firstname'] . ' ' . $row['lastname'];
+             $row['date_added'] = date("l dS F Y h:i:s A", $row['created']);
+             $row['autosave'] = $row['autosave']? 'Yes':'No';
+             if($this->request->get['ams_page_id']){
+              $row['action'] = $this->url->link($this->_namespace . '/update', 'token=' . $this->session->data['token'] . '&ams_page_id=' . $this->request->get['ams_page_id'] . '&revision_id=' . $row['ams_revision_id'], 'SSL');
+             }else{
+                  $row['action'] = $this->url->link($this->_namespace . '/insert', 'token=' . $this->session->data['token'] . '&revision_id=' . $row['ams_revision_id'], 'SSL');
+             }
+              $this->data['histories'][] = $row;
+        }
+        
+        
+        $pagination = new \Core\Pagination();
+        $pagination->total = $total;
+        $pagination->page = $page;
+        $pagination->limit = $this->config->get('config_limit_admin');
+        $pagination->url =  $this->url->link($this->_namespace . '/get_revisions', 'token=' . $this->session->data['token'] . '&ams_page_id=' . $this->request->get['ams_page_id'] . '&page={page}', 'SSL');
+        $pagination->text = $this->language->get('text_pagination');
+
+        $this->data['pagination'] = $pagination->render();
+        
+  
+        
+        $this->template = 'cms/partial/history.phtml';
+
+        $this->children = array(
+            'common/header',
+            'common/footer'
+        );
+        $this->response->setOutput($this->render());
+    
     }
 
 }

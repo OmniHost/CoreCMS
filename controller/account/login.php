@@ -91,6 +91,9 @@ class ControllerAccountLogin extends \Core\Controller {
         } else {
             $data['error_warning'] = '';
         }
+        
+        $data['account_register'] = $this->config->get('config_account_register');
+        
 
         $data['action'] = $this->url->link('account/login', '', 'SSL');
         $data['register'] = $this->url->link('account/register', '', 'SSL');

@@ -198,14 +198,24 @@ class ControllerCmsPage extends \Core\Controller {
             $page['name'] = \Core\HookPoints::executeHooks('ams_page_name', $page['name']);
             $page['content'] = \Core\HookPoints::executeHooks('ams_page_content', html_entity_decode($page['content'], ENT_QUOTES, 'UTF-8'));
 
+ 
       
 
             $this->document->setTitle(strip_tags($page['meta_title']));
             $this->document->setKeywords($page['meta_keywords']);
             $this->document->setDescription($page['meta_description']);
-
+            if(!empty($page['meta_og_title'])){
+                $this->document->addMeta('og:title', $page['meta_og_title'],'property');
+            }
+            if(!empty($page['meta_og_description'])){
+                $this->document->addMeta('og:description', $page['meta_og_description'],'property');
+            }
+            if(!empty($page['meta_og_image'])){
+                $this->document->addMeta('og:image', $this->config->get('config_ssl') .'img/' .  $page['meta_og_image'],'property');
+            }
 
             $this->document->addLink($this->url->link('cms/page', 'ams_page_id=' . $page['id']), 'canonical');
+            $this->document->addMeta('og:url', $this->url->link('cms/page', 'ams_page_id=' . $page['id']),'property');
 
             $this->data['breadcrumbs'] = array();
 

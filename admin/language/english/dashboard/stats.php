@@ -7,3 +7,4 @@ $_['text_users'] = 'Total Users';
 $_['text_pages'] = 'Total Pages';
 $_['text_posts'] = 'Total Posts';
 $_['text_comments'] = 'Total Comments';
+$_['text_contacts'] = 'Total Contact Emails';

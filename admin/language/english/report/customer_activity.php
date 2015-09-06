@@ -10,7 +10,7 @@ $_['text_login']          = '<a href="customer_id=%d">%s</a> logged in.';
 $_['text_password']       = '<a href="customer_id=%d">%s</a> updated their account password.';
 $_['text_register']       = '<a href="customer_id=%d">%s</a> registered for an account.';
 
-$_['text_newsletter']  = '<a href="customer_id=%d">%s</a> updated their newsletter preference.';
+$_['text_newsletter']  = '<a href="customer_id=%d">%s</a> updated their communication preference.';
 
 // Column
 $_['column_customer']     = 'User';

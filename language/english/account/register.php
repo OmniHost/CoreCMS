@@ -8,7 +8,7 @@ $_['text_register']        = 'Register';
 $_['text_account_already'] = 'If you already have an account with us, please login at the <a href="%s">login page</a>.';
 $_['text_your_details']    = 'Your Personal Details';
 $_['text_your_address']    = 'Your Address';
-$_['text_newsletter']      = 'Newsletter';
+$_['text_newsletter']      = 'Communication';
 $_['text_your_password']   = 'Your Password';
 $_['text_agree']           = 'I have read and agree to the <a href="%s" class="agree"><b>%s</b></a>';
 
@@ -20,7 +20,7 @@ $_['entry_email']          = 'E-Mail';
 $_['entry_telephone']      = 'Telephone';
 $_['entry_fax']            = 'Fax';
 $_['entry_country']        = 'Country';
-$_['entry_newsletter']     = 'Subscribe';
+$_['entry_newsletter']     = 'Allow Communication';
 $_['entry_password']       = 'Password';
 $_['entry_confirm']        = 'Password Confirm';
 
@@ -35,3 +35,4 @@ $_['error_country']        = 'Please select a country!';
 $_['error_password']       = 'Password must be between 4 and 20 characters!';
 $_['error_confirm']        = 'Password confirmation does not match password!';
 $_['error_agree']          = 'Warning: You must agree to the %s!';
+$_['error_custom_field'] = '%s required!';

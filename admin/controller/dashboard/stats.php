@@ -48,6 +48,9 @@ class ControllerDashboardStats extends \Core\Controller {
         $data['total_pages'] = $query->row['total'];
         $query = $this->db->query("select count(*) as total from #__ams_pages where namespace='blog.post' and status='1'");
         $data['total_posts'] = $query->row['total'];
+        
+        $query = $this->db->query("select count(*) as total from #__contact");
+        $data['total_contacts'] = $query->row['total'];
 
 
         $this->load->model('cms/comment');
@@ -60,12 +63,14 @@ class ControllerDashboardStats extends \Core\Controller {
         $data['text_pages'] = $this->language->get('text_pages');
         $data['text_posts'] = $this->language->get('text_posts');
         $data['text_comments'] = $this->language->get('text_comments');
+        $data['text_contacts'] = $this->language->get('text_contacts');
         
         $data['online'] = $this->url->link('report/customer_online', 'token=' . $this->session->data['token'], 'SSL');
         $data['users'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'], 'SSL');
 $data['pages'] = $this->url->link('cms/page', 'token=' . $this->session->data['token'], 'SSL');
         $data['posts'] = $this->url->link('blog/post', 'token=' . $this->session->data['token'], 'SSL');
  $data['comments'] = $this->url->link('cms/comment', 'token=' . $this->session->data['token'], 'SSL');
+ $data['contacts'] = $this->url->link('sale/contact', 'token=' . $this->session->data['token'], 'SSL');
 
 
         $this->template = 'dashboard/stats.phtml';

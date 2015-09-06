@@ -398,18 +398,7 @@ CAROUSEL;
         }
         return $this->load->controller('module/gallery', $filter);
     }
-    
-    public function script($attrs){
-       
-        if(!empty($attrs['src'])){
-            $this->document->addScript($attrs['src']);
-        }
-        return '';
-    }
-    
-    public function inlinescript($attrs,$script){
-        return '<script>' . html_entity_decode($script, ENT_QUOTES, 'UTF-8') . '</script>';
-    }
+
 
     public function script($attrs){
        

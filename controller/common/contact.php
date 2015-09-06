@@ -8,11 +8,15 @@ class ControllerCommonContact extends \Core\Controller {
         $this->load->language('common/contact');
 
         $this->document->setTitle($this->language->get('heading_title'));
+        
+         
 
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             unset($this->session->data['captcha']);
 
             $this->language->load('common/contact');
+
+            
 
             $mail = new \Core\Mail();
             $mail->protocol = $this->config->get('config_mail_protocol');
@@ -23,11 +27,45 @@ class ControllerCommonContact extends \Core\Controller {
             $mail->port = $this->config->get('config_mail_smtp_port');
             $mail->timeout = $this->config->get('config_mail_smtp_timeout');
 
+            $post = $this->request->post;
+            unset($post['custom_field']);
+            
+            $mailbody = "Contact form Submission \n";
+            
+            $mailbody .= $this->language->get('entry_name') . ": " . $this->request->post['name'] . "\n";
+            $mailbody .= $this->language->get('entry_email') . ": " . $this->request->post['email'] . "\n";
+            $mailbody .= $this->language->get('entry_enquiry') . ": " . $this->request->post['enquiry'] . "\n";
+            
+            $fields = $this->model_account_custom_field->getCustomFields();
+             foreach($fields as $cfield){
+                if($cfield['location'] == 'contact'){
+                    $mailbody .= $cfield['name']. ": " . $this->request->post['custom_field'][$cfield['custom_field_id']] . "\n";
+                    $post['custom_field'][$cfield['name']] = $this->request->post['custom_field'][$cfield['custom_field_id']];
+
+                }
+             }
+            
+         
+            
+            
+            $mailbody .= "\n\n\n------------------------------------------\n";
+            $mailbody .= "" . DATE("Y-m-d h:i a") . " | " . $this->request->server['REMOTE_ADDR'];
+            
+            
+
+            $mailbody = \Core\HookPoints::executeHooks('contact_form_submit_body', $mailbody, $this->request->post);
+            $mailsubject = sprintf($this->language->get('email_subject'), $this->request->post['name']);
+            $mailsubject = \Core\HookPoints::executeHooks('contact_form_submit_subject', $mailsubject, $this->request->post);
+
+            $this->load->model('account/contact');
+            $this->model_account_contact->addContact($post);
+         
+
             $mail->setTo($this->config->get('config_email'));
             $mail->setFrom($this->request->post['email']);
             $mail->setSender($this->request->post['name']);
-            $mail->setSubject(sprintf($this->language->get('email_subject'), $this->request->post['name']));
-            $mail->setText(strip_tags($this->request->post['enquiry']));
+            $mail->setSubject();
+            $mail->setText($mailbody);
             $mail->send();
 
             $this->redirect($this->url->link('common/contact/success'));
@@ -86,6 +124,12 @@ class ControllerCommonContact extends \Core\Controller {
             $data['error_captcha'] = '';
         }
 
+        if (isset($this->error['custom_field'])) {
+            $data['error_custom_field'] = $this->error['custom_field'];
+        } else {
+            $data['error_custom_field'] = array();
+        }
+
         $data['button_submit'] = $this->language->get('button_submit');
 
         $data['action'] = $this->url->link('common/contact');
@@ -125,6 +169,21 @@ class ControllerCommonContact extends \Core\Controller {
         } else {
             $data['captcha'] = '';
         }
+
+
+        $this->load->model('account/custom_field');
+
+        $data['custom_fields'] = $this->model_account_custom_field->getCustomFields();
+
+        if (isset($this->request->post['custom_field'])) {
+            $data['contact_custom_field'] = $this->request->post['custom_field'];
+        } else {
+            $data['contact_custom_field'] = array();
+        }
+        
+                    $this->document->addScript('view/plugins/datetimepicker/moment.js');
+		$this->document->addScript('view/plugins/datetimepicker/bootstrap-datetimepicker.min.js');
+		$this->document->addStyle('view/plugins/datetimepicker/bootstrap-datetimepicker.min.css');
 
         $this->children = array(
             'common/column_top',
@@ -200,6 +259,16 @@ class ControllerCommonContact extends \Core\Controller {
 
         if (empty($this->session->data['captcha']) || ($this->session->data['captcha'] != $this->request->post['captcha'])) {
             $this->error['captcha'] = $this->language->get('error_captcha');
+        }
+        
+        $this->load->model('account/custom_field');
+
+        $custom_fields = $this->model_account_custom_field->getCustomFields($this->config->get('config_customer_group_id'));
+
+        foreach ($custom_fields as $custom_field) {
+            if (($custom_field['location'] == 'contact') && $custom_field['required'] && empty($this->request->post['custom_field'][$custom_field['custom_field_id']])) {
+                $this->error['custom_field'][$custom_field['custom_field_id']] = sprintf($this->language->get('error_custom_field'), $custom_field['name']);
+            }
         }
 
         return !$this->error;

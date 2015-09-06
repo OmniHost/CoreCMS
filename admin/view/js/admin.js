@@ -39,7 +39,40 @@ $(document).ready(function () {
 
 
 
+    //Autocomplete
+    $('input[type=\'autocomplete\']').each(function () {
 
+        var $this = $(this);
+        //     console.log($(this).attr('data-url'));
+        $(this).autoinput({
+            'source': function (request, response) {
+
+                $.ajax({
+                    url: $this.attr('data-url') + '&filter_name=' + encodeURIComponent(request),
+                    dataType: 'json',
+                    success: function (json) {
+                        response($.map(json, function (item) {
+                            return {
+                                label: item['name'],
+                                value: item['download_id']
+                            }
+                        }));
+                    }
+                });
+            },
+            'select': function (item) {
+                $this.val('');
+                console.log(item);
+                $('#' + $this.attr('data-target') + '-' + item['value']).remove();
+
+                $('#' + $this.attr('data-target') ).append('<div class="list-group-item" id="' + $this.attr('data-target') + '-' + item['value'] + '"><i class="fa fa-minus-circle text-danger"></i> ' + item['label'] + '<input type="hidden" name="' + $this.attr('data-key') + '[]" value="' + item['value'] + '" /></div>');
+            }
+        });
+    });
+
+    $('.autocomplete-list').delegate('.fa-minus-circle', 'click', function () {
+        $(this).parent().remove();
+    });
 
 
 
@@ -153,3 +186,112 @@ $(document).ready(function () {
 
     }
 });
+
+// Autocomplete */
+(function ($) {
+    function AutoInput(element, options) {
+        this.element = element;
+        this.options = options;
+        this.timer = null;
+        this.items = new Array();
+
+        $(element).attr('autocomplete', 'off');
+        $(element).on('focus', $.proxy(this.focus, this));
+        $(element).on('blur', $.proxy(this.blur, this));
+        $(element).on('keydown', $.proxy(this.keydown, this));
+
+        $(element).after('<ul class="dropdown-menu"></ul>');
+        $(element).siblings('ul.dropdown-menu').delegate('a', 'click', $.proxy(this.click, this));
+    }
+
+    AutoInput.prototype = {
+        getElement: function () {
+            return $(this.element);
+        },
+        focus: function () {
+            this.request();
+        },
+        blur: function () {
+            setTimeout(function (object) {
+                object.hide();
+            }, 200, this);
+        },
+        click: function (event) {
+            event.preventDefault();
+
+            value = $(event.target).parent().attr('data-value');
+
+            if (value && this.items[value]) {
+                this.options.select(this.items[value]);
+            }
+        },
+        keydown: function (event) {
+            switch (event.keyCode) {
+                case 27: // escape
+                    this.hide();
+                    break;
+                default:
+                    this.request();
+                    break;
+            }
+        },
+        show: function () {
+            var pos = $(this.element).position();
+            console.log(pos);
+            $(this.element).siblings('ul.dropdown-menu').css({
+                left: pos.leftm,
+                top: pos.top + $(this.element).outerHeight(),
+                width: $(this.element).outerWidth()
+            });
+
+            $(this.element).siblings('ul.dropdown-menu').show();
+        },
+        hide: function () {
+            $(this.element).siblings('ul.dropdown-menu').hide();
+        },
+        request: function () {
+            clearTimeout(this.timer);
+
+            this.timer = setTimeout(function (object) {
+                object.options.source($(object.element).val(), $.proxy(object.response, object));
+            }, 200, this);
+        },
+        response: function (json) {
+            html = '';
+
+            if (json.length) {
+                for (i = 0; i < json.length; i++) {
+                    this.items[json[i]['value']] = json[i];
+                }
+
+                for (i = 0; i < json.length; i++) {
+                    html += '<li data-value="' + json[i]['value'] + '"><a href="#">' + json[i]['label'] + '</a></li>';
+                }
+
+            }
+
+            if (html) {
+                this.show();
+            } else {
+                this.hide();
+            }
+
+            $(this.element).siblings('ul.dropdown-menu').html(html);
+        }
+    };
+
+    $.fn.autoinput = function (option) {
+        return this.each(function () {
+            var data = $(this).data('autoinput');
+
+            if (!data) {
+                data = new AutoInput(this, option);
+
+                $(this).data('autoinput', data);
+            }
+        });
+    }
+
+
+
+})(window.jQuery);

@@ -52,6 +52,11 @@ Abstract class Page {
      */
     public $meta_description;
 
+    
+    public $meta_og_title;
+    public $meta_og_description;
+    public $meta_og_image;
+    
     /**
      * Allow comments on the item
      * @var int
@@ -206,6 +211,23 @@ Abstract class Page {
         return $this->_db->fetchAll("select * from `#__ams_nodes` where ams_page_id = '" . (int) $id . "'");
     }
 
+    public function loadPageRevision($revision_id) {
+        $q = $this->_db->query("select * from #__ams_revisions where ams_revision_id = '" . (int) $revision_id . "'");
+
+        $return = array();
+        if ($q->row) {
+            
+            $this->loadPageObject($q->row['ams_page_id']);
+            $data = $this->toArray();
+            $revision = json_decode($q->row['pagedata'], 1);
+            $return = array_deap_merge($data, $revision);
+            $this->populate($return);
+        }
+        //  debugPre($return);
+        //  exit;
+        return $return;
+    }
+
     /**
      * Load CMS object given id.
      *
@@ -242,7 +264,7 @@ Abstract class Page {
                     }
                 }
             }
-        } 
+        }
         return $this;
     }
 
@@ -321,6 +343,32 @@ Abstract class Page {
     protected function _update() {
         $data = $this->toArray();
         return $this->_pageModel->updatePage($this->id, $data);
+    }
+
+    public function storeRevision($page_data, $user_id) {
+
+        $this->_db->query("delete from #__ams_revisions where ams_page_id = '" . (int) $this->id . "' and autosave = '1'");
+        $this->_db->query("delete from #__ams_revisions where ams_page_id = '0' and autosave = '1'");
+        $version = 0;
+        if ($this->id) {
+            $q = $this->_db->query("select * from #__ams_revisions where ams_page_id = '" . (int) $this->id . "' and autosave = '0' order by version desc limit 1");
+            if ($q->row) {
+                $version = $q->row['version'];
+            }
+        }
+        $version++;
+
+        try {
+
+            $this->_db->query("insert into #__ams_revisions set ams_page_id = '" . (int) $this->id . "', "
+                    . " user_id = '" . (int) $user_id . "', "
+                    . " autosave = '0', "
+                    . " pagedata = '" . $this->_db->escape(json_encode($page_data)) . "', "
+                    . " created = '" . time() . "', "
+                    . " version = '" . $version . "'");
+        } catch (Exception $e) {
+            
+        }
     }
 
     /**

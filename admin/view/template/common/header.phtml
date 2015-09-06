@@ -56,7 +56,7 @@
     |               | sidebar-mini                            |
     |---------------------------------------------------------|
     -->
-    <body class="skin-blue sidebar-mini sidebar-collapse">
+    <body class="skin-blue sidebar-mini">
         <div class="wrapper">
 
             <!-- Main Header -->
@@ -183,25 +183,29 @@
                             </a>
                             <ul class="treeview-menu">
                                 <li><a href="<?php echo $pages; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_pages; ?></a></li>
-                                 <li><a href="<?php echo $posts; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_posts; ?></a></li>
+                                <li><a href="<?php echo $posts; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_posts; ?></a></li>
                                 <li><a href="<?php echo $blog_category; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_blog_category; ?></a></li>
                                 <li><a href="<?php echo $banner; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_banners; ?></a></li>
                                 <li><a href="<?php echo $comments; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_comments; ?><?php if ($total_comments): ?> <span class="badge bg-red pull-right"><?php echo $total_comments; ?></span><?php endif; ?></a></li>
-                                  <li><a href="<?php echo $menu; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_menu; ?></a></li>
+                                <li><a href="<?php echo $download; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_download; ?></a></li>
+                                <li><a href="<?php echo $menu; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_menu; ?></a></li>
                             </ul>
                         </li>
                         <li class="treeview">
                             <a href="#">
-                                <i class="fa fa-puzzle-piece"></i>
-                                <span><?php echo $menu_extension; ?></span>
+                                <i class="fa fa-envelope-o"></i>
+                                <span><?php echo $menu_communication; ?></span>
                                 <i class="fa fa-angle-left pull-right"></i>
+                                <ul class="treeview-menu">
+                                    <li><a href="<?php echo $contact_us;?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_contact_us; ?><?php if ($total_contact_us): ?> <span class="badge bg-red pull-right"><?php echo $total_contact_us; ?></span><?php endif; ?></a></li>
+                                    <li><a href="<?php echo $marketing;?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_marketing; ?></a></li>
+                                    <li><a href="<?php echo $newsletter; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_newsletters; ?></a></li>
+                                     <li><a href="<?php echo $subscriber; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_subscriber; ?></a></li>
+                                </ul>
                             </a>
-                            <ul class="treeview-menu">
-                                <li><a href="<?php echo $modules; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_modules; ?></a></li>
-                                <li><a href="<?php echo $modifications; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_modifications; ?></a></li>
-                                <li><a href="<?php echo $installer; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_install; ?></a></li>
-                            </ul>
+
                         </li>
+                        
                         <li class="treeview">
                             <a href="#">
                                 <i class="fa fa-user"></i>
@@ -232,6 +236,7 @@
                                         <li><a href="<?php echo $user_group_ban; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_user_ip_ban; ?></a></li>
                                     </ul>
                                 </li>   
+                                <li><a href="<?php echo $api_user; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_api_user; ?></a></li>
                             </ul>
                         </li>
                         <li>
@@ -239,9 +244,22 @@
                                 <i class="fa fa-bar-chart"></i> <Span><?php echo $menu_reports; ?></span><i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
-                                        <li><a href="<?php echo $report_user_activity; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_report_user_activity; ?></a></li>
-                                        <li><a href="<?php echo $report_user_online; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_report_user_online; ?></a></li>
-                                     </ul>
+                                <li><a href="<?php echo $report_user_activity; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_report_user_activity; ?></a></li>
+                                <li><a href="<?php echo $report_user_online; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_report_user_online; ?></a></li>
+                            </ul>
+                        </li>
+                        <li class="treeview">
+                            <a href="#">
+                                <i class="fa fa-puzzle-piece"></i>
+                                <span><?php echo $menu_extension; ?></span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a href="<?php echo $modules; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_modules; ?></a></li>
+                                <li><a href="<?php echo $modifications; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_modifications; ?></a></li>
+                                <li><a href="<?php echo $installer; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_install; ?></a></li>
+                                <li><a href="<?php echo $feeds; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_feeds; ?></a></li>
+                            </ul>
                         </li>
                         <li><a class="top">
                                 <i class="fa fa-cogs"></i> <Span><?php echo $menu_system; ?></span><i class="fa fa-angle-left pull-right"></i>
@@ -249,10 +267,22 @@
                             <ul class="treeview-menu">
                                 <li><a href="<?php echo $setting; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_setting; ?></a></li>
                                 <li><a href="<?php echo $layout; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_layout; ?></a></li>
-                                <li><a href="<?php echo $country; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_country; ?></a></li>
-                                <li><a href="<?php echo $currency; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_currency; ?></a></li>
-
-
+                                <li class="treeview">
+                                    <a href="#">
+                                        <i class="fa fa-globe"></i>
+                                        <span><?php echo $menu_localisation; ?> </span>
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                    </a>
+                                    <ul class="treeview-menu">
+                                        <li><a href="<?php echo $country; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_country; ?></a></li>
+                                        <li><a href="<?php echo $zone; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_zone; ?></a></li>
+                                        <li><a href="<?php echo $currency; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_currency; ?></a></li>
+                                        <li><a href="<?php echo $language; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_language; ?></a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="<?php echo $custom_field; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_custom_field; ?></a></li>
+                                <li><a href="<?php echo $upload; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_upload; ?></a></li>
+                                <li><a href="<?php echo $backup; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_backup; ?></a></li>
                             </ul>
                         </li>
 

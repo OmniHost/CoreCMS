@@ -12,6 +12,7 @@ $_['text_review'] = 'Comments';
 $_['tab_general'] = 'General';
 $_['tab_mail'] = 'Email';
 $_['tab_server'] = 'Server';
+$_['tab_seo'] = 'SEO';
 $_['tab_google'] = 'Google';
 
 $_['entry_name'] = 'Site Name';
@@ -50,6 +51,9 @@ $_['entry_google_api']           = 'Google Public API access';
 $_['entry_google_captcha_public']      = 'Site key';
 $_['entry_google_captcha_secret']      = 'Secret key';
 $_['entry_status']                     = 'Status';
+$_['entry_file_max_size']	           = 'Max File Size';
+$_['entry_file_ext_allowed']           = 'Allowed File Extensions';
+$_['entry_file_mime_allowed']          = 'Allowed File Mime Types';
 
 $_['entry_image_thumb']                = 'Gallery Thumb Size';
 $_['entry_image_popup']                = 'Gallery Popup Size';
@@ -77,6 +81,9 @@ $_['help_google_analytics']            = 'Login to your <a href="http://www.goog
 $_['help_google_captcha']              = 'Go to <a href="https://www.google.com/recaptcha/intro/index.html" target="_blank"><u>Google reCAPTCHA page</u></a> and register your website.';
 $_['help_encryption']                  = 'Please provide a secret key that will be used to encrypt private information.';
 $_['help_google_api']            = 'Login to your <a href="https://code.google.com/apis/console/" target="_blank"><u>Google API Console</u></a>  and after creating your website profile copy and paste the codes here.';
+$_['help_file_max_size']		       = 'The maximum image file size you can upload in Image Manager. Enter as byte.';
+$_['help_file_ext_allowed']            = 'Add which file extensions are allowed to be uploaded. Use a new line for each value.';
+$_['help_file_mime_allowed']           = 'Add which file mime types are allowed to be uploaded. Use a new line for each value.';
 
 $_['error_ftp_hostname']               = 'FTP Host required!';
 $_['error_ftp_port']                   = 'FTP Port required!';
@@ -129,3 +136,31 @@ $_['help_currency']                    = 'Change the default currency. Clear you
 $_['help_currency_auto']               = 'Set your store to automatically update currencies daily.';
 $_['entry_currency_auto']              = 'Auto Update Currency';
 $_['entry_robots'] = 'Robots.txt contents';
+
+$_['text_autosave'] = 'CMS Autosave';
+$_['entry_autosave'] = 'Enable Autosave';
+$_['entry_autosave_time'] = 'Save every:';
+$_['help_autosave_time'] = 'How many seconds between autosaves';
+$_['help_autosave'] = 'Disable or enable the autosave functionality, this will only affect autosave not revisions.';
+$_['entry_autosave_seconds'] = 'seconds (min 30, default 120)';
+
+$_['entry_account_register'] = 'Allow User Registration';
+$_['help_account_register'] = 'If set Yes, users can register from the front end of the site using the Create an Account link provided on the Login page.';
+
+$_['help_meta_title'] = 'This will be default page title';
+$_['text_facebook_defaults'] = 'Default Facebook Open Graph Tags';
+$_['text_twitter_defaults'] = 'Default Twitter Tags';
+$_['text_google_defaults'] = 'Default Google / Schema Tags';
+
+$_['help_meta_publisher'] = 'Rel=publisher tag is defined as the tag that links a brand’s Google+ page snippet to it’s search snippet.';
+$_['entry_meta_publisher'] = 'Rel=Publisher Tag';
+$_['help_meta_author'] = 'el=author associates an individual’s Google+ page to a website';
+$_['entry_meta_author'] = 'Rel=Author Tag';
+
+$_['entry_facebook_sitename'] = 'Facebook og:site_name';
+$_['entry_facebook_title'] = 'Facebook og:title';
+$_['entry_facebook_description'] = 'Facebook og:description';
+$_['entry_facebook_image'] = 'Facebook og:image (min 200X200)';
+$_['entry_facebook_appid'] = 'Facebook AppId';
+$_['entry_meta_ogimage_help'] = 'Visit <a href="https://developers.facebook.com/docs/sharing/best-practices#images" target="_blank">Facebook Guidlines</a> for Best Guidlines regarding images';
+

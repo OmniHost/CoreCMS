@@ -1,6 +1,6 @@
 <?php
 
-define('VERSION', '1.0.1');
+define('VERSION', '1.2.0');
 define('NS', 'installer');
 
 define('APP_NAMESPACE', 'installer');

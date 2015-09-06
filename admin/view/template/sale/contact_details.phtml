@@ -1,0 +1,95 @@
+<?php echo $header; ?>
+<?php include(__DIR__ . '/../common/page-header.phtml'); ?>
+
+<section class="content">
+
+    <div class="box">
+        <div class="box-header text-right">
+            <button type="submit" form="form-reply"  class="btn btn-app"><i class="fa fa-reply text-primary"></i><?php echo $button_reply; ?></button>
+            <a onclick="$('#execute').val('delete');
+                    $('#form').submit();" class="btn btn-app"><i class="fa fa-trash text-danger"></i><?php echo $button_delete; ?> </a>
+            <a href="<?php echo $cancel; ?>" class="btn btn-app"><i class="fa fa-reply"></i> <?php echo $button_cancel; ?></a>
+        </div>
+
+        <div class="box-body">
+            <form action="<?php echo $execute; ?>" method="post" enctype="multipart/form-data" id="form">
+                <input type="hidden" name="execute" id="execute" />
+            </form>
+            <?php if ($single_data) { ?>
+                <?php foreach ($single_data as $contact) { ?>
+                    <div class="box box-primary">
+                        <div class="box-body">
+                            <div class="mailbox-read-info">
+                                <h3><?php echo $contact['firstname']; ?></h3>
+                                <h5><?php echo $contact['email'] ?>  <span class="mailbox-read-time pull-right"><?php echo $contact['date_added'] ?> | <?php echo $contact['ipaddress'] ?></span></h5>
+                            </div>
+                            <div class="mailbox-read-message">
+                                <h4><?php echo $column_description; ?></h4>
+                                <?php echo nl2br($contact['enquiry']); ?>
+                            </div>
+                            <?php if ($contact['custom_field']): ?>
+                                <h4><?php echo $heading_additional_fields; ?></h4>
+                                <?php foreach (unserialize($contact['custom_field']) as $fld => $val): ?>
+                                    <p><strong><?php echo $fld; ?> : </strong><?php echo nl2br($val); ?></p>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+
+                        </div>
+                        <div class="box-footer">
+                            <?php if($responses): ?>
+                            <h4><?php echo $heading_title_replies; ?></h4>
+                            <?php foreach($responses as $response): ?>
+                            <div class="alert bg-info disabled">
+                            <div class="mailbox-read-info clearfix">
+                                <h5 class="pull-left"><?php echo $response['subject']; ?></h5> <span class="mailbox-read-time pull-right"><?php echo $response['date_created'] ?></span></h5>
+                            </div>
+                            <div class="mailbox-read-message">
+                                <?php echo nl2br($contact['enquiry']); ?>
+                            </div>
+                                </div>
+                            <?php endforeach; ?>
+
+<?php endif;?>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="box box-success">
+                <form action="<?php echo $send; ?>" method="post" class="form-horizontal" enctype="multipart/form-data" id="form-reply">
+           
+                    <div class="box-header">
+                        <h4 class="box-title"><?php echo $heading_title_reply; ?></h4>
+                    </div>
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="control-label col-sm-3"><?php echo $label_subject; ?></label>
+                            <div class="col-sm-9">
+                                <input type="text" name="subject" value="<?php echo $subject; ?>" class="form-control required" placeholder="<?php echo $label_subject; ?>"/>
+                                <?php if($error_subject): ?><span class="text-danger"><?php echo $error_subject; ?></span><?php endif; ?>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3"><?php echo $label_message; ?></label>
+                            <div class="col-sm-9">
+                                <textarea class="form-control" name="message_body" rows="15"><?php echo $message_body; ?></textarea>
+                                <?php if($error_message_body): ?><span class="text-danger"><?php echo $error_message_body; ?></span><?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer text-right">
+                        <button type="submit" class="btn btn-primary"><?php echo $button_reply; ?></button>
+                    </div>
+                </form>
+            </div>
+
+        <?php } ?>
+    <?php } else { ?>
+        <?php echo $text_no_results; ?>
+    <?php } ?>
+
+</div>
+</div>
+</section>
+<?php echo $footer; ?>

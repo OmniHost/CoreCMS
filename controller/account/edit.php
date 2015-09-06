@@ -103,6 +103,14 @@ class ControllerAccountEdit extends \Core\Controller {
             $data['error_telephone'] = '';
         }
 
+
+        if (isset($this->error['custom_field'])) {
+			$data['error_custom_field'] = $this->error['custom_field'];
+		} else {
+			$data['error_custom_field'] = array();
+		}
+
+
         $data['action'] = $this->url->link('account/edit', '', 'SSL');
 
         if ($this->request->server['REQUEST_METHOD'] != 'POST') {
@@ -161,11 +169,30 @@ class ControllerAccountEdit extends \Core\Controller {
 
         $data['countries'] = $this->model_localisation_country->getCountries();
 
+
+        // Custom Fields
+        $this->load->model('account/custom_field');
+
+        $data['custom_fields'] = $this->model_account_custom_field->getCustomFields($this->config->get('config_customer_group_id'));
+
+        if (isset($this->request->post['custom_field'])) {
+            $data['account_custom_field'] = $this->request->post['custom_field'];
+        } elseif (isset($customer_info)) {
+            $data['account_custom_field'] = unserialize($customer_info['custom_field']);
+        } else {
+            $data['account_custom_field'] = array();
+        }
+
         $data['back'] = $this->url->link('account/account', '', 'SSL');
 
         $this->template = 'account/edit.phtml';
         $this->data = $data;
 
+        
+        $this->document->addScript('view/plugins/datetimepicker/moment.js');
+		$this->document->addScript('view/plugins/datetimepicker/bootstrap-datetimepicker.min.js');
+		$this->document->addStyle('view/plugins/datetimepicker/bootstrap-datetimepicker.min.css');
+        
 
         $this->children = array(
             'common/column_top',
@@ -196,6 +223,18 @@ class ControllerAccountEdit extends \Core\Controller {
 
         if (($this->customer->getEmail() != $this->request->post['email']) && $this->model_account_customer->getTotalCustomersByEmail($this->request->post['email'])) {
             $this->error['warning'] = $this->language->get('error_exists');
+        }
+
+
+        // Custom field validation
+        $this->load->model('account/custom_field');
+
+        $custom_fields = $this->model_account_custom_field->getCustomFields($this->config->get('config_customer_group_id'));
+
+        foreach ($custom_fields as $custom_field) {
+            if (($custom_field['location'] == 'account') && $custom_field['required'] && empty($this->request->post['custom_field'][$custom_field['custom_field_id']])) {
+                $this->error['custom_field'][$custom_field['custom_field_id']] = sprintf($this->language->get('error_custom_field'), $custom_field['name']);
+            }
         }
 
         return !$this->error;

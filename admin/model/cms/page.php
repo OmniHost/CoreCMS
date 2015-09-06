@@ -8,6 +8,35 @@ class ModelCmsPage extends \Core\Ams\Page {
      */
     protected $_namespace = 'cms.page';
     public $content;
+    public $downloads;
+
+    protected function _setdownloads($data) {
+
+        $downloads = array();
+        $list = json_decode($data['content'], 1);
+        if ($list) {
+            $downloads = $this->_linkupdownloads($list);
+        }
+        return $downloads;
+    }
+
+    protected function _linkupdownloads($list = array()) {
+        $downloads = array();
+        registry('load')->model('cms/download');
+        foreach ($list as $download_id) {
+            $download = registry('model_cms_download')->getDownload($download_id);
+            if ($download) {
+                $downloads[] = $download;
+            }
+        }
+
+        return $downloads;
+    }
+
+    protected function _populatedownloads($data) {
+
+        return json_encode($data['downloads']);
+    }
 
     public function getFormFields($tabs) {
 
@@ -27,7 +56,22 @@ class ModelCmsPage extends \Core\Ams\Page {
             'required' => false
         );
 
+        if (isset($this->request->post['downloads'])) {
+            $data['downloads'] = $this->_linkupdownloads($this->request->post['downloads']);
+        } elseif (!empty($this->content)) {
+            $data['downloads'] = $this->downloads;
+        } else {
+            $data['downloads'] = array();
+        }
 
+        $tabs['general']['downloads'] = array(
+            'key' => 'downloads',
+            'type' => 'autocomplete_list',
+            'value' => $data['downloads'],
+            'label' => $this->_language->get('entry_downloads'),
+            'url' => registry('url')->link('cms/download/autocomplete', 'token=' . registry(session)->data['token'], 'SSL'),
+            'required' => false
+        );
 
 
         return $tabs;

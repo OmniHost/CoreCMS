@@ -129,6 +129,8 @@ class AutoEmbed {
             }
         }
 
+        
+        
         if (!$provider && $args['discover']) {
             $provider = $this->discover($url);
         }
@@ -206,11 +208,21 @@ class AutoEmbed {
     public function fetch($provider, $url, $args = array()) {
         $width = $this->embedWidth;
         $height = $this->embedHeight;
-        $args = array_merge(compact('width', 'height'), $args);
-
+        $autoplay = '0';
+        $loop = '0';
+        $args = array_merge(compact('width', 'height','autoplay','loop'), $args);
+        
+        
+    
         $provider = $this->add_query_arg('maxwidth', (int) $args['width'], $provider);
         $provider = $this->add_query_arg('maxheight', (int) $args['height'], $provider);
+        $provider = $this->add_autoplay_arg((int)$args['autoplay'], $provider);
+        $provider = $this->add_autoplay_arg((int)$args['loop'], $provider);
         $provider = $this->add_query_arg('url', $url, $provider);
+        
+        
+        
+        
 
         foreach (array('json', 'xml') AS $format) {
             $result = $this->_fetch_with_format($provider, $format);
@@ -220,6 +232,29 @@ class AutoEmbed {
         return false;
     }
 
+    
+    public function add_autoplay_arg($autoplay, $provider){
+        if(!$autoplay){
+            return $provider;
+        }
+        if(strpos($provider, 'vimeo.com') !== false){
+            return $this->add_query_arg('autoplay', '1', $provider);
+        }else{
+            return $this->add_query_arg('autoplay', '1', $provider);
+        }
+    }
+    
+    public function add_loop_arg($loop, $provider){
+        if(!$loop){
+            return $provider;
+        }
+        if(strpos($provider, 'vimeo.com') !== false){
+            return $this->add_query_arg('loop', '1', $provider);
+        }else{
+            return $this->add_query_arg('loop', '1', $provider);
+        }
+    }
+    
     /**
      * Fetches result from an oEmbed provider for a specific format and complete provider URL
      * @access private

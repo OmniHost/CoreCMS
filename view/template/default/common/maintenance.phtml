@@ -1,5 +1,4 @@
 <?php echo $header; ?>
-<?php echo $column_top; ?>
 <section class="content">
     <div class="container">
         <div class="row">
@@ -14,15 +13,9 @@
                 <?php $class = 'col-sm-12'; ?>
             <?php } ?>
             <div class="<?php echo $class; ?>">
-                <?php echo $content_top; ?>
                 <?php echo $message; ?>
-                <?php echo $content_bottom; ?>
             </div><!-- end col-sm-12 -->
-            <?php if ($column_right): ?>
-                <?php echo $column_right; ?>
-            <?php endif; ?>
         </div><!-- end row -->
     </div><!-- end container -->
 </section>
-<?php echo $column_bottom; ?>
 <?php echo $footer; ?>
