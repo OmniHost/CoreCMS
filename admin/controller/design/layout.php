@@ -404,7 +404,19 @@ class ControllerDesignLayout extends \Core\Controller {
                 );
             }
         }
-
+        
+        $this->data['template_positions'] = array();
+        
+        $templates = array('default' => json_decode(file_get_contents(DIR_ROOT . 'view/template/default/config.json')));
+        $template = $this->config->get('config_template');
+        $template_configs = array();
+        if(is_file(DIR_ROOT . 'view/template/' . $template . '/config.json')){
+            $template_configs = json_decode(file_get_contents(DIR_ROOT . 'view/template/' . $template . '/config.json'),1);
+        }
+        if($template_configs && !empty($template_configs['extra_positions'])){
+           $this->data['template_positions'] = $template_configs['extra_positions'];
+        }
+        
 
         $this->template = 'design/layout_form.phtml';
         $this->children = array(

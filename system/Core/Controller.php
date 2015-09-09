@@ -256,4 +256,8 @@ abstract class Controller {
         }
     }
 
+    
+    public function getOutput(){
+        return $this->output;
+    }
 }

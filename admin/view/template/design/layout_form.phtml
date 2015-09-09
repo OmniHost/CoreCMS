@@ -87,7 +87,7 @@
                                         <?php } ?>
                                     </select></td>
                                 <td class="text-left"><select name="layout_module[<?php echo $module_row; ?>][position]" class="form-control">
-                                       
+
                                         <?php if ($layout_module['position'] == 'content_top') { ?>
                                             <option value="content_top" selected="selected"><?php echo $text_content_top; ?></option>
                                         <?php } else { ?>
@@ -98,7 +98,7 @@
                                         <?php } else { ?>
                                             <option value="content_bottom"><?php echo $text_content_bottom; ?></option>
                                         <?php } ?>
-                                             <?php if ($layout_module['position'] == 'column_top') { ?>
+                                        <?php if ($layout_module['position'] == 'column_top') { ?>
                                             <option value="column_top" selected="selected"><?php echo $text_column_top; ?></option>
                                         <?php } else { ?>
                                             <option value="column_top"><?php echo $text_column_top; ?></option>
@@ -118,6 +118,13 @@
                                         <?php } else { ?>
                                             <option value="column_right"><?php echo $text_column_right; ?></option>
                                         <?php } ?>
+                                        <?php foreach ($template_positions as $template_position): ?>
+                                            <?php if ($layout_module['position'] == $template_position) { ?>
+                                                <option value="<?php echo $template_position; ?>" selected="selected"><?php echo $template_position; ?></option>
+                                            <?php } else { ?>
+                                                <option value="<?php echo $template_position; ?>"><?php echo $template_position; ?></option>
+                                            <?php } ?>
+                                        <?php endforeach; ?>
                                     </select></td>
                                 <td class="text-right"><input type="text" name="layout_module[<?php echo $module_row; ?>][sort_order]" value="<?php echo $layout_module['sort_order']; ?>" placeholder="<?php echo $entry_sort_order; ?>" class="form-control" /></td>
                                 <td class="text-left"><button type="button" onclick="$('#module-row<?php echo $module_row; ?>').remove();" data-toggle="tooltip" title="<?php echo $button_remove; ?>" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>
@@ -177,6 +184,9 @@ var route_row = <?php echo $route_row; ?>;
         html += '    <option value="column_bottom"><?php echo $text_column_bottom; ?></option>';
         html += '    <option value="column_left"><?php echo $text_column_left; ?></option>';
         html += '    <option value="column_right"><?php echo $text_column_right; ?></option>';
+<?php foreach ($template_positions as $template_position): ?>
+            html += '    <option value="<?php echo $template_position; ?>"><?php echo $template_position; ?></option>';
+<?php endforeach; ?>
         html += '  </select></td>';
         html += '  <td class="text-left"><input type="text" name="layout_module[' + module_row + '][sort_order]" value="" placeholder="<?php echo $entry_sort_order; ?>" class="form-control" /></td>';
         html += '  <td class="text-left"><button type="button" onclick="$(\'#module-row' + module_row + '\').remove();" data-toggle="tooltip" title="<?php echo $button_remove; ?>" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>';

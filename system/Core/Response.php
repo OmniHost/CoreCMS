@@ -72,13 +72,45 @@ class Response {
 
         return $output;
     }
+    
+    protected function getChild($child, $args = array()) {
+        $action = new \Core\Action($child, $args);
+
+        if (file_exists($action->getFile())) {
+            require_once(__modification($action->getFile()));
+
+            $class = $action->getClass();
+
+            $controller = new $class();
+
+            $controller->{$action->getMethod()}($action->getArgs());
+
+            return $controller->getOutput();
+        } else {
+            return '';
+        }
+    }
 
     public function output() {
 
         if ($this->output) {
 
+            $output = $this->output;
+            //Lets Replace all Instances of <!--{{MODULE POST}}-->
+             preg_match_all('/<!--{{(.*)}}-->/Uis', $output, $matches, PREG_SET_ORDER);
+             
+             if($matches){
+                 foreach($matches as $match){
+                     $res = $this->getChild('common/custom_position', $match[1]);
+                     if($res){
+                         $output = str_replace($match[0], $res, $output);
+                     }
+                 }
+             }
+            
+            
 
-            $output = \Core\Shortcode::doShortcode($this->output);
+            $output = \Core\Shortcode::doShortcode($output);
 
             $doc = \Core\Registry::getInstance()->get('document');
             $scripts = $doc->getScripts();
