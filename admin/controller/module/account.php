@@ -63,11 +63,6 @@ class ControllerModuleAccount extends \Core\Controller {
             $data['account_status'] = $this->config->get('account_status');
         }
 
-        /* 	$data['header'] = $this->load->controller('common/header');
-          $data['column_left'] = $this->load->controller('common/column_left');
-          $data['footer'] = $this->load->controller('common/footer');
-
-          $this->response->setOutput($this->load->view('module/account.tpl', $data)); */
         $this->data = $data;
         $this->template = 'module/account.phtml';
         $this->children = array(

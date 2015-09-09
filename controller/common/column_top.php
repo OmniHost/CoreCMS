@@ -28,13 +28,11 @@ class ControllerCommonColumnTop extends \Core\Controller {
         $this->data['modules'] = array();
 
         $modules = $this->model_design_layout->getLayoutModules($layout_id, 'column_top');
-        
-        
+ 
 
         foreach ($modules as $module) {
             $part = explode('.', $module['code']);
-           
-
+  
             if (isset($part[0]) && $this->config->get($part[0] . '_status')) {
                 $this->data['modules'][] = $this->load->controller('module/' . $part[0]);
             }

@@ -227,19 +227,27 @@ class ControllerCmsPage extends \Core\Controller {
             $parent_id = $page['parent_id'];
 
 
+            $parentCrumbs = array();
+            
             while ($parent_id > 0) {
                 $parent_obj = $this->model_cms_page->loadParent($parent_id);
 
                 $parent = $parent_obj->toArray();
                 $parent_id = $parent['parent_id'];
                 if ($parent['id']) {
-                    $this->data['breadcrumbs'][] = array(
+                    $parentCrumbs[] = array(
                         'text' => strip_tags($parent['name']),
                         'href' => $this->url->link(str_replace(".", "/", $parent_obj->getNamespace()), 'ams_page_id=' . $parent['id'])
                     );
                 }
             }
+            
+            $parentCrumbs = array_reverse($parentCrumbs);
+            foreach($parentCrumbs as $crumb){
+                 $this->data['breadcrumbs'][] = $crumb;
+            }
 
+            
 
             $this->data['breadcrumbs'][] = array(
                 'text' => strip_tags($page['name']),

@@ -6,6 +6,7 @@ error_reporting(E_ALL);
 
 if(!is_file('config.php')){
     header("location: install/");
+    exit;
 }
 require('config.php');
 if (!defined('DIR_APPLICATION')) {

@@ -179,7 +179,7 @@ abstract class Controller {
             }
         }
 
-  
+  //is there an override ???
         
         if (file_exists($template . $this->template)) {
             $this->fillTranslations();
@@ -187,7 +187,7 @@ abstract class Controller {
 
             ob_start();
 
-            require($template . $this->template);
+            require(__modification($template . $this->template));
 
             $this->output = ob_get_contents();
 

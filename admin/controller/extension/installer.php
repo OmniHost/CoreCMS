@@ -272,31 +272,16 @@ class ControllerExtensionInstaller extends \Core\Controller {
 
             $root = DIR_ROOT;
 
+
             foreach ($files as $file) {
                 // Upload everything in the upload directory
                 //$destination = $root . substr($file, strlen($directory));
-                  $destination = substr($file, strlen($directory));
-                  
-                   if (substr($destination, 0, 5) == 'admin') {
-                                $destination = basename(DIR_APPLICATION) . substr($destination, 5);
-                            }
-
-                            if (substr($destination, 0, 7) == 'catalog') {
-                                $destination = basename(DIR_ROOT) . substr($destination, 7);
-                            }
-
-                            if (substr($destination, 0, 5) == 'image') {
-                                $destination = basename(DIR_IMAGE) . substr($destination, 5);
-                            }
-
-                            if (substr($destination, 0, 6) == 'system') {
-                                $destination = basename(DIR_SYSTEM) . substr($destination, 6);
-                            }
-
-                            if (substr($destination, 0, 6) == 'plugins') {
-                                $destination = basename(DIR_PLUGINS) . substr($destination, 7);
-                            }
-
+             
+                
+                //$destination = DIR_ROOT;
+                $destination = DIR_ROOT . substr($file, strlen($directory));
+         
+                
                 if (is_dir($file)) {
                     $list = glob(rtrim($destination, '/') . '/*');
 

@@ -15,6 +15,7 @@ class ControllerExtensionModification extends \Core\Controller {
         $this->document->setTitle($this->language->get('heading_title'));
 
         $this->load->model('extension/modification');
+
         $this->getList();
     }
 
@@ -46,7 +47,7 @@ class ControllerExtensionModification extends \Core\Controller {
                 $url .= '&page=' . $this->request->get['page'];
             }
 
-            $this->response->redirect(fixajaxurl($this->url->link('extension/modification', 'token=' . $this->session->data['token'] . $url, 'SSL')));
+            $this->redirect($this->url->link('extension/modification', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
 
         $this->getList();
@@ -61,6 +62,7 @@ class ControllerExtensionModification extends \Core\Controller {
 
         if ($this->validate()) {
             // Just before files are deleted, if config settings say maintenance mode is off then turn it on
+            $org_maintenance = $this->config->get('config_maintenance');
             if (!$this->config->get('config_maintenance')) {
                 $this->load->model('setting/setting');
 
@@ -116,7 +118,7 @@ class ControllerExtensionModification extends \Core\Controller {
 
             // This is purly for developers so they can run mods directly and have them run without upload sfter each change.
             $files = glob(DIR_SYSTEM . '*.mod.xml');
-            
+
             if ($files) {
                 foreach ($files as $file) {
                     $xml[] = file_get_contents($file);
@@ -131,9 +133,11 @@ class ControllerExtensionModification extends \Core\Controller {
                     $xml[] = $result['xml'];
                 }
             }
+
             $modification = array();
+
             foreach ($xml as $xml) {
-                $dom = new \DOMDocument('1.0', 'UTF-8');
+                $dom = new DOMDocument('1.0', 'UTF-8');
                 $dom->preserveWhiteSpace = false;
                 $dom->loadXml($xml);
 
@@ -156,8 +160,6 @@ class ControllerExtensionModification extends \Core\Controller {
                     $files = explode(',', $file->getAttribute('path'));
 
                     foreach ($files as $file) {
-                     
-                     
                         $path = '';
 
                         // Get the full path of the files that are going to be used for modification
@@ -172,11 +174,11 @@ class ControllerExtensionModification extends \Core\Controller {
                         if (substr($file, 0, 6) == 'system') {
                             $path = DIR_SYSTEM . str_replace('../', '', substr($file, 7));
                         }
-                        
+
                         if (substr($file, 0, 7) == 'plugins') {
                             $path = DIR_PLUGINS . str_replace('../', '', substr($file, 8));
                         }
-                        
+
 
                         if ($path) {
                             $files = glob($path);
@@ -184,7 +186,7 @@ class ControllerExtensionModification extends \Core\Controller {
                             if ($files) {
                                 foreach ($files as $file) {
                                     // Get the key to be used for the modification cache filename.
-                                  
+
                                     if (substr($file, 0, strlen(DIR_ROOT)) == DIR_ROOT) {
                                         $key = substr($file, strlen(DIR_ROOT));
                                     }
@@ -196,11 +198,11 @@ class ControllerExtensionModification extends \Core\Controller {
                                     if (substr($file, 0, strlen(DIR_SYSTEM)) == DIR_SYSTEM) {
                                         $key = 'system/' . substr($file, strlen(DIR_SYSTEM));
                                     }
-                                    
-                                     if (substr($file, 0, strlen(DIR_PLUGINS)) == DIR_PLUGINS) {
+
+                                    if (substr($file, 0, strlen(DIR_PLUGINS)) == DIR_PLUGINS) {
                                         $key = 'plugins/' . substr($file, strlen(DIR_PLUGINS));
                                     }
-                                    
+
 
                                     // If file contents is not already in the modification array we need to load it.
                                     if (!isset($modification[$key])) {
@@ -239,6 +241,8 @@ class ControllerExtensionModification extends \Core\Controller {
                                             $search = $operation->getElementsByTagName('search')->item(0)->textContent;
                                             $trim = $operation->getElementsByTagName('search')->item(0)->getAttribute('trim');
                                             $index = $operation->getElementsByTagName('search')->item(0)->getAttribute('index');
+                                            $position = $operation->getElementsByTagName('search')->item(0)->getAttribute('position');
+                                            $offset = $operation->getElementsByTagName('search')->item(0)->getAttribute('offset');
 
                                             // Trim line if no trim attribute is set or is set to true.
                                             if (!$trim || $trim == 'true') {
@@ -248,8 +252,15 @@ class ControllerExtensionModification extends \Core\Controller {
                                             // Add
                                             $add = $operation->getElementsByTagName('add')->item(0)->textContent;
                                             $trim = $operation->getElementsByTagName('add')->item(0)->getAttribute('trim');
-                                            $position = $operation->getElementsByTagName('add')->item(0)->getAttribute('position');
-                                            $offset = $operation->getElementsByTagName('add')->item(0)->getAttribute('offset');
+                                            $_position = $operation->getElementsByTagName('add')->item(0)->getAttribute('position');
+                                            $_offset = $operation->getElementsByTagName('add')->item(0)->getAttribute('offset');
+                                            
+                                            if($_offset){
+                                                $offset = $_offset;
+                                            }
+                                            if($_position){
+                                                $position = $_position;
+                                            }
 
                                             if ($offset == '') {
                                                 $offset = 0;
@@ -274,7 +285,7 @@ class ControllerExtensionModification extends \Core\Controller {
                                             $i = 0;
 
                                             $lines = explode("\n", $modification[$key]);
-
+                                      
                                             for ($line_id = 0; $line_id < count($lines); $line_id++) {
                                                 $line = $lines[$line_id];
 
@@ -311,13 +322,17 @@ class ControllerExtensionModification extends \Core\Controller {
                                                             break;
                                                         case 'before':
                                                             $new_lines = explode("\n", $add);
-
+                                                            
+                                                            
+                                                         
                                                             array_splice($lines, $line_id - $offset, 0, $new_lines);
 
                                                             $line_id += count($new_lines);
                                                             break;
                                                         case 'after':
                                                             $new_lines = explode("\n", $add);
+                                                            
+                                                            array_unshift($new_lines, $search);
 
                                                             array_splice($lines, ($line_id + 1) + $offset, 0, $new_lines);
 
@@ -334,9 +349,9 @@ class ControllerExtensionModification extends \Core\Controller {
 
                                             $modification[$key] = implode("\n", $lines);
                                         } else {
-                                            $search = $operation->getElementsByTagName('search')->item(0)->textContent;
+                                            $search = trim($operation->getElementsByTagName('search')->item(0)->textContent);
                                             $limit = $operation->getElementsByTagName('search')->item(0)->getAttribute('limit');
-                                            $replace = $operation->getElementsByTagName('add')->item(0)->textContent;
+                                            $replace = trim($operation->getElementsByTagName('add')->item(0)->textContent);
 
                                             // Limit
                                             if (!$limit) {
@@ -391,8 +406,8 @@ class ControllerExtensionModification extends \Core\Controller {
                             }
                         }
                     }
-                    
                 }
+
                 // Log
                 $log[] = '----------------------------------------------------------------';
             }
@@ -425,8 +440,8 @@ class ControllerExtensionModification extends \Core\Controller {
                 }
             }
 
-            // Just after modifications are complete, if config settings say maintenance mode is off then turn it back off.
-            if (!$this->config->get('config_maintenance')) {
+            // Just after modifications are complete, if config settings say maintenance mode is on AND is different org state, then turn it back on
+            if ($org_maintenance != $this->config->get('config_maintenance')) {
                 $this->model_setting_setting->editSettingValue('config', 'config_maintenance', false);
             }
 
@@ -446,7 +461,7 @@ class ControllerExtensionModification extends \Core\Controller {
                 $url .= '&page=' . $this->request->get['page'];
             }
 
-            $this->response->redirect(fixajaxurl($this->url->link('extension/modification', 'token=' . $this->session->data['token'] . $url, 'SSL')));
+            $this->redirect($this->url->link('extension/modification', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
 
         $this->getList();
@@ -768,13 +783,13 @@ class ControllerExtensionModification extends \Core\Controller {
         $pagination->total = $modification_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        
+
         $pagination->text = $this->language->get('text_pagination');
         $pagination->url = $this->url->link('extension/modification', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
-      
+
         $data['sort'] = $sort;
         $data['order'] = $order;
 
@@ -789,7 +804,7 @@ class ControllerExtensionModification extends \Core\Controller {
 
         $data['clear_log'] = $this->url->link('extension/modification/clearlog', 'token=' . $this->session->data['token'], 'SSL');
 
-       $this->data = $data;
+        $this->data = $data;
         $this->template = 'extension/modification.phtml';
         $this->children = array(
             'common/header',
@@ -798,7 +813,7 @@ class ControllerExtensionModification extends \Core\Controller {
 
         $this->response->setOutput($this->render());
 
-      //  $this->response->setOutput($this->load->view('extension/modification.tpl', $data));
+        //  $this->response->setOutput($this->load->view('extension/modification.tpl', $data));
     }
 
     protected function validate() {
