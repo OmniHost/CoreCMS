@@ -259,7 +259,7 @@ Class Core {
         foreach ($this->pre_actions as $pre_action) {
             $controller->addPreAction(new \Core\Action($pre_action));
         }
-
+        
         if (isset($this->request->get['p'])) {
             $action = new \Core\Action($this->request->get['p']);
         } else {

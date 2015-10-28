@@ -332,7 +332,7 @@ class ControllerExtensionModification extends \Core\Controller {
                                                         case 'after':
                                                             $new_lines = explode("\n", $add);
                                                             
-                                                            array_unshift($new_lines, $search);
+                                                            //array_unshift($new_lines, $search);
 
                                                             array_splice($lines, ($line_id + 1) + $offset, 0, $new_lines);
 

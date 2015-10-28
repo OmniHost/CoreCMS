@@ -61,6 +61,11 @@
                                                 <?php echo $site_url; ?>
                                             </div>
                                             <input disabled="disabled" type="text" value="<?php echo $slug; ?>" class="form-control required " id="slugInput" />
+                                            <?php if (!isset($doslug) || !$doslug): ?>
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-default" type="button" id="resetSlug">Reset</button>
+                                                </span>
+                                            <?php endif; ?>
 
                                             <input type="hidden" name="slug" value="<?php echo $slug; ?>" id="slugInputValue" />
                                         </div>
@@ -133,7 +138,7 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                       
+
                                         <?php endif; ?>
                                         <?php foreach ($tabs['general_details'] as $el => $formfield): ?>
                                             <div class="">
@@ -198,7 +203,7 @@
                                 <div class="col-sm-9">
                                     <a href="#" id="thumb-fbimage" data-toggle="image" class="img-thumbnail"><img src="<?php echo $src_og_image; ?>" alt="" title="" data-placeholder="<?php echo $placeholder; ?>" /></a>
                                     <input type="hidden" name="meta_og_image" value="<?php echo $entry_meta_ogimage; ?>" id="input-facebook_ogimag" />
-                                    <span><?php echo $entry_meta_ogimage_help;?></span>
+                                    <span><?php echo $entry_meta_ogimage_help; ?></span>
 
                                 </div>
                             </div>
@@ -412,6 +417,28 @@
 
             $('#nameInput').on("keyup", function () {
                 var pdata = {name: $(this).val()};
+                if (slugXHR != null) {
+                    slugXHR.abort();
+                    slugXHR = null;
+                }
+                slugXHR = $.ajax({
+                    type: "POST",
+                    url: 'index.php?p=<?php echo $namespace; ?>/getSlug&token=<?php echo $this->session->data['token']; ?>',
+                    data: pdata,
+                    dataType: 'json',
+                    success: function (msg) {
+                        /* handle the ajax response */
+                        $('#slugInput').val(msg.slug);
+                        $('#slugInputValue').val(msg.slug);
+
+                    }
+                });
+            });
+
+<?php else: ?>
+
+            $('#resetSlug').on("click", function () {
+                var pdata = {name: $('#nameInput').val(), 'page_id': <?php echo $this->request->get['ams_page_id']; ?>};
                 if (slugXHR != null) {
                     slugXHR.abort();
                     slugXHR = null;

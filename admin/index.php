@@ -17,6 +17,10 @@ require_once(DIR_ROOT . 'system/Core/Core.php');
 $core = new \Core\Core($config, 'admin');
 $core->user = new \Core\User();
 
+if(is_file(DIR_VENDOR . 'autoload.php')){
+ require(DIR_VENDOR . 'autoload.php');
+}
+
 $core->addPreAction('user/login/status');
 $core->addPreAction('user/login/permission');
 

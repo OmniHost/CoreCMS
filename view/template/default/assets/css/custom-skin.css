@@ -1,0 +1,341 @@
+#layout {
+  max-width: 100%;
+  margin: auto;
+}
+.body-wrapper {
+  background-color: transparent;
+}
+::-moz-selection {
+  background: #136597;
+  color: #fff;
+  text-shadow: none;
+}
+::selection {
+  background: #136597;
+  color: #fff;
+  text-shadow: none;
+}
+.tabs-style-3,
+.nav-pills li a:hover,
+.tabs-style-3 .nav-pills li a:focus,
+.tabs-style-3 .nav-pills li.active a,
+.element:hover .portfolio-texbox,
+.tabs-style-2 .nav-pills li a:hover,
+.tabs-style-2 .nav-pills li a:focus,
+.tabs-style-2 .nav-pills li.active a,
+.list-group-item.active,
+.list-group-item.active:hover,
+.list-group-item.active:focus,
+.btn-gray:hover,
+.btn-gray:focus,
+.btn-gray:active,
+.btn-gray.active,
+.open .dropdown-toggle.btn-gray,
+.primary-bg-color,
+.btn-primary,
+.testimonial.testimonial-version4 .textbox,
+.testimonial.testimonial-version4 .item .textbox:after,
+.price-table-head h3,
+#main-nav ul ul a:hover,
+#main-nav ul ul .hover > a,
+#main-nav ul ul .current > a,
+#main-nav ul ul .current > a:hover,
+.icon-text-block2:hover .btn-default,
+.number-list li:before,
+.item:hover .portfolio-texbox,
+.item:hover .portfolio-texbox,
+.btn-default.selected,
+.footer hr.primary-bg-color,
+.panel-primary > .panel-heading,
+.progress-bar-primary,
+.pager li > a:hover,
+.pager li > a:focus,
+.pagination > .active > a,
+.pagination > .active > span,
+.pagination > .active > a:hover,
+.pagination > .active > span:hover,
+.pagination > .active > a:focus,
+.pagination > .active > span:focus,
+.pagination > li > a:hover,
+.pagination > li > span:hover,
+.pagination > li > a:focus,
+.pagination > li > span:focus,
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a:focus,
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus,
+.btn-primary.disabled,
+.btn-primary[disabled],
+fieldset[disabled] .btn-primary,
+.btn-primary.disabled:hover,
+.btn-primary[disabled]:hover,
+fieldset[disabled] .btn-primary:hover,
+.btn-primary.disabled:focus,
+.btn-primary[disabled]:focus,
+fieldset[disabled] .btn-primary:focus,
+.btn-primary.disabled:active,
+.btn-primary[disabled]:active,
+fieldset[disabled] .btn-primary:active,
+.btn-primary.disabled.active,
+.btn-primary[disabled].active,
+fieldset[disabled] .btn-primary.active,
+.btn-default:hover,
+.btn-default:focus,
+.btn-default:active,
+.btn-default.active,
+.open .dropdown-toggle.btn-default,
+.panel-primary > .panel-heading,
+#main-nav ul ul a:hover,
+#main-nav ul ul .hover > a,
+#main-nav ul ul .current > a,
+#main-nav ul ul .current > a:hover {
+  background-color: #136597 !important;
+  color: #fff!important;
+}
+#main-nav ul ul,
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active,
+.open .dropdown-toggle.btn-primary,
+.pager li > a:hover,
+.pager li > a:focus,
+.form-control:focus,
+.btn-gray:hover,
+.list-group-item.active,
+.list-group-item.active:hover,
+.list-group-item.active:focus,
+.btn-default,
+.btn-primary,
+.bordered-heading.panel-primary .panel-heading,
+.tag-box-version1,
+.tag-box-version2,
+.tag-box-version3,
+.tag-box-version4,
+.tag-box-version6,
+.tag-box-version7,
+.custom-alert-primary,
+.twitter-widget .twitter-item:hover,
+.twitter-widget .primary-border,
+.primary-border-bottom,
+.header-title,
+.register-block,
+.twitter-widget .twitter-item:hover,
+.panel-primary > .panel-heading,
+.panel-primary,
+.pagination > .active > a,
+.pagination > .active > span,
+.pagination > .active > a:hover,
+.pagination > .active > span:hover,
+.pagination > .active > a:focus,
+.pagination > .active > span:focus,
+.pagination > li > a:hover,
+.pagination > li > span:hover,
+.pagination > li > a:focus,
+.pagination > li > span:focus,
+.tab-content > .active,
+.pill-content > .active,
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus,
+.nav-tabs,
+.btn-primary.disabled,
+.btn-primary[disabled],
+fieldset[disabled] .btn-primary,
+.btn-primary.disabled:hover,
+.btn-primary[disabled]:hover,
+fieldset[disabled] .btn-primary:hover,
+.btn-primary.disabled:focus,
+.btn-primary[disabled]:focus,
+fieldset[disabled] .btn-primary:focus,
+.btn-primary.disabled:active,
+.btn-primary[disabled]:active,
+fieldset[disabled] .btn-primary:active,
+.btn-primary.disabled.active,
+.btn-primary[disabled].active,
+fieldset[disabled] .btn-primary.active,
+.btn-default:hover,
+.btn-default:focus,
+.btn-default:active,
+.btn-default.active,
+.open .dropdown-toggle.btn-default,
+blockquote,
+.panel-primary > .panel-heading,
+.panel-primary,
+#main-nav a:hover,
+#main-nav .hover > a,
+#main-nav .current > a {
+  border-color: #136597;
+}
+#logo,
+span.primary-color,
+.testimonial.testimonial-version4 .item .textbox:after,
+.not-ie #main-nav .current:after,
+.btn-default,
+a:hover,
+a:focus,
+.primary-color,
+.bordered-heading.panel-primary .panel-heading,
+.alert-primary,
+.custom-alert-primary,
+.twitter-item a,
+.thumbnail-text:hover h4,
+.price-table:hover .price-tag,
+.price-table.active .price-tag,
+.btn-link:hover a,
+.icon-text-block:hover i.block-icon,
+#main-nav .current > a,
+.btn-default a,
+.category-widget ul li a:hover,
+.footer hr.primary-bg-color,
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus,
+.nav > li > a:hover,
+.nav > li > a:focus,
+.btn-link:hover,
+.btn-link:focus,
+a:focus {
+  color: #136597;
+}
+.twitter-widget .twitter-item:hover:after {
+  border-top-color: #136597;
+}
+.testimonial.testimonial-version4 .item .textbox:after,
+.thumbnail-text:hover .heading h4,
+.content-color-link:hover,
+a.underlined:hover,
+#main-nav > ul > li > a:hover,
+#main-nav > ul > li.current > a,
+.testimonial-metadata span,
+.icon-text-block:hover i.block-icon {
+  color: #136597;
+}
+.element:hover .portfolio-texbox p,
+.element:hover .portfolio-texbox h5 {
+  color: #fff !important;
+}
+.element .portfolio-texbox p,
+.element .portfolio-texbox h5 {
+  color: #444 !important;
+}
+.content-color-link,
+#main-nav > ul > li > a{
+    color: #555 !important;
+}
+
+.content-color-link:hover,
+#header.navbar-fixed-top #main-nav > ul > li > a:hover,
+#header.navbar-fixed-top #main-nav > ul > li.current > a {
+  color: #136597 !important;
+  background: none;
+}
+
+#header #logo-header {
+    max-height: 45px;
+}
+
+#header.navbar-fixed-top #logo-header {
+    max-height: 25px;
+}
+
+@media screen and (max-width: 767px){
+#main-nav ul {
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.08);background-color: #ffffff;
+}
+#main-nav ul li {
+    margin:0;
+  /*  padding:10px 15px;*/
+    border-bottom: 1px solid #efefef;
+}
+#main-nav ul li>a {
+       padding:10px 15px; 
+}
+}
+
+#main-nav-trigger span.fa-bars {
+   float: right;
+    padding: 8px;
+    font-size: 1.5em;
+}
+
+.headline h2, .headline h3, .headline h4 {
+    border-bottom: 2px solid #136597;
+}
+
+.breadcrumbs .breadcrumb li:last-of-type a {
+    color: #136597;
+}
+
+/* Start: Recommended Isotope styles */
+
+/**** Isotope Filtering ****/
+
+.isotope-item {
+  z-index: 2;
+}
+
+.isotope-hidden.isotope-item {
+  pointer-events: none;
+  z-index: 1;
+}
+
+/**** Isotope CSS3 transitions ****/
+
+.isotope,
+.isotope .isotope-item {
+  -webkit-transition-duration: 0.8s;
+     -moz-transition-duration: 0.8s;
+      -ms-transition-duration: 0.8s;
+       -o-transition-duration: 0.8s;
+          transition-duration: 0.8s;
+}
+
+.isotope {
+  -webkit-transition-property: height, width;
+     -moz-transition-property: height, width;
+      -ms-transition-property: height, width;
+       -o-transition-property: height, width;
+          transition-property: height, width;
+}
+
+.isotope .isotope-item {
+  -webkit-transition-property: -webkit-transform, opacity;
+     -moz-transition-property:    -moz-transform, opacity;
+      -ms-transition-property:     -ms-transform, opacity;
+       -o-transition-property:      -o-transform, opacity;
+          transition-property:         transform, opacity;
+}
+
+/**** disabling Isotope CSS3 transitions ****/
+
+.isotope.no-transition,
+.isotope.no-transition .isotope-item,
+.isotope .isotope-item.no-transition {
+  -webkit-transition-duration: 0s;
+     -moz-transition-duration: 0s;
+      -ms-transition-duration: 0s;
+       -o-transition-duration: 0s;
+          transition-duration: 0s;
+}
+
+/* End: Recommended Isotope styles */
+
+
+
+/* disable CSS transitions for containers with infinite scrolling*/
+.isotope.infinite-scrolling {
+  -webkit-transition: none;
+     -moz-transition: none;
+      -ms-transition: none;
+       -o-transition: none;
+          transition: none;
+}
+
+
+/**** Isotope styles ****/
+
+
+
+

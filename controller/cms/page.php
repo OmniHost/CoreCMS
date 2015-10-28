@@ -17,7 +17,7 @@ class ControllerCmsPage extends \Core\Controller {
                 'link' => $this->url->link('common/contact'),
                 'ams_page_id' => "0"
             ),
-             array(
+            array(
                 'name' => 'Blog Page',
                 'type' => 'core',
                 'link' => $this->url->link('blog/blog'),
@@ -26,35 +26,35 @@ class ControllerCmsPage extends \Core\Controller {
             array(
                 'name' => 'Account Page',
                 'type' => 'core',
-                'link' => $this->url->link('account/account','','SSL'),
+                'link' => $this->url->link('account/account', '', 'SSL'),
                 'ams_page_id' => "0"
             ),
             array(
                 'name' => 'Login Page',
                 'type' => 'core',
-                'link' => $this->url->link('account/login','','SSL'),
+                'link' => $this->url->link('account/login', '', 'SSL'),
                 'ams_page_id' => "0"
             ),
             array(
                 'name' => 'Register Page',
                 'type' => 'core',
-                'link' => $this->url->link('account/register','','SSL'),
+                'link' => $this->url->link('account/register', '', 'SSL'),
                 'ams_page_id' => "0"
             ),
             array(
                 'name' => 'Logout Page',
                 'type' => 'core',
-                'link' => $this->url->link('account/logout','','SSL'),
+                'link' => $this->url->link('account/logout', '', 'SSL'),
                 'ams_page_id' => "0"
             )
         );
-        
-         $pages = \Core\HookPoints::executeHooks('get_core_pages', $core_pages);
-         
-         usort($pages, function($a, $b) { 
-             return strcmp($a['name'], $b['name']);
-         });
-         return $pages;
+
+        $pages = \Core\HookPoints::executeHooks('get_core_pages', $core_pages);
+
+        usort($pages, function($a, $b) {
+            return strcmp($a['name'], $b['name']);
+        });
+        return $pages;
     }
 
     public function autocomplete() {
@@ -62,32 +62,32 @@ class ControllerCmsPage extends \Core\Controller {
 
         $search = $this->request->get['filter_page'];
 
-        
-        
-        /*if (strpos('home page', strtolower($search)) !== false || strlen($search) < 3) {
-            $pages[] = array(
-                'name' => 'Home Page',
-                'type' => 'core',
-                'link' => $this->url->link('common/home'),
-                'ams_page_id' => "0"
-            );
-        }
-        if (strpos('contact page', strtolower($search)) !== false || strlen($search) < 3) {
-            $pages[] = array(
-                'name' => 'Contact Page',
-                'type' => 'core',
-                'link' => $this->url->link('common/contact'),
-                'ams_page_id' => "0"
-            );
-        }*/
+
+
+        /* if (strpos('home page', strtolower($search)) !== false || strlen($search) < 3) {
+          $pages[] = array(
+          'name' => 'Home Page',
+          'type' => 'core',
+          'link' => $this->url->link('common/home'),
+          'ams_page_id' => "0"
+          );
+          }
+          if (strpos('contact page', strtolower($search)) !== false || strlen($search) < 3) {
+          $pages[] = array(
+          'name' => 'Contact Page',
+          'type' => 'core',
+          'link' => $this->url->link('common/contact'),
+          'ams_page_id' => "0"
+          );
+          } */
         if (strlen($search) >= 3) {
-            
-            foreach($pages as $idx=>$page){
-                if( strpos( strtolower($page['name']), strtolower($search)) === false){
+
+            foreach ($pages as $idx => $page) {
+                if (strpos(strtolower($page['name']), strtolower($search)) === false) {
                     unset($pages[$idx]);
                 }
             }
-            
+
             $query = $this->db->query("select * from #__ams_pages where public='1'and name like '%" . $this->db->escape($search) . "%' order by name asc limit 10");
             foreach ($query->rows as $row) {
                 $pages[] = array(
@@ -180,6 +180,8 @@ class ControllerCmsPage extends \Core\Controller {
         $this->load->model('cms/page');
         $page = $this->model_cms_page->loadPageObject($this->request->get['ams_page_id'])->toArray();
 
+  
+
         if (!$page || !$page['status']) {
             return $this->not_found();
         }
@@ -189,8 +191,8 @@ class ControllerCmsPage extends \Core\Controller {
 
         if ($allowed) {
 
-            
-            
+
+
             $this->model_cms_page->updateViews();
             $this->language->load('cms/page');
 
@@ -198,24 +200,29 @@ class ControllerCmsPage extends \Core\Controller {
             $page['name'] = \Core\HookPoints::executeHooks('ams_page_name', $page['name']);
             $page['content'] = \Core\HookPoints::executeHooks('ams_page_content', html_entity_decode($page['content'], ENT_QUOTES, 'UTF-8'));
 
- 
-      
+            $page['slug'] = $this->model_cms_page->getSlug();
+            
+
+
 
             $this->document->setTitle(strip_tags($page['meta_title']));
             $this->document->setKeywords($page['meta_keywords']);
             $this->document->setDescription($page['meta_description']);
-            if(!empty($page['meta_og_title'])){
-                $this->document->addMeta('og:title', $page['meta_og_title'],'property');
+            
+           
+            
+            if (!empty($page['meta_og_title'])) {
+                $this->document->addMeta('og:title', $page['meta_og_title'], 'property');
             }
-            if(!empty($page['meta_og_description'])){
-                $this->document->addMeta('og:description', $page['meta_og_description'],'property');
+            if (!empty($page['meta_og_description'])) {
+                $this->document->addMeta('og:description', $page['meta_og_description'], 'property');
             }
-            if(!empty($page['meta_og_image'])){
-                $this->document->addMeta('og:image', $this->config->get('config_ssl') .'img/' .  $page['meta_og_image'],'property');
+            if (!empty($page['meta_og_image'])) {
+                $this->document->addMeta('og:image', $this->config->get('config_ssl') . 'img/' . $page['meta_og_image'], 'property');
             }
 
             $this->document->addLink($this->url->link('cms/page', 'ams_page_id=' . $page['id']), 'canonical');
-            $this->document->addMeta('og:url', $this->url->link('cms/page', 'ams_page_id=' . $page['id']),'property');
+            $this->document->addMeta('og:url', $this->url->link('cms/page', 'ams_page_id=' . $page['id']), 'property');
 
             $this->data['breadcrumbs'] = array();
 
@@ -228,7 +235,7 @@ class ControllerCmsPage extends \Core\Controller {
 
 
             $parentCrumbs = array();
-            
+
             while ($parent_id > 0) {
                 $parent_obj = $this->model_cms_page->loadParent($parent_id);
 
@@ -241,13 +248,13 @@ class ControllerCmsPage extends \Core\Controller {
                     );
                 }
             }
-            
+
             $parentCrumbs = array_reverse($parentCrumbs);
-            foreach($parentCrumbs as $crumb){
-                 $this->data['breadcrumbs'][] = $crumb;
+            foreach ($parentCrumbs as $crumb) {
+                $this->data['breadcrumbs'][] = $crumb;
             }
 
-            
+
 
             $this->data['breadcrumbs'][] = array(
                 'text' => strip_tags($page['name']),
@@ -256,7 +263,7 @@ class ControllerCmsPage extends \Core\Controller {
 
             $this->data['page'] = $page;
 
-            
+
 
 
             if ($page['comments'] && $this->config->get('config_review_status')) {
@@ -265,8 +272,6 @@ class ControllerCmsPage extends \Core\Controller {
                 $this->data['has_comments'] = false;
             }
 
-            
-           
 
             $this->template = 'cms/page.phtml';
 
@@ -287,9 +292,7 @@ class ControllerCmsPage extends \Core\Controller {
             return $this->forward('error/not_allowed');
         }
     }
-    
-    
-    
+
     public function agree() {
         $this->load->model('cms/page');
         $page = $this->model_cms_page->loadPageObject($this->request->get['page_id'])->toArray();
@@ -409,46 +412,94 @@ class ControllerCmsPage extends \Core\Controller {
             $this->response->setOutput(json_encode($json));
         }
     }
-    
-    
-    public function commentblock($page){
-        
-        if(!$page['comments']){
+
+    public function commentblock($page) {
+
+        if (!$page['comments']) {
             return '';
         }
-        
-            if ($page['comments'] && $this->config->get('config_review_status')) {
-                $this->data['has_comments'] = true;
+
+        if ($page['comments'] && $this->config->get('config_review_status')) {
+            $this->data['has_comments'] = true;
+        } else {
+            $this->data['has_comments'] = false;
+        }
+
+        if ($this->config->get('config_review_guest') || $this->customer->isLogged()) {
+            $this->data['can_comment'] = true;
+        } else {
+            $this->data['can_comment'] = false;
+        }
+
+        $this->data['comment_auto_approve'] = $this->config->get('config_comment_auto_approve');
+
+
+        if ($this->customer->isLogged()) {
+            $this->data['customer_name'] = $this->customer->getFirstName() . '&nbsp;' . $this->customer->getLastName();
+        } else {
+            $this->data['customer_name'] = '';
+        }
+
+        $this->data['ams_page_id'] = $page['id'];
+
+        $this->load->model('cms/comment');
+        $this->language->load('cms/comment');
+        $this->data['text_comments'] = $this->language->get('text_comments');
+        $this->data['comment_count'] = $this->model_cms_comment->countComments($page['id']);
+
+
+        $this->template = 'cms/commentblock.phtml';
+        return $this->render();
+    }
+
+    public function download() {
+
+
+
+        $this->load->model('setting/rights');
+
+        if (isset($this->request->get['download_id']) && isset($this->request->get['ams_page_id']) && $this->model_setting_rights->getRight($this->request->get['ams_page_id'], 'ams_page')) {
+            $download_id = $this->request->get['download_id'];
+        } else {
+            $download_id = 0;
+        }
+
+        $this->load->model('cms/download');
+
+        $download_info = $this->model_cms_download->getDownload($download_id);
+
+        if ($download_info) {
+            $file = DIR_DOWNLOAD . $download_info['filename'];
+            $mask = basename($download_info['mask']);
+
+            if (!headers_sent()) {
+                if (file_exists($file)) {
+
+                    $this->model_cms_download->updateDownloaded($download_id);
+
+                    header('Content-Type: application/octet-stream');
+                    header('Content-Disposition: attachment; filename="' . ($mask ? $mask : basename($file)) . '"');
+                    header('Expires: 0');
+                    header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+                    header('Pragma: public');
+                    header('Content-Length: ' . filesize($file));
+
+                    if (ob_get_level()) {
+                        ob_end_clean();
+                    }
+
+                    readfile($file, 'rb');
+
+                    exit();
+                } else {
+                    exit('Error: Could not find file ' . $file . '!');
+                }
             } else {
-                $this->data['has_comments'] = false;
+                exit('Error: Headers already sent out!');
             }
-
-            if ($this->config->get('config_review_guest') || $this->customer->isLogged()) {
-                $this->data['can_comment'] = true;
-            } else {
-                $this->data['can_comment'] = false;
-            }
-
-            $this->data['comment_auto_approve'] = $this->config->get('config_comment_auto_approve');
-
-
-            if ($this->customer->isLogged()) {
-                $this->data['customer_name'] = $this->customer->getFirstName() . '&nbsp;' . $this->customer->getLastName();
-            } else {
-                $this->data['customer_name'] = '';
-            }
-
-            $this->data['ams_page_id'] = $page['id'];
-
-            $this->load->model('cms/comment');
-            $this->language->load('cms/comment');
-            $this->data['text_comments'] = $this->language->get('text_comments');
-            $this->data['comment_count'] = $this->model_cms_comment->countComments($page['id']);
-
-                       
-            $this->template = 'cms/commentblock.phtml';
-            return $this->render();
-        
+        } else {
+            $this->response->redirect($this->url->link('error/not_found', '', 'SSL'));
+        }
     }
 
 }

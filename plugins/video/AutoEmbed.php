@@ -129,8 +129,8 @@ class AutoEmbed {
             }
         }
 
-        
-        
+
+
         if (!$provider && $args['discover']) {
             $provider = $this->discover($url);
         }
@@ -210,51 +210,77 @@ class AutoEmbed {
         $height = $this->embedHeight;
         $autoplay = '0';
         $loop = '0';
-        $args = array_merge(compact('width', 'height','autoplay','loop'), $args);
-        
-        
-    
+        $args = array_merge(compact('width', 'height', 'autoplay', 'loop'), $args);
+
+
+
         $provider = $this->add_query_arg('maxwidth', (int) $args['width'], $provider);
         $provider = $this->add_query_arg('maxheight', (int) $args['height'], $provider);
-        $provider = $this->add_autoplay_arg((int)$args['autoplay'], $provider);
-        $provider = $this->add_autoplay_arg((int)$args['loop'], $provider);
+        $provider = $this->add_autoplay_arg((int) $args['autoplay'], $provider);
+        $provider = $this->add_loop_arg((int) $args['loop'], $provider);
+        //  $provider = $this->add_params_arg($args['params'], $provider);
         $provider = $this->add_query_arg('url', $url, $provider);
-        
-        
-        
-        
+
+
+
 
         foreach (array('json', 'xml') AS $format) {
             $result = $this->_fetch_with_format($provider, $format);
+
+            //   return str_replace('?feature=oembed', '?feature=oembed&rel=0&?wmode=transparent&iv_load_policy=3&showinfo=0&vq=hd1080', $embed );
+
+            if ($args['params']) {
+                parse_str($args['params'], $params);
+                $rep = http_build_query($params);
+                if (strpos($result->html, 'youtu.be') !== false || strpos($result->html, 'youtube.com') !== false) {
+                    $result->html = preg_replace("@src=(['\"])?([^'\">\s]*)@", "src=$1$2&" . $rep, $result->html);
+              
+                }
+            }
+
             return $result;
         }
 
         return false;
     }
 
-    
-    public function add_autoplay_arg($autoplay, $provider){
-        if(!$autoplay){
+    public function add_autoplay_arg($autoplay, $provider) {
+        if (!$autoplay) {
             return $provider;
         }
-        if(strpos($provider, 'vimeo.com') !== false){
+        if (strpos($provider, 'vimeo.com') !== false) {
             return $this->add_query_arg('autoplay', '1', $provider);
-        }else{
+        } else {
             return $this->add_query_arg('autoplay', '1', $provider);
         }
     }
-    
-    public function add_loop_arg($loop, $provider){
-        if(!$loop){
+
+    public function add_loop_arg($loop, $provider) {
+        if (!$loop) {
             return $provider;
         }
-        if(strpos($provider, 'vimeo.com') !== false){
+        if (strpos($provider, 'vimeo.com') !== false) {
             return $this->add_query_arg('loop', '1', $provider);
-        }else{
+        } else {
             return $this->add_query_arg('loop', '1', $provider);
         }
     }
-    
+
+    public function add_params_arg($params, $provider) {
+
+        if (!$params) {
+            return $provider;
+        }
+
+        parse_str($params, $output);
+        if ($output) {
+            foreach ($output as $k => $v) {
+                $provider = $this->add_query_arg($k, $v, $provider);
+            }
+        }
+        return $provider;
+    }
+
     /**
      * Fetches result from an oEmbed provider for a specific format and complete provider URL
      * @access private

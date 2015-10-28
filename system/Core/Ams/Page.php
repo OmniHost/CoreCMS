@@ -267,6 +267,13 @@ Abstract class Page {
         }
         return $this;
     }
+    
+    
+    public function getSlug(){
+        $query = $this->_db->query("SELECT keyword FROM #__url_alias WHERE `query` = '" . $this->_db->escape('ams_page_id=' . (int) $this->id) . "'");
+        return $query->row['keyword'];
+
+    }
 
     public function loadParent($id) {
 

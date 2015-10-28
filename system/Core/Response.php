@@ -98,10 +98,11 @@ class Response {
             $output = $this->output;
             //Lets Replace all Instances of <!--{{MODULE POST}}-->
              preg_match_all('/<!--{{(.*)}}-->/Uis', $output, $matches, PREG_SET_ORDER);
-             
+           
              if($matches){
                  foreach($matches as $match){
                      $res = $this->getChild('common/custom_position', $match[1]);
+                  
                      if($res){
                          $output = str_replace($match[0], $res, $output);
                      }

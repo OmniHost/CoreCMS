@@ -27,8 +27,14 @@ class Language {
             $_ = array();
 
             require(__modification($file));
+            $data = $_;
+            require($file);
+            $new = array_deap_merge($data, $_);
 
-            $this->data = array_deap_merge($this->data, $_);
+
+            require(__modification($file));
+
+            $this->data = array_deap_merge($this->data, $new);
 
             return $this->data;
         }
@@ -44,6 +50,16 @@ class Language {
 
             return $this->data;
         }
+    }
+    
+    public function push($file){
+        $_ = array();
+        if(is_file($file)){
+            require($file);
+             $this->data = array_deap_merge($this->data, $_);
+        }
+       
+        return $this->data;
     }
 
 }

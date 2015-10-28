@@ -27,14 +27,14 @@ class ModelToolSeo extends \Core\Model {
         $this->db->query("delete from #__url_alias where `query` = '" . $this->db->escape($query_string) . "'");
     }
 
-    public function getUniqueSlug($name) {
+    public function getUniqueSlug($name, $page_id = '') {
         $slugname = slug($name);
-        $q = $this->db->fetchRow("select count(*) as cnt from #__url_alias where `keyword` like '" . $this->db->escape($slugname) . "'");
+        $q = $this->db->fetchRow("select count(*) as cnt from #__url_alias where `keyword` like '" . $this->db->escape($slugname) . "' and `query` = '" . $this->db->escape($page_id) . "'");
         if ($q['cnt']) {
             $q = $this->db->query("select count(*) as cnt from #__url_alias where `keyword` REGEXP '^" . $this->db->escape($slugname) . "[0-9]*'");
             $cnt = $q->row['cnt'];
             if ($cnt > 0) {
-                $slugname .= $cnt;
+                $slugname .= "-" . $cnt;
             }
         }
         return $slugname;

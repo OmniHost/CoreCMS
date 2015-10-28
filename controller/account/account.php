@@ -70,6 +70,7 @@ class ControllerAccountAccount extends \Core\Controller {
         $json = array();
 
         $this->load->model('localisation/country');
+        $this->load->model('localisation/zone');
 
         $country_info = $this->model_localisation_country->getCountry($this->request->get['country_id']);
 
@@ -82,6 +83,8 @@ class ControllerAccountAccount extends \Core\Controller {
                 'iso_code_3' => $country_info['iso_code_3'],
                 'address_format' => $country_info['address_format'],
                 'postcode_required' => $country_info['postcode_required'],
+                	'zone'              => $this->model_localisation_zone->getZonesByCountryId($this->request->get['country_id']),
+		
                 'status' => $country_info['status']
             );
         }

@@ -143,7 +143,11 @@ Abstract class Base extends \Core\Controller {
     public function getSlug() {
         $page_name = slug(trim(html_entity_decode($this->request->post['name'])));
         $this->load->model('tool/seo');
-        $keyword = $this->model_tool_seo->getUniqueSlug($page_name);
+        $page_id = 0;
+        if(!empty($this->request->post['page_id'])){
+            $page_id = 'ams_page_id=' . $this->request->post['page_id'];
+        }
+        $keyword = $this->model_tool_seo->getUniqueSlug($page_name, $page_id);
         $this->response->setOutput(json_encode(array('slug' => $keyword)));
     }
 
@@ -532,10 +536,11 @@ Abstract class Base extends \Core\Controller {
             $_page['selected'] = (isset($this->request->post['selected']) && in_array($_page['ams_page_id'], $this->request->post['selected'])) ? '1' : false;
             $_page['date_created'] = DATE($this->language->get('date_time_format_short'), $_page['date_created']);
             $_page['date_modified'] = DATE($this->language->get('date_time_format_short'), $_page['date_modified']);
-
+            $_page['slug'] = $this->model_tool_seo->getUrl('ams_page_id=' . $_page['ams_page_id']);
             $this->data['pages'][] = $_page;
         }
 
+        
         $url = '';
 
         if (isset($this->request->get['sort'])) {

@@ -10,7 +10,7 @@ class ControllerCommonCustomPosition extends \Core\Controller {
         if(!$pos){
             return '';
         }
-        $pos = preg_replace("/[^a-z0-9\/\s-. ]/i", " ", $pos);
+        $pos = preg_replace("/[^a-z0-9\/\s-_. ]/i", " ", $pos);
         $this->data['pos'] = $pos;
         $this->data['pos_class'] = 'widget-' . slug($pos);
         $this->load->model('design/layout');

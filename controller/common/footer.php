@@ -35,6 +35,8 @@ class ControllerCommonFooter extends \Core\Controller {
 
          $this->load->model('tool/image');
         $this->data['config_logo'] = $this->model_tool_image->resize($this->config->get('config_logo'), 0, 100);
+        $this->data['home'] = $this->url->link('common/home');
+        $this->data['site_name'] = $this->config->get('config_name');
         
            //Header menu
         $this->load->model('design/menu');

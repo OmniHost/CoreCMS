@@ -73,7 +73,7 @@ if (BASE_REQUEST_TYPE == 'cli') {
 
     if ($_SERVER['argc'] >= 3) {
 
-        if (basename($_SERVER['argv'][0]) == 'cli.php') {
+        if (basename($_SERVER['argv'][0]) == 'cli.php' || basename($_SERVER['argv'][0]) == 'index.php'  ) {
             $sn = $_SERVER['argv'][1];
             //$p = $_SERVER['argv'][2];
             $route = array();

@@ -7,16 +7,17 @@ class Plugin_video extends \Core\Plugin {
             'align' => 'center',
             'aspect_ratio' => '16:9',
             'width' => '100',
+            'params' => '',
             'autoplay' => 0), $atts);
 
         $aspect_ratio = str_replace(':', '-', $this->attribute('aspect_ratio'));
 
-        return $this->get_embed_video($content, $this->attribute('align'), $aspect_ratio, $this->attribute('width'), $this->attribute('autoplay'));
+        return $this->get_embed_video($content, $this->attribute('align'), $aspect_ratio, $this->attribute('width'), $this->attribute('autoplay'), $this->attribute('params'));
     }
 
-    public function get_embed_video($url, $align, $aspect, $width = null, $autoplay = 0) {
+    public function get_embed_video($url, $align, $aspect, $width = null, $autoplay = 0, $params = '') {
         $code = $this->before_video($align, $aspect, $width);
-        $code .= $this->embed_video($url, $autoplay);
+        $code .= $this->embed_video($url, $autoplay,$params);
         $code .= $this->after_video();
         return $code;
     }
@@ -31,11 +32,11 @@ class Plugin_video extends \Core\Plugin {
         return $code;
     }
 
-    private function embed_video($url, $autoplay = 0) {
+    private function embed_video($url, $autoplay = 0, $params = '') {
         $regex = "/ (width|height)=\"[0-9\%]*\"/";
         require_once('AutoEmbed.php');
         $autoEmbed = new AutoEmbed();
-        $embed_code = $autoEmbed->get_html($url, array('width' => '100%', 'height' => '100%', 'autoplay' => $autoplay));
+        $embed_code = $autoEmbed->get_html($url, array('width' => '100%', 'height' => '100%', 'autoplay' => $autoplay, 'params' => $params));
         if (!$embed_code) {
             return '<strong>' . __('Error: Invalid URL!', 'respvid') . '</strong>';
         }

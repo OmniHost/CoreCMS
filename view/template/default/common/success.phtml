@@ -1,8 +1,8 @@
 <?php echo $header; ?>
 <div class="breadcrumbs">
     <div class="container">
-        <h3 class="pull-left"><?php echo $heading_title; ?></h3>
-        <?php if (!empty($breadcrubs)): ?>
+        <h2 class="pull-left"><?php echo $heading_title; ?></h2>
+        <?php if (!empty($breadcrumbs)): ?>
             <ul class="pull-right breadcrumb">
                 <?php foreach ($breadcrumbs as $breadcrumb) { ?>
                     <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>

@@ -4,7 +4,7 @@ define('NS', 'front');
 define('VERSION', '1.2.0');
 error_reporting(E_ALL);
 
-if(!is_file('config.php')){
+if (!is_file('config.php')) {
     header("location: install/");
     exit;
 }
@@ -15,11 +15,24 @@ if (!defined('DIR_APPLICATION')) {
 }
 
 require(DIR_SYSTEM . 'startup.php');
+
 require_once(DIR_ROOT . 'system/Core/Core.php');
 $core = new \Core\Core($config);
 $core->load->library('customer');
 $core->customer = new Customer();
+$currency = new \Core\Currency();
+$core->currency = $currency;
+
+if(is_file(DIR_VENDOR . 'autoload.php')){
+ require(DIR_VENDOR . 'autoload.php');
+}
+
+if(BASE_REQUEST_TYPE == 'cli'){
+    $core->dispatch_cli();
+}else{
+
 $core->addPreAction('common/maintenance');
 $core->addPreAction('common/seo_url');
 $core->addPreAction('common/home/marketing');
 $core->dispatch();
+}

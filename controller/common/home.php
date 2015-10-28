@@ -26,9 +26,9 @@ class ControllerCommonHome extends \Core\Controller {
     }
 
     public function marketing() {
-        if (isset($request->get['tracking'])) {
-            setcookie('tracking', $request->get['tracking'], time() + 3600 * 24 * 1000, '/');
-            $db->query("UPDATE `#__marketing` SET clicks = (clicks + 1) WHERE code = '" . $db->escape($request->get['tracking']) . "'");
+        if (isset($this->request->get['tracking'])) {
+            setcookie('tracking', $this->request->get['tracking'], time() + 3600 * 24 * 1000, '/');
+            $this->db->query("UPDATE `#__marketing` SET clicks = (clicks + 1) WHERE code = '" . $this->db->escape($this->request->get['tracking']) . "'");
         }
     }
 

@@ -1,0 +1,13 @@
+{
+    "name": "CoreCMS Composer File",
+    "description": "CoreCMS Vendor Requirements.",
+    "authors": [
+        {
+            "name": "OmniHostNZ",
+            "email": "craig@omnihost.co.nz"
+        }
+    ],
+    "require": {
+        
+    }
+}

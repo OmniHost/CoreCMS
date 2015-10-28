@@ -1,7 +1,10 @@
-<footer id="footer">
-    <div class="container footer">
-        <div class="row">
 
+<div class="margin-bottom-60">
+</div>
+<!--Start of  FOOTER -->
+<footer class="footer">
+    <div class="container ">
+        <div class="row">
             <div class="col-sm-4">
 <!--{{footer_left}}-->
             </div>
@@ -13,27 +16,28 @@
             <div class="col-sm-4">
 <!--{{footer_right}}-->
             </div>
-
-        </div><!-- end row -->
-    </div><!-- end container -->
-
-    <div class="copyrights">
-        <div class="container">
-            <div class="row">
-
-                <div class="col-sm-12">
-                    <p class="pull-left"><?php echo DATE("Y"); ?> &copy; All Rights reserved.</p>
-
-                </div>
-                <div class="col-sm-12 text-right">
-                <small>Powered by <a href="http://omnihost.co.nz">CoreCMS</a></small>
-                </div>
-
-            </div><!-- end row -->
-        </div><!-- end container -->
-    </div><!-- end copyrights -->
+        </div>
+    </div>
 </footer>
-<!-- end footer -->
+<!-- Dotted line between footer -->
+<hr class='dotted'/>
+<footer class="below-footer">
+    <div class="container ">
+        <div class="pull-right smalllogo">
+            <div>
+                Powered By: <a href="http://omnihost.co.nz">CoreCMS</a>
+            </div>
+        </div>
+        <a id="scrolltotop" href="#" class="btn btn-default btn-sm"><i class="fa fa-angle-up fa-2x"></i></a>
+        <p>
+            &copy; <?php echo date("Y"); ?> <?php echo $site_name;?>. &nbsp;&nbsp;<a href="" class="primary-color">Privacy Policy</a>&nbsp; |&nbsp; <a href="" class="primary-color">Terms of Service</a>
+        </p>
+    </div>
+</footer>
+<!-- End of footer -->
+</div>
+</div>
+</div>
 
 <!--[if lt IE 9]>
 <script src="view/plugins/jquery/jquery-1.11.3.min.js"></script>
@@ -44,10 +48,12 @@
 <script src="view/plugins/jquery/jquery-2.1.4.min.js"></script>
 <!--<![endif]-->
 <script src="view/plugins/bootstrap/js/bootstrap.min.js"></script>
-
+<script src="view/plugins/main.js"></script>
 <!-- Custom JS -->
 <!-- THE ABOVE TAG IS REPLACED WITH ANY JS SCRIPTS THAT ARE REQUESTED!!!! -->
-<script src="view/plugins/main.js"></script>
+
+<script type="text/javascript" src="view/template/default/assets/js/site.js"></script>
+
 <script>
 <?php echo $google_analytics; ?>
 </script>

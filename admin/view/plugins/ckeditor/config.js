@@ -40,9 +40,9 @@ CKEDITOR.editorConfig = function (config) {
     config.allowedContent= true;
     CKEDITOR.dtd.$removeEmpty['i'] = false
     CKEDITOR.dtd.$removeEmpty['span'] = false
-    config.extraPlugins= 'bootstrap,autogrow,justify';
-    config.contentsCss = 'view/bootstrap/css/bootstrap.min.css';
-    
+    config.extraPlugins= 'colordialog,bootstrap,autogrow,justify,fontawesome';
+    config.contentsCss = 'view/plugins/ckeditor/plugins/fontawesome/font-awesome/css/font-awesome.min.css,bootstrap/css/bootstrap.min.css,';
+    CKEDITOR.timestamp='1.2.0.1';
 };
 
 

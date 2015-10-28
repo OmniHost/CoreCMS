@@ -1,7 +1,7 @@
 <?php echo $header; ?>
 <div class="breadcrumbs">
     <div class="container">
-        <h3 class="pull-left"><?php echo $page['name']; ?></h3>
+        <h2 class="pull-left"><?php echo $page['name']; ?></h2>
         <ul class="pull-right breadcrumb">
             <?php foreach ($breadcrumbs as $breadcrumb) { ?>
                 <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
@@ -23,9 +23,35 @@
             <?php } else { ?>
                 <?php $class = 'col-sm-12'; ?>
             <?php } ?>
-            <div class="<?php echo $class; ?>">
+            <div class="<?php echo $class; ?> ams-page-<?php echo $page['id']; ?> page-<?php echo $page['slug'];?>">
                 <?php echo $content_top; ?>
                 <?php echo $page['content']; ?>
+                <?php if($page['downloads']): ?>
+                <h3><?php echo $heading_download; ?></h3>
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <td class="text-left"><?php echo $column_name; ?></td>
+            <td class="text-left"><?php echo $column_size; ?></td>
+            <td class="text-left"><?php echo $column_date_added; ?></td>
+            <td></td>
+          </tr>
+        </thead>
+        <tbody>
+          <?php foreach ($page['downloads'] as $download) { ?>
+          <tr>
+            <td class="text-left"><?php echo $download['name']; ?></td>
+            <td class="text-left"><?php echo $download['size']; ?></td>
+            <td class="text-left"><?php echo DATE("F j, Y", strtotime($download['date_modified'])); ?></td>
+            <td><a href="<?php echo $download['href']; ?>" data-toggle="tooltip" title="<?php echo $button_download; ?>" class="btn btn-primary"><i class="fa fa-cloud-download"></i></a></td>
+          </tr>
+          <?php } ?>
+        </tbody>
+      </table>
+      <div class="col-sm-6 text-left"><?php echo $pagination; ?></div>
+      <div class="col-sm-6 text-right"><?php echo $results; ?></div>
+      
+                <?php endif; ?>
                 <?php echo $page['comments']; ?>
                 <?php echo $content_bottom; ?>
             </div><!-- end col-sm-12 -->
@@ -36,4 +62,5 @@
     </div><!-- end container -->
 </section>
 <?php echo $column_bottom; ?>
+
 <?php echo $footer; ?>
