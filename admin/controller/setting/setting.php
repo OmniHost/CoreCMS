@@ -21,7 +21,7 @@ class ControllerSettingSetting extends \Core\Controller {
 
             $this->model_setting_setting->editSetting('config', $this->request->post);
 
-            \Core\HookPoints::executeHooks('admin_settings_save');
+             $this->event->trigger('admin.settings.save');
             $this->session->data['success'] = $this->language->get('text_success');
 
             $this->response->redirect(fixajaxurl($this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL')));
@@ -460,8 +460,8 @@ class ControllerSettingSetting extends \Core\Controller {
 
         $data['placeholder'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
 
-        $data['tabs'] = \Core\HookPoints::executeHooks('admin_settings_settings', $data['tabs']);
-
+         $this->event->trigger('admin.settings.settings', $data['tabs']);
+     
         ksort($data['tabs']);
         $this->data = $data;
 
@@ -527,8 +527,8 @@ class ControllerSettingSetting extends \Core\Controller {
             }
         }
 
-        $this->error = \Core\HookPoints::executeHooks('admin_settings_validate', $this->error);
-
+         $this->event->trigger('admin.settings.validate', $this->error);
+      
         if ($this->error && !isset($this->error['warning'])) {
 
             $this->error['warning'] = $this->language->get('error_warning');

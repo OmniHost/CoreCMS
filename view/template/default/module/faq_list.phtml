@@ -1,0 +1,63 @@
+<?php echo $header; ?>
+<div class="breadcrumbs">
+    <div class="container">
+        <h2 class="pull-left"><?php echo $heading_title; ?></h2>
+        <ul class="pull-right breadcrumb">
+            <?php foreach ($breadcrumbs as $breadcrumb) { ?>
+                <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
+            <?php } ?>
+        </ul>
+    </div>
+</div>
+<?php echo $column_top; ?>
+<section class="content">
+    <div class="container">
+        <div class="row">
+            <?php if ($column_left): ?>
+                <?php echo $column_left; ?>
+            <?php endif; ?>
+            <?php if ($column_left && $column_right) { ?>
+                <?php $class = 'col-sm-6'; ?>
+            <?php } elseif ($column_left || $column_right) { ?>
+                <?php $class = 'col-sm-9'; ?>
+            <?php } else { ?>
+                <?php $class = 'col-sm-12'; ?>
+            <?php } ?>
+            <div class="<?php echo $class; ?> ">
+                <?php echo $content_top; ?>
+                
+      <table class="table table-bordered table-striped table-hover">
+	    <thead>
+		  <tr>
+		
+			<th><?php echo $text_question; ?></th>
+			<th><?php echo $text_answer; ?></th>
+		
+			
+		  </tr>
+		</thead>
+		<tbody>
+		<?php foreach ($all_faq as $faq) { ?>
+		  <tr>
+		     <td style="vertical-align:middle"><?php echo $faq['question']; ?></td>
+		   <td style="vertical-align:middle"><?php echo $faq['answer']; ?></td>
+		  
+		   </tr>
+		<?php } ?>
+		</tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="2"><?php echo $pagination; ?></td>
+                    </tr>
+                </tfoot>
+	  </table>
+                 <?php echo $content_bottom; ?>
+            </div><!-- end col-sm-12 -->
+            <?php if ($column_right): ?>
+                <?php echo $column_right; ?>
+            <?php endif; ?>
+        </div><!-- end row -->
+    </div><!-- end container -->
+</section>
+<?php echo $column_bottom; ?>
+<?php echo $footer; ?>

@@ -69,7 +69,17 @@ class Shortcode {
             return $content;
 
         $pattern = self::getShortcodeRegex();
-        return preg_replace_callback("/$pattern/s", 'self::doShortcodeTag', $content);
+        while(preg_match("/$pattern/s", $content)){
+            $content = preg_replace_callback("/$pattern/sS", 'self::doShortcodeTag', $content);
+        }
+       // exit;
+        
+        
+   /*    while(false !== strpos($content, '[')) {
+           $content = preg_replace_callback("/$pattern/s", 'self::doShortcodeTag', $content);
+           
+        }*/
+        return ($content);
     }
 
     public static function getShortcodeRegex() {

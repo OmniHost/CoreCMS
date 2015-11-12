@@ -631,6 +631,16 @@ CREATE TABLE `#__download` (
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 
+DROP TABLE  IF EXISTS `#__event`;
+
+CREATE TABLE IF NOT EXISTS `#__event` (
+`event_id` int(11) NOT NULL AUTO_INCREMENT,
+  `code` varchar(32) NOT NULL,
+  `trigger` text NOT NULL,
+  `action` text NOT NULL,
+PRIMARY KEY (`event_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
 
 DROP TABLE  IF EXISTS `#__extension`;
 

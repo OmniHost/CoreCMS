@@ -69,33 +69,34 @@ if (in_array($sapi, array('cli', 'cgi', 'cgi-fcgi')) && empty($_SERVER['REMOTE_A
 $cli_params = false;
 if (BASE_REQUEST_TYPE == 'cli') {
 
+    $_SERVER['REQUEST_METHOD'] = "GET";
+    $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+    $_SERVER['SERVER_PORT'] = '80';
+    $_SERVER['DOCUMENT_ROOT'] = rtrim(DIR_ROOT, '/');
+    $_SERVER['HTTP_USER_AGENT'] = 'PHP SHELL CLI';
+    $_SERVER['SCRIPT_FILENAME'] = DIR_ROOT . 'index.php';
 
 
-    if ($_SERVER['argc'] >= 3) {
+    $cli_options = getopt("p:g:", array("host:"));
 
-        if (basename($_SERVER['argv'][0]) == 'cli.php' || basename($_SERVER['argv'][0]) == 'index.php'  ) {
-            $sn = $_SERVER['argv'][1];
-            //$p = $_SERVER['argv'][2];
-            $route = array();
-            $args = $_SERVER['argv'];
-            unset($args[0], $args[1]);
-            foreach ($args as $arg) {
-                $route[] = $arg;
-            }
-            $p = implode("&", $route);
+    $host = !empty($cli_options['host']) ? $cli_options['host'] : $config['config_url'];
+    $p = !empty($cli_options['p']) ? $cli_options['p'] : 'common/cron';
+    $g = !empty($cli_options['g']) ? $cli_options['g'] : false;
 
-            parse_str($p, $_GET);
-            $_SERVER['REQUEST_METHOD'] = "GET";
-            $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
-            $_SERVER['SERVER_PORT'] = '80';
-            $_SERVER['HTTP_HOST'] = $_SERVER['SERVER_NAME'] = $sn;
-            $cli_params = $_SERVER['REQUEST_URI'] = $p;
-            set_time_limit(0);
-        }
+
+    $host = ltrim($host, 'http://');
+    $host = ltrim($host, 'https://');
+    $host = rtrim($host, '/');
+    $_SERVER['HTTP_HOST'] = $_SERVER['SERVER_NAME'] = $host;
+
+    if ($g) {
+        parse_str($g, $_GET);
     }
-    if (!$cli_params) {
-        die('Oops - there was a problem processing the CLI request.');
+
+    if ($p) {
+        $_GET['p'] = $p;
     }
+    $_SERVER['QUERY_STRING'] = http_build_query($_GET);
 }
 
 // Windows IIS Compatibility  

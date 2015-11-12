@@ -33,7 +33,7 @@ final class Action {
      * @param string $route
      * @param array $args
      */
-    public function __construct($route, $args = array()) {
+    public function __construct($route, &$args = array()) {
         $path = '';
 
         $parts = explode('/', str_replace('../', '', (string) $route));

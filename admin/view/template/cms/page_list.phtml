@@ -14,6 +14,49 @@
             </button>
         </div>
         <div class="box-body table-responsive">
+            <div class="well">
+                <div class="row">
+
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label" for="input-name"><?php echo $entry_name; ?></label>
+                            <input type="text" name="filter_name" value="<?php echo!empty($filters['name']) ? $filters['name'] : ''; ?>" placeholder="<?php echo $entry_name; ?>" id="input-name" class="form-control" />
+                        </div>
+
+                    </div>
+                    <div class="col-sm-4">
+
+                        <div class="form-group">
+                            <label class="control-label" for="input-status"><?php echo $entry_status; ?></label>
+                            <select name="filter_status" id="input-status" class="form-control">
+                                <option value="*"></option>
+                                <?php if (!empty($filters['status']) && $filter['status']) { ?>
+                                    <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+                                <?php } else { ?>
+                                    <option value="1"><?php echo $text_enabled; ?></option>
+                                <?php } ?>
+                                <?php if (!empty($filters['status']) && !$filter['status']) { ?>
+                                    <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+                                <?php } else { ?>
+                                    <option value="0"><?php echo $text_disabled; ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label" for="input-date-added"><?php echo $column_date_added; ?></label>
+                            <div class="input-group date">
+                                <input type="text" name="filter_date_added" value="<?php echo (!empty($filters['date_added'])) ? $filters['date_added'] : ''; ?>" placeholder="<?php echo $entry_date_added; ?>" data-format="YYYY-MM-DD" id="input-date-added" class="form-control">
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                </span></div>
+                        </div>
+                        <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> Filter</button>
+                    </div>
+                </div>
+            </div>
             <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form">
                 <table class="table table-bordered table-striped table-responsive">
                     <thead>
@@ -36,7 +79,7 @@
                                 <?php } else { ?>
                                     <a href="<?php echo $sort_date_added; ?>"><?php echo $column_date_added; ?></a>
                                 <?php } ?></th>
-                             <th class="left"><?php if ($sort == 'date_modified') { ?>
+                            <th class="left"><?php if ($sort == 'date_modified') { ?>
                                     <a href="<?php echo $sort_date_modified; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_modified; ?></a>
                                 <?php } else { ?>
                                     <a href="<?php echo $sort_date_modified; ?>"><?php echo $column_date_modified; ?></a>
@@ -62,7 +105,7 @@
                                     <td class="text-right"><?php foreach ($page['action'] as $action) { ?>
                                             <a class="btn btn-xs btn-primary" href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a>
                                         <?php } ?>
-                                    <a class="btn btn-xs btn-default" target="_blank" href="<?php echo $this->config->get('config_catalog') . $page['slug']; ?>">View Page</a></td>
+                                        <a class="btn btn-xs btn-default" target="_blank" href="<?php echo $this->config->get('config_catalog') . $page['slug']; ?>">View Page</a></td>
                                 </tr>
                             <?php } ?>
                         <?php } else { ?>
@@ -82,5 +125,41 @@
         </div>
     </div>
 </section><!-- /.content -->
+
+<script type="text/javascript"><!--
+    docReady(function () {
+        $('#button-filter').on('click', function () {
+            url = url = 'index.php?p=<?php echo $filter; ?>&token=<?php echo $token; ?>';
+
+            var filter_name = $('input[name=\'filter_name\']').val();
+
+            if (filter_name) {
+                url += '&filter[name]=' + encodeURIComponent(filter_name);
+            }
+
+
+
+            var filter_status = $('select[name=\'filter_status\']').val();
+
+            if (filter_status != '*') {
+                url += '&filter[status]=' + encodeURIComponent(filter_status);
+            }
+
+
+
+            var filter_date_added = $('input[name=\'filter_date_added\']').val();
+
+            if (filter_date_added) {
+                url += '&filter[date_added]=' + encodeURIComponent(filter_date_added);
+            }
+
+            location = url;
+        });
+
+        $('.date').datetimepicker({
+            pickTime: false
+        });
+    });
+//--></script>
 
 <?php echo $footer; ?>

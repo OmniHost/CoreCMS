@@ -1,0 +1,59 @@
+<?php echo $header; ?>
+<?php include(__DIR__ . '/../common/page-header.phtml'); ?>
+
+<section class="content">
+
+    <div class="box box-default">
+        <div class="box-header ">
+            <h3 class="box-title"><?php echo $heading_title; ?></h3>
+<div class="box-tools">
+<button type="submit" form="form-faq" data-toggle="tooltip" title="<?php echo $button_save; ?>" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="<?php echo $cancel; ?>" data-toggle="tooltip" title="<?php echo $button_cancel; ?>" class="btn btn-default"><i class="fa fa-reply"></i></a>
+</div>
+        </div>
+        <div class="box-body">
+
+            <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form-faq" class="form-horizontal">
+
+               
+                    <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-title"><?php echo $text_question; ?></label>
+                        <div class="col-sm-10">
+                            <input type="text" name="question" value="<?php echo $question; ?>" placeholder="<?php echo $text_question; ?>" id="input-title" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-answer"><?php echo $text_answer; ?></label>
+                        <div class="col-sm-10">
+                            <?php echo wysiwyg('answer', 'answer', $answer); ?>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-status"><?php echo $text_status; ?></label>
+                        <div class="col-sm-10">
+                            <select name="status" id="input-status" class="form-control">
+                                <?php if ($status) { ?>
+                                    <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+                                    <option value="0"><?php echo $text_disabled; ?></option>
+                                <?php } else { ?>
+                                    <option value="1"><?php echo $text_enabled; ?></option>
+                                    <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+            </form>
+
+        </div>
+    </div>
+</section>
+<script type="text/javascript"><!--
+    docReady(function () {
+
+    });
+//--></script>
+
+<?php echo $footer; ?>

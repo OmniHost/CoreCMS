@@ -17,7 +17,7 @@ class ModelBlogCategory extends \Core\Ams\Page {
             $groups = "-1,-2";
         }
 
-        $sql = "select count(*) as total from #__ams_pages a inner join #__ams_nodes n on a.ams_page_id = n.ams_page_id and n.node='publish_date' where a.status='1' and a.public='1' and a.namespace='blog.post' and a.ams_page_id in (select object_id from sba_allowed_groups where object_type='ams_page' and group_id in ($groups)) and a.ams_page_id not in(select object_id from sba_denied_groups where object_type='ams_page' and group_id in ($groups)) and n.content < '" . time() . "'";
+        $sql = "select count(*) as total from #__ams_pages a inner join #__ams_nodes n on a.ams_page_id = n.ams_page_id and n.node='publish_date' where a.status='1' and a.public='1' and a.namespace='blog.post' and a.ams_page_id in (select object_id from #__allowed_groups where object_type='ams_page' and group_id in ($groups)) and a.ams_page_id not in(select object_id from #__denied_groups where object_type='ams_page' and group_id in ($groups)) and n.content < '" . time() . "'";
 
         $row = $this->_db->query($sql);
         return $row->row['total'];
@@ -35,8 +35,8 @@ class ModelBlogCategory extends \Core\Ams\Page {
         $sql = "select a.ams_page_id, n.content as publish_date from #__ams_pages a "
                 . " inner join #__ams_nodes n on a.ams_page_id = n.ams_page_id and n.node='publish_date' "
                 . " where a.status='1' and a.public='1' and a.namespace='blog.post' "
-                . " and a.ams_page_id in (select object_id from sba_allowed_groups where object_type='ams_page' and group_id in ($groups)) "
-                . " and a.ams_page_id not in(select object_id from sba_denied_groups where object_type='ams_page' and group_id in ($groups))"
+                . " and a.ams_page_id in (select object_id from #__allowed_groups where object_type='ams_page' and group_id in ($groups)) "
+                . " and a.ams_page_id not in(select object_id from #__denied_groups where object_type='ams_page' and group_id in ($groups))"
                 . " and n.content < '" . time() . "'";
 
 
@@ -109,8 +109,8 @@ class ModelBlogCategory extends \Core\Ams\Page {
                 . " inner join #__ams_nodes d on p.ams_page_id = d.ams_page_id and d.node='publish_date' "
                 . " where"
                 . " p.status = 1 and p.namespace='blog.post' and n.node='categories' and n.content like '%\"" . $id . "\"%'"
-                . " and p.ams_page_id in (select object_id from sba_allowed_groups where object_type='ams_page' and group_id in ($groups)) "
-                . " and p.ams_page_id not in(select object_id from sba_denied_groups where object_type='ams_page' and group_id in ($groups))"
+                . " and p.ams_page_id in (select object_id from #__allowed_groups where object_type='ams_page' and group_id in ($groups)) "
+                . " and p.ams_page_id not in(select object_id from #__denied_groups where object_type='ams_page' and group_id in ($groups))"
                 . " and d.content < '" . time() . "'";
 
 

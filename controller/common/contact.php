@@ -8,15 +8,15 @@ class ControllerCommonContact extends \Core\Controller {
         $this->load->language('common/contact');
 
         $this->document->setTitle($this->language->get('heading_title'));
-        
-         
+
+
 
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             unset($this->session->data['captcha']);
 
             $this->language->load('common/contact');
 
-            
+
 
             $mail = new \Core\Mail();
             $mail->protocol = $this->config->get('config_mail_protocol');
@@ -29,7 +29,7 @@ class ControllerCommonContact extends \Core\Controller {
 
             $post = $this->request->post;
             unset($post['custom_field']);
-            
+
             $mailbody = "Contact form Submission \n";
             
             $mailbody .= $this->language->get('entry_name') . ": " . $this->request->post['name'] . "\n";
@@ -37,25 +37,28 @@ class ControllerCommonContact extends \Core\Controller {
             $mailbody .= $this->language->get('entry_enquiry') . ": " . $this->request->post['enquiry'] . "\n";
             
             $fields = $this->model_account_custom_field->getCustomFields();
-             foreach($fields as $cfield){
-                if($cfield['location'] == 'contact'){
-                    $mailbody .= $cfield['name']. ": " . $this->request->post['custom_field'][$cfield['custom_field_id']] . "\n";
+            foreach ($fields as $cfield) {
+                if ($cfield['location'] == 'contact') {
+                    $mailbody .= $cfield['name'] . ": " . $this->request->post['custom_field'][$cfield['custom_field_id']] . "\n";
                     $post['custom_field'][$cfield['name']] = $this->request->post['custom_field'][$cfield['custom_field_id']];
-
                 }
-             }
-            
-         
-            
-            
+            }
+
+
+
+
             $mailbody .= "\n\n\n------------------------------------------\n";
             $mailbody .= "" . DATE("Y-m-d h:i a") . " | " . $this->request->server['REMOTE_ADDR'];
             
             
 
-            $mailbody = \Core\HookPoints::executeHooks('contact_form_submit_body', $mailbody, $this->request->post);
+
+
+            $this->event->trigger('contact.form.submit.body', $mailbody);
+
             $mailsubject = sprintf($this->language->get('email_subject'), $this->request->post['name']);
-            $mailsubject = \Core\HookPoints::executeHooks('contact_form_submit_subject', $mailsubject, $this->request->post);
+
+            $this->event->trigger('contact.form.submit.subject', $mailsubject);
 
             $this->load->model('account/contact');
             $this->model_account_contact->addContact($post);
@@ -180,10 +183,10 @@ class ControllerCommonContact extends \Core\Controller {
         } else {
             $data['contact_custom_field'] = array();
         }
-        
-                    $this->document->addScript('view/plugins/datetimepicker/moment.js');
-		$this->document->addScript('view/plugins/datetimepicker/bootstrap-datetimepicker.min.js');
-		$this->document->addStyle('view/plugins/datetimepicker/bootstrap-datetimepicker.min.css');
+
+        $this->document->addScript('view/plugins/datetimepicker/moment.js');
+        $this->document->addScript('view/plugins/datetimepicker/bootstrap-datetimepicker.min.js');
+        $this->document->addStyle('view/plugins/datetimepicker/bootstrap-datetimepicker.min.css');
 
         $this->children = array(
             'common/column_top',

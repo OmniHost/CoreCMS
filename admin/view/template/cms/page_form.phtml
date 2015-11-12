@@ -31,12 +31,13 @@
                 <ul class="nav nav-tabs" style='margin-bottom:15px;'>
 
                     <li class="active"><a href="#tab-general" data-toggle="tab"><?php echo $tab_general; ?></a></li>
-                    <li class=""><a href="#tab-meta" data-toggle="tab"><?php echo $tab_meta; ?></a></li>
+                    
                     <?php foreach ($tabs as $tabid => $tab): ?>
                         <?php if ($tabid != 'permission' && $tabid != 'general' && $tabid != 'meta' && $tabid != 'general_details'): ?>
                             <li class=""><a href="#tab-<?php echo slug($tabid); ?>" data-toggle="tab"><?php echo ucfirst($tabid); ?></a></li>
                         <?php endif; ?>
                     <?php endforeach; ?>
+                            <li class=""><a href="#tab-meta" data-toggle="tab"><?php echo $tab_meta; ?></a></li>
                     <li><a href="#tab-permission" data-toggle="tab"><?php echo $tab_permission; ?></a></li>
                     <li><a href="#tab-revisions" data-toggle="tab"><?php echo $tab_revision; ?></a></li>
                 </ul>
@@ -108,6 +109,7 @@
                                                 <?php endforeach; ?>
                                             </select>
                                         </div>
+                                        <?php if ($ams_parents): ?>
                                         <div class="">
                                             <label for="parentInput" class="control-label required"><?php echo $entry_parent; ?></label>
                                             <div class="">
@@ -117,6 +119,7 @@
                                                 </select>
                                             </div>
                                         </div>
+                                        <?php endif; ?>
                                         <div class="">
                                             <label for="statusInput" class="control-label required"><?php echo $entry_status; ?></label>
                                             <div class="">
@@ -202,7 +205,7 @@
                                 <label for="metaogImgInput" class="col-sm-2 control-label "><?php echo $entry_meta_ogimage; ?></label>
                                 <div class="col-sm-9">
                                     <a href="#" id="thumb-fbimage" data-toggle="image" class="img-thumbnail"><img src="<?php echo $src_og_image; ?>" alt="" title="" data-placeholder="<?php echo $placeholder; ?>" /></a>
-                                    <input type="hidden" name="meta_og_image" value="<?php echo $entry_meta_ogimage; ?>" id="input-facebook_ogimag" />
+                                    <input type="hidden" name="meta_og_image" value="<?php echo $meta_og_image; ?>" id="input-facebook_ogimag" />
                                     <span><?php echo $entry_meta_ogimage_help; ?></span>
 
                                 </div>

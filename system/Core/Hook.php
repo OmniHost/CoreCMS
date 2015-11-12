@@ -1,7 +1,9 @@
 <?php
 
 namespace Core;
-
+/**
+ * @deprecated since version 1.2
+ */
 abstract class Hook {
 
     public function __construct() {

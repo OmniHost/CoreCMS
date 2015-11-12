@@ -323,12 +323,31 @@ function formfield($field) {
             return '<textarea id="' . $field['id'] . '"  name="' . $field['key'] . '" class="' . $class . '" rows="' . $rows . '">' . $field['value'] . '</textarea>';
             break;
 
+        case "multitext":
+            $html = '<div class="input-group"><input type="text" data-key="' . $field['key'] . '" data-target="' . $field['id'] . '" value="" placeholder="' . $field['label'] . '" id="input-' . $field['id'] . '" class="form-control" /><span class="input-group-btn">
+        <button data-target="' . $field['id'] . '" class="btn btn-primary btn-add-multitext" type="button"><i class="fa fa-plus"></i></button>
+      </span></div>';
+            $html .= '<div id="' . $field['id'] . '" class="well well-sm autocomplete-list" style="height: 150px; overflow: auto;">';
+            //$html .= print_r($field['value'], 1);
+            foreach($field['value'] as $k=>$val){
+                $html .= '<div class="list-group-item" id="' . $field['id'] . '-' . $k . '"><div class="input-group"><span class="input-group-btn"><button class="btn btn-default btn-minus-circle" type="button"><i class="fa fa-minus-circle text-danger"></i></button></span><input class="form-control" type="text" name="' . $field['key'].'[]" value="' . $val . '"></div></div>';
+            }
+
+            /*
+             * <div id="downloadsInput1"><i class="fa fa-minus-circle text-danger"></i> TenXIcon<input type="hidden" name="downloads[]" value="1"></div>
+             */
+            
+            $html .= '</div>';
+
+            return $html;
+            
+            break;
         case 'autocomplete_list':
             $html = '<input type="autocomplete" data-key="' . $field['key'] . '" data-target="' . $field['id'] . '" data-url="' . $field['url'] . '" value="" placeholder="' . $field['label'] . '" id="input-' . $field['id'] . '" class="form-control" />';
             $html .= '<div id="' . $field['id'] . '" class="well well-sm autocomplete-list" style="height: 150px; overflow: auto;">';
             //$html .= print_r($field['value'], 1);
             foreach($field['value'] as $download){
-                $html .= '<div class="list-group-item" id="' . $field['id'] . '-' . $download['download_id'] . '"><i class="fa fa-minus-circle text-danger"></i> ' . $download['name'] . '<input type="hidden" name="' . $field['key'].'[]" value="' . $download['id'] . '"></div>';
+                $html .= '<div class="list-group-item" id="' . $field['id'] . '-' . $download['download_id'] . '"><div class="input-group"><span class="input-group-btn"><button class="btn btn-default btn-minus-circle" type="button"><i class="fa fa-minus-circle text-danger"></i></button></span><span class="form-control"> ' . $download['name'] . '</span><input type="hidden" name="' . $field['key'].'[]" value="' . $download['id'] . '"></div></div>';
             }
 
             /*
@@ -381,7 +400,20 @@ function formfield($field) {
                     . '<input type="hidden" name="' . $field['key'] . '" value="' . $field['value'] . '" id="input-' . slug($field['key']) . '" />';
 
             break;
-        case "datetime":
+        case "date":
+            registry('document')->addScript('view/plugins/datetimepicker/moment.min.js');
+            \Core\Registry::getInstance()->get('document')->addScript('view/plugins/datetimepicker/bootstrap-datetimepicker.min.js');
+            \Core\Registry::getInstance()->get('document')->addStyle('view/plugins/datetimepicker/bootstrap-datetimepicker.min.css');
+            $dateformat = dateformat_PHP_to_MomentJs(\Core\Registry::getInstance()->get('language')->get('date_format_short'));
+            $id = !empty($field['id']) ? $field['id'] : slug('input-' . $field['key']);
+
+            return '<input id="' . $id . '" data-date-format="' . $dateformat . '" type="text" name="' . $field['key'] . '" class="' . $class . ' dateinput" value="' . $field['value'] . '" />'
+                    . ''
+                    . '<script>docReady(function () {'
+                    . '$(\'#' . $id . '\').datepicker({format: "' . $dateformat . '"});});'
+                    . '</script>';
+            break;
+         case "datetime":
             registry('document')->addScript('view/plugins/datetimepicker/moment.min.js');
             \Core\Registry::getInstance()->get('document')->addScript('view/plugins/datetimepicker/bootstrap-datetimepicker.min.js');
             \Core\Registry::getInstance()->get('document')->addStyle('view/plugins/datetimepicker/bootstrap-datetimepicker.min.css');
@@ -393,6 +425,9 @@ function formfield($field) {
                     . '<script>docReady(function () {'
                     . '$(\'#' . $id . '\').datetimepicker({format: "' . $dateformat . '"});});'
                     . '</script>';
+            break;
+        case "display":
+             return '<span class="' . $class . '">' . $field['value'] . '</span><input type="hidden" name="' . $field['key'] . '" class="' . $class . '" value="' . $field['value'] . '" />';
             break;
         case "text":
         default:

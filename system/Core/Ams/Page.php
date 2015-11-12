@@ -51,12 +51,10 @@ Abstract class Page {
      * @var string
      */
     public $meta_description;
-
-    
     public $meta_og_title;
     public $meta_og_description;
     public $meta_og_image;
-    
+
     /**
      * Allow comments on the item
      * @var int
@@ -216,7 +214,7 @@ Abstract class Page {
 
         $return = array();
         if ($q->row) {
-            
+
             $this->loadPageObject($q->row['ams_page_id']);
             $data = $this->toArray();
             $revision = json_decode($q->row['pagedata'], 1);
@@ -247,6 +245,7 @@ Abstract class Page {
             $this->name = $row['name'];
             $this->parent_id = $row['parent_id'];
             $this->status = $row['status'];
+            $this->user_id = $row['user_id'];
 
             $nodes = $this->_findDependentRowset($id);
 
@@ -267,9 +266,8 @@ Abstract class Page {
         }
         return $this;
     }
-    
-    
-    public function getSlug(){
+
+    public function getSlug() {
         $query = $this->_db->query("SELECT keyword FROM #__url_alias WHERE `query` = '" . $this->_db->escape('ams_page_id=' . (int) $this->id) . "'");
         return $query->row['keyword'];
 
@@ -405,10 +403,14 @@ Abstract class Page {
                 if ($key == 'id') {
                     $key = 'ams_page_id';
                 }
+                if($key == 'date_added') {
+                    $query .= " and DATE(from_unixtime(date_created)) = DATE('" . $this->_db->escape($value) . "') ";
+                           
+                }
                 if ($key == 'ams_page_id') {
                     $query .= " and ams_page_id = '" . (int) $value . "' ";
                 } elseif ($key == 'name') {
-                    $query .= " and `name` like '%" . $this->_db->escape($value) . "' ";
+                    $query .= " and `name` like '%" . $this->_db->escape($value) . "%' ";
                 } elseif ($key == 'parent_id') {
                     $query .= " and parent_id = '" . (int) $value . "' ";
                 } elseif ($key == 'status') {
@@ -463,5 +465,183 @@ Abstract class Page {
     public function updateViews() {
         $this->_db->query("update #__ams_pages set views = views + 1 where ams_page_id = '" . $this->id . "'");
     }
+
+    /** Admin Form Generation Defaults * */
+
+    /**
+     * Generate an image select block
+     * @param string $name - name of the field 
+     * @param string $label - Label for the field
+     * @param bool $required - is the field required
+     * @return array
+     */
+    protected function _formTypeImage($name, $label, $required = false) {
+        if (isset($this->request->post[$name])) {
+            $data[$name] = $this->request->post[$name];
+        } elseif (!empty($this->{$name})) {
+            $data[$name] = $this->{$name};
+        } else {
+            $data[$name] = '';
+        }
+
+        $image_model = $this->_load->model('tool/image');
+        if ($data[$name]) {
+            $thumb = $image_model->resizeExact($data[$name], 100, 100);
+        } else {
+            $thumb = $image_model->resizeExact('no_image.jpg', 100, 100);
+        }
+
+        return array(
+            'key' => $name,
+            'type' => 'image',
+            'placeholder' => $image_model->resizeExact('no_image.jpg', 100, 100),
+            'thumb' => $thumb,
+            'value' => $data[$name],
+            'label' => $this->_language->get($label),
+            'required' => $required
+        );
+    }
+
+    /**
+     * Generate an html WYSISYG input
+     * @param string $name - name of the field 
+     * @param string $label - Label for the field
+     * @param bool $required - is the field required
+     * @return array
+     */
+    protected function _formTypeHtml($name, $label, $required = false) {
+        if (isset($this->request->post[$name])) {
+            $data[$name] = $this->request->post[$name];
+        } elseif (!empty($this->{$name})) {
+            $data[$name] = $this->{$name};
+        } else {
+            $data[$name] = '';
+        }
+
+        return array(
+            'key' => $name,
+            'type' => 'html',
+            'value' => $data[$name],
+            'label' => $this->_language->get($label),
+            'required' => $required
+        );
+    }
+
+    /**
+     * Generate an html input
+     * @param string $name - name of the field 
+     * @param string $label - Label for the field
+     * @param string $type - Type of input
+     * @param bool $required - is the field required
+     * @return array
+     */
+    protected function _formTypeInput($name, $label, $type = 'text', $required = false) {
+        if (isset($this->request->post[$name])) {
+            $data[$name] = $this->request->post[$name];
+        } elseif (!empty($this->{$name})) {
+            $data[$name] = $this->{$name};
+        } else {
+            $data[$name] = '';
+        }
+
+        return array(
+            'key' => $name,
+            'type' => $type,
+            'value' => $data[$name],
+            'label' => $this->_language->get($label),
+            'required' => $required
+        );
+    }
+
+    /**
+     * 
+     * @param string $name - name of the field 
+     * @param string $label - Label for the field
+     * @param bool $time - show time or date only
+     * @param bool $required - is the field required
+     * @param string $default - Default Date to display
+     * @return array()
+     */
+    protected function _formTypeInputDate($name, $label, $time = false, $required = false, $default = '') {
+        if ($time) {
+            $format = "date_time_format_short";
+        } else {
+            $format = "date_format_short";
+        }
+
+
+        if (isset($this->request->post[$name])) {
+            $data[$name] = $this->request->post[$name];
+        } elseif ($this->{$name} > 0) {
+            $data[$name] = DATE($this->_language->get($format), strtotime($this->{$name}));
+        } else {
+            $data[$name] = '';
+            if ($default) {
+                $data[$name] = DATE($this->_language->get($format), strtotime($default));
+            }
+        }
+
+        return array(
+            'key' => $name,
+            'type' => ($time) ? 'datetime' : 'date',
+            'value' => $data[$name],
+            'label' => $this->_language->get($label),
+            'required' => $required
+        );
+    }
+
+    /**
+     * Generate an html WYSISYG input
+     * @param string $name - name of the field 
+     * @param string $label - Label for the field
+     * @param string $map_route - url to call for the autocomplete
+     * @param bool $required - is the field required
+     * @param mixed $mapFunction - callback function for the post variable if rquired! null will use pure post
+     * @return array
+     */
+    protected function _formTypeAutocompleteList($name, $label, $map_route, $required = false, $mapFunction = null) {
+        if (isset($this->request->post[$name])) {
+            if (!null($mapFunction)) {
+                $data[$name] = call_user_func($mapFunction, $this->request->post[$name]);
+            } else {
+                $data[$name] = $this->request->post[$name];
+            }
+        } elseif (!empty($this->{$name})) {
+            $data[$name] = $this->{$name};
+        } else {
+            $data[$name] = '';
+        }
+
+
+        return array(
+            'key' => $name,
+            'type' => 'autocomplete_list',
+            'value' => $data[$name],
+            'label' => $this->_language->get($label),
+            'url' => $map_route,
+            'required' => $required
+        );
+    }
+    
+    protected function _formTypeMultiText($name, $label, $required = false){
+         if (isset($this->request->post[$name])) {
+            $data[$name] = $this->request->post[$name];
+        } elseif (!empty($this->{$name})) {
+            $data[$name] = json_decode($this->{$name},1);
+        } else {
+            $data[$name] = array();
+        }
+
+        return array(
+            'key' => $name,
+            'type' => "multitext",
+            'value' => $data[$name],
+            'label' => $this->_language->get($label),
+            'required' => $required
+        );
+    }
+    
+    
+  
 
 }

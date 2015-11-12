@@ -54,7 +54,7 @@ $(document).ready(function () {
                         response($.map(json, function (item) {
                             return {
                                 label: item['name'],
-                                value: item['download_id']
+                                value: item['id']
                             }
                         }));
                     }
@@ -70,11 +70,19 @@ $(document).ready(function () {
         });
     });
 
-    $('.autocomplete-list').delegate('.fa-minus-circle', 'click', function () {
-        $(this).parent().remove();
+
+    $('.autocomplete-list').delegate('.fa-minus-circle,.btn-minus-circle', 'click', function () {
+        $(this).closest('.list-group-item').remove();
     });
 
 
+    $(document).on("click", ".btn-add-multitext", function(e) { 
+        e.preventDefault();
+        var val = $('#input-' + $(this).attr('data-target')).val();
+        $('#input-' + $(this).attr('data-target')).val('');
+        var idkey = Date.now() / 1000;
+         $('#' + $(this).attr('data-target') ).append('<div class="list-group-item" id="' + $(this).attr('data-target') + '-' + idkey + '"><i class="fa fa-minus-circle text-danger"></i> ' + val + '<input type="hidden" name="' + $(this).attr('data-key') + '[]" value="' + val + '" /></div>');
+    });
 
 
 
@@ -295,3 +303,7 @@ $(document).ready(function () {
 
 
 })(window.jQuery);
+
+if (!Date.now) {
+    Date.now = function() { return new Date().getTime(); }
+}

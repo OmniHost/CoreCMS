@@ -34,6 +34,10 @@ class Plugin_demo extends \Core\Plugin {
 
 $psd = new Plugin_demo;
 
+/**
+ * @deprecated since version 1.2
+ * @see Events Subsystem!!!
+ */
 class DemoHook extends \Core\Hook {
 
     public function init() {

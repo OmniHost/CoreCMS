@@ -165,10 +165,9 @@ $this->data['marketing'] = $this->url->link('marketing/marketing', 'token=' . $t
             )
         );
 
-
-
-        $this->data['header_navs'] = \Core\HookPoints::executeHooks('admin_header_navs', $data['header_navs']);
-
+        
+        $this->event->trigger('admin.header.navs', $data['header_navs']);
+ 
 
         $this->template = 'common/header.phtml';
         $this->render();

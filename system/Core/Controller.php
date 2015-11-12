@@ -101,7 +101,7 @@ abstract class Controller {
      * @param array $args
      * @return string
      */
-    protected function getChild($child, $args = array()) {
+    protected function getChild($child, &$args = array()) {
         $action = new \Core\Action($child, $args);
 
         if (file_exists($action->getFile())) {
@@ -151,15 +151,15 @@ abstract class Controller {
      * @return string
      */
     protected function render($tpl = false, $data = array()) {
-        
-        if($tpl){
+
+        if ($tpl) {
             $this->template = $tpl;
         }
-        
-        if($data){
+
+        if ($data) {
             $this->data = array_deap_merge($data, $this->data);
         }
-        
+
         foreach ($this->children as $child) {
             $this->data[basename($child)] = $this->getChild($child);
         }
@@ -179,8 +179,8 @@ abstract class Controller {
             }
         }
 
-  //is there an override ???
-        
+        //is there an override ???
+
         if (file_exists($template . $this->template)) {
             $this->fillTranslations();
             extract($this->data);
@@ -198,6 +198,74 @@ abstract class Controller {
             trigger_error('Error: Could not load template ' . $template . $this->template . '!');
             exit();
         }
+    }
+    
+    public function not_allowed(){
+         $this->language->load('error/not_allowed');
+
+        $this->document->settitle($this->language->get('heading_title'));
+
+        $this->data['breadcrumbs'] = array();
+
+        $this->data['breadcrumbs'][] = array(
+            'text' => $this->language->get('text_home'),
+            'href' => $this->url->link('common/home'),
+            'separator' => false
+        );
+
+        if (isset($this->request->get['p'])) {
+            $data = $this->request->get;
+
+            unset($data['_route_']);
+
+            $route = $data['p'];
+
+            unset($data['p']);
+
+            $url = '';
+
+            if ($data) {
+                $url = '&' . urldecode(http_build_query($data, '', '&'));
+            }
+
+            if (isset($this->request->server['https']) && (($this->request->server['https'] == 'on') || ($this->request->server['https'] == '1'))) {
+                $connection = 'ssl';
+            } else {
+                $connection = 'nonssl';
+            }
+
+            $this->data['breadcrumbs'][] = array(
+                'text' => $this->language->get('heading_title'),
+                'href' => $this->url->link($route, $url, $connection),
+                'separator' => $this->language->get('text_separator')
+            );
+        }
+
+        $this->data['heading_title'] = $this->language->get('heading_title');
+
+        $this->data['text_error'] = $this->language->get('text_error');
+
+        $this->data['button_continue'] = $this->language->get('button_continue');
+
+        $this->response->addheader($this->request->server['SERVER_PROTOCOL'] . '/1.1 401 Not Authorised');
+
+        $this->data['continue'] = $this->url->link('common/home');
+
+
+        $this->template = 'error/not_allowed.phtml';
+
+        $this->children = array(
+            'common/column_top',
+            'common/column_bottom',
+            'common/column_left',
+            'common/column_right',
+            'common/content_top',
+            'common/content_bottom',
+            'common/footer',
+            'common/header'
+        );
+
+        $this->response->setoutput($this->render());
     }
 
     public function not_found($heading = false, $msg = false) {
@@ -250,14 +318,14 @@ abstract class Controller {
     protected function fillTranslations() {
         $translations = $this->language->all();
         foreach ($translations as $k => $v) {
-            if (!isset($this->data[$k]) && substr($k,0,6) != 'error_') {
+            if (!isset($this->data[$k]) && substr($k, 0, 6) != 'error_') {
                 $this->data[$k] = $v;
             }
         }
     }
 
-    
-    public function getOutput(){
+    public function getOutput() {
         return $this->output;
     }
+
 }

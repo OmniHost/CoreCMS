@@ -27,7 +27,7 @@ class Response {
 
     public function setOutput($output, $end = false) {
         $this->output = $output;
-        if($end){
+        if ($end) {
             $this->output();
             exit;
         }
@@ -72,7 +72,7 @@ class Response {
 
         return $output;
     }
-    
+
     protected function getChild($child, $args = array()) {
         $action = new \Core\Action($child, $args);
 
@@ -97,19 +97,19 @@ class Response {
 
             $output = $this->output;
             //Lets Replace all Instances of <!--{{MODULE POST}}-->
-             preg_match_all('/<!--{{(.*)}}-->/Uis', $output, $matches, PREG_SET_ORDER);
-           
-             if($matches){
-                 foreach($matches as $match){
-                     $res = $this->getChild('common/custom_position', $match[1]);
-                  
-                     if($res){
-                         $output = str_replace($match[0], $res, $output);
-                     }
-                 }
-             }
-            
-            
+            preg_match_all('/<!--{{(.*)}}-->/Uis', $output, $matches, PREG_SET_ORDER);
+
+            if ($matches) {
+                foreach ($matches as $match) {
+                    $res = $this->getChild('common/custom_position', $match[1]);
+
+                    if ($res) {
+                        $output = str_replace($match[0], $res, $output);
+                    }
+                }
+            }
+
+
 
             $output = \Core\Shortcode::doShortcode($output);
 
@@ -130,7 +130,7 @@ class Response {
                 }
                 $output = str_replace('<!-- Custom CSS -->', $html, $output);
             }
-            
+
             $metas = $doc->getMeta();
             if ($metas) {
                 $html = '';
@@ -139,9 +139,8 @@ class Response {
                 }
                 $output = str_replace('<!-- Custom META -->', $html, $output);
             }
+            \Core\Registry::getInstance()->get('event')->trigger('before.render', $output);
             
-            $output = \Core\HookPoints::executeHooks('before_render', $output);
-
 
             if ($this->level) {
 

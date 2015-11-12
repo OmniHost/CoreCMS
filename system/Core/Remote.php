@@ -82,6 +82,7 @@ class Remote {
                 curl_setopt($ch, CURLOPT_URL, $url);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $query_string);
                 break;
+            
             case 'GET':
             default:
                 if (strlen($query_string) > 0) {

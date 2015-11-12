@@ -29,7 +29,7 @@ class ModelToolSeo extends \Core\Model {
 
     public function getUniqueSlug($name, $page_id = '') {
         $slugname = slug($name);
-        $q = $this->db->fetchRow("select count(*) as cnt from #__url_alias where `keyword` like '" . $this->db->escape($slugname) . "' and `query` = '" . $this->db->escape($page_id) . "'");
+        $q = $this->db->fetchRow("select count(*) as cnt from #__url_alias where `keyword` like '" . $this->db->escape($slugname) . "' and `query` != '" . $this->db->escape($page_id) . "'");
         if ($q['cnt']) {
             $q = $this->db->query("select count(*) as cnt from #__url_alias where `keyword` REGEXP '^" . $this->db->escape($slugname) . "[0-9]*'");
             $cnt = $q->row['cnt'];

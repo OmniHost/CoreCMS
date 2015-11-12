@@ -44,10 +44,8 @@ class ControllerCommonHome extends \Core\Controller {
                 $this->data['widgets'][slug($extension)] = $this->load->controller('dashboard/' . $extension);
             }
         }
-        $widgets = \Core\HookPoints::executeHooks('admin_dashboard');
-        if($widgets){
-            $this->data['widgets'] = array_merge($this->data['widgets'], $widgets);
-        }
+        
+        $this->event->trigger('admin.dashboard.widget', $this->data['widgets']);
 
         $this->template = 'common/home.phtml';
         $this->children = array(

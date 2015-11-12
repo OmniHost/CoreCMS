@@ -518,7 +518,7 @@ class ControllerCmsDownload extends \Core\Controller {
 
             foreach ($results as $result) {
                 $json[] = array(
-                    'download_id' => $result['download_id'],
+                    'id' => $result['download_id'],
                     'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8'))
                 );
             }

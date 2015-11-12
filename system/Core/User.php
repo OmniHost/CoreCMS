@@ -17,7 +17,7 @@ class User {
                 $this->user_id = $user_query->row['user_id'];
                 $this->username = $user_query->row['username'];
                 $this->fullname = $user_query->row['firstname'] . ' ' . $user_query->row['lastname'];
-                $this->group_id = $user_query->row['user_group_id'];
+                $this->user_group_id = $user_query->row['user_group_id'];
 
                 $this->db->query("UPDATE #__user SET ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE user_id = '" . (int) $this->session->data['user_id'] . "'");
 
@@ -54,7 +54,7 @@ class User {
 
             $this->user_id = $user_query->row['user_id'];
             $this->username = $user_query->row['username'];
-            $this->group_id = $user_query->row['user_group_id'];
+            $this->user_group_id = $user_query->row['user_group_id'];
 
             $user_group_query = $this->db->query("SELECT permission FROM #__user_group WHERE user_group_id = '" . (int) $user_query->row['user_group_id'] . "'");
 

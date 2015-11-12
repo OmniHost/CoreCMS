@@ -53,7 +53,7 @@ Class Core {
             }
             self::$registry->set('db', $db);
 
-            $dbconfigs = $this->db->fetchAll("select * from #__setting");
+            $dbconfigs = $db->fetchAll("select * from #__setting");
             foreach ($dbconfigs as $setting) {
                 if (!$setting['serialized']) {
                     $config->set($setting['key'], $setting['value']);
@@ -61,6 +61,20 @@ Class Core {
                     $config->set($setting['key'], unserialize($setting['value']));
                 }
             }
+            
+            require_once('Event.php');
+            $event = new \Core\Event();
+            
+            //Core Events:::
+            $event->register('cms.pagelist','cms/page/event_pagelist');
+            
+            $events = $db->query('Select * from #__event')->rows;
+          
+            foreach($events as $_event){
+                $event->register($_event['trigger'], $_event['action']);
+            }
+            
+            self::$registry->set('event', $event);
         }
         
         define('HTTP_SERVER', $config->get('config_url'));

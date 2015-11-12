@@ -40,7 +40,7 @@ class ControllerExtensionModule extends \Core\Controller {
 
             $this->session->data['success'] = $this->language->get('text_success');
 
-            $this->response->redirect(fixajaxurl($this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL')));
+            $this->redirect($this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL'));
         }
 
         $this->getList();
@@ -69,7 +69,7 @@ class ControllerExtensionModule extends \Core\Controller {
 
             $this->session->data['success'] = $this->language->get('text_success');
 
-            $this->response->redirect(fixajaxurl($this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL')));
+            $this->redirect(fixajaxurl($this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL')));
         }
 
         $this->getList();
@@ -89,7 +89,7 @@ class ControllerExtensionModule extends \Core\Controller {
 
             $this->session->data['success'] = $this->language->get('text_success');
 
-            $this->response->redirect(fixajaxurl($this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL')));
+            $this->redirect(fixajaxurl($this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL')));
         }
 
         $this->getList();

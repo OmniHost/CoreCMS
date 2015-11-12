@@ -217,20 +217,7 @@ CAROUSEL;
 
     // --------------------------------------------------------------------------
 
-    /**
-     * Row
-     *
-     * Usage: {{ bootstrap:row }} My Content {{ /bootstrap:row }}
-     * 
-     * Optional: class and id
-     *
-     * @return html
-     */
-    function row() {
-        $class = $this->attribute('class');
-        $id = $this->attribute('id');
-        return '<div class="row ' . $class . '" id="' . $id . '">' . $this->content() . '</div>';
-    }
+   
 
     // --------------------------------------------------------------------------
 
@@ -411,7 +398,48 @@ CAROUSEL;
     public function inlinescript($attrs,$script){
         return '<script>' . html_entity_decode($script, ENT_QUOTES, 'UTF-8') . '</script>';
     }
-
+    
+    public function bootstrap_row($attribs, $innerHtml) {
+         $attribs = $this->parseAttributes(array(
+            'id' => '',
+            'class' => ''
+                ), $attribs);
+          $class = $this->attribute('class');
+        $id = $this->attribute('id');
+        
+        $innerHtml = str_replace(array("&nbsp;[","&nbsp;"),array("[","]"), $innerHtml);
+   /*     if(\Core\Shortcode::hasShortcode($innerHtml, 'bootstrap_span')){
+            var_dump($innerHtml);
+            exit;
+        }*/
+        
+     
+        
+        return '<div class="row ' . $class . '" id="' . $id . '">' . $innerHtml . '</div>';
+    }
+    
+ 
+    public function bootstrap_span($attribs, $innerHtml) {
+        $attribs = $this->parseAttributes(array(
+            'id' => '',
+            'class' => '',
+            'size' => '',
+                ), $attribs);
+        $class = $this->attribute('class');
+        $id = $this->attribute('id');
+        $size = $this->attribute('size');
+        
+        
+        if (!$size) {
+            $size = "col-xs-12";
+        }
+        $html = '<div class="' . $size . ' ' . $class;
+        $html .= '" id="' . $id . '">' . $innerHtml . '</div>';
+        return $html;
+    
+    }
+    
+    
     public function init() {
         if (!$this->isAdmin()) {
             add_shortcode('bootstrap_alert', array($this, 'alert'));
@@ -419,6 +447,8 @@ CAROUSEL;
             add_shortcode('gallery' , array($this, 'gallery'));
             add_shortcode('script' , array($this, 'script'));
             add_shortcode('inlinescript' , array($this, 'inlinescript'));
+            add_shortcode('bootstrap_span', array($this, 'bootstrap_span'));
+            add_shortcode('bootstrap_row', array($this, 'bootstrap_row'));
         }
     }
 
