@@ -1,0 +1,78 @@
+<?php echo $header; ?>
+<?php include(__DIR__ . '/../common/page-header.phtml'); ?>
+
+<section class="content">
+
+    <div class="box">
+        <div class="box-header text-right">
+
+            <button type="submit" form="form-html" data-toggle="tooltip" title="<?php echo $button_save; ?>" class="btn btn-app"><i class="fa fa-save text-green"></i> <?php echo $button_save; ?></button>
+            <a href="<?php echo $cancel; ?>" data-toggle="tooltip" title="<?php echo $button_cancel; ?>" class="btn btn-app"><i class="fa fa-reply "></i> <?php echo $button_cancel; ?></a>
+        </div>
+
+
+        <div class="box-body">
+
+            <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form-html" class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label required" for="input-name"><?php echo $entry_name; ?></label>
+                    <div class="col-sm-9">
+                        <input type="text" name="name" value="<?php echo $name; ?>" placeholder="<?php echo $entry_name; ?>" id="input-name" class="form-control" />
+                        <?php if ($error_name) { ?>
+                            <div class="text-danger"><?php echo $error_name; ?></div>
+                        <?php } ?>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-title"><?php echo $entry_title; ?></label>
+                    <div class="col-sm-9">
+                        <input type="text" name="title" placeholder="<?php echo $entry_title; ?>" id="input-heading" value="<?php echo isset($title) ? $title : ''; ?>" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label required" for="input-businessid"><?php echo $entry_business_id; ?></label>
+                    <div class="col-sm-9">
+                        <input type="text" name="business_id" value="<?php echo $business_id; ?>" placeholder="<?php echo $entry_business_id; ?>" id="input-busienssid" class="form-control" />
+                        <?php if ($error_business_id) { ?>
+                            <div class="text-danger"><?php echo $error_business_id; ?></div>
+                        <?php } ?>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-widget"><?php echo $entry_widget; ?></label>
+                    <div class="col-sm-9">
+                        <select name="widget" id="input-widget" class="form-control">
+                            <?php if ($widget == 'review') { ?>
+                                <option value="review" selected="selected">Review Widget</option>
+                                <option value="newsletter">Newsletter Widget</option>
+                            <?php } else { ?>
+                                <option value="review">Review Widget</option>
+                                <option value="newsletter" selected="selected">Newsletter Widget</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-status"><?php echo $entry_status; ?></label>
+                    <div class="col-sm-9">
+                        <select name="status" id="input-status" class="form-control">
+                            <?php if ($status) { ?>
+                                <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+                                <option value="0"><?php echo $text_disabled; ?></option>
+                            <?php } else { ?>
+                                <option value="1"><?php echo $text_enabled; ?></option>
+                                <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<?php echo $footer; ?>

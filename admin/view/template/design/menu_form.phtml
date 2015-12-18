@@ -167,7 +167,7 @@ function buildMenuTree($mi, &$_id = 0) {
                                             <i class="fa fa-trash-o"></i>
                                         </div>';
         $xhtml .= '</div>';
-        if ($m['children']) {
+        if (!empty($m['children'])) {
             $xhtml .= '<ol class="dd-list">';
             $xhtml .= buildMenuTree($m['children'], $_id);
             $xhtml .= '</ol>';
@@ -178,75 +178,7 @@ function buildMenuTree($mi, &$_id = 0) {
     return $xhtml;
 }
 ?>
-<?php
-/*
- * <ol class="dd-list">
-  <li class="dd-item" data-id="1" data-title="" data-ams_page_id="0" data-link="">
-  <div class="dd-handle"></div>
-  <div class="dd-content">
-  <span class="text">Item 1</span>
-  <div class="tools">
-  <i class="fa fa-edit"></i>
-  <i class="fa fa-trash-o"></i>
-  </div>
-  </div>
-  </li>
-  <li class="dd-item" data-id="9"><div class="dd-handle"></div>
-  <div class="dd-content">
-  <span class="text">Item 9</span>
-  <div class="tools">
-  <i class="fa fa-edit"></i>
-  <i class="fa fa-trash-o"></i>
-  </div>
-  </div></li>
-  <li class="dd-item" data-id="2"><button data-action="collapse" type="button">Collapse</button><button data-action="expand" type="button" style="display: none;">Expand</button>
-  <div class="dd-handle"></div>
-  <div class="dd-content">
-  <span class="text">Item 2</span>
-  <div class="tools">
-  <i class="fa fa-edit"></i>
-  <i class="fa fa-trash-o"></i>
-  </div>
-  </div>
-  <ol class="dd-list">
-  <li class="dd-item" data-id="3">
-  <div class="dd-handle">
 
-  </div>
-  <div class="dd-content">
-  <span class="text">Item 3</span>
-  <div class="tools">
-  <i class="fa fa-edit"></i>
-  <i class="fa fa-trash-o"></i>
-  </div>
-  </div>
-  </li>
-  <li class="dd-item" data-id="4"><div class="dd-handle"></div>
-  <div class="dd-content">
-  <span class="text">Item 4</span>
-  <div class="tools">
-  <i class="fa fa-edit"></i>
-  <i class="fa fa-trash-o"></i>
-  </div>
-  </div></li>
-  <li class="dd-item" data-id="5">
-  <div class="dd-handle"></div>
-  <div class="dd-content">
-  <span class="text">Item 5</span>
-  <div class="tools">
-  <i class="fa fa-edit"></i>
-  <i class="fa fa-trash-o"></i>
-  </div>
-  </div>
-  </li>
-
-  </ol>
-  </li>
-
-  </ol>
- * 
- */
-?>
 
 <script type="text/javascript"><!--
     function htmlEntities(str) {
@@ -277,7 +209,8 @@ function buildMenuTree($mi, &$_id = 0) {
         ).get();
         $item_id = Math.max.apply(Math, item_ids);
 
-        $('#add_menu_item').on("click", function () {
+       // $('#add_menu_item').on("click", function () {
+        $(document). on("click", '#add_menu_item', function () {
             $item_action = 'add';
             $item_id++;
             $('#item_id').val($item_id);
@@ -294,7 +227,8 @@ function buildMenuTree($mi, &$_id = 0) {
             $('#menu-item-modal').modal('show');
         });
 
-        $('#nestable .fa-edit').on("click", function () {
+        $(document). on("click", '#nestable .fa-edit', function() {
+      //  $('#nestable .fa-edit').on("click", function () {
             var theLi = $(this).closest('li');
             $item_action = 'edit';
             $('#item_id').val(theLi.attr('data-id'));
@@ -337,7 +271,7 @@ function buildMenuTree($mi, &$_id = 0) {
                         $('.ui-autocomplete').css('z-index', '999999999');
                         response($.map(json, function (item) {
                             return {
-                                label: item['name'],
+                                label: decodeEntities(item['name']),
                                 ams_page: item['ams_page_id'],
                                 link: item['link']
                             }
@@ -356,7 +290,9 @@ function buildMenuTree($mi, &$_id = 0) {
             }
         });
 
-        $('#save_menu_item').on("click", function () {
+
+        $(document). on("click", '#save_menu_item', function() {
+        //$('#save_menu_item').on("click", function () {
             var theTitle = $('#titleInput').val();
             var theLink = $('#linkInput').val();
             var theLabel = $('#linkLabelInput').val();
@@ -411,8 +347,8 @@ function buildMenuTree($mi, &$_id = 0) {
             $('#menu-item-modal').modal('hide');
         });
 
-
-        $('#nestable .fa-trash-o').on("click", function () {
+         $(document). on("click", '#nestable .fa-trash-o', function() {
+     //   $('#nestable .fa-trash-o').on("click", function () {
             if (confirm('<?php echo $text_confirm; ?>')) {
                 $(this).closest('li').remove();
                 $('#menu_items_input').val(JSON.stringify($('#nestable').nestable('serialize')));

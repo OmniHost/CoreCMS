@@ -110,7 +110,8 @@ abstract class Page extends \Core\Controller {
                 $this->data['has_comments'] = false;
             }
             
-            
+             $this->load->model('cms/comment');
+        $this->data['comment_count'] = $this->model_cms_comment->countComments($page['id']);
             
 
             $this->template = $this->_namespace . '.phtml';

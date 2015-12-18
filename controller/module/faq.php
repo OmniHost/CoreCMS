@@ -65,8 +65,8 @@ class ControllerModuleFaq extends \Core\Controller {
 
         foreach ($all_faq as $faq) {
             $data['all_faq'][] = array(
-                'question' => html_entity_decode($faq['question'], ENT_QUOTES),
-                'answer' => (strip_tags(html_entity_decode($faq['answer'], ENT_QUOTES))),
+                'question' => html_entity_decode($faq['question'], ENT_QUOTES, "UTF-8"),
+                'answer' => html_entity_decode($faq['answer'], ENT_QUOTES, "UTF-8"),
                 'view' => $this->url->link('extension/faq/faq', 'faq_id=' . $faq['faq_id']),
                 'date_added' => date($this->language->get('date_format_short'), strtotime($faq['date_added']))
             );

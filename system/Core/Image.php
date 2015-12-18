@@ -59,7 +59,7 @@ class Image {
         $crop_w = round($new_w / $size_ratio);
         $crop_h = round($new_h / $size_ratio);
 
-        if (!is_array($crop) || count($crop) !== 2) {
+        if (empty($crop) || !is_array($crop) || count($crop) !== 2) {
             $crop = array('center', 'center');
         }
 
@@ -167,6 +167,7 @@ class Image {
             $scale = min($scale_w, $scale_h);
         }
 
+        
         if ($scale == 1 && $scale_h == $scale_w && $this->info['mime'] != 'image/png') {
             return;
         }

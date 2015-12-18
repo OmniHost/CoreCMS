@@ -4,7 +4,7 @@ class ModelToolSeo extends \Core\Model {
 
     public function getUrl($query_string) {
         $query = $this->db->fetchRow("select keyword from #__url_alias where query = '" . $this->db->escape($query_string) . "'");
-        return $query['keyword'];
+        return $query ? $query['keyword'] : '';
     }
     
     public function getSlug($keyword){

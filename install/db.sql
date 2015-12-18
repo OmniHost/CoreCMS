@@ -861,10 +861,113 @@ CREATE TABLE `#__subscriber` (
   `ip_address` varchar(50) NOT NULL,
   `date_created` datetime NOT NULL,
   `date_modified` datetime NOT NULL,
+  `firstname` VARCHAR(250) NOT NULL ,
+  `lastname` VARCHAR(250) NOT NULL ,
+  `unsubscribe_date` DATE NOT NULL ,
+  `unsubsribe_send_id` INT(11) NOT NULL,
   PRIMARY KEY (`subscriber_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
+CREATE TABLE IF NOT EXISTS `#__subscriber_group` (
+  `subscriber_id` int(11) NOT NULL,
+  `group_id` int(11) NOT NULL,
+  PRIMARY KEY  (`subscriber_id`,`group_id`)
+)  DEFAULT CHARSET=utf8;
 
+
+CREATE TABLE IF NOT EXISTS `#__newsletter_group` (
+  `group_id` int(11) NOT NULL auto_increment,
+  `group_name` varchar(255) NOT NULL,
+  `public` int(11) NOT NULL,
+  PRIMARY KEY  (`group_id`)
+)  DEFAULT CHARSET=utf8;
+
+INSERT INTO `#__newsletter_group` VALUES (1, 'General e-Newsletter', 1);
+
+CREATE TABLE IF NOT EXISTS `#__newsletter_campaign` (
+  `campaign_id` int(11) NOT NULL auto_increment,
+  `campaign_name` varchar(255) NOT NULL,
+  `create_date` date NOT NULL,
+  PRIMARY KEY  (`campaign_id`)
+)  DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `#__newsletter_campaign_subscriber` (
+  `campaign_id` int(11) NOT NULL,
+  `subscriber_id` int(11) NOT NULL,
+  `current_newsletter_id` int(11) NOT NULL,
+  `join_time` int(11) NOT NULL,
+  PRIMARY KEY  (`campaign_id`,`subscriber_id`)
+)   DEFAULT CHARSET=utf8;
+
+
+
+CREATE TABLE IF NOT EXISTS `#__newsletter_campaign_newsletter` (
+  `campaign_id` int(11) NOT NULL,
+  `newsletter_id` int(11) NOT NULL,
+  `send_time` int(11) NOT NULL,
+  PRIMARY KEY  (`campaign_id`,`newsletter_id`)
+)  DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `#__newsletter_image` (
+  `image_id` int(11) NOT NULL auto_increment,
+  `image_url` text NOT NULL,
+  PRIMARY KEY  (`image_id`)
+)  DEFAULT CHARSET=utf8;
+
+
+
+CREATE TABLE IF NOT EXISTS `#__newsletter_link` (
+  `link_id` int(11) NOT NULL auto_increment,
+  `link_url` text NOT NULL,
+  PRIMARY KEY  (`link_id`)
+)  DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `#__newsletter_link_open` (
+  `link_open_id` int(11) NOT NULL auto_increment,
+  `link_id` int(11) NOT NULL,
+  `subscriber_id` int(11) NOT NULL,
+  `send_id` int(11) NOT NULL,
+  `timestamp` int(11) NOT NULL,
+  PRIMARY KEY  (`link_open_id`)
+)  DEFAULT CHARSET=utf8;
+
+CREATE TABLE `#__newsletter` (
+  `newsletter_id` int(11) NOT NULL auto_increment,
+`name` VARCHAR(250) NOT NULL ,
+  `create_date` date NOT NULL,
+  `template` varchar(100) collate utf8_bin NOT NULL,
+  `subject` varchar(255) collate utf8_bin NOT NULL,
+  `from_name` varchar(255) collate utf8_bin NOT NULL,
+  `from_email` varchar(255) collate utf8_bin NOT NULL,
+  `content` text collate utf8_bin NOT NULL,
+  `bounce_email` varchar(255) collate utf8_bin NOT NULL,
+  PRIMARY KEY  (`newsletter_id`)
+)  DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `#__newsletter_subscriber` (
+  `send_id` int(11) NOT NULL,
+  `subscriber_id` int(11) NOT NULL,
+  `sent_time` int(11) NOT NULL,
+  `status` int(11) NOT NULL,
+  `open_time` int(11) NOT NULL,
+  `bounce_time` int(11) NOT NULL,
+  PRIMARY KEY  (`send_id`,`subscriber_id`),
+  KEY `open_time` (`open_time`)
+)  DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `#__newsletter_send` (
+  `send_id` int(11) NOT NULL auto_increment,
+  `start_time` int(11) NOT NULL,
+  `status` int(11) NOT NULL,
+  `finish_time` int(11) NOT NULL,
+  `newsletter_id` int(11) NOT NULL,
+  `campaign_id` int(11) NOT NULL,
+  `template_html` text NOT NULL,
+  `full_html` text NOT NULL,
+  PRIMARY KEY  (`send_id`),
+  KEY `newsletter_id` (`newsletter_id`)
+)   DEFAULT CHARSET=utf8;
 
 DROP TABLE  IF EXISTS `#__upload`;
 

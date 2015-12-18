@@ -45,6 +45,10 @@ function splitByCaps($string, $ucfirst = true, $glue = false) {
     return ($glue) ? str_replace(' ', $glue, $return) : $return;
 }
 
+function unslug($text) {
+    return ucfirst(str_replace('_', ' ', $text));
+}
+
 function textAutoLink($str, $attributes = array(), $protocols = array('http', 'https', 'mail')) {
     /* $attrs = '';
       foreach ($attributes as $attribute => $value) {
@@ -329,31 +333,40 @@ function formfield($field) {
       </span></div>';
             $html .= '<div id="' . $field['id'] . '" class="well well-sm autocomplete-list" style="height: 150px; overflow: auto;">';
             //$html .= print_r($field['value'], 1);
-            foreach($field['value'] as $k=>$val){
-                $html .= '<div class="list-group-item" id="' . $field['id'] . '-' . $k . '"><div class="input-group"><span class="input-group-btn"><button class="btn btn-default btn-minus-circle" type="button"><i class="fa fa-minus-circle text-danger"></i></button></span><input class="form-control" type="text" name="' . $field['key'].'[]" value="' . $val . '"></div></div>';
+            foreach ($field['value'] as $k => $val) {
+                $html .= '<div class="list-group-item" id="' . $field['id'] . '-' . $k . '"><div class="input-group"><span class="input-group-btn"><button class="btn btn-default btn-minus-circle" type="button"><i class="fa fa-minus-circle text-danger"></i></button></span><input class="form-control" type="text" name="' . $field['key'] . '[]" value="' . $val . '"></div></div>';
             }
 
             /*
              * <div id="downloadsInput1"><i class="fa fa-minus-circle text-danger"></i> TenXIcon<input type="hidden" name="downloads[]" value="1"></div>
              */
-            
+
             $html .= '</div>';
 
             return $html;
-            
+
+            break;
+
+        case "autocomplete":
+
+            return '<input type="hidden" name="' . $field['key'] . '" value="' . @$field['value']['id'] . '" id="' . $field['id'] . '"><input data-target="' . $field['id'] . '" data-limit="1" data-url="' . $field['url'] . '" type="' . $field['type'] . '" name="' . $field['key'] . '_display" class="' . $class . '" value="' . @$field['value']['name'] . '" />';
+
             break;
         case 'autocomplete_list':
-            $html = '<input type="autocomplete" data-key="' . $field['key'] . '" data-target="' . $field['id'] . '" data-url="' . $field['url'] . '" value="" placeholder="' . $field['label'] . '" id="input-' . $field['id'] . '" class="form-control" />';
+
+            $html = '<input type="autocomplete" data-limit="0" data-key="' . $field['key'] . '" data-target="' . $field['id'] . '" data-url="' . $field['url'] . '" value="" placeholder="' . $field['label'] . '" id="input-' . $field['id'] . '" class="form-control" />';
             $html .= '<div id="' . $field['id'] . '" class="well well-sm autocomplete-list" style="height: 150px; overflow: auto;">';
             //$html .= print_r($field['value'], 1);
-            foreach($field['value'] as $download){
-                $html .= '<div class="list-group-item" id="' . $field['id'] . '-' . $download['download_id'] . '"><div class="input-group"><span class="input-group-btn"><button class="btn btn-default btn-minus-circle" type="button"><i class="fa fa-minus-circle text-danger"></i></button></span><span class="form-control"> ' . $download['name'] . '</span><input type="hidden" name="' . $field['key'].'[]" value="' . $download['id'] . '"></div></div>';
+            if (!empty($field['value']) && is_array($field['value'])) {
+                foreach ($field['value'] as $download) {
+                    $html .= '<div class="list-group-item" id="' . $field['id'] . '-' . $download['id'] . '"><div class="input-group"><span class="input-group-btn"><button class="btn btn-default btn-minus-circle" type="button"><i class="fa fa-minus-circle text-danger"></i></button></span><span class="form-control"> ' . $download['name'] . '</span><input type="hidden" name="' . $field['key'] . '[]" value="' . $download['id'] . '"></div></div>';
+                }
             }
 
             /*
              * <div id="downloadsInput1"><i class="fa fa-minus-circle text-danger"></i> TenXIcon<input type="hidden" name="downloads[]" value="1"></div>
              */
-            
+
             $html .= '</div>';
 
             return $html;
@@ -374,24 +387,22 @@ function formfield($field) {
             }
             $return .= '</ul></div>';
             return $return;
-            /* <li class="list-group-item even">
-              <input type="checkbox" name="allowed_groups[]" value="1">
 
-              Default                                                </li>
-              <li class="list-group-item odd">
+            break;
 
+        case "select":
+            $return = '<select name="' . $field['key'] . '" id="' . $field['key'] . 'Input" class="form-control">';
+            foreach ($field['options'] as $ok => $ov) {
+                if ($ok == $field['value']) {
+                    $return .= '<option selected value="' . $ok . '">' . $ov . '</option>';
+                } else {
+                    $return .= '<option value="' . $ok . '">' . $ov . '</option>';
+                }
+                
+            }
+            $return .= '</select>';
+            return $return;
 
-              Everybody                                                </li>
-              <li class="list-group-item even">
-              <input type="checkbox" name="allowed_groups[]" value="-2">
-
-              Guest                                                </li>
-              <li class="list-group-item odd">
-              <input type="checkbox" name="allowed_groups[]" value="-3">
-
-              Users                                                </li>
-              </ul>
-              </div> */
             break;
 
         case "image":
@@ -413,7 +424,7 @@ function formfield($field) {
                     . '$(\'#' . $id . '\').datepicker({format: "' . $dateformat . '"});});'
                     . '</script>';
             break;
-         case "datetime":
+        case "datetime":
             registry('document')->addScript('view/plugins/datetimepicker/moment.min.js');
             \Core\Registry::getInstance()->get('document')->addScript('view/plugins/datetimepicker/bootstrap-datetimepicker.min.js');
             \Core\Registry::getInstance()->get('document')->addStyle('view/plugins/datetimepicker/bootstrap-datetimepicker.min.css');
@@ -427,7 +438,7 @@ function formfield($field) {
                     . '</script>';
             break;
         case "display":
-             return '<span class="' . $class . '">' . $field['value'] . '</span><input type="hidden" name="' . $field['key'] . '" class="' . $class . '" value="' . $field['value'] . '" />';
+            return '<span class="' . $class . '">' . $field['value'] . '</span><input type="hidden" name="' . $field['key'] . '" class="' . $class . '" value="' . $field['value'] . '" />';
             break;
         case "text":
         default:

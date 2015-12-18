@@ -94,7 +94,7 @@ class ModelBlogCategory extends \Core\Ams\Page {
         }
 
 
-        if ($data['ams_page_id']) {
+        if (!empty($data['ams_page_id'])) {
             $id = $data['ams_page_id'];
         } else {
             $id = $this->id;
@@ -162,7 +162,7 @@ class ModelBlogCategory extends \Core\Ams\Page {
 
     public function countActivePosts($data = array()) {
 
-        if ($data['ams_page_id']) {
+        if (!empty($data['ams_page_id'])) {
             $id = $data['ams_page_id'];
         } else {
             $id = $this->id;

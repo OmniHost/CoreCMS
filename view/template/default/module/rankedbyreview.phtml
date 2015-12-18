@@ -1,0 +1,13 @@
+<div class="widget rankedbyreview-widget rankedbyreview-widget-<?php echo $module; ?>">
+  <?php if($heading_title) { ?>
+    <div class="headline">
+    <h3 class="header-title"><?php echo $heading_title; ?></h3>
+    </div>
+  <?php } ?>
+  <?php if($widget == 'review'): ?>
+    <div id="rbr_review_box"></div>
+    <?php else: ?>
+    <div id="rbr_newsletter_container"></div>
+    <?php endif; ?>
+    
+</div>

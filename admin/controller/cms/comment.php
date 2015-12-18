@@ -268,7 +268,7 @@ class ControllerCmsComment extends \Core\Controller {
         foreach ($results as $result) {
             $data['comments'][] = array(
                 'comment_id' => $result['comment_id'],
-                'name' => $result['title'],
+                'name' => html_entity_decode($result['name']),
                 'author' => $result['author'],
                 'rating' => $result['rating'],
                 'status' => ($result['status']) ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),

@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * this will just be the overview! -)
+ */
 class ControllerMarketingNewsletter extends \Core\Controller {
 
     private $error = array();

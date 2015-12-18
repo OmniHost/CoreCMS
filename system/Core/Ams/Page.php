@@ -501,6 +501,40 @@ Abstract class Page {
             'required' => $required
         );
     }
+    
+    protected function _formTypeMultiSelect($name, $label, $values, $required = false){
+        return $this->_formTypeSelect($name, $label, $values, $required, true);
+    }
+    
+    protected function _formTypeSelect($name, $label, $values, $required = false, $multiple = false){
+         if (isset($this->request->post[$name])) {
+            $data[$name] = $this->request->post[$name];
+        } elseif (!empty($this->{$name})) {
+            $data[$name] = $this->{$name};
+        } else {
+            reset($values);
+            $data[$name] = key($values);
+        }
+        
+        
+        return array(
+            'key' => $name,
+            'type' => 'select',
+            'multiple' => $multiple,
+            'options' => $values,
+            'value' => $data[$name],
+            'label' => $this->_language->get($label),
+            'required' => $required
+        );
+    }
+    
+    protected function _formTypePublish($name, $label){
+        $values = array(
+            0 => registry('language')->get('text_disabled'),
+            1 => registry('language')->get('text_enabled')
+        );
+        return $this->_formTypeSelect($name, $label, $values);
+    }
 
     /**
      * Generate an html WYSISYG input
@@ -622,12 +656,36 @@ Abstract class Page {
             'required' => $required
         );
     }
-    
-    protected function _formTypeMultiText($name, $label, $required = false){
-         if (isset($this->request->post[$name])) {
+
+    protected function _formTypeAutocomplete($name, $label, $map_route, $required = false, $mapFunction = null) {
+        if (isset($this->request->post[$name])) {
+            if (!null($mapFunction)) {
+                $data[$name] = call_user_func($mapFunction, $this->request->post[$name]);
+            } else {
+                $data[$name] = $this->request->post[$name];
+            }
+        } elseif (!empty($this->{$name})) {
+            $data[$name] = $this->{$name};
+        } else {
+            $data[$name] = '';
+        }
+
+
+        return array(
+            'key' => $name,
+            'type' => 'autocomplete',
+            'value' => $data[$name],
+            'label' => $this->_language->get($label),
+            'url' => $map_route,
+            'required' => $required
+        );
+    }
+
+    protected function _formTypeMultiText($name, $label, $required = false) {
+        if (isset($this->request->post[$name])) {
             $data[$name] = $this->request->post[$name];
         } elseif (!empty($this->{$name})) {
-            $data[$name] = json_decode($this->{$name},1);
+            $data[$name] = json_decode($this->{$name}, 1);
         } else {
             $data[$name] = array();
         }

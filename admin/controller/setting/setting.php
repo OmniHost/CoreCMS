@@ -260,9 +260,18 @@ class ControllerSettingSetting extends \Core\Controller {
         } else {
             $data['error_login_attempts'] = '';
         }
+        
+        
+         if (isset($this->error['autosave_time'])) {
+            $data['error_autosave_time'] = $this->error['autosave_time'];
+        } else {
+            $data['error_autosave_time'] = '';
+        }
 
 
-
+//error_autosave_time 
+        
+        
         if (isset($this->request->post['config_file_max_size'])) {
             $data['config_file_max_size'] = $this->request->post['config_file_max_size'];
         } elseif ($this->config->get('config_file_max_size')) {

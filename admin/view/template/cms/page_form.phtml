@@ -148,7 +148,7 @@
                                                 <label for="<?php echo $el; ?>Input" class="control-label <?php echo $formfield['required'] ? 'required' : ''; ?>"><?php echo $formfield['label']; ?></label>
                                                 <div class="">
                                                     <?php echo formfield($formfield); ?>
-                                                    <?php if ($formfield['error']) { ?>
+                                                    <?php if (!empty($formfield['error'])) { ?>
                                                         <span class="error text-danger"><?php echo $formfield['error']; ?></span>
                                                     <?php } ?>
                                                 </div>
@@ -217,7 +217,7 @@
                                 <label for="<?php echo $el; ?>Input" class="col-sm-2 control-label <?php echo $formfield['required'] ? 'required' : ''; ?>"><?php echo $formfield['label']; ?></label>
                                 <div class="col-sm-9">
                                     <?php echo formfield($formfield); ?>
-                                    <?php if ($formfield['error']) { ?>
+                                    <?php if (!empty($formfield['error'])) { ?>
                                         <span class="error text-danger"><?php echo $formfield['error']; ?></span>
                                     <?php } ?>
                                 </div>
@@ -233,7 +233,7 @@
                                         <label for="<?php echo $el; ?>Input" class="col-sm-2 control-label <?php echo $formfield['required'] ? 'required' : ''; ?>"><?php echo $formfield['label']; ?></label>
                                         <div class="col-sm-9">
                                             <?php echo formfield($formfield); ?>
-                                            <?php if ($formfield['error']) { ?>
+                                            <?php if (!empty($formfield['error'])) { ?>
                                                 <span class="error text-danger"><?php echo $formfield['error']; ?></span>
                                             <?php } ?>
                                         </div>
@@ -296,18 +296,19 @@
                             </div>
                         </div>
 
-
+<?php if(!empty($tabs['permission'])): ?>
                         <?php foreach ($tabs['permission'] as $el => $formfield): ?>
                             <div class="form-group">
                                 <label for="<?php echo $el; ?>Input" class="col-sm-2 control-label <?php echo $formfield['required'] ? 'required' : ''; ?>"><?php echo $formfield['label']; ?></label>
                                 <div class="col-sm-9">
                                     <?php echo formfield($formfield); ?>
-                                    <?php if ($formfield['error']) { ?>
+                                    <?php if (!empty($formfield['error'])) { ?>
                                         <span class="error text-danger"><?php echo $formfield['error']; ?></span>
                                     <?php } ?>
                                 </div>
                             </div>
                         <?php endforeach; ?>
+                        <?php endif; ?>
                     </div>
 
                     <div class="tab-pane" id="tab-revisions">

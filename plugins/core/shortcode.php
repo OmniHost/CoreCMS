@@ -371,10 +371,37 @@ CAROUSEL;
         return '<div class="well ' . $class . '" id="' . $id . '">' . $this->content() . '</div>';
     }
 
+    public function module($attribs, $innerHtml) {
+        $attribs = $this->parseAttributes(array(
+            'name' => false,
+            'module_id' => 0
+                ), $attribs);
+
+        if ($attribs['name']) {
+            $attribs['name'] = str_replace("module/","",  $attribs['name']);
+        }
+
+        if ($attribs['name'] && $this->config->get($attribs['name'] . '_status')) {
+            return $this->load->controller('module/' . $attribs['name']);
+        }
+        
+        if ($attribs['module_id']) {
+            $this->load->model('extension/module');
+            $setting_info = $this->model_extension_module->getModule($attribs['module_id']);
+
+            if ($setting_info && $setting_info['status']) {
+               return $this->load->controller('module/' . $attribs['name'], $setting_info);
+      
+            }
+        }
+        return '';
+    }
+
     public function gallery($attribs, $innerHtml) {
         $attribs = $this->parseAttributes(array(
             'name' => '',
-            'banner_id' => 0
+            'banner_id' => 0,
+            'resize' => false,
                 ), $attribs);
         $filter = array();
         if ($attribs['name']) {
@@ -386,39 +413,37 @@ CAROUSEL;
         return $this->load->controller('module/gallery', $filter);
     }
 
+    public function script($attrs) {
 
-    public function script($attrs){
-       
-        if(!empty($attrs['src'])){
+        if (!empty($attrs['src'])) {
             $this->document->addScript($attrs['src']);
         }
         return '';
     }
-    
-    public function inlinescript($attrs,$script){
+
+    public function inlinescript($attrs, $script) {
         return '<script>' . html_entity_decode($script, ENT_QUOTES, 'UTF-8') . '</script>';
     }
-    
+
     public function bootstrap_row($attribs, $innerHtml) {
-         $attribs = $this->parseAttributes(array(
+        $attribs = $this->parseAttributes(array(
             'id' => '',
             'class' => ''
                 ), $attribs);
-          $class = $this->attribute('class');
+        $class = $this->attribute('class');
         $id = $this->attribute('id');
-        
-        $innerHtml = str_replace(array("&nbsp;[","&nbsp;"),array("[","]"), $innerHtml);
-   /*     if(\Core\Shortcode::hasShortcode($innerHtml, 'bootstrap_span')){
-            var_dump($innerHtml);
-            exit;
-        }*/
-        
-     
-        
+
+        $innerHtml = str_replace(array("&nbsp;[", "&nbsp;"), array("[", "]"), $innerHtml);
+        /*     if(\Core\Shortcode::hasShortcode($innerHtml, 'bootstrap_span')){
+          var_dump($innerHtml);
+          exit;
+          } */
+
+
+
         return '<div class="row ' . $class . '" id="' . $id . '">' . $innerHtml . '</div>';
     }
-    
- 
+
     public function bootstrap_span($attribs, $innerHtml) {
         $attribs = $this->parseAttributes(array(
             'id' => '',
@@ -428,8 +453,8 @@ CAROUSEL;
         $class = $this->attribute('class');
         $id = $this->attribute('id');
         $size = $this->attribute('size');
-        
-        
+
+
         if (!$size) {
             $size = "col-xs-12";
         }
@@ -438,15 +463,15 @@ CAROUSEL;
         return $html;
     
     }
-    
-    
+
     public function init() {
         if (!$this->isAdmin()) {
             add_shortcode('bootstrap_alert', array($this, 'alert'));
             add_shortcode('bootstrap_align', array($this, 'align'));
-            add_shortcode('gallery' , array($this, 'gallery'));
-            add_shortcode('script' , array($this, 'script'));
-            add_shortcode('inlinescript' , array($this, 'inlinescript'));
+            add_shortcode('gallery', array($this, 'gallery'));
+            add_shortcode('module', array($this, 'module'));
+            add_shortcode('script', array($this, 'script'));
+            add_shortcode('inlinescript', array($this, 'inlinescript'));
             add_shortcode('bootstrap_span', array($this, 'bootstrap_span'));
             add_shortcode('bootstrap_row', array($this, 'bootstrap_row'));
         }

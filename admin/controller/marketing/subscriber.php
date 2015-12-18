@@ -143,6 +143,18 @@ class ControllerMarketingSubscriber extends \Core\Controller {
         } else {
             $filter_email = null;
         }
+        
+        if (isset($this->request->get['filter_firstname'])) {
+            $filter_firstname = $this->request->get['filter_firstname'];
+        } else {
+            $filter_firstname = null;
+        }
+        
+        if (isset($this->request->get['filter_lastname'])) {
+            $filter_lastname = $this->request->get['filter_lastname'];
+        } else {
+            $filter_lastname = null;
+        }
 
 
         if (isset($this->request->get['filter_date_added'])) {
@@ -154,13 +166,13 @@ class ControllerMarketingSubscriber extends \Core\Controller {
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
         } else {
-            $sort = 'name';
+            $sort = 'date_created';
         }
 
         if (isset($this->request->get['order'])) {
             $order = $this->request->get['order'];
         } else {
-            $order = 'ASC';
+            $order = 'DESC';
         }
 
         if (isset($this->request->get['page'])) {
@@ -173,6 +185,12 @@ class ControllerMarketingSubscriber extends \Core\Controller {
 
         if (isset($this->request->get['filter_email'])) {
             $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+        }
+        if (isset($this->request->get['filter_firstname'])) {
+            $url .= '&filter_firstname=' . urlencode(html_entity_decode($this->request->get['filter_firstname'], ENT_QUOTES, 'UTF-8'));
+        }
+        if (isset($this->request->get['filter_lastname'])) {
+            $url .= '&filter_lastname=' . urlencode(html_entity_decode($this->request->get['filter_lastname'], ENT_QUOTES, 'UTF-8'));
         }
 
 
@@ -216,6 +234,8 @@ class ControllerMarketingSubscriber extends \Core\Controller {
         $filter_data = array(
             'filter_email' => $filter_email,
             'filter_date_added' => $filter_date_added,
+            'filter_firstname' => $filter_firstname,
+            'filter_lastname' => $filter_lastname,
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
@@ -227,22 +247,30 @@ class ControllerMarketingSubscriber extends \Core\Controller {
         $results = $this->model_marketing_subscriber->getSubscribers($filter_data);
 
         foreach ($results as $result) {
-            $data['subscribers'][] = array(
-                'subscriber_id' => $result['subscriber_id'],
-                'email' => $result['email'],
-                'ip_address' => $result['ip_address'],
-                'opt_in' => $result['opt_in'] ? $this->language->get('text_yes') : $this->language->get('text_no'),
-                'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_created'])),
-                'edit' => $this->url->link('marketing/subscriber/edit', 'token=' . $this->session->data['token'] . '&subscriber_id=' . $result['subscriber_id'] . $url, 'SSL')
-            );
+            $result['opt_in'] = $result['unsubscribe_date'] ? $this->language->get('text_yes') : $this->language->get('text_no');
+            $result['date_added'] = date($this->language->get('date_format_short'), strtotime($result['date_created']));
+            $result['edit'] = $this->url->link('marketing/subscriber/edit', 'token=' . $this->session->data['token'] . '&subscriber_id=' . $result['subscriber_id'] . $url, 'SSL');
+            
+            $result['sent'] = 0;
+            $result['opened'] = 0;
+            $result['bounced'] = 0;
+            
+            $data['subscribers'][] = $result;
         }
 
         $data['heading_title'] = $this->language->get('heading_title');
 
-        
+
         $data['text_no_results'] = $this->language->get('text_no_results');
         $data['text_confirm'] = $this->language->get('text_confirm');
 
+        $data['column_groups'] = $this->language->get('column_groups');
+        $data['column_campaigns'] = $this->language->get('column_campaigns');
+        $data['column_sent'] = $this->language->get('column_sent');
+        $data['column_opened'] = $this->language->get('column_opened');
+        $data['column_bounced'] = $this->language->get('column_bounced');
+        $data['column_firstname'] = $this->language->get('column_firstname');
+        $data['column_lastname'] = $this->language->get('column_lastname');
         $data['column_email'] = $this->language->get('column_email');
         $data['column_ip'] = $this->language->get('column_ip');
         $data['column_opt_in'] = $this->language->get('column_opt_in');
@@ -284,6 +312,13 @@ class ControllerMarketingSubscriber extends \Core\Controller {
         if (isset($this->request->get['filter_email'])) {
             $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
         }
+        
+         if (isset($this->request->get['filter_firstname'])) {
+            $url .= '&filter_firstname=' . urlencode(html_entity_decode($this->request->get['filter_firstname'], ENT_QUOTES, 'UTF-8'));
+        }
+        if (isset($this->request->get['filter_lastname'])) {
+            $url .= '&filter_lastname=' . urlencode(html_entity_decode($this->request->get['filter_lastname'], ENT_QUOTES, 'UTF-8'));
+        }
 
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
@@ -299,6 +334,8 @@ class ControllerMarketingSubscriber extends \Core\Controller {
             $url .= '&page=' . $this->request->get['page'];
         }
 
+        $data['sort_firstname'] = $this->url->link('marketing/subscriber', 'token=' . $this->session->data['token'] . '&sort=firstname' . $url, 'SSL');
+        $data['sort_lastname'] = $this->url->link('marketing/subscriber', 'token=' . $this->session->data['token'] . '&sort=lastname' . $url, 'SSL');
         $data['sort_email'] = $this->url->link('marketing/subscriber', 'token=' . $this->session->data['token'] . '&sort=email' . $url, 'SSL');
         $data['sort_ip'] = $this->url->link('marketing/subscriber', 'token=' . $this->session->data['token'] . '&sort=ip_address' . $url, 'SSL');
         $data['sort_date_added'] = $this->url->link('marketing/subscriber', 'token=' . $this->session->data['token'] . '&sort=date_created' . $url, 'SSL');
@@ -307,6 +344,13 @@ class ControllerMarketingSubscriber extends \Core\Controller {
 
         if (isset($this->request->get['filter_email'])) {
             $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+        }
+        
+         if (isset($this->request->get['filter_firstname'])) {
+            $url .= '&filter_firstname=' . urlencode(html_entity_decode($this->request->get['filter_firstname'], ENT_QUOTES, 'UTF-8'));
+        }
+        if (isset($this->request->get['filter_lastname'])) {
+            $url .= '&filter_lastname=' . urlencode(html_entity_decode($this->request->get['filter_lastname'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_date_added'])) {
@@ -333,6 +377,8 @@ class ControllerMarketingSubscriber extends \Core\Controller {
 
         $data['filter_email'] = $filter_email;
         $data['filter_date_added'] = $filter_date_added;
+        $data['filter_firstname'] = $filter_firstname;
+        $data['filter_lastname'] = $filter_lastname;
 
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -455,10 +501,10 @@ class ControllerMarketingSubscriber extends \Core\Controller {
 
         if ((utf8_strlen($this->request->post['email']) > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email'])) {
             $this->error['email'] = $this->language->get('error_email');
-        }else{
+        } else {
             $this->load->model('marketing/subscriber');
-            $subid = isset($this->request->get['subscriber_id'])?$this->request->get['subscriber_id']:false;
-            if($this->model_marketing_subscriber->hasEntry($this->request->post['email'], $subid)){
+            $subid = isset($this->request->get['subscriber_id']) ? $this->request->get['subscriber_id'] : false;
+            if ($this->model_marketing_subscriber->hasEntry($this->request->post['email'], $subid)) {
                 $this->error['email'] = $this->language->get('error_email_exists');
             }
         }
@@ -472,6 +518,42 @@ class ControllerMarketingSubscriber extends \Core\Controller {
         }
 
         return !$this->error;
+    }
+    
+    
+    /** Dashbaord functions **/
+    public function overview(){
+        $data = array();
+         $this->load->language('marketing/subscriber');
+
+        $this->document->setTitle($this->language->get('heading_overview'));
+
+        $this->load->model('marketing/subscriber');
+
+        
+        $data['heading_title'] = $this->language->get('heading_overview');
+        
+         $data['header'] = $this->getChild('common/header');
+        $data['footer'] = $this->getChild('common/footer');
+
+        $this->response->setOutput($this->render('marketing/subscriber_overview.phtml', $data));
+    }
+    
+    public function groups(){
+        $data = array();
+         $this->load->language('marketing/subscriber');
+
+        $this->document->setTitle($this->language->get('heading_groups'));
+
+        $this->load->model('marketing/subscriber');
+
+        
+        $data['heading_title'] = $this->language->get('heading_groups');
+        
+         $data['header'] = $this->getChild('common/header');
+        $data['footer'] = $this->getChild('common/footer');
+
+        $this->response->setOutput($this->render('marketing/subscriber_group_list.phtml', $data));
     }
 
 }

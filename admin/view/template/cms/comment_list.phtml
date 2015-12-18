@@ -59,9 +59,9 @@
                             <tr>
                                 <td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
                                 <td class="text-left"><?php if ($sort == 'id.name') { ?>
-                                        <a href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_name; ?></a>
+                                        <a href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_page; ?></a>
                                     <?php } else { ?>
-                                        <a href="<?php echo $sort_iname; ?>"><?php echo $column_name; ?></a>
+                                        <a href="<?php echo $sort_name; ?>"><?php echo $column_page; ?></a>
                                     <?php } ?></td>
                                 <td class="text-left"><?php if ($sort == 'r.author') { ?>
                                         <a href="<?php echo $sort_author; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_author; ?></a>

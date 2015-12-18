@@ -199,8 +199,25 @@
                                 <ul class="treeview-menu">
                                     <li><a href="<?php echo $contact_us;?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_contact_us; ?><?php if ($total_contact_us): ?> <span class="badge bg-red pull-right"><?php echo $total_contact_us; ?></span><?php endif; ?></a></li>
                                     <li><a href="<?php echo $marketing;?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_marketing; ?></a></li>
-                                    <li><a href="<?php echo $newsletter; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_newsletters; ?></a></li>
-                                     <li><a href="<?php echo $subscriber; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_subscriber; ?></a></li>
+                                    <li class="treeview">
+                                    <a href="#">
+                                        <i class="fa fa-envelope-square"></i>
+                                        <span><?php echo $menu_newsletter_system; ?></span>
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                    </a>
+                                    <ul class="treeview-menu">
+                                        <li><a href="<?php echo $newsletter_overview; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_newsletter_overview; ?></a></li>
+                                        <li><a href="<?php echo $subscriber; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_subscriber; ?></a></li>
+                                        <li><a href="<?php echo $newsletter_groups; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_newsletter_group; ?></a></li>
+                                        <li><a href="<?php echo $newsletter_campaigns; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_newsletter_campaign; ?></a></li>
+                                        <li><a href="<?php echo $newsletter_newsletter; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_newsletter_newsletter; ?></a></li>
+                                        
+                                 
+                                        
+                                    </ul>
+                                </li> 
+                                    <li><a href="<?php echo $newsletter; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_newsletters; ?> (old)</a></li>
+                                     
                                 </ul>
                             </a>
 

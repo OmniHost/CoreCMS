@@ -8,6 +8,7 @@ $_['text_list']     		    = 'All Faq';
 
 // Text
 $_['entry_name']                 = 'Title';
+$_['entry_sort_order']                 = 'Sort Order';
 $_['entry_date_added']                 = 'Date Added';
 $_['button_filter']                 = 'Filter Faq';
 $_['button_view_all_faq']                 = 'View All Faq';

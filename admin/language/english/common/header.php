@@ -49,6 +49,12 @@ $_['menu_upload'] = 'Uploads';
 $_['menu_custom_field'] = 'Custom Fields';
 $_['menu_communication'] = 'Communication';
 $_['menu_contact_us'] = 'Contact Requests';
+$_['menu_newsletter_system'] = 'Newsletter System';
 $_['menu_newsletters'] = 'Newsletters';
+$_['menu_newsletter_newsletter'] = 'Newsletters';
 $_['menu_subscriber'] = 'Subscribers';
+$_['menu_newsletter_group'] = 'Groups';
+$_['menu_newsletter_campaign'] = 'Campaigns';
+$_['menu_newsletter_overview'] = 'Overview';
 $_['menu_marketing'] = 'Marketing';
+

@@ -69,7 +69,7 @@ class ModelCmsPage extends \Core\Ams\Page {
             'type' => 'autocomplete_list',
             'value' => $data['downloads'],
             'label' => $this->_language->get('entry_downloads'),
-            'url' => registry('url')->link('cms/download/autocomplete', 'token=' . registry(session)->data['token'], 'SSL'),
+            'url' => registry('url')->link('cms/download/autocomplete', 'token=' . registry('session')->data['token'], 'SSL'),
             'required' => false
         );
 

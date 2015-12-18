@@ -1,0 +1,21 @@
+<div class="widget blog-latest-widget">
+    <?php if ($heading_title): ?>
+        <h4 class="heading"><?php echo $heading_title; ?></h4>
+    <?php endif; ?>
+    <ul class="media-list latest-posts-list">
+        <?php foreach ($posts as $post): ?>
+            <li class="media">
+                <div class="media-left">
+                    <a href="<?php echo $post['href']; ?>">
+                        <img class="media-object" src="<?php echo $post['image']; ?>" alt="<?php echo htmlspecialchars($post['name']); ?>">
+                    </a>
+                </div>
+                <div class="media-body">
+                    <h5 class="media-heading"> <a href="<?php echo $post['href']; ?>"><?php echo $post['name']; ?></a></h5>
+                    <small class="text-muted"><?php echo $post['date']; ?></small>
+                </div>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+
+</div>

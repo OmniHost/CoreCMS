@@ -87,6 +87,7 @@ class ControllerModuleFaq extends \Core\Controller {
                   `question` varchar(255) COLLATE utf8_bin NOT NULL,
 		  `answer` text COLLATE utf8_bin NOT NULL,
 		  `date_added` datetime NOT NULL,
+                  `sort_order` INT(11) NOT NULL DEFAULT '0',
 		  `status` tinyint(1) NOT NULL,
 		  PRIMARY KEY (`faq_id`)
 		)");

@@ -61,11 +61,16 @@ $(document).ready(function () {
                 });
             },
             'select': function (item) {
-                $this.val('');
-                console.log(item);
-                $('#' + $this.attr('data-target') + '-' + item['value']).remove();
+                if ($this.attr("data-limit") == "1") {
+                    $this.val(decodeEntities(item['label']));
+                    $('#' + $this.attr('data-target')).val(item['value']);
+                } else {
+                    $this.val('');
+                    console.log(item);
+                    $('#' + $this.attr('data-target') + '-' + item['value']).remove();
 
-                $('#' + $this.attr('data-target') ).append('<div class="list-group-item" id="' + $this.attr('data-target') + '-' + item['value'] + '"><i class="fa fa-minus-circle text-danger"></i> ' + item['label'] + '<input type="hidden" name="' + $this.attr('data-key') + '[]" value="' + item['value'] + '" /></div>');
+                    $('#' + $this.attr('data-target')).append('<div class="list-group-item" id="' + $this.attr('data-target') + '-' + item['value'] + '"><div class="input-group"><span class="input-group-btn"><button class="btn btn-default btn-minus-circle" type="button"><i class="fa fa-minus-circle text-danger"></i></button></span><span class="form-control">' + item['label'] + '</span><input type="hidden" name="' + $this.attr('data-key') + '[]" value="' + item['value'] + '" /></div></div>');
+                }
             }
         });
     });
@@ -76,12 +81,12 @@ $(document).ready(function () {
     });
 
 
-    $(document).on("click", ".btn-add-multitext", function(e) { 
+    $(document).on("click", ".btn-add-multitext", function (e) {
         e.preventDefault();
         var val = $('#input-' + $(this).attr('data-target')).val();
         $('#input-' + $(this).attr('data-target')).val('');
         var idkey = Date.now() / 1000;
-         $('#' + $(this).attr('data-target') ).append('<div class="list-group-item" id="' + $(this).attr('data-target') + '-' + idkey + '"><i class="fa fa-minus-circle text-danger"></i> ' + val + '<input type="hidden" name="' + $(this).attr('data-key') + '[]" value="' + val + '" /></div>');
+        $('#' + $(this).attr('data-target')).append('<div class="list-group-item" id="' + $(this).attr('data-target') + '-' + idkey + '"><i class="fa fa-minus-circle text-danger"></i> ' + val + '<input type="hidden" name="' + $(this).attr('data-key') + '[]" value="' + val + '" /></div>');
     });
 
 
@@ -273,7 +278,7 @@ $(document).ready(function () {
                 }
 
                 for (i = 0; i < json.length; i++) {
-                    html += '<li data-value="' + json[i]['value'] + '"><a href="#">' + json[i]['label'] + '</a></li>';
+                    html += '<li data-value="' + json[i]['value'] + '"><a href="#">' + decodeEntities(json[i]['label']) + '</a></li>';
                 }
 
             }
@@ -305,5 +310,29 @@ $(document).ready(function () {
 })(window.jQuery);
 
 if (!Date.now) {
-    Date.now = function() { return new Date().getTime(); }
+    Date.now = function () {
+        return new Date().getTime();
+    }
 }
+
+var decodeEntities = (function() {
+  // this prevents any overhead from creating the object each time
+  var element = document.createElement('div');
+
+  function decodeHTMLEntities (str) {
+    if(str && typeof str === 'string') {
+      // strip script/html tags
+      str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
+      str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
+      element.innerHTML = str;
+      str = element.textContent;
+      element.textContent = '';
+    }
+
+    return str;
+  }
+
+  return decodeHTMLEntities;
+})();
+
+console.log("admin.js complete");

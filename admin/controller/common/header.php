@@ -44,7 +44,11 @@ $this->data['marketing'] = $this->url->link('marketing/marketing', 'token=' . $t
         $this->data['custom_field'] = $this->url->link('sale/custom_field', 'token=' . $this->session->data['token'], 'SSL');
         $this->data['upload'] = $this->url->link('tool/upload', 'token=' . $this->session->data['token'], 'SSL');
         $this->data['contact_us'] = $this->url->link('sale/contact', 'token=' . $this->session->data['token'], 'SSL');
-        $this->data['subscriber'] = $this->url->link('marketing/subscriber', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['newsletter_overview'] = $this->url->link('marketing/newsletter/overview', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['newsletter_groups'] = $this->url->link('marketing/newsletter/group', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['newsletter_campaigns'] = $this->url->link('marketing/newsletter/campaign', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['newsletter_newsletter'] = $this->url->link('marketing/newsletter/newsletter', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['subscriber'] = $this->url->link('marketing/newsletter/subscriber', 'token=' . $this->session->data['token'], 'SSL');
         $this->data['newsletter'] = $this->url->link('marketing/contact', 'token=' . $this->session->data['token'], 'SSL');
         
         
@@ -87,12 +91,15 @@ $this->data['marketing'] = $this->url->link('marketing/marketing', 'token=' . $t
         $this->data['menu_zone'] = $this->language->get('menu_zone');
         $this->data['menu_upload'] = $this->language->get('menu_upload');
         $this->data['menu_custom_field'] = $this->language->get('menu_custom_field');
+        
+        
+        
 
 
-        $data['text_customer'] = $this->language->get('text_customer');
-        $data['text_online'] = $this->language->get('text_online');
-        $data['text_approval'] = $this->language->get('text_approval');
-        $data['text_review'] = $this->language->get('text_review');
+        $this->data['text_customer'] = $this->language->get('text_customer');
+        $this->data['text_online'] = $this->language->get('text_online');
+        $this->data['text_approval'] = $this->language->get('text_approval');
+        $this->data['text_review'] = $this->language->get('text_review');
 
 
         $this->data['links'] = $this->document->getLinks();
@@ -155,7 +162,7 @@ $this->data['marketing'] = $this->url->link('marketing/marketing', 'token=' . $t
 
 
 
-        $data['header_navs'] = array(
+        $this->data['header_navs'] = array(
             'alerts' => array(
                 'title' => $this->language->get('alert_user'),
                 'icon' => 'fa fa-bell-o',
@@ -166,9 +173,9 @@ $this->data['marketing'] = $this->url->link('marketing/marketing', 'token=' . $t
         );
 
         
-        $this->event->trigger('admin.header.navs', $data['header_navs']);
+        $this->event->trigger('admin.header.navs', $this->data['header_navs']);
  
-
+        
         $this->template = 'common/header.phtml';
         $this->render();
     }

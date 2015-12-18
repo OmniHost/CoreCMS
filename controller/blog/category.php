@@ -12,8 +12,8 @@ class ControllerBlogCategory extends \Core\Controller\Page {
         }
 
         $pg = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
-        $this->data['ams_page_id'] = $this->model_cms_page->id;
-
+        $this->data['ams_page_id'] = $this->_model->id;
+        $this->data['heading_title'] = $this->data['page']['name'];
 
         $start = ($pg - 1) * $this->config->get('config_blog_limit');
 
@@ -38,7 +38,7 @@ class ControllerBlogCategory extends \Core\Controller\Page {
         $pagination->page = $pg;
         $pagination->text = $this->language->get('text_pagination');
         $pagination->limit = $this->config->get('config_blog_limit');
-        $pagination->url = $this->url->link('blog/category', 'ams_page_id=' . $page['id'] . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('blog/category', 'ams_page_id=' . $this->_model->id . '&page={page}', 'SSL');
 
         $this->data['pagination'] = $pagination;
 

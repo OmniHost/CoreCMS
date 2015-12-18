@@ -453,6 +453,7 @@ class ControllerCmsBanner extends \Core\Controller {
             foreach ($results as $result) {
                 $json[] = array(
                     'banner_id' => $result['banner_id'],
+                    'id' => $result['banner_id'],
                     'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8'))
                 );
             }

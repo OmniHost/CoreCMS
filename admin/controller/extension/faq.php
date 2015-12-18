@@ -227,6 +227,7 @@ class ControllerExtensionFaq extends \Core\Controller {
         $data['text_disabled'] = $this->language->get('text_disabled');
         $data['text_browse'] = $this->language->get('text_browse');
         $data['text_clear'] = $this->language->get('text_clear');
+        $data['entry_sort_order'] = $this->language->get('entry_sort_order');
 
 
         $data['button_save'] = $this->language->get('button_save');
@@ -269,6 +270,14 @@ class ControllerExtensionFaq extends \Core\Controller {
             $data['status'] = $faq['status'];
         } else {
             $data['status'] = '';
+        }
+        
+        if (isset($this->request->post['sort_order'])) {
+            $data['sort_order'] = $this->request->post['sort_order'];
+        } elseif (!empty($faq)) {
+            $data['sort_order'] = $faq['sort_order'];
+        } else {
+            $data['sort_order'] = '0';
         }
 
         $data['header'] = $this->getChild('common/header');

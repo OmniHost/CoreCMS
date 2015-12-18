@@ -266,7 +266,7 @@ Class Core {
 
     public function dispatch_cli() {
 
-
+            @ini_set("memory_limit", "128M");
 
         // Front Controller 
         $controller = new \Core\Front();

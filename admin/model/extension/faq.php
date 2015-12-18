@@ -3,13 +3,13 @@
 class ModelExtensionFaq extends \Core\Model {
 
     public function addfaq($data) {
-        $this->db->query("INSERT INTO #__faq set date_added = NOW(), status = '" . (int) $data['status'] . "',"
+        $this->db->query("INSERT INTO #__faq set date_added = NOW(), sort_order='" . (int)$data['sort_order'] . "', status = '" . (int) $data['status'] . "',"
                 . " question = '" . $this->db->escape($data['question']) . "', 
             answer = '" . $this->db->escape($data['answer']) . "'");
     }
 
     public function editfaq($faq_id, $data) {
-        $this->db->query("UPDATE #__faq SET question = '" . $this->db->escape($data['question']) . "', answer = '" . $this->db->escape($data['answer']) . "', status = '" . (int) $data['status'] . "' WHERE faq_id = '" . (int) $faq_id . "'");
+        $this->db->query("UPDATE #__faq SET sort_order='" . (int)$data['sort_order'] . "', question = '" . $this->db->escape($data['question']) . "', answer = '" . $this->db->escape($data['answer']) . "', status = '" . (int) $data['status'] . "' WHERE faq_id = '" . (int) $faq_id . "'");
     }
 
     public function getfaq($faq_id) {
@@ -52,7 +52,7 @@ class ModelExtensionFaq extends \Core\Model {
                 $data['limit'] = 20;
             }
 
-            $sql .= " ORDER BY date_added DESC LIMIT " . (int) $data['start'] . "," . (int) $data['limit'];
+            $sql .= " ORDER BY sort_order asc, date_added asc LIMIT " . (int) $data['start'] . "," . (int) $data['limit'];
         }
 
         $query = $this->db->query($sql);

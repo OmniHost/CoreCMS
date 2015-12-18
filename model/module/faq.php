@@ -3,7 +3,7 @@
 class ModelModuleFaq extends \Core\Model {
 
     public function getAllFaq($data) {
-        $sql = "SELECT * FROM #__faq  WHERE status = '1' ORDER BY date_added DESC";
+        $sql = "SELECT * FROM #__faq  WHERE status = '1' ORDER BY sort_order ASC, date_added ASC";
 
         if (isset($data['start']) && isset($data['limit'])) {
             if ($data['start'] < 0) {
