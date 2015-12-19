@@ -21,7 +21,7 @@ class ControllerSettingSetting extends \Core\Controller {
 
             $this->model_setting_setting->editSetting('config', $this->request->post);
 
-             $this->event->trigger('admin.settings.save');
+            $this->event->trigger('admin.settings.save');
             $this->session->data['success'] = $this->language->get('text_success');
 
             $this->response->redirect(fixajaxurl($this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL')));
@@ -559,6 +559,15 @@ class ControllerSettingSetting extends \Core\Controller {
         } else {
             $this->response->setOutput($server . 'img/no_image.jpg');
         }
+    }
+
+    public function cleancache() {
+        $this->event->trigger('admin.cache.clear');
+        $this->session->data['success'] = $this->language->get('All Caches Cleared');
+
+        $this->cache->clear();
+       // $this->cache->clearImageCache();
+        $this->redirect($this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'));
     }
 
 }

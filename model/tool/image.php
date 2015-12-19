@@ -128,8 +128,17 @@ class ModelToolImage extends \Core\Model {
             }
 
             $image = new \Core\Image(DIR_IMAGE . $old_image);
+            
+            list($width_orig, $height_orig) = getimagesize(DIR_IMAGE . $old_image);
+            
+            if($width_orig < $width || $height_orig < $height){
+                $image->resize($width,$height);
+            }
+            
             $dims = $image->resizeDimensions($width, $height);
         
+   
+            
             if(!$dims){
                 return $this->resizeExact($filename, $width, $height);
             } 

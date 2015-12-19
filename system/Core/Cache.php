@@ -96,11 +96,34 @@ class Cache {
      * Clears the cache folder
      */
     public function clear() {
-        $files = glob(DIR_CACHE . 'cache.*');
+        $files = glob(DIR_CACHE . 'cache*');
         if ($files) {
             foreach ($files as $file) {
                 if (file_exists($file)) {
                     unlink($file);
+                }
+            }
+        }
+        
+    }
+    /**
+     * @non functional
+     */
+    public function clearImageCache(){
+        $files = glob(DIR_IMAGE . 'cache/*');
+        if ($files) {
+            $this->_deleteImages($files);
+        }
+    }
+    
+    public function _deleteImages($files){
+        foreach($files as $file){
+            if(is_file($file)){
+                unlink($file);
+            }elseif(is_dir($file)){
+                $sfiles = glob($file);
+                if($sfiles){
+                    $this->_deleteImages($sfiles);
                 }
             }
         }

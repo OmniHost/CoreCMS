@@ -67,7 +67,7 @@ class ControllerCommonContact extends \Core\Controller {
             $mail->setTo($this->config->get('config_email'));
             $mail->setFrom($this->request->post['email']);
             $mail->setSender($this->request->post['name']);
-            $mail->setSubject();
+            $mail->setSubject($mailsubject);
             $mail->setText($mailbody);
             $mail->send();
 
@@ -187,6 +187,8 @@ class ControllerCommonContact extends \Core\Controller {
         $this->document->addScript('view/plugins/datetimepicker/moment.js');
         $this->document->addScript('view/plugins/datetimepicker/bootstrap-datetimepicker.min.js');
         $this->document->addStyle('view/plugins/datetimepicker/bootstrap-datetimepicker.min.css');
+        
+        
 
         $this->children = array(
             'common/column_top',

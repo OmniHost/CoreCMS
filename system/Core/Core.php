@@ -39,6 +39,9 @@ Class Core {
             $config->load($hostname . '.' . $ns);
         }
         
+         require_once('Event.php');
+         $event = new \Core\Event();
+          self::$registry->set('event', $event);
         
 
         define('CORE_IS_ADMIN', $ns == 'admin');
@@ -62,19 +65,16 @@ Class Core {
                 }
             }
             
-            require_once('Event.php');
-            $event = new \Core\Event();
-            
             //Core Events:::
-            $event->register('cms.pagelist','cms/page/event_pagelist');
+            $this->event->register('cms.pagelist','cms/page/event_pagelist');
             
             $events = $db->query('Select * from #__event')->rows;
           
             foreach($events as $_event){
-                $event->register($_event['trigger'], $_event['action']);
+                $this->event->register($_event['trigger'], $_event['action']);
             }
             
-            self::$registry->set('event', $event);
+           
         }
         
         define('HTTP_SERVER', $config->get('config_url'));
