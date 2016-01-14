@@ -1,0 +1,180 @@
+<?php echo $header; ?>
+<?php include(__DIR__ . '/../common/page-header.phtml'); ?>
+
+<section class="content">
+
+    <div class="box">
+        <div class="box-header text-right">
+            <button id="nlsavebutton" type="submit" form="form-newsletter" data-toggle="tooltip" title="<?php echo $button_save; ?>" class="btn btn-app"><i class="fa fa-save text-primary"></i> <?php echo $button_save; ?></button>
+            <a href="<?php echo $cancel; ?>" data-toggle="tooltip" title="<?php echo $button_cancel; ?>" class="btn btn-app"><i class="fa fa-reply"></i><?php echo $button_cancel; ?></a></div>
+
+        <div class="box-body">
+            <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form-newsletter" class="form-horizontal">
+                <div class="form-group required">
+                    <label class="col-sm-2 control-label" for="input-newsletter_name"><?php echo $entry_newsletter_name; ?></label>
+                    <div class="col-sm-10">
+                        <input type="text" name="name" value="<?php echo $name; ?>" placeholder="<?php echo $entry_newsletter_name; ?>" id="input-group_name" class="form-control" />
+                        <?php if ($error_newsletter_name) { ?>
+                            <div class="text-danger"><?php echo $error_newsletter_name; ?></div>
+                        <?php } ?>
+                    </div>
+                </div>
+                <div class="form-group required">
+                    <label class="col-sm-2 control-label" for="input-newsletter_subject"><?php echo $entry_newsletter_subject; ?></label>
+                    <div class="col-sm-10">
+                        <input type="text" name="subject" value="<?php echo $subject; ?>" placeholder="<?php echo $entry_newsletter_subject; ?>" id="input-group_name" class="form-control" />
+                        <?php if ($error_newsletter_subject) { ?>
+                            <div class="text-danger"><?php echo $error_newsletter_subject; ?></div>
+                        <?php } ?>
+                    </div>
+                </div>
+
+                <div class="form-group required">
+                    <label class="col-sm-2 control-label" for="input-newsletter_from"><?php echo $entry_newsletter_from_name; ?></label>
+                    <div class="col-sm-10">
+                        <input type="text" name="from_name" value="<?php echo $from_name; ?>" placeholder="<?php echo $entry_newsletter_from_name; ?>" id="input-group_name" class="form-control" />
+                        <?php if ($error_newsletter_from) { ?>
+                            <div class="text-danger"><?php echo $error_newsletter_from; ?></div>
+                        <?php } ?>
+                    </div>
+                </div>
+
+                <div class="form-group required">
+                    <label class="col-sm-2 control-label" for="input-newsletter_from_email"><?php echo $entry_newsletter_from_email; ?></label>
+                    <div class="col-sm-10">
+                        <input type="text" name="from_email" value="<?php echo $from_email; ?>" placeholder="<?php echo $entry_newsletter_from_email; ?>" id="input-group_name" class="form-control" />
+                        <?php if ($error_newsletter_from_email) { ?>
+                            <div class="text-danger"><?php echo $error_newsletter_from_email; ?></div>
+                        <?php } ?>
+                    </div>
+                </div>
+
+                <div class="form-group required">
+                    <label class="col-sm-2 control-label" for="input-newsletter_bounce_email"><?php echo $entry_newsletter_bounce_email; ?></label>
+                    <div class="col-sm-10">
+                        <input type="text" name="bounce_email" value="<?php echo $bounce_email; ?>" placeholder="<?php echo $entry_newsletter_bounce_email; ?>" id="input-group_name" class="form-control" />
+                        <?php if ($error_newsletter_bounce_email) { ?>
+                            <div class="text-danger"><?php echo $error_newsletter_bounce_email; ?></div>
+                        <?php } ?>
+                    </div>
+                </div>
+
+                <div class="form-group required">
+                    <label class="col-sm-2 control-label" for="input-newsletter_template"><?php echo $entry_template; ?></label>
+                    <div class="col-sm-10">
+                        <input type="hidden" name="builder_info[template]" value="<?php echo $builder_info['template']; ?>" id="builder_info_template_input" />
+                        <div class="row">
+                            <?php foreach ($templates as $tpl): ?>
+                                <div data-key="<?php echo $tpl['key']; ?>" data-path="<?php echo $tpl['path']; ?>" class="template-selector <?php echo $tpl['key'] == $builder_info['template'] ? 'selected' : ''; ?>" >
+                                    <img src="<?php echo $tpl['preview']; ?>" class="img-responsive" />
+                                    <h5><?php echo $tpl['name']; ?></h5>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+
+                <?php /** TEMPLATE && CONTENT * */ ?>
+                <div class="text-center">
+                    <div id="editor-anchor"></div>
+                </div>
+                <div class="form-group">
+
+                    <textarea class="form-control hidden" id="dentifrice-textarea" name="newsletter"><?php echo $content; ?></textarea>
+                    <textarea class="form-control hidden" id="dentifrice-template" name="builder_info[html]"><?php echo html_entity_decode($builder_info['html']); ?></textarea>
+                    <textarea class="form-control hidden" id="dentifrice-styles" name="builder_info[styles]"><?php echo html_entity_decode($builder_info['styles']); ?></textarea>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</section>
+<script type="text/javascript">
+    var dentifrice_settings = {
+        templateUrl: 'templates/basic/basic.html',
+        anchorId: 'editor-anchor'
+    };
+
+    docReady(function () {
+        if (!dentifrice.bootstrap(dentifrice_settings)) {
+            alert('Could not load Dentifrice editor ! See console for errors.');
+        }
+    });
+    loadSavedHtml = function () {
+        
+      
+
+        try {
+            var ifwin = $('iframe#' + iframeID)[0].contentWindow;//resumeBtn
+                    console.log(ifwin.isloaded);
+                    
+            if(ifwin.isloaded == true){
+            var html = $('#dentifrice-template').val();
+            var style = $('#dentifrice-styles').val();
+            console.log("updateing Template");
+            console.log( $('iframe#' + iframeID)[0].contentWindow);
+
+            ifwin.$('#dtf-content').empty();
+            ifwin.$('head').find('style[data-userstyle]').remove();
+              var $tmp = ifwin.$('<tmp/>').html(style);
+             $tmp.find('style').attr('data-userstyle', true);
+             $tmp.contents().appendTo('head');
+             // Insert HTML content from the draft
+             ifwin.$('#dtf-content').html(html);
+             // Re-load the editor
+             ifwin.dtfEditor.load();
+             //ifwin.$('#validateBtn').trigger('click');
+         }else{
+             setTimeout(loadSavedHtml, 500);
+             }
+        } catch (err) {
+            setTimeout('loadSavedHtml', 500);
+        }
+    }
+
+    _lockEdition = function (lock) {
+        if (lock) {
+            var ifwin = $('iframe#' + iframeID)[0].contentWindow;//resumeBtn
+            var html = ifwin.dtfEditor.getContent();
+            var styles = ifwin.dtfEditor.getUserStyles();
+            $('#dentifrice-template').val(html);
+            $('#dentifrice-styles').val(styles);
+            $('#nlsavebutton').attr('disabled', false);
+
+        } else {
+            $('#nlsavebutton').attr('disabled', 'disabled');
+        }
+    }
+
+
+    docReady(function () {
+        $('#nlsavebutton').attr('disabled', 'disabled');
+
+
+<?php if ($content): ?>
+        
+        loadSavedHtml();
+            
+<?php endif; ?>
+
+        $(document).on("click", ".template-selector", function () {
+            var key = $(this).data('key');
+            var path = $(this).data('path');
+            var $this = $(this);
+            if (confirm("Are you sure you wish to change? This will remove all your changes.")) {
+                $('#builder_info_template_input').val(key);
+                $('#dentifrice-styles').val('');
+                $('#dentifrice-template').val('');
+                dentifrice.destroy();
+                dentifrice_settings.templateUrl = path;
+                if (!dentifrice.bootstrap(dentifrice_settings)) {
+                    alert('Could not load Email editor ! See console for errors.');
+                }
+                $('.template-selector').removeClass('selected');
+                $this.addClass('selected');
+            }
+        });
+    });
+
+</script>
+<?php echo $footer; ?>

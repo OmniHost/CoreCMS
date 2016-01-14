@@ -47,6 +47,8 @@ class ModelCmsComment extends \Core\Model {
             $message .= $this->db->escape(strip_tags($data['text'])) . "\n\n";
 
             $mail = new \Core\Mail();
+            $mail->tags = array('Comment Notification');
+            $mail->mandrill_key = $this->config->get('config_mandrill_key');
             $mail->protocol = $this->config->get('config_mail_protocol');
             $mail->parameter = $this->config->get('config_mail_parameter');
             $mail->hostname = $this->config->get('config_mail_smtp_hostname');
@@ -63,13 +65,15 @@ class ModelCmsComment extends \Core\Model {
 
             // Send to additional alert emails
             $emails = explode(',', $this->config->get('config_mail_alert'));
+            $addys = array();
 
             foreach ($emails as $email) {
                 if ($email && preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $email)) {
-                    $mail->setTo($email);
-                    $mail->send();
+                    //  $mail->setTo($email);
+                    $addys[] = $email;
                 }
             }
+            $mail->send();
         }
     }
 

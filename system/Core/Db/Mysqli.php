@@ -42,7 +42,7 @@ final class MySQLi {
         $this->link = new \mysqli($hostname, $username, $password, $database);
 
         if (\mysqli_connect_error()) {
-            throw new \ErrorException('Error: Could not make a database link (' . \mysqli_connect_errno() . ') ' . \mysqli_connect_error());
+            throw new \Core\Exception('Error: Could not make a database link (' . \mysqli_connect_errno() . ') ' . \mysqli_connect_error());
         }
 
         $this->link->set_charset("utf8");
@@ -79,7 +79,7 @@ final class MySQLi {
                 return true;
             }
         } else {
-            throw new \ErrorException('Error: ' . $this->link->error . '<br />Error No: ' . $this->link->errno . '<br />' . $sql);
+            throw new \Core\Exception('Error: ' . $this->link->error . '<br />Error No: ' . $this->link->errno . '<br />' . $sql);
             exit();
         }
     }

@@ -67,6 +67,7 @@ Class Core {
             
             //Core Events:::
             $this->event->register('cms.pagelist','cms/page/event_pagelist');
+            $this->event->register('cron.run','marketing/cron');
             
             $events = $db->query('Select * from #__event')->rows;
           

@@ -27,6 +27,8 @@ class ModelMarketingNewsletterGroup extends \Core\Model {
 
     public function getGroups($data = array()) {
         $sql = "select * from #__newsletter_group";
+        
+        $sql .= " order by group_name asc ";
 
         if (isset($data['start']) || isset($data['limit'])) {
             if ($data['start'] < 0) {
@@ -39,6 +41,8 @@ class ModelMarketingNewsletterGroup extends \Core\Model {
 
             $sql .= " LIMIT " . (int) $data['start'] . "," . (int) $data['limit'];
         }
+        
+        
 
         $query = $this->db->query($sql);
 

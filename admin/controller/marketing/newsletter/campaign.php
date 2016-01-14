@@ -134,7 +134,7 @@ class ControllerMarketingNewsletterCampaign extends \Core\Controller {
 
             $result['member_count'] = $this->model_marketing_newsletter_campaign->getSubscriberCount($result['campaign_id']);
             
-            $result['newsletter_count'] = '0';
+            $result['newsletter_count'] = $this->model_marketing_newsletter_campaign->getNewsletterCount($result['campaign_id']);
             
             $data['campaigns'][] = $result;
         }
@@ -260,6 +260,15 @@ class ControllerMarketingNewsletterCampaign extends \Core\Controller {
             $data['campaign_name'] = '';
         }
 
+       
+        if (isset($this->request->post['campaign_newsletter'])) {
+            $data['campaign_newsletter'] = $this->request->post['campaign_newsletter'];
+        } elseif (!empty($campaign_info)) {
+            $data['campaign_newsletter'] = $campaign_info['campaign_newsletter'];
+        } else {
+            $data['campaign_newsletter'] = '';
+        }
+        
         
         
 

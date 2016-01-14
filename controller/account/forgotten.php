@@ -28,14 +28,16 @@ class ControllerAccountForgotten extends \Core\Controller {
             $message .= $this->language->get('text_password') . "\n\n";
             $message .= $password;
 
-             $mail = new \Core\Mail();
-        $mail->protocol = $this->config->get('config_mail_protocol');
-        $mail->parameter = $this->config->get('config_mail_parameter');
-        $mail->hostname = $this->config->get('config_mail_smtp_hostname');
-        $mail->username = $this->config->get('config_mail_smtp_username');
-        $mail->password = $this->config->get('config_mail_smtp_password');
-        $mail->port = $this->config->get('config_mail_smtp_port');
-        $mail->timeout = $this->config->get('config_mail_smtp_timeout');
+            $mail = new \Core\Mail();
+            $mail->tags = array('Forgotten Password');
+            $mail->mandrill_key = $this->config->get('config_mandrill_key');
+            $mail->protocol = $this->config->get('config_mail_protocol');
+            $mail->parameter = $this->config->get('config_mail_parameter');
+            $mail->hostname = $this->config->get('config_mail_smtp_hostname');
+            $mail->username = $this->config->get('config_mail_smtp_username');
+            $mail->password = $this->config->get('config_mail_smtp_password');
+            $mail->port = $this->config->get('config_mail_smtp_port');
+            $mail->timeout = $this->config->get('config_mail_smtp_timeout');
             $mail->setTo($this->request->post['email']);
             $mail->setFrom($this->config->get('config_email'));
             $mail->setSender($this->config->get('config_name'));
@@ -58,7 +60,7 @@ class ControllerAccountForgotten extends \Core\Controller {
 
                 $this->model_account_activity->addActivity('forgotten', $activity_data);
             }
-            
+
             $this->redirect($this->url->link('account/login', '', 'SSL'));
         }
 

@@ -11,8 +11,8 @@ class ModelMarketingNewsletterSubscriber extends \Core\Model {
                 $this->db->query("insert into #__subscriber_group set subscriber_id='" . (int) $subscriber_id . "', group_id='" . (int) $group_id . "'");
             }
         }
-        if(!empty($data['campaign_id'])){
-            foreach($data['campaign_id'] as $campaign_id){
+        if (!empty($data['campaign_id'])) {
+            foreach ($data['campaign_id'] as $campaign_id) {
                 $this->db->query("insert into #__newsletter_campaign_subscriber set subscriber_id='" . (int) $subscriber_id . "', campaign_id='" . (int) $campaign_id . "', current_newsletter_id='0', join_time = '" . time() . "'");
             }
         }
@@ -27,35 +27,35 @@ class ModelMarketingNewsletterSubscriber extends \Core\Model {
                 $this->db->query("insert into #__subscriber_group set subscriber_id='" . (int) $subscriber_id . "', group_id='" . (int) $group_id . "'");
             }
         }
-        
+
         //Campaigns::
         //What campaigns are currently active?
-       
-        if(empty($data['campaign_id'])){
-            $this->db->query("delete from #__newsletter_campaign_subscriber where subscriber_id = '" . (int)$subscriber_id . "'");
-        }else{
-             $ex_query = $this->db->query("select * from #__newsletter_campaign_subscriber where subscriber_id = '" . (int)$subscriber_id . "'")->rows;
-             $existing = array();
-             foreach($ex_query as $ex){
-                 $existing[$ex['campaign_id']] = $ex['campaign_id'];
-             }
-             foreach($data['campaign_id'] as $campaign_id){
-                 if(isset($existing['campaign_id'])){
-                     unset($existing['campaign_id']);
-                 }else{
-                      $this->db->query("insert into #__newsletter_campaign_subscriber set subscriber_id='" . (int) $subscriber_id . "', campaign_id='" . (int) $campaign_id . "', current_newsletter_id='0', join_time = '" . time() . "'");
-                 }
-             }
-             if(count($existing)){
-                 $this->db->query("delete from #__newsletter_campaign_subscriber where campaign_id in (" . implode(",", $existing) . ") and subscriber_id = '" . (int)$subscriber_id . "'");
-             }
+
+        if (empty($data['campaign_id'])) {
+            $this->db->query("delete from #__newsletter_campaign_subscriber where subscriber_id = '" . (int) $subscriber_id . "'");
+        } else {
+            $ex_query = $this->db->query("select * from #__newsletter_campaign_subscriber where subscriber_id = '" . (int) $subscriber_id . "'")->rows;
+            $existing = array();
+            foreach ($ex_query as $ex) {
+                $existing[$ex['campaign_id']] = $ex['campaign_id'];
+            }
+            foreach ($data['campaign_id'] as $campaign_id) {
+                if (isset($existing['campaign_id'])) {
+                    unset($existing['campaign_id']);
+                } else {
+                    $this->db->query("insert into #__newsletter_campaign_subscriber set subscriber_id='" . (int) $subscriber_id . "', campaign_id='" . (int) $campaign_id . "', current_newsletter_id='0', join_time = '" . time() . "'");
+                }
+            }
+            if (count($existing)) {
+                $this->db->query("delete from #__newsletter_campaign_subscriber where campaign_id in (" . implode(",", $existing) . ") and subscriber_id = '" . (int) $subscriber_id . "'");
+            }
         }
     }
 
     public function deleteSubscriber($subscriber_id) {
         $this->db->query("delete from #__subscriber where subscriber_id = '" . (int) $subscriber_id . "'");
         $this->db->query("delete from #__subscriber_group where subscriber_id = '" . (int) $subscriber_id . "'");
-        $this->db->query("delete from #__newsletter_campaign_subscriber where subscriber_id = '" . (int)$subscriber_id . "'");
+        $this->db->query("delete from #__newsletter_campaign_subscriber where subscriber_id = '" . (int) $subscriber_id . "'");
     }
 
     public function getTotalSubscribers($filter_data) {
@@ -74,11 +74,11 @@ class ModelMarketingNewsletterSubscriber extends \Core\Model {
         }
         if (isset($data['filter_opt_in']) && $data['filter_opt_in']) {
 
-            $sql .= " and unsubsribe_send_id = '0' ";
+            $sql .= " and unsubscribe_send_id = '0' ";
         }
         if (isset($data['filter_opt_in']) && !$data['filter_opt_in']) {
 
-            $sql .= " and unsubsribe_send_id > '0' ";
+            $sql .= " and unsubscribe_send_id > '0' ";
         }
 
         $query = $this->db->query($sql);
@@ -101,11 +101,11 @@ class ModelMarketingNewsletterSubscriber extends \Core\Model {
         }
         if (isset($data['filter_opt_in']) && $data['filter_opt_in']) {
 
-            $sql .= " and unsubsribe_send_id = '0' ";
+            $sql .= " and unsubscribe_send_id = '0' ";
         }
         if (isset($data['filter_opt_in']) && !$data['filter_opt_in']) {
 
-            $sql .= " and unsubsribe_send_id > '0' ";
+            $sql .= " and unsubscribe_send_id > '0' ";
         }
 
         $sort_data = array(
@@ -151,11 +151,11 @@ class ModelMarketingNewsletterSubscriber extends \Core\Model {
         $member['group_id'] = array();
         $member['campaign_id'] = array();
         $groups = $this->db->query("select group_id from #__subscriber_group where subscriber_id = '" . (int) $subscriber_id . "'")->rows;
-        foreach($groups as $group){
+        foreach ($groups as $group) {
             $member['group_id'][] = $group['group_id'];
         }
         $campaigns = $this->db->query("select campaign_id from #__newsletter_campaign_subscriber where subscriber_id = '" . (int) $subscriber_id . "'")->rows;
-        foreach($campaigns as $campaign){
+        foreach ($campaigns as $campaign) {
             $member['campaign_id'][] = $campaign['campaign_id'];
         }
         return $member;
@@ -168,6 +168,21 @@ class ModelMarketingNewsletterSubscriber extends \Core\Model {
         }
         $query = $this->db->query("select count(*) as total from #__subscriber where email = '" . $this->db->escape($email) . "' " . $where);
         return $query->row['total'];
+    }
+
+    public function getSendCount($subscriber_id) {
+        $query = $this->db->query("select count(*) as total from #__newsletter_subscriber nm inner join #__newsletter_send ns using(send_id) where  nm.sent_time > 0 and nm.subscriber_id='" . (int) $subscriber_id . "'")->row;
+        return $query['total'];
+    }
+
+    public function getOpenCount($subscriber_id) {
+        $query = $this->db->query("select count(*) as total from #__newsletter_subscriber nm inner join #__newsletter_send ns using(send_id) where nm.open_time > 0 and  nm.sent_time > 0 and nm.subscriber_id='" . (int) $subscriber_id . "'")->row;
+        return $query['total'];
+    }
+
+    public function getBounceCount($subscriber_id) {
+        $query = $this->db->query("select count(*) as total from #__newsletter_subscriber nm inner join #__newsletter_send ns using(send_id) where nm.bounce_time > 0 and  nm.sent_time > 0 and nm.subscriber_id='" . (int) $subscriber_id . "'")->row;
+        return $query['total'];
     }
 
 }

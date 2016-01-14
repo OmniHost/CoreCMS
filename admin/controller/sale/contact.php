@@ -374,6 +374,8 @@ class ControllerSaleContact extends \Core\Controller {
                     . "date_created = now()");
             
             $mail = new \Core\Mail();
+            $mail->mandrill_key = $this->config->get('config_mandrill_key');
+            $mail->tags = array('Contact Reply');
             $mail->protocol = $this->config->get('config_mail_protocol');
             $mail->parameter = $this->config->get('config_mail_parameter');
             $mail->hostname = $this->config->get('config_smtp_host');
@@ -386,9 +388,8 @@ class ControllerSaleContact extends \Core\Controller {
             $mail->setSender($this->config->get('config_name'));
             $mail->setSubject(html_entity_decode($this->request->post['subject']), ENT_QUOTES, 'UTF-8');
             $mail->setText(strip_tags(html_entity_decode($this->request->post['message_body'], ENT_QUOTES, 'UTF-8')));
-          //  $mail->send();
-            debugPre($mail);
-            exit;
+            $mail->send();
+           
             $this->session->data['success'] = $this->language->get('reply_message');
             $this->redirect($this->url->link('sale/contact', 'token=' . $this->session->data['token'], 'SSL'));
         }else{

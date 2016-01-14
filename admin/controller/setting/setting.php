@@ -395,6 +395,16 @@ class ControllerSettingSetting extends \Core\Controller {
         } else {
             $data['config_mail_smtp_port'] = 25;
         }
+        
+        if (isset($this->request->post['config_mandrill_key'])) {
+            $data['config_mandrill_key'] = $this->request->post['config_mandrill_key'];
+        } elseif ($this->config->has('config_mandrill_key')) {
+            $data['config_mandrill_key'] = $this->config->get('config_mandrill_key');
+        } else {
+            $data['config_mandrill_key'] = '';
+        }
+        
+        //config_mandrill_key
 
         if (isset($this->request->post['config_mail_smtp_timeout'])) {
             $data['config_mail_smtp_timeout'] = $this->request->post['config_mail_smtp_timeout'];

@@ -24,22 +24,18 @@ switch ($_GET['type']) {
 };
 
 
-
 $type = $_GET['type'];
 $elements = explode(',', $_GET['files']);
 
 // Determine last modification date of the files 
 $lastmodified = 0;
 
-
 while (list(, $element) = each($elements)) {
     $path = realpath($base . '/' . $element);
 
-    // echo '*' . $element  . ':' . $path . '<br />';
 
     if (($type == 'javascript' && substr($path, -3) != '.js') ||
             ($type == 'css' && substr($path, -4) != '.css')) {
-
 
         header("HTTP/1.0 403 Forbidden");
         exit;
@@ -50,7 +46,6 @@ while (list(, $element) = each($elements)) {
         header("HTTP/1.0 404 Not Found");
         exit;
     }
-
 
     $lastmodified = max($lastmodified, filemtime($path));
 }

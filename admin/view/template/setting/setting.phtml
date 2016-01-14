@@ -525,7 +525,7 @@
                                 <div class="col-sm-9">
                                     <a href="#" id="thumb-fbimage" data-toggle="image" class="img-thumbnail"><img src="<?php echo $config_facebook_ogimage; ?>" alt="" title="" data-placeholder="<?php echo $placeholder; ?>" /></a>
                                     <input type="hidden" name="config_facebook_ogimage" value="<?php echo $config_facebook_ogimag; ?>" id="input-facebook_ogimag" />
-                                    <span><?php echo $entry_meta_ogimage_help;?></span>
+                                    <span><?php echo $entry_meta_ogimage_help; ?></span>
                                 </div>
                             </div>
                         </fieldset>
@@ -568,43 +568,12 @@
                                     <?php } else { ?>
                                         <option value="smtp"><?php echo $text_smtp; ?></option>
                                     <?php } ?>
+                                    <?php if ($config_mail_protocol == 'mandrill') { ?>
+                                        <option value="mandrill" selected="selected"><?php echo $text_mandrill; ?></option>
+                                    <?php } else { ?>
+                                        <option value="mandrill"><?php echo $text_mandrill; ?></option>
+                                    <?php } ?>
                                 </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label" for="input-mail-parameter"><span data-toggle="tooltip" title="<?php echo $help_mail_parameter; ?>"><?php echo $entry_mail_parameter; ?></span></label>
-                            <div class="col-sm-9">
-                                <input type="text" name="config_mail_parameter" value="<?php echo $config_mail_parameter; ?>" placeholder="<?php echo $entry_mail_parameter; ?>" id="input-mail-parameter" class="form-control" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label" for="input-mail-smtp-hostname"><span data-toggle="tooltip" title="<?php echo $help_mail_smtp_hostname; ?>"><?php echo $entry_mail_smtp_hostname; ?></span></label>
-                            <div class="col-sm-9">
-                                <input type="text" name="config_mail_smtp_hostname" value="<?php echo $config_mail_smtp_hostname; ?>" placeholder="<?php echo $entry_mail_smtp_hostname; ?>" id="input-mail-smtp-hostname" class="form-control" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label" for="input-mail-smtp-username"><?php echo $entry_mail_smtp_username; ?></label>
-                            <div class="col-sm-9">
-                                <input type="text" name="config_mail_smtp_username" value="<?php echo $config_mail_smtp_username; ?>" placeholder="<?php echo $entry_mail_smtp_username; ?>" id="input-mail-smtp-username" class="form-control" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label" for="input-mail-smtp-password"><?php echo $entry_mail_smtp_password; ?></label>
-                            <div class="col-sm-9">
-                                <input type="text" name="config_mail_smtp_password" value="<?php echo $config_mail_smtp_password; ?>" placeholder="<?php echo $entry_mail_smtp_password; ?>" id="input-mail-smtp-password" class="form-control" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label" for="input-mail-smtp-port"><?php echo $entry_mail_smtp_port; ?></label>
-                            <div class="col-sm-9">
-                                <input type="text" name="config_mail_smtp_port" value="<?php echo $config_mail_smtp_port; ?>" placeholder="<?php echo $entry_mail_smtp_port; ?>" id="input-mail-smtp-port" class="form-control" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label" for="input-mail-smtp-timeout"><?php echo $entry_mail_smtp_timeout; ?></label>
-                            <div class="col-sm-9">
-                                <input type="text" name="config_mail_smtp_timeout" value="<?php echo $config_mail_smtp_timeout; ?>" placeholder="<?php echo $entry_mail_smtp_timeout; ?>" id="input-mail-smtp-timeout" class="form-control" />
                             </div>
                         </div>
                         <div class="form-group">
@@ -613,6 +582,86 @@
                                 <textarea name="config_mail_alert" rows="5" placeholder="<?php echo $entry_mail_alert; ?>" id="input-alert-email" class="form-control"><?php echo $config_mail_alert; ?></textarea>
                             </div>
                         </div>
+                        <fieldset>
+                            <legend><?php echo $entry_mail_parameter; ?></legend>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-mail-parameter"><span data-toggle="tooltip" title="<?php echo $help_mail_parameter; ?>"><?php echo $entry_mail_parameter; ?></span></label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="config_mail_parameter" value="<?php echo $config_mail_parameter; ?>" placeholder="<?php echo $entry_mail_parameter; ?>" id="input-mail-parameter" class="form-control" />
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>Mandrill Parameters</legend>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-mandrill-key"><span data-toggle="tooltip" title="<?php echo $help_mandrill_key; ?>"><?php echo $entry_mandrill_key; ?></span></label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="config_mandrill_key" value="<?php echo $config_mandrill_key; ?>" placeholder="<?php echo $entry_mandrill_key; ?>" id="input-mandrill-key" class="form-control" />
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>SMTP Parameters</legend>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-mail-smtp-hostname"><span data-toggle="tooltip" title="<?php echo $help_mail_smtp_hostname; ?>"><?php echo $entry_mail_smtp_hostname; ?></span></label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="config_mail_smtp_hostname" value="<?php echo $config_mail_smtp_hostname; ?>" placeholder="<?php echo $entry_mail_smtp_hostname; ?>" id="input-mail-smtp-hostname" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-mail-smtp-username"><?php echo $entry_mail_smtp_username; ?></label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="config_mail_smtp_username" value="<?php echo $config_mail_smtp_username; ?>" placeholder="<?php echo $entry_mail_smtp_username; ?>" id="input-mail-smtp-username" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-mail-smtp-password"><?php echo $entry_mail_smtp_password; ?></label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="config_mail_smtp_password" value="<?php echo $config_mail_smtp_password; ?>" placeholder="<?php echo $entry_mail_smtp_password; ?>" id="input-mail-smtp-password" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-mail-smtp-port"><?php echo $entry_mail_smtp_port; ?></label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="config_mail_smtp_port" value="<?php echo $config_mail_smtp_port; ?>" placeholder="<?php echo $entry_mail_smtp_port; ?>" id="input-mail-smtp-port" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-mail-smtp-timeout"><?php echo $entry_mail_smtp_timeout; ?></label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="config_mail_smtp_timeout" value="<?php echo $config_mail_smtp_timeout; ?>" placeholder="<?php echo $entry_mail_smtp_timeout; ?>" id="input-mail-smtp-timeout" class="form-control" />
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>Bounce Handling</legend>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-bounce-email"><span data-toggle="tooltip" title="where bounce emails will get sent. create a new email account for this if possible.">Bounce Email</span></label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="config_bounce_email" value="<?php echo $config_bounce_email; ?>" placeholder="Bounce Email" id="input-bounce-email" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-bounce-username"><span data-toggle="tooltip" title="pop3 username to access this bounce account.">Bounce Username</span></label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="config_bounce_username" value="<?php echo $config_bounce_username; ?>" placeholder="Bounce Email" id="input-bounce-username" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-bounce-password"><span data-toggle="tooltip" title="pop3 password to access this bounce account.">Bounce Password</span></label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="config_bounce_password" value="<?php echo $config_bounce_password; ?>" placeholder="Bounce Password" id="input-bounce-password" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-bounce-host"><span data-toggle="tooltip" title=" pop3 incoming server address to access this bounce account (eg: mail.yourwebsite.com)">Bounce Host</span></label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="config_bounce_host" value="<?php echo $config_bounce_host; ?>" placeholder="Bounce Host" id="input-bounce-host" class="form-control" />
+                                </div>
+                            </div>
+                           
+                        </fieldset>
+
                     </div>
                     <div class="tab-pane" id="tab-ftp">
                         <div class="form-group">

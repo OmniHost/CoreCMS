@@ -188,3 +188,18 @@ th a.desc:after {
     padding-left: 5px;
 
 }
+
+.template-selector {
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #efefef;
+    border-radius: 8px;
+    text-align: center;
+    width: 150px;
+    float: left;
+}
+
+.template-selector.selected {
+    border: 1px solid #3c8dbc;
+    box-shadow: 0 0 3px #3c8dbc;
+}

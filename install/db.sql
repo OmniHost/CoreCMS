@@ -936,11 +936,11 @@ CREATE TABLE `#__newsletter` (
   `newsletter_id` int(11) NOT NULL auto_increment,
 `name` VARCHAR(250) NOT NULL ,
   `create_date` date NOT NULL,
-  `template` varchar(100) collate utf8_bin NOT NULL,
+  `template` mediumtext collate utf8_bin NOT NULL,
   `subject` varchar(255) collate utf8_bin NOT NULL,
   `from_name` varchar(255) collate utf8_bin NOT NULL,
   `from_email` varchar(255) collate utf8_bin NOT NULL,
-  `content` text collate utf8_bin NOT NULL,
+  `content` mediumtext collate utf8_bin NOT NULL,
   `bounce_email` varchar(255) collate utf8_bin NOT NULL,
   PRIMARY KEY  (`newsletter_id`)
 )  DEFAULT CHARSET=utf8;

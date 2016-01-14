@@ -3,7 +3,9 @@
 class ModelAccountContact extends \Core\Model {
 
     public function addContact($data) {
-
+        if(empty($data['custom_field'])){
+            $data['custom_field'] = array();
+        }
         $ip = $this->request->server['REMOTE_ADDR'];
 
         $this->db->query("INSERT INTO #__contact SET "

@@ -87,6 +87,8 @@ class ControllerModuleContact extends \Core\Controller {
 
 
             $mail = new \Core\Mail();
+            $mail->tags = array('Contact Request');
+            $mail->mandrill_key = $this->config->get('config_mandrill_key');
             $mail->protocol = $this->config->get('config_mail_protocol');
             $mail->parameter = $this->config->get('config_mail_parameter');
             $mail->hostname = $this->config->get('config_mail_smtp_hostname');
@@ -133,11 +135,12 @@ class ControllerModuleContact extends \Core\Controller {
 
 
             $mail->setTo($this->config->get('config_email'));
-            $mail->setFrom($this->request->post['email']);
+            $mail->setFrom($this->config->get('config_email'));
             $mail->setSender($this->request->post['name']);
+             $mail->setReplyTo($this->request->post['email']);
             $mail->setSubject($mailsubject);
             $mail->setText($mailbody);
-            
+            $mail->setHtml(nl2br($mailbody));
             
             $mail->send();
 

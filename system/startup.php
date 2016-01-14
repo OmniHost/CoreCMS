@@ -89,6 +89,8 @@ if (BASE_REQUEST_TYPE == 'cli') {
     $host = rtrim($host, '/');
     $_SERVER['HTTP_HOST'] = $_SERVER['SERVER_NAME'] = $host;
 
+
+    
     if ($g) {
         parse_str($g, $_GET);
     }
