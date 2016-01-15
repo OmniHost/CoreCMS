@@ -81,11 +81,10 @@ var postMessage_module = (function() {
         "type": "",
         "content": ""
     };
-    var createMessageToSend = function(type, content, template) {
+    var createMessageToSend = function(type, content) {
         var messageToSend;
         messageObj.type = type;
         messageObj.content = content;
-	messageObj.template = template
 
         messageToSend = JSON.stringify(messageObj);
         post(messageToSend)

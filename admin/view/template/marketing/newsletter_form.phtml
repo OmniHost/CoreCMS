@@ -145,17 +145,18 @@
             $('#nlsavebutton').attr('disabled', 'disabled');
         }
     }
-
+<?php if ($content): ?>
+      docReady(function () {
+        loadSavedHtml();
+    });
+            
+<?php endif; ?>
 
     docReady(function () {
         $('#nlsavebutton').attr('disabled', 'disabled');
 
 
-<?php if ($content): ?>
-        
-        loadSavedHtml();
-            
-<?php endif; ?>
+
 
         $(document).on("click", ".template-selector", function () {
             var key = $(this).data('key');
