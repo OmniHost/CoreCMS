@@ -7,5 +7,11 @@ class ModelApiApi extends \Core\Model {
 
         return $query->row;
     }
+    
+    public function getCredentials($id){
+           $query = $this->db->query("SELECT * FROM `#__api` WHERE  api_id='" . (int)$id . "' AND status = '1'");
+
+        return $query->row;   
+    }
 
 }

@@ -2,7 +2,7 @@
 
 class ModelToolImage extends \Core\Model {
 
-    public function resize($filename, $maxwidth = 0, $maxheight = 0, $force = false) {
+    public function resize($filename, $maxwidth = 0, $maxheight = 0) {
 
         if (!file_exists(DIR_IMAGE . $filename) || !is_file(DIR_IMAGE . $filename)) {
             return;
@@ -48,7 +48,7 @@ class ModelToolImage extends \Core\Model {
 
 
 
-            if ( $width_orig != $newWidth || $height_orig != $newHeight) {
+            if ($width_orig != $newWidth || $height_orig != $newHeight) {
                 $image = new \Core\Image(DIR_IMAGE . $old_image);
                 $image->resize($newWidth, $newHeight, '');
 
