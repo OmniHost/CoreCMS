@@ -59,6 +59,7 @@ DROP TABLE  IF EXISTS `#__ams_revisions`;
 CREATE TABLE `#__ams_revisions` (
   `ams_revision_id` int(11) NOT NULL AUTO_INCREMENT,
   `ams_page_id` int(11) NOT NULL,
+  `namespace` varchar(250) NOT NULL,
   `user_id` int(11) NOT NULL DEFAULT '0',
   `autosave` int(1) NOT NULL DEFAULT '0',
   `pagedata` longtext NOT NULL,
@@ -633,8 +634,8 @@ CREATE TABLE `#__download` (
 
 DROP TABLE  IF EXISTS `#__event`;
 
-CREATE TABLE IF NOT EXISTS `#__event` (
-`event_id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `#__event` (
+  `event_id` int(11) NOT NULL AUTO_INCREMENT,
   `code` varchar(32) NOT NULL,
   `trigger` text NOT NULL,
   `action` text NOT NULL,
@@ -662,6 +663,7 @@ CREATE TABLE `#__layout` (
 ) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__layout` (`layout_id`, `name`) VALUES ('1', 'Default');
+INSERT INTO `#__layout` (`layout_id`, `name`) VALUES ('2', 'Global');
 INSERT INTO `#__layout` (`layout_id`, `name`) VALUES ('6', 'Home');
 INSERT INTO `#__layout` (`layout_id`, `name`) VALUES ('7', 'Contact');
 
@@ -690,6 +692,7 @@ CREATE TABLE `#__layout_route` (
 
 INSERT INTO `#__layout_route` (`layout_route_id`, `layout_id`, `route`) VALUES ('72', '7', 'common/contact');
 INSERT INTO `#__layout_route` (`layout_route_id`, `layout_id`, `route`) VALUES ('71', '6', 'common/home');
+INSERT INTO `#__layout_route` (`layout_route_id`, `layout_id`, `route`) VALUES ('70', '2', '*');
 
 
 DROP TABLE  IF EXISTS `#__marketing`;
@@ -765,7 +768,127 @@ CREATE TABLE `#__module` (
   PRIMARY KEY (`module_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 
+DROP TABLE  IF EXISTS `#__newsletter`;
 
+CREATE TABLE `#__newsletter` (
+  `newsletter_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(250) NOT NULL,
+  `create_date` date NOT NULL,
+  `template` mediumtext CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `subject` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `from_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `from_email` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `content` mediumtext CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `bounce_email` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`newsletter_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+
+DROP TABLE  IF EXISTS `#__newsletter_campaign`;
+
+CREATE TABLE `#__newsletter_campaign` (
+  `campaign_id` int(11) NOT NULL AUTO_INCREMENT,
+  `campaign_name` varchar(255) NOT NULL,
+  `create_date` date NOT NULL,
+  PRIMARY KEY (`campaign_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+
+
+DROP TABLE  IF EXISTS `#__newsletter_campaign_newsletter`;
+
+CREATE TABLE `#__newsletter_campaign_newsletter` (
+  `campaign_id` int(11) NOT NULL,
+  `newsletter_id` int(11) NOT NULL,
+  `send_time` int(11) NOT NULL,
+  PRIMARY KEY (`campaign_id`,`newsletter_id`,`send_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+DROP TABLE  IF EXISTS `#__newsletter_campaign_subscriber`;
+
+CREATE TABLE `#__newsletter_campaign_subscriber` (
+  `campaign_id` int(11) NOT NULL,
+  `subscriber_id` int(11) NOT NULL,
+  `current_newsletter_id` int(11) NOT NULL,
+  `join_time` int(11) NOT NULL,
+  PRIMARY KEY (`campaign_id`,`subscriber_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+DROP TABLE  IF EXISTS `#__newsletter_group`;
+
+CREATE TABLE `#__newsletter_group` (
+  `group_id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_name` varchar(255) NOT NULL,
+  `public` int(11) NOT NULL,
+  PRIMARY KEY (`group_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+INSERT INTO `#__newsletter_group` (`group_id`, `group_name`, `public`) VALUES ('1', 'General e-Newsletter', '1');
+
+
+
+DROP TABLE  IF EXISTS `#__newsletter_image`;
+
+CREATE TABLE `#__newsletter_image` (
+  `image_id` int(11) NOT NULL AUTO_INCREMENT,
+  `image_url` text NOT NULL,
+  PRIMARY KEY (`image_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+
+
+
+DROP TABLE  IF EXISTS `#__newsletter_link`;
+
+CREATE TABLE `#__newsletter_link` (
+  `link_id` int(11) NOT NULL AUTO_INCREMENT,
+  `link_url` text NOT NULL,
+  PRIMARY KEY (`link_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+
+
+
+DROP TABLE  IF EXISTS `#__newsletter_link_open`;
+
+CREATE TABLE `#__newsletter_link_open` (
+  `link_open_id` int(11) NOT NULL AUTO_INCREMENT,
+  `link_id` int(11) NOT NULL,
+  `subscriber_id` int(11) NOT NULL,
+  `send_id` int(11) NOT NULL,
+  `timestamp` int(11) NOT NULL,
+  PRIMARY KEY (`link_open_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+
+
+DROP TABLE  IF EXISTS `#__newsletter_subscriber`;
+
+CREATE TABLE `#__newsletter_subscriber` (
+  `send_id` int(11) NOT NULL,
+  `subscriber_id` int(11) NOT NULL,
+  `sent_time` int(11) NOT NULL,
+  `status` int(11) NOT NULL,
+  `open_time` int(11) NOT NULL,
+  `bounce_time` int(11) NOT NULL,
+  PRIMARY KEY (`send_id`,`subscriber_id`),
+  KEY `open_time` (`open_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE  IF EXISTS `#__newsletter_send`;
+
+CREATE TABLE `#__newsletter_send` (
+  `send_id` int(11) NOT NULL AUTO_INCREMENT,
+  `start_time` int(11) NOT NULL,
+  `status` int(11) NOT NULL,
+  `finish_time` int(11) NOT NULL,
+  `newsletter_id` int(11) NOT NULL,
+  `campaign_id` int(11) NOT NULL,
+  `template_html` text NOT NULL,
+  `full_html` text NOT NULL,
+  PRIMARY KEY (`send_id`),
+  KEY `newsletter_id` (`newsletter_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 
 DROP TABLE  IF EXISTS `#__setting`;
 
@@ -777,79 +900,86 @@ CREATE TABLE `#__setting` (
   `value` text NOT NULL,
   `serialized` tinyint(1) NOT NULL,
   PRIMARY KEY (`setting_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=1758 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=2775 DEFAULT CHARSET=utf8;
 
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1752', '0', 'config', 'config_google_analytics', '', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1751', '0', 'config', 'config_error_log', '1', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1750', '0', 'config', 'config_error_display', '0', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1749', '0', 'config', 'config_compression', '9', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1748', '0', 'config', 'config_encryption', '5a8128ec3bc20a5ddee688b5b4454f42', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1747', '0', 'config', 'config_file_mime_allowed', 'text/plain\r\nimage/png\r\nimage/jpeg\r\nimage/gif\r\nimage/bmp\r\nimage/tiff\r\nimage/svg+xml\r\napplication/zip\r\n&quot;application/zip&quot;\r\napplication/x-zip\r\n&quot;application/x-zip&quot;\r\napplication/x-zip-compressed\r\n&quot;application/x-zip-compressed&quot;\r\napplication/rar\r\n&quot;application/rar&quot;\r\napplication/x-rar\r\n&quot;application/x-rar&quot;\r\napplication/x-rar-compressed\r\n&quot;application/x-rar-compressed&quot;\r\napplication/octet-stream\r\n&quot;application/octet-stream&quot;\r\naudio/mpeg\r\nvideo/quicktime\r\napplication/pdf', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1745', '0', 'config', 'config_file_max_size', '300000', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1746', '0', 'config', 'config_file_ext_allowed', 'zip\r\ntxt\r\npng\r\njpe\r\njpeg\r\njpg\r\ngif\r\nbmp\r\nico\r\ntiff\r\ntif\r\nsvg\r\nsvgz\r\nzip\r\nrar\r\nmsi\r\ncab\r\nmp3\r\nqt\r\nmov\r\npdf\r\npsd\r\nai\r\neps\r\nps\r\ndoc', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1744', '0', 'config', 'config_robots', 'User-agent: *\r\n \tAllow: /\r\n\r\n\tDisallow: /admin/\r\n \tDisallow: /install/\r\n \tDisallow: /_cache/\r\n\r\n\r\nUser-agent: Mediapartners-Google\r\n \tAllow: /\r\n\r\nUser-agent: Adsbot-Google\r\n \tAllow: /\r\n\r\nUser-agent: Googlebot-Image\r\n \tAllow: /\r\n\r\nUser-agent: Googlebot-Mobile\r\n \tAllow: /\r\n\r\nUser-agent: Googlebot-Video\r\n \tAllow: /\r\n\r\n# digg mirror\r\nUser-agent: duggmirror\r\nDisallow: /', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1743', '0', 'config', 'config_maintenance', '1', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1742', '0', 'config', 'config_secure', '0', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1741', '0', 'config', 'config_ftp_status', '0', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('668', '0', '_version_', '_version_', '1.2.0', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1740', '0', 'config', 'config_ftp_root', '', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1739', '0', 'config', 'config_ftp_password', '', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1738', '0', 'config', 'config_ftp_username', '', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1737', '0', 'config', 'config_ftp_port', '21', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1736', '0', 'config', 'config_ftp_hostname', 'clients', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1735', '0', 'config', 'config_mail_alert', '', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1734', '0', 'config', 'config_mail_smtp_timeout', '15', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1733', '0', 'config', 'config_mail_smtp_port', '', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1732', '0', 'config', 'config_mail_smtp_password', '', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1731', '0', 'config', 'config_mail_smtp_username', '', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1730', '0', 'config', 'config_mail_smtp_hostname', '', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1719', '0', 'config', 'config_meta_description', '', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1720', '0', 'config', 'config_meta_keyword', '', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1721', '0', 'config', 'config_facebook_appid', '', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1722', '0', 'config', 'config_facebook_ogsitename', '', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1723', '0', 'config', 'config_facebook_ogtitle', '', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1724', '0', 'config', 'config_facebook_ogdescription', '', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1725', '0', 'config', 'config_facebook_ogimage', '', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1726', '0', 'config', 'config_meta_publisher', '', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1727', '0', 'config', 'config_meta_author', '', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1728', '0', 'config', 'config_mail_protocol', 'mail', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1729', '0', 'config', 'config_mail_parameter', '', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1718', '0', 'config', 'config_meta_title', 'CoreCMS', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1717', '0', 'config', 'config_account_mail', '0', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1716', '0', 'config', 'config_account_id', '0', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1715', '0', 'config', 'config_login_attempts', '5', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1714', '0', 'config', 'config_customer_group_display', 'a:1:{i:0;s:1:"1";}', '1');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1713', '0', 'config', 'config_customer_group_id', '1', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1712', '0', 'config', 'config_account_register', '1', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1711', '0', 'config', 'config_review_mail', '1', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1710', '0', 'config', 'config_comment_auto_approve', '0', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1709', '0', 'config', 'config_review_guest', '0', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1708', '0', 'config', 'config_review_status', '1', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1707', '0', 'config', 'config_autosave_time', '120', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1706', '0', 'config', 'config_autosave_status', '1', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1705', '0', 'config', 'config_image_blogcat_height', '300', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1704', '0', 'config', 'config_image_blogcat_width', '300', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1703', '0', 'config', 'config_image_popup_height', '600', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1702', '0', 'config', 'config_image_popup_width', '800', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1701', '0', 'config', 'config_image_thumb_height', '300', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1700', '0', 'config', 'config_image_thumb_width', '300', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1699', '0', 'config', 'config_limit_admin', '20', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1698', '0', 'config', 'config_blog_limit', '5', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1697', '0', 'config', 'config_product_limit', '20', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1696', '0', 'config', 'config_currency_auto', '0', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1695', '0', 'config', 'config_currency', 'NZD', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1694', '0', 'config', 'config_country_id', '153', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1693', '0', 'config', 'config_icon', 'uploads/core-omni-logo.png', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1692', '0', 'config', 'config_logo', 'uploads/corelogo.png', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1691', '0', 'config', 'config_layout_id', '1', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1690', '0', 'config', 'config_template', 'default', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1688', '0', 'config', 'config_name', 'CoreCMS', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1689', '0', 'config', 'config_email', 'vxdhost@gmail.com', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1753', '0', 'config', 'config_google_analytics_status', '0', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1754', '0', 'config', 'config_google_captcha_public', '', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1755', '0', 'config', 'config_google_captcha_secret', '', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1756', '0', 'config', 'config_google_captcha_status', '0', '0');
-INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('1757', '0', 'config', 'config_google_api_key', '', '0');
+
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2773', '0', 'config', 'config_google_captcha_status', '0', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2772', '0', 'config', 'config_google_captcha_secret', '', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2771', '0', 'config', 'config_google_captcha_public', '', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2769', '0', 'config', 'config_google_analytics', '', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2770', '0', 'config', 'config_google_analytics_status', '0', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2764', '0', 'config', 'config_file_mime_allowed', 'text/plain\r\nimage/png\r\nimage/jpeg\r\nimage/gif\r\nimage/bmp\r\nimage/tiff\r\nimage/svg+xml\r\napplication/zip\r\n&quot;application/zip&quot;\r\napplication/x-zip\r\n&quot;application/x-zip&quot;\r\napplication/x-zip-compressed\r\n&quot;application/x-zip-compressed&quot;\r\napplication/rar\r\n&quot;application/rar&quot;\r\napplication/x-rar\r\n&quot;application/x-rar&quot;\r\napplication/x-rar-compressed\r\n&quot;application/x-rar-compressed&quot;\r\napplication/octet-stream\r\n&quot;application/octet-stream&quot;\r\naudio/mpeg\r\nvideo/quicktime\r\napplication/pdf', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2766', '0', 'config', 'config_compression', '0', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2767', '0', 'config', 'config_error_display', '1', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2768', '0', 'config', 'config_error_log', '1', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2765', '0', 'config', 'config_encryption', 'c584174ac95959cfffc150ed3610d7ca', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2762', '0', 'config', 'config_file_max_size', '300000', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2763', '0', 'config', 'config_file_ext_allowed', 'zip\r\ntxt\r\npng\r\njpe\r\njpeg\r\njpg\r\ngif\r\nbmp\r\nico\r\ntiff\r\ntif\r\nsvg\r\nsvgz\r\nzip\r\nrar\r\nmsi\r\ncab\r\nmp3\r\nqt\r\nmov\r\npdf\r\npsd\r\nai\r\neps\r\nps\r\ndoc', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2761', '0', 'config', 'config_robots', 'User-agent: *\r\n \tAllow: /\r\n\r\n\tDisallow: /admin/\r\n \tDisallow: /install/\r\n \tDisallow: /_cache/\r\n\r\n\r\nUser-agent: Mediapartners-Google\r\n \tAllow: /\r\n\r\nUser-agent: Adsbot-Google\r\n \tAllow: /\r\n\r\nUser-agent: Googlebot-Image\r\n \tAllow: /\r\n\r\nUser-agent: Googlebot-Mobile\r\n \tAllow: /\r\n\r\nUser-agent: Googlebot-Video\r\n \tAllow: /\r\n\r\n# digg mirror\r\nUser-agent: duggmirror\r\nDisallow: /', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2760', '0', 'config', 'config_maintenance', '1', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2759', '0', 'config', 'config_secure', '0', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2758', '0', 'config', 'config_ftp_status', '0', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2757', '0', 'config', 'config_ftp_root', '', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2756', '0', 'config', 'config_ftp_password', '', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2755', '0', 'config', 'config_ftp_username', '', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2754', '0', 'config', 'config_ftp_port', '21', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2753', '0', 'config', 'config_ftp_hostname', '', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2752', '0', 'config', 'config_bounce_host', '', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2751', '0', 'config', 'config_bounce_password', '', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2750', '0', 'config', 'config_bounce_username', '', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2749', '0', 'config', 'config_bounce_email', '', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2748', '0', 'config', 'config_mail_smtp_timeout', '15', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2747', '0', 'config', 'config_mail_smtp_port', '', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2746', '0', 'config', 'config_mail_smtp_password', '', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2745', '0', 'config', 'config_mail_smtp_username', '', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2744', '0', 'config', 'config_mail_smtp_hostname', '', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2743', '0', 'config', 'config_mandrill_key', '', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2741', '0', 'config', 'config_mail_alert', '', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2742', '0', 'config', 'config_mail_parameter', '', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2738', '0', 'config', 'config_meta_publisher', '', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2739', '0', 'config', 'config_meta_author', '', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2740', '0', 'config', 'config_mail_protocol', 'mail', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2737', '0', 'config', 'config_facebook_ogimage', '', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2736', '0', 'config', 'config_facebook_ogdescription', '', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2734', '0', 'config', 'config_facebook_ogsitename', '', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2735', '0', 'config', 'config_facebook_ogtitle', '', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2731', '0', 'config', 'config_meta_description', '', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2732', '0', 'config', 'config_meta_keyword', '', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2733', '0', 'config', 'config_facebook_appid', '', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2730', '0', 'config', 'config_meta_title', 'Core CMS', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2729', '0', 'config', 'config_sso_id', '1', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2727', '0', 'config', 'config_account_id', '0', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2728', '0', 'config', 'config_account_mail', '0', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2726', '0', 'config', 'config_login_attempts', '5', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2725', '0', 'config', 'config_customer_group_display', 'a:1:{i:0;s:1:"1";}', '1');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2724', '0', 'config', 'config_customer_group_id', '1', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2723', '0', 'config', 'config_account_register', '0', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2722', '0', 'config', 'config_review_mail', '1', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2720', '0', 'config', 'config_review_guest', '1', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2721', '0', 'config', 'config_comment_auto_approve', '0', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2719', '0', 'config', 'config_review_status', '1', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2718', '0', 'config', 'config_autosave_time', '120', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2717', '0', 'config', 'config_autosave_status', '1', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2716', '0', 'config', 'config_image_blogcat_height', '300', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2715', '0', 'config', 'config_image_blogcat_width', '300', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2714', '0', 'config', 'config_image_popup_height', '600', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2713', '0', 'config', 'config_image_popup_width', '800', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2712', '0', 'config', 'config_image_thumb_height', '300', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2711', '0', 'config', 'config_image_thumb_width', '300', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2710', '0', 'config', 'config_limit_admin', '100', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2709', '0', 'config', 'config_blog_limit', '5', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2708', '0', 'config', 'config_product_limit', '20', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2706', '0', 'config', 'config_currency', 'NZD', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2707', '0', 'config', 'config_currency_auto', '0', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2705', '0', 'config', 'config_country_id', '153', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2704', '0', 'config', 'config_icon', 'uploads/core-omni-logo.png', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2703', '0', 'config', 'config_logo', 'uploads/corelogo.png', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2702', '0', 'config', 'config_layout_id', '1', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2701', '0', 'config', 'config_template', 'default', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2700', '0', 'config', 'config_email', 'vxdhost@gmail.com', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2699', '0', 'config', 'config_name', 'Core CMS', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2698', '0', 'contact', 'contact_status', '1', '0');
+INSERT INTO `#__setting` (`setting_id`, `store_id`, `code`, `key`, `value`, `serialized`) VALUES ('2774', '0', 'config', 'config_google_api_key', '', '0');
 
 
 DROP TABLE  IF EXISTS `#__subscriber`;
@@ -861,113 +991,23 @@ CREATE TABLE `#__subscriber` (
   `ip_address` varchar(50) NOT NULL,
   `date_created` datetime NOT NULL,
   `date_modified` datetime NOT NULL,
-  `firstname` VARCHAR(250) NOT NULL ,
-  `lastname` VARCHAR(250) NOT NULL ,
-  `unsubscribe_date` DATE NOT NULL ,
-  `unsubsribe_send_id` INT(11) NOT NULL,
+  `firstname` varchar(250) NOT NULL,
+  `lastname` varchar(250) NOT NULL,
+  `unsubscribe_date` date NOT NULL,
+  `unsubscribe_send_id` int(11) NOT NULL,
   PRIMARY KEY (`subscriber_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+
+DROP TABLE  IF EXISTS `#__subscriber_group`;
+
 
 CREATE TABLE IF NOT EXISTS `#__subscriber_group` (
   `subscriber_id` int(11) NOT NULL,
   `group_id` int(11) NOT NULL,
-  PRIMARY KEY  (`subscriber_id`,`group_id`)
-)  DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`subscriber_id`,`group_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
-CREATE TABLE IF NOT EXISTS `#__newsletter_group` (
-  `group_id` int(11) NOT NULL auto_increment,
-  `group_name` varchar(255) NOT NULL,
-  `public` int(11) NOT NULL,
-  PRIMARY KEY  (`group_id`)
-)  DEFAULT CHARSET=utf8;
-
-INSERT INTO `#__newsletter_group` VALUES (1, 'General e-Newsletter', 1);
-
-CREATE TABLE IF NOT EXISTS `#__newsletter_campaign` (
-  `campaign_id` int(11) NOT NULL auto_increment,
-  `campaign_name` varchar(255) NOT NULL,
-  `create_date` date NOT NULL,
-  PRIMARY KEY  (`campaign_id`)
-)  DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS `#__newsletter_campaign_subscriber` (
-  `campaign_id` int(11) NOT NULL,
-  `subscriber_id` int(11) NOT NULL,
-  `current_newsletter_id` int(11) NOT NULL,
-  `join_time` int(11) NOT NULL,
-  PRIMARY KEY  (`campaign_id`,`subscriber_id`)
-)   DEFAULT CHARSET=utf8;
-
-
-
-CREATE TABLE IF NOT EXISTS `#__newsletter_campaign_newsletter` (
-  `campaign_id` int(11) NOT NULL,
-  `newsletter_id` int(11) NOT NULL,
-  `send_time` int(11) NOT NULL,
-  PRIMARY KEY  (`campaign_id`,`newsletter_id`)
-)  DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS `#__newsletter_image` (
-  `image_id` int(11) NOT NULL auto_increment,
-  `image_url` text NOT NULL,
-  PRIMARY KEY  (`image_id`)
-)  DEFAULT CHARSET=utf8;
-
-
-
-CREATE TABLE IF NOT EXISTS `#__newsletter_link` (
-  `link_id` int(11) NOT NULL auto_increment,
-  `link_url` text NOT NULL,
-  PRIMARY KEY  (`link_id`)
-)  DEFAULT CHARSET=utf8;
-
-
-CREATE TABLE IF NOT EXISTS `#__newsletter_link_open` (
-  `link_open_id` int(11) NOT NULL auto_increment,
-  `link_id` int(11) NOT NULL,
-  `subscriber_id` int(11) NOT NULL,
-  `send_id` int(11) NOT NULL,
-  `timestamp` int(11) NOT NULL,
-  PRIMARY KEY  (`link_open_id`)
-)  DEFAULT CHARSET=utf8;
-
-CREATE TABLE `#__newsletter` (
-  `newsletter_id` int(11) NOT NULL auto_increment,
-`name` VARCHAR(250) NOT NULL ,
-  `create_date` date NOT NULL,
-  `template` mediumtext collate utf8_bin NOT NULL,
-  `subject` varchar(255) collate utf8_bin NOT NULL,
-  `from_name` varchar(255) collate utf8_bin NOT NULL,
-  `from_email` varchar(255) collate utf8_bin NOT NULL,
-  `content` mediumtext collate utf8_bin NOT NULL,
-  `bounce_email` varchar(255) collate utf8_bin NOT NULL,
-  PRIMARY KEY  (`newsletter_id`)
-)  DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS `#__newsletter_subscriber` (
-  `send_id` int(11) NOT NULL,
-  `subscriber_id` int(11) NOT NULL,
-  `sent_time` int(11) NOT NULL,
-  `status` int(11) NOT NULL,
-  `open_time` int(11) NOT NULL,
-  `bounce_time` int(11) NOT NULL,
-  PRIMARY KEY  (`send_id`,`subscriber_id`),
-  KEY `open_time` (`open_time`)
-)  DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS `#__newsletter_send` (
-  `send_id` int(11) NOT NULL auto_increment,
-  `start_time` int(11) NOT NULL,
-  `status` int(11) NOT NULL,
-  `finish_time` int(11) NOT NULL,
-  `newsletter_id` int(11) NOT NULL,
-  `campaign_id` int(11) NOT NULL,
-  `template_html` text NOT NULL,
-  `full_html` text NOT NULL,
-  PRIMARY KEY  (`send_id`),
-  KEY `newsletter_id` (`newsletter_id`)
-)   DEFAULT CHARSET=utf8;
 
 DROP TABLE  IF EXISTS `#__upload`;
 
