@@ -43,7 +43,7 @@ final class Loader {
         if (file_exists($file)) {
             include_once(__modification($file));
         } else {
-            trigger_error('Error: Could not load library ' . $library . '!');
+            throw new \Core\Exception('Error: Could not load library ' . $library . '!');
             exit();
         }
     }
@@ -58,7 +58,7 @@ final class Loader {
         if (file_exists($file)) {
             include_once(__modification($file));
         } else {
-            trigger_error('Error: Could not load helper ' . $helper . '!');
+            throw new \Core\Exception('Error: Could not load helper ' . $helper . '!');
             exit();
         }
     }
@@ -87,7 +87,7 @@ final class Loader {
             \Core\Core::$registry->set('model_' . str_replace('/', '_', $model),$regclass);
             return $regclass;
         } else {
-            trigger_error('Error: Could not load model ' . $model . '!');
+            throw new \Core\Exception('Error: Could not load model ' . $model . '!');
             exit();
         }
     }
@@ -110,7 +110,7 @@ final class Loader {
 
             \Core\Core::$registry->set(str_replace('/', '_', $driver), new $class($hostname, $username, $password, $database));
         } else {
-            trigger_error('Error: Could not load database ' . $driver . '!');
+            throw new \Core\Exception('Error: Could not load database ' . $driver . '!');
             exit();
         }
     }

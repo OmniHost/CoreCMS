@@ -49,7 +49,7 @@ class Template {
             $content = ob_get_clean();
             return $content;
         } else {
-            trigger_error('Error: Could not load template ' . $file . '!');
+            throw new \Core\Exception('Error: Could not load template ' . $file . '!');
             exit();
         }
     }

@@ -160,47 +160,5 @@ class Remote {
         return $retval;
     }
 
-    static public function ticketApi($post) {
-        $config = \Vxd\Vxd::$config['osTicket'];
-
-
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $config['url']);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post));
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Request/RankedByREview - (rankedbyreview.com)');
-        curl_setopt($ch, CURLOPT_HEADER, TRUE);
-        curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Expect:', 'X-API-Key: ' . $config['key']));
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, FALSE);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); // this is an insecure setting. =(
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2); // this one too
-
-        $result = curl_exec($ch);
-        $data = curl_getinfo($ch);
-        curl_close($ch);
-
-        // because CURLOPT_HEADER is true, we have to split up the headers and response body 
-        list($header, $body) = explode("\r\n\r\n", $result, 2);
-        // process headers into a nice little array:
-        $raw_headers = explode("\r\n", $header);
-        $headers = self::parse_headers($header);
-
-        // send beautiful response back
-        $result = array(
-            'info' => $data, // from cURL response, includes http codes
-            'raw_headers' => $raw_headers,
-            'headers' => $headers,
-            'body' => $body,
-        );
-
-
-
-
-        return $result;
-    }
-
+   
 }

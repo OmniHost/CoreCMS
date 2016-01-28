@@ -226,6 +226,29 @@ Abstract class Page {
         return $return;
     }
 
+    public function loadPagePreview($page) {
+        $this->id = 0;
+        $this->name = $page['name'];
+        $this->parent_id = $page['parent_id'];
+        $this->status = $page['status'];
+        $this->user_id = '0';
+        unset($page['name'], $page['slug'], $page['parent_id'], $page['status']);
+        $properties = $this->_getProperties();
+        foreach ($page as $key => $node) {
+          
+            if (in_array($key, $properties)) {
+// try to call the setter method
+                $value = $this->_callSetterMethod($key, array("content" => $node));
+                if ($value === self::NO_SETTER) {
+                    $value = $node;
+                }
+                $this->$key = $value;
+            }
+        }
+        
+        return $this;
+    }
+
     /**
      * Load CMS object given id.
      *
@@ -269,8 +292,7 @@ Abstract class Page {
 
     public function getSlug() {
         $query = $this->_db->query("SELECT keyword FROM #__url_alias WHERE `query` = '" . $this->_db->escape('ams_page_id=' . (int) $this->id) . "'");
-        return $query->row['keyword'];
-
+        return $query->row ? $query->row['keyword'] : '';
     }
 
     public function loadParent($id) {
@@ -405,7 +427,6 @@ Abstract class Page {
                 }
                 if($key == 'date_added') {
                     $query .= " and DATE(from_unixtime(date_created)) = DATE('" . $this->_db->escape($value) . "') ";
-                           
                 }
                 if ($key == 'ams_page_id') {
                     $query .= " and ams_page_id = '" . (int) $value . "' ";
@@ -501,13 +522,13 @@ Abstract class Page {
             'required' => $required
         );
     }
-    
-    protected function _formTypeMultiSelect($name, $label, $values, $required = false){
+
+    protected function _formTypeMultiSelect($name, $label, $values, $required = false) {
         return $this->_formTypeSelect($name, $label, $values, $required, true);
     }
-    
-    protected function _formTypeSelect($name, $label, $values, $required = false, $multiple = false){
-         if (isset($this->request->post[$name])) {
+
+    protected function _formTypeSelect($name, $label, $values, $required = false, $multiple = false) {
+        if (isset($this->request->post[$name])) {
             $data[$name] = $this->request->post[$name];
         } elseif (!empty($this->{$name})) {
             $data[$name] = $this->{$name};
@@ -515,8 +536,8 @@ Abstract class Page {
             reset($values);
             $data[$name] = key($values);
         }
-        
-        
+
+
         return array(
             'key' => $name,
             'type' => 'select',
@@ -527,8 +548,8 @@ Abstract class Page {
             'required' => $required
         );
     }
-    
-    protected function _formTypePublish($name, $label){
+
+    protected function _formTypePublish($name, $label) {
         $values = array(
             0 => registry('language')->get('text_disabled'),
             1 => registry('language')->get('text_enabled')
@@ -698,8 +719,5 @@ Abstract class Page {
             'required' => $required
         );
     }
-    
-    
-  
 
 }

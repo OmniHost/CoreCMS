@@ -10,21 +10,48 @@ abstract class Page extends \Core\Controller {
     protected function getPage() {
         $this->_model = $this->load->model($this->_namespace);
 
-        $page = $this->_model->loadPageObject($this->request->get['ams_page_id'])->toArray();
+        $this->user = new \Core\User();
+        if (!empty($this->request->get['preview_id'])) {
+        
+            if (!$this->user->isLogged()) {
+                $this->_error = 'not_found';
+            }else{
+                $rev = $this->db->query("select * from #__ams_revisions where ams_revision_id='" . (int)$this->request->get['preview_id'] . "'")->row;
+                $page = json_decode($rev['pagedata'],1);
+                if(!$page){
+                     $this->_error = 'not_found';
+                }else{
+                   
+                    if($this->_namespace != $rev['namespace']){
+                        return $this->redirect('index.php?p=' . $rev['namespace'] . '&preview_id=' . $this->request->get['preview_id']);    
+                    }
+                    $this->request->get['ams_page_id'] = $rev['ams_page_id'];
+                }
+            }
+        }
 
+        
+
+        if ($page) {
+            $page = $this->_model->loadPagePreview($page)->toArray();
+        } else {
+            $page = $this->_model->loadPageObject($this->request->get['ams_page_id'])->toArray();
+        }
+
+       
 
 
 
         if (!$page) {
             $this->_error = 'not_found';
         } elseif (!$page['status']) {
-            $this->user = new \Core\User();
+            
             if (!$this->user->isLogged()) {
                 $this->_error = 'not_found';
             }
         }
 
-        if (!$this->_error) {
+        if (!$this->_error && !$this->user->isLogged()) {
             $this->load->model('setting/rights');
             $allowed = $this->model_setting_rights->getRight($this->request->get['ams_page_id'], 'ams_page');
             if (!$allowed) {
@@ -33,7 +60,9 @@ abstract class Page extends \Core\Controller {
         }
 
         if (!$this->_error) {
+            if(empty($this->request->get['preview_id'])){
             $this->_model->updateViews();
+            }
             $this->language->load('cms/page');
             if ($this->_namespace != 'cms/page') {
                 $this->language->load($this->_namespace);
@@ -109,10 +138,10 @@ abstract class Page extends \Core\Controller {
             } else {
                 $this->data['has_comments'] = false;
             }
-            
-             $this->load->model('cms/comment');
-        $this->data['comment_count'] = $this->model_cms_comment->countComments($page['id']);
-            
+
+            $this->load->model('cms/comment');
+            $this->data['comment_count'] = $this->model_cms_comment->countComments($page['id']);
+
 
             $this->template = $this->_namespace . '.phtml';
 

@@ -62,7 +62,7 @@ class Config {
 
             $this->data = array_deap_merge($this->data, $_);
         } else {
-            trigger_error('Error: Could not load config ' . $file . '!');
+            throw new \Core\Exception('Error: Could not load config ' . $file . '!');
             exit();
         }
     }

@@ -266,6 +266,8 @@ Abstract class Base extends \Core\Controller {
             $this->data['autosave'] = fixajaxurl($this->url->link($this->_namespace . '/autosave', 'token=' . $this->session->data['token'] . '&_autosave_=1&ams_page_id=' . $this->request->get['ams_page_id'], 'SSL'));
             $this->data['history'] = fixajaxurl($this->url->link($this->_namespace . '/get_revisions', 'token=' . $this->session->data['token'] . '&page=1&ams_page_id=' . $this->request->get['ams_page_id'], 'SSL'));
         }
+        
+        $this->data['preview_url'] = $this->config->get('config_catalog') . '?p=' . $this->_namespace . '&preview_id=';
 
         $this->data['cancel'] = $this->url->link($this->_namespace, 'token=' . $this->session->data['token'] . $url, 'SSL');
 
@@ -699,9 +701,11 @@ Abstract class Base extends \Core\Controller {
 
             $new[$a['parentid']][] = $a;
         }
-
+        if($new){
         $tree = $this->_createTree($new, $new[0]); // changed
         return $tree;
+        }
+        return array();
     }
 
     private function _createTree(&$list, $parent) {
@@ -738,17 +742,18 @@ Abstract class Base extends \Core\Controller {
         $version++;
         $this->response->addHeader('Content-Type: application/json');
         try {
-            if ($last_pagedata != $this->db->escape(json_encode($page_data))) {
+          //  if ($last_pagedata != $this->db->escape(json_encode($page_data))) {
                 $this->db->query("insert into #__ams_revisions set ams_page_id = '" . (int) $id . "', "
                         . " user_id = '" . (int) $this->user->getId() . "', "
                         . " autosave = '" . (int) $autosave . "', "
-                        . " pagedata = '" . $this->db->escape(json_encode($page_data)) . "', "
+                        . " pagedata = '" . $this->db->escape(json_encode($page_data)) . "',"
+                        . " namespace = '" . $this->db->escape($this->_namespace) .  "', "
                         . " created = '" . time() . "', "
                         . " version = '" . $version . "'");
                 $this->response->setOutput(json_encode(array('saved' => $this->db->insertId())));
-            } else {
-                $this->response->setOutput(json_encode(array('saved' => '1')));
-            }
+           // } else {
+             //   $this->response->setOutput(json_encode(array('saved' => '1')));
+          //  }
         } catch (Exception $e) {
             $this->response->setOutput(json_encode(array('saved' => '0')));
         }
@@ -781,6 +786,11 @@ Abstract class Base extends \Core\Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+    
+    public function delete_revision(){
+        $this->db->query("Delete from #__ams_revisions where ams_revision_id='" . (int)$this->request->get['revision_id'] . "'");
+       $this->get_revisions();
+    }
 
     public function get_revisions() {
         $this->language->load('cms/page');
@@ -790,9 +800,9 @@ Abstract class Base extends \Core\Controller {
         $page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
         $start = ($page - 1) * 20;
 
-        $countq = $this->db->query("select count(*) as total from #__ams_revisions where ams_page_id = '" . (int) $ams_page_id . "'");
+        $countq = $this->db->query("select count(*) as total from #__ams_revisions where namespace='" . $this->db->escape($this->_namespace) . "' and  ams_page_id = '" . (int) $ams_page_id . "'");
         $total = $countq->row['total'];
-        $q = $this->db->query("select r.*, u.firstname, u.lastname from #__ams_revisions r left join #__user u on u.user_id = r.user_id where r.ams_page_id = '" . (int) $ams_page_id . "' order by r.ams_revision_id desc limit $start, 20");
+        $q = $this->db->query("select r.*, u.firstname, u.lastname from #__ams_revisions r left join #__user u on u.user_id = r.user_id where r.namespace='" . $this->db->escape($this->_namespace) . "' and r.ams_page_id = '" . (int) $ams_page_id . "' order by r.ams_revision_id desc limit $start, 20");
         $this->data['histories'] = array();
         foreach ($q->rows as $row) {
             $row['author'] = $row['firstname'] . ' ' . $row['lastname'];
@@ -803,6 +813,8 @@ Abstract class Base extends \Core\Controller {
             } else {
                 $row['action'] = $this->url->link($this->_namespace . '/insert', 'token=' . $this->session->data['token'] . '&revision_id=' . $row['ams_revision_id'], 'SSL');
             }
+            $row['preview'] = $this->config->get('config_catalog') . '?p=' . $this->_namespace . '&preview_id=' . $row['ams_revision_id'];
+            $row['delete'] = $this->url->link($this->_namespace . '/delete_revision', 'token=' . $this->session->data['token'] . '&ams_page_id=' . $this->request->get['ams_page_id']  .'&revision_id=' . $row['ams_revision_id'], 'SSL');
             $this->data['histories'][] = $row;
         }
 

@@ -115,7 +115,7 @@ abstract class Controller {
 
             return $controller->output;
         } else {
-            trigger_error('Error: Could not load controller ' . $child . '!');
+            throw new \Core\Exception('Error: Could not load controller ' . $child . '!');
             exit();
         }
     }
@@ -195,7 +195,7 @@ abstract class Controller {
 
             return $this->output;
         } else {
-            trigger_error('Error: Could not load template ' . $template . $this->template . '!');
+            throw new \Core\Exception('Error: Could not load template ' . $template . $this->template . '!');
             exit();
         }
     }

@@ -271,7 +271,8 @@ function wysiwyg($id, $name, $value = '', $class = "form-control", $rows = 20) {
     $ed = '<textarea id="' . $id . '" name="' . $name . '" rows="' . $rows . '" class="' . $class . '">';
     $ed .= $value;
     $ed .= '</textarea>';
-    $ed .= '<script>docReady(function() { CKEDITOR.replace(\'' . $id . '\', { ' . "\n"
+    $ed .= '<script>docReady(function() { CKEDITOR.replace(\'' . $id . '\', { '
+            . 'baseHref: \'' . registry('config')->get('config_catalog') . "'\n"
             . '});});</script>';
     return $ed;
 }
@@ -318,6 +319,7 @@ function formfield($field) {
     }
 
     switch ($field['type']):
+
 
         case "html":
             return wysiwyg($field['id'], $field['key'], $field['value']);
