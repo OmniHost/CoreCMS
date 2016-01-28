@@ -22,6 +22,9 @@
                 <button class="btn btn-app">
                     <i class="fa fa-save text-green"></i> <?php echo $button_save; ?>
                 </button>
+                <button type="button" class="btn btn-app preview-page">
+                    <i class="fa fa-preview text-primary "></i> Preview Page
+                </button>
                 <a href="<?php echo $cancel; ?>" class="btn btn-app" onclick="$('#form').submit();">
                     <i class="fa fa-reply"></i> <?php echo $button_cancel; ?>
                 </a>
@@ -31,13 +34,13 @@
                 <ul class="nav nav-tabs" style='margin-bottom:15px;'>
 
                     <li class="active"><a href="#tab-general" data-toggle="tab"><?php echo $tab_general; ?></a></li>
-                    
+
                     <?php foreach ($tabs as $tabid => $tab): ?>
                         <?php if ($tabid != 'permission' && $tabid != 'general' && $tabid != 'meta' && $tabid != 'general_details'): ?>
                             <li class=""><a href="#tab-<?php echo slug($tabid); ?>" data-toggle="tab"><?php echo ucfirst($tabid); ?></a></li>
                         <?php endif; ?>
                     <?php endforeach; ?>
-                            <li class=""><a href="#tab-meta" data-toggle="tab"><?php echo $tab_meta; ?></a></li>
+                    <li class=""><a href="#tab-meta" data-toggle="tab"><?php echo $tab_meta; ?></a></li>
                     <li><a href="#tab-permission" data-toggle="tab"><?php echo $tab_permission; ?></a></li>
                     <li><a href="#tab-revisions" data-toggle="tab"><?php echo $tab_revision; ?></a></li>
                 </ul>
@@ -110,15 +113,15 @@
                                             </select>
                                         </div>
                                         <?php if ($ams_parents): ?>
-                                        <div class="">
-                                            <label for="parentInput" class="control-label required"><?php echo $entry_parent; ?></label>
                                             <div class="">
-                                                <select name="parent_id" id="parentInput" class="form-control">
-                                                    <option value="0"><?php echo $text_none; ?></option>
-                                                    <?php echo render_select($parents, $parent_id); ?>
-                                                </select>
+                                                <label for="parentInput" class="control-label required"><?php echo $entry_parent; ?></label>
+                                                <div class="">
+                                                    <select name="parent_id" id="parentInput" class="form-control">
+                                                        <option value="0"><?php echo $text_none; ?></option>
+                                                        <?php echo render_select($parents, $parent_id); ?>
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
                                         <?php endif; ?>
                                         <div class="">
                                             <label for="statusInput" class="control-label required"><?php echo $entry_status; ?></label>
@@ -296,18 +299,18 @@
                             </div>
                         </div>
 
-<?php if(!empty($tabs['permission'])): ?>
-                        <?php foreach ($tabs['permission'] as $el => $formfield): ?>
-                            <div class="form-group">
-                                <label for="<?php echo $el; ?>Input" class="col-sm-2 control-label <?php echo $formfield['required'] ? 'required' : ''; ?>"><?php echo $formfield['label']; ?></label>
-                                <div class="col-sm-9">
-                                    <?php echo formfield($formfield); ?>
-                                    <?php if (!empty($formfield['error'])) { ?>
-                                        <span class="error text-danger"><?php echo $formfield['error']; ?></span>
-                                    <?php } ?>
+                        <?php if (!empty($tabs['permission'])): ?>
+                            <?php foreach ($tabs['permission'] as $el => $formfield): ?>
+                                <div class="form-group">
+                                    <label for="<?php echo $el; ?>Input" class="col-sm-2 control-label <?php echo $formfield['required'] ? 'required' : ''; ?>"><?php echo $formfield['label']; ?></label>
+                                    <div class="col-sm-9">
+                                        <?php echo formfield($formfield); ?>
+                                        <?php if (!empty($formfield['error'])) { ?>
+                                            <span class="error text-danger"><?php echo $formfield['error']; ?></span>
+                                        <?php } ?>
+                                    </div>
                                 </div>
-                            </div>
-                        <?php endforeach; ?>
+                            <?php endforeach; ?>
                         <?php endif; ?>
                     </div>
 
@@ -346,9 +349,16 @@
     }
 
 
-    function autosave_page() {
+    function autosave_page(callback_func) {
         for (instance in CKEDITOR.instances) {
             CKEDITOR.instances[instance].updateElement();
+        }
+        
+
+        if(typeof callback_func == 'function'){
+            var $callback = callback_func;
+        }else{
+            var $callback = function(res) { };
         }
 
         $.ajax({
@@ -370,6 +380,7 @@
                     $('.autosave-timer').text('0');
                     $('.ajax-error').remove();
                     $('#tab-revisions').load('<?php echo $history; ?>');
+                    $callback(html.saved);
 
                 } else {
                     $('#autosave-error').html('<span  class="ajax-error text-red">&nbsp;<?php echo $text_autosave_warning; ?>&nbsp;&nbsp;</span>');
@@ -385,6 +396,28 @@
     }
 
     docReady(function () {
+
+
+        $(document).on("click", ".preview-page", function (e) {
+            e.preventDefault();
+            clearInterval(autosaving_interval);
+            clearInterval(autosaving_timer);
+            var myWindow = window.open('');
+            autosave_page(function (res) {
+                
+                myWindow.location = '<?php echo $preview_url; ?>' + res, '_blank';
+            });
+            start_timing();
+        });
+
+        $(document).on("click", ".delete-history", function (e) {
+            e.preventDefault();
+            var $url = $(this).attr('href');
+            if (confirm("Are you sure?")) {
+                $('#tab-revisions').load($url);
+            }
+
+        });
 
         $('#autosave-on').click(function (e) {
             e.preventDefault();

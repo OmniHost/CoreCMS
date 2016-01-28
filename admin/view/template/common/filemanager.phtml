@@ -57,8 +57,8 @@ $('a.thumbnail').on('click', function (e) {
             $('#<?php echo $target; ?>').attr('value', $(this).parent().find('input').attr('value'));
 <?php } ?>
     <?php if($ckeditor) : ?>
-    CKEDITOR.tools.callFunction(CKEDITOR.instances.<?php echo $ckeditor; ?>._.filebrowserFn, $(this).attr('href'));
-   // CKEDITOR.tools.callFunction(CKEDITOR.instances.<?php echo $ckeditor; ?>._.filebrowserFn, '<?php echo $image_url; ?>' + $(this).parent().find('input').attr('value'));
+    //CKEDITOR.tools.callFunction(CKEDITOR.instances.<?php echo $ckeditor; ?>._.filebrowserFn, $(this).attr('href'));
+    CKEDITOR.tools.callFunction(CKEDITOR.instances.<?php echo $ckeditor; ?>._.filebrowserFn, 'img/' + $(this).parent().find('input').attr('value'));
 <?php endif; ?>
 
     /*    var range, sel = window.getSelection();

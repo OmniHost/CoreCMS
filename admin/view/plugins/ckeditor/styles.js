@@ -30,6 +30,7 @@ CKEDITOR.stylesSet.add( 'default', [
 	{ name: 'Preformatted Text',element: 'pre' },
 	{ name: 'Address',			element: 'address' },
 	*/
+       {name: 'Paragraph Lead', element: 'p', attributes: {'class': 'lead'}},
 
 	{ name: 'Italic Title',		element: 'h2', styles: { 'font-style': 'italic' } },
 	{ name: 'Subtitle',			element: 'h3', styles: { 'color': '#aaa', 'font-style': 'italic' } },
@@ -76,36 +77,163 @@ CKEDITOR.stylesSet.add( 'default', [
 
 	{ name: 'Language: RTL',	element: 'span', attributes: { 'dir': 'rtl' } },
 	{ name: 'Language: LTR',	element: 'span', attributes: { 'dir': 'ltr' } },
+{name: 'Blockquote Reverse', element: 'blockquote', attributes: {'class': 'blockquote-reverse'}},
 
-	/* Object Styles */
-
-	{
-		name: 'Styled image (left)',
-		element: 'img',
-		attributes: { 'class': 'left' }
-	},
-
-	{
-		name: 'Styled image (right)',
-		element: 'img',
-		attributes: { 'class': 'right' }
-	},
-
-	{
-		name: 'Compact table',
-		element: 'table',
-		attributes: {
-			cellpadding: '5',
-			cellspacing: '0',
-			border: '1',
-			bordercolor: '#ccc'
-		},
-		styles: {
-			'border-collapse': 'collapse'
-		}
-	},
-
-	{ name: 'Borderless Table',		element: 'table',	styles: { 'border-style': 'hidden', 'background-color': '#E6E6FA' } },
-	{ name: 'Square Bulleted List',	element: 'ul',		styles: { 'list-style-type': 'square' } }
+{
+                    name: 'Unstyled List',
+                    element: 'ul',
+                    attributes:
+                            {
+                                'class': 'list-unstyled'
+                            }
+                },
+                {
+                    name: 'List inline',
+                    element: 'ul',
+                    attributes:
+                            {
+                                'class': 'list-inline'
+                            }
+                },
+                {
+                    name: 'row active',
+                    element: 'tr',
+                    attributes:
+                            {
+                                'class': 'active'
+                            }
+                },
+                {
+                    name: 'row success',
+                    element: 'tr',
+                    attributes:
+                            {
+                                'class': 'success'
+                            }
+                },
+                {
+                    name: 'row warning',
+                    element: 'tr',
+                    attributes:
+                            {
+                                'class': 'warning'
+                            }
+                },
+                {
+                    name: 'row danger',
+                    element: 'tr',
+                    attributes:
+                            {
+                                'class': 'danger'
+                            }
+                },
+                {
+                    name: 'row info',
+                    element: 'tr',
+                    attributes:
+                            {
+                                'class': 'info'
+                            }
+                },
+                
+                {
+                    name: 'Responsive Table Container',
+                    element: 'div',
+                    attributes:
+                            {
+                                'class': 'table-responsive'
+                            }
+                },
+                 {
+                    name: 'Text Muted',
+                    element: 'span',
+                    attributes:
+                            {
+                                'class': 'text-muted'
+                            }
+                }
+                ,
+                 {
+                    name: 'Text Primary',
+                    element: 'span',
+                    attributes:
+                            {
+                                'class': 'text-primary'
+                            }
+                },
+                 {
+                    name: 'Text Success',
+                    element: 'span',
+                    attributes:
+                            {
+                                'class': 'text-success'
+                            }
+                },
+                 {
+                    name: 'Text Danger',
+                    element: 'span',
+                    attributes:
+                            {
+                                'class': 'text-danger'
+                            }
+                },
+                 {
+                    name: 'Text info',
+                    element: 'span',
+                    attributes:
+                            {
+                                'class': 'text-info'
+                            }
+                },
+                 {
+                    name: 'Text Warning',
+                    element: 'span',
+                    attributes:
+                            {
+                                'class': 'text-warning'
+                            }
+                }
+                ,
+                 {
+                    name: 'Primary Background',
+                    element: 'p',
+                    attributes:
+                            {
+                                'class': 'bg-primary'
+                            }
+                },
+                 {
+                    name: 'Success Background',
+                    element: 'p',
+                    attributes:
+                            {
+                                'class': 'bg-success'
+                            }
+                },
+                 {
+                    name: 'Info Background',
+                    element: 'p',
+                    attributes:
+                            {
+                                'class': 'bg-info'
+                            }
+                },
+                 {
+                    name: 'Warning Background',
+                    element: 'p',
+                    attributes:
+                            {
+                                'class': 'bg-warning'
+                            }
+                },
+                 {
+                    name: 'Danger Background',
+                    element: 'p',
+                    attributes:
+                            {
+                                'class': 'bg-danger'
+                            }
+                },
+                { name: 'Square Bulleted List',	element: 'ul',		styles: { 'list-style-type': 'square' } }
 ] );
 

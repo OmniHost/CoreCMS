@@ -429,9 +429,22 @@ class ControllerSettingSetting extends \Core\Controller {
         } else {
             $data['config_ftp_port'] = 21;
         }
+        
+
 
         
-         if (isset($this->request->post['config_autosave_status'])) {
+         if (isset($this->request->post['config_sso_id'])) {
+            $data['config_sso_id'] = (int)$this->request->post['config_sso_id'];
+        } elseif ($this->config->get('config_sso_id')) {
+            $data['config_sso_id'] = $this->config->get('config_sso_id');
+        } else {
+            $data['config_sso_id'] = '0';
+        }
+        
+        $this->load->model('user/api');
+        $data['sso_users'] = $this->model_user_api->getApis();
+        
+        if (isset($this->request->post['config_autosave_status'])) {
             $data['config_autosave_status'] = (int)$this->request->post['config_autosave_status'];
         } elseif ($this->config->get('config_autosave_status')) {
             $data['config_autosave_status'] = $this->config->get('config_autosave_status');

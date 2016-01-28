@@ -9,13 +9,18 @@
             </tr>
         </thead>
         <tbody>
+           
             <?php if ($histories) { ?>
                 <?php foreach ($histories as $history) { ?>
                     <tr>
                         <td><?php echo $history['date_added']; ?></td>
                         <td><?php echo $history['autosave']; ?></td>
                         <td><?php echo $history['author']; ?></td>
-                        <td class="text-right"><a href="<?php echo $history['action']; ?>" class="btn btn-sm btn-primary"><?php echo $button_load_revision; ?></a></td>
+                        <td class="text-right">
+                            <a href="<?php echo $history['action']; ?>" class="btn btn-sm btn-primary"><?php echo $button_load_revision; ?></a>
+                            <a href="<?php echo $history['preview']; ?>" class="btn btn-sm btn-success get-preview" target="_blank">Preview</a>
+                            <a href="<?php echo $history['delete']; ?>" class="btn btn-sm btn-danger delete-history">Delete</a>
+                        </td>
                     </tr>
                 <?php } ?>
             <?php } else { ?>

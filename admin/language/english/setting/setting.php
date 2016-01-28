@@ -167,3 +167,6 @@ $_['entry_facebook_image'] = 'Facebook og:image (min 200X200)';
 $_['entry_facebook_appid'] = 'Facebook AppId';
 $_['entry_meta_ogimage_help'] = 'Visit <a href="https://developers.facebook.com/docs/sharing/best-practices#images" target="_blank">Facebook Guidlines</a> for Best Guidlines regarding images';
 
+
+$_['entry_sso'] = 'SSO API User';
+$_['help_sso'] = 'Which api credentials to use when using SSO (with system like Vanilla forums)';

@@ -8,41 +8,47 @@ CKEDITOR.editorConfig = function (config) {
     // For complete reference see:
     // http://docs.ckeditor.com/#!/api/CKEDITOR.config
 
-    // The toolbar groups arrangement, optimized for two toolbar rows.
+
     config.toolbarGroups = [
-        {name: 'clipboard', groups: ['clipboard', 'undo']},
-        {name: 'editing', groups: ['find', 'selection', 'spellchecker']},
-        {name: 'links'},
-        {name: 'insert'},
-        {name: 'forms'},
-        {name: 'tools'},
+        {name: 'tools', groups: ['tools']},
         {name: 'document', groups: ['mode', 'document', 'doctools']},
-        {name: 'others'},
+        {name: 'clipboard', groups: ['clipboard', 'undo']},
+        {name: 'editing', groups: ['find', 'selection', 'spellchecker', 'editing']},
+        {name: 'links', groups: ['links']},
+        {name: 'insert', groups: ['insert']},
+        {name: 'forms', groups: ['forms']},
+        {name: 'others', groups: ['others']},
         '/',
         {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
-        {name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'bidi','justify']},
-        {name: 'styles'},
-        {name: 'colors'},
-        {name: 'about'}
+        {name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'bidi', 'paragraph']},
+        {name: 'styles', groups: ['styles']},
+        {name: 'colors', groups: ['colors']},
+        {name: 'about', groups: ['about']}
     ];
 
-    // Remove some buttons provided by the standard plugins, which are
-    // not needed in the Standard(s) toolbar.
-    config.removeButtons = 'Underline,Subscript,Superscript';
+
+config.uiColor = '#ffffff';
+	
+	config.toolbarCanCollapse = true;
+
+    config.removeButtons = 'Font,FontSize,About';
 
     // Set the most common block elements.
-    config.format_tags = 'p;h2;h3;h4;h5;pre';
-    config.skin = 'minimalist';
+    config.format_tags = 'p;h1;h2;h3;pre';
+
     // Simplify the dialog windows.
     config.removeDialogTabs = 'link:advanced:image:Upload';
+
+    config.skin = 'moonocolor';
+
+    config.height = '350';     // CSS unit (em).
+    config.allowedContent = true;
+    CKEDITOR.dtd.$removeEmpty['i'] = false;
+    CKEDITOR.dtd.$removeEmpty['span'] = false;
+    config.justifyClasses = ['text-left', 'text-center', 'text-right', 'text-justify'];
     
-    config.autoGrow_maxHeight= 500;
-    config.allowedContent= true;
-    CKEDITOR.dtd.$removeEmpty['i'] = false
-    CKEDITOR.dtd.$removeEmpty['span'] = false
-    config.extraPlugins= 'colordialog,bootstrap,autogrow,justify,fontawesome';
-    config.contentsCss = 'view/plugins/ckeditor/plugins/fontawesome/font-awesome/css/font-awesome.min.css,bootstrap/css/bootstrap.min.css,';
-    CKEDITOR.timestamp='1.2.0.1';
+    config.extraPlugins = 'bs3menu,fontawesome';
+    
+    config.contentsCss = ['view/bootstrap/css/bootstrap.min.css','//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css'];
+    //config.contentsCss = [config.contentsCss, 'view/bootstrap/css/bootstrap.min.css',CKEDITOR.getUrl(this.path + 'contents.css')];
 };
-
-
