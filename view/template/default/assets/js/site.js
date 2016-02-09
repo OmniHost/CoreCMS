@@ -12,12 +12,12 @@ $(document).ready(function () {
         //  console.log($(window).scrollTop());
 
         if ($(window).scrollTop() > 100) {
-            $('#header').addClass('navbar-fixed-top');
+            $('#header.scrollfix').addClass('navbar-fixed-top');
             $('#scrolltotop').css('opacity', '1');
         }
 
         if ($(window).scrollTop() < 100) {
-            $('#header').removeClass('navbar-fixed-top');
+            $('#header.scrollfix').removeClass('navbar-fixed-top');
             $('#scrolltotop').css('opacity', '0');
         }
     });

@@ -20,7 +20,7 @@ class ControllerModuleRankedByReview extends \Core\Controller {
         }else{
             $this->document->addScript('//business.rankedbyreview.com/rest/small-business-widget/newsletter/' . $setting['business_id'] . '.js');
         }
-        
+        $this->setOverride($setting['name']);
         return $this->render();
     }
 

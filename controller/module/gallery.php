@@ -38,6 +38,7 @@ class ControllerModuleGallery extends \Core\Controller {
 
         $this->data = $data;
         $this->template = 'module/gallery.phtml';
+        $this->setOverride($setting['name']);
         return $this->render();
     }
 

@@ -1,0 +1,190 @@
+<?php echo $header; ?>
+<?php include(__DIR__ . '/../../common/page-header.phtml'); ?>
+
+<section class="content">
+
+    <div class="box box-default">
+        <div class="box-header ">
+            <h3 class="box-title"><?php echo $heading_title; ?></h3>
+            <div class="box-tools">
+                <button type="submit" form="form-faq" data-toggle="tooltip" title="<?php echo $button_save; ?>" class="btn btn-primary"><i class="fa fa-save"></i></button>
+                <a href="<?php echo $cancel; ?>" data-toggle="tooltip" title="<?php echo $button_cancel; ?>" class="btn btn-default"><i class="fa fa-reply"></i></a>
+            </div>
+        </div>
+        <div class="box-body">
+
+            <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form-faq" class="form-horizontal">
+
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><?php echo $entry_testimonial_id; ?></label>
+                    <div class="col-sm-10"><span class="form-control"><?php echo ($testimonial_id ? $testimonial_id : $text_empty); ?></span></div>
+                </div>
+
+                <div class="form-group required">
+                    <label class="col-sm-2 control-label"><?php echo $entry_firstname; ?></label>
+                    <div class="col-sm-10"><input class="form-control" type="text" name="firstname" value="<?php echo $firstname ?>" />
+                        <?php if ($error_firstname) { ?>
+                            <span class="error"><?php echo $error_firstname; ?></span>
+                        <?php } ?></div>
+                </div>
+
+
+                <div class="form-group required">
+                    <label class="col-sm-2 control-label"><?php echo $entry_lastname; ?></label>
+                    <div class="col-sm-10"><input class="form-control" type="text" name="lastname" value="<?php echo $lastname ?>" />
+                        <?php if ($error_lastname) { ?>
+                            <span class="error"><?php echo $error_lastname; ?></span>
+                        <?php } ?></div>
+                </div>
+
+
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label"><?php echo $entry_email; ?></label>
+                    <div class="col-sm-10"><input class="form-control" type="email" name="email" value="<?php echo $email ?>" size="50"	/>
+                        <?php if ($error_email) { ?>
+                            <span class="error"><?php echo $error_email; ?></span>
+                        <?php } ?></div>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><?php echo $entry_website; ?></label>
+                    <div class="col-sm-10"><input class="form-control" type="url" name="website" value="<?php echo $website ?>" size="50"/></div>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><?php echo $entry_company; ?></label>
+                    <div class="col-sm-10"><input class="form-control" type="text" name="company" value="<?php echo $company ?>" size="50"/></div>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><?php echo $entry_title; ?></label>
+                    <div class="col-sm-10"><input class="form-control" type="text" name="title" value="<?php echo $title ?>" size="50"/></div>
+                </div>
+
+
+                <div class="form-group required">
+                    <label class="col-sm-2 control-label"><?php echo $entry_testimony; ?></label>
+                    <div class="col-sm-10"><textarea class="form-control" name="testimony" cols="60" rows="8"><?php echo $testimony; ?></textarea>
+                        <?php if ($error_testimony) { ?>
+                            <span class="error"><?php echo $error_testimony; ?></span>
+                        <?php } ?></div>
+                </div>
+
+
+                <div class="form-group required">
+                    <label class="col-sm-2 control-label"><?php echo $entry_rating; ?></label>
+                    <div class="radio col-sm-10">
+                        <label>
+                            <?php if ($rating == 1) { ?>
+                                <input type="radio" name="rating" value="1" checked />
+                            <?php } else { ?>
+                                <input type="radio" name="rating" value="1" />
+                            <?php } ?> 1 (<?php echo $text_bad; ?>)</label>
+                        &nbsp;<label>
+                            <?php if ($rating == 2) { ?>
+                                <input type="radio" name="rating" value="2" checked />
+                            <?php } else { ?>
+                                <input type="radio" name="rating" value="2" />
+                            <?php } ?>
+                            2 </label>
+                        &nbsp;<label>
+                            <?php if ($rating == 3) { ?>
+                                <input type="radio" name="rating" value="3" checked />
+                            <?php } else { ?>
+                                <input type="radio" name="rating" value="3" />
+                            <?php } ?>
+                            3 </label>
+                        &nbsp;<label>
+                            <?php if ($rating == 4) { ?>
+                                <input type="radio" name="rating" value="4" checked />
+                            <?php } else { ?>
+                                <input type="radio" name="rating" value="4" />
+                            <?php } ?>
+                            4 </label>
+                        &nbsp;<label>
+                            <?php if ($rating == 5 || empty($rating)) { ?>
+                                <input type="radio" name="rating" value="5" checked />
+                            <?php } else { ?>
+                                <input type="radio" name="rating" value="5" />
+                            <?php } ?>
+                            5  (<?php echo $text_good; ?>)</label>
+
+                        <?php if ($error_rating) { ?>
+                            <span class="error"><?php echo $error_rating; ?></span>
+                        <?php } ?></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="entry_status"><?php echo $entry_status; ?></label>
+                    <div class="col-sm-10">
+                        <select name="status" id="input-guest_status" class="form-control">
+                            <?php if ($status) { ?>
+                                <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+                                <option value="0"><?php echo $text_disabled; ?></option>
+                            <?php } else { ?>
+                                <option value="1"><?php echo $text_enabled; ?></option>
+                                <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="entry_featured"><?php echo $entry_featured; ?></label>
+                    <div class="col-sm-10">
+                        <select name="featured" id="input-entry_featured" class="form-control">
+                            <?php if ($featured) { ?>
+                                <option value="1" selected="selected"><?php echo $text_yes; ?></option>
+                                <option value="0"><?php echo $text_no; ?></option>
+                            <?php } else { ?>
+                                <option value="1"><?php echo $text_yes; ?></option>
+                                <option value="0" selected="selected"><?php echo $text_no; ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+
+
+
+            
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="entry_photo"><?php echo $entry_photo; ?></label>
+                    <div class="col-sm-9"><a href="" id="thumb-logo" data-toggle="image" class="img-thumbnail"><img src="<?php echo $thumb; ?>" alt="" title="" data-placeholder="<?php echo $no_photo; ?>" /></a>
+                        <input type="hidden" name="image" value="<?php echo $image; ?>" id="input-logo" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><?php echo $entry_sort_order; ?></label>
+                    <div class="col-sm-2"><input class="form-control" type="text" name="sort_order" value="<?php echo $sort_order ?>"/></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><?php echo $entry_date_added; ?></label>
+                    <div class="col-sm-10"><span class="form-control"><?php echo ($date_added ? $date_added : $text_empty); ?></span></div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><?php echo $entry_date_modified; ?></label>
+                    <div class="col-sm-10"><span class="form-control"><?php echo ($date_modified ? $date_modified : $text_empty); ?></span></div>
+                </div>
+
+
+
+
+
+            </form>
+
+        </div>
+    </div>
+</section>
+<script type="text/javascript"><!--
+    docReady(function () {
+
+    });
+    //--></script>
+
+<?php echo $footer; ?>

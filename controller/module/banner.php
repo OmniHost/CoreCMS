@@ -41,6 +41,10 @@ class ControllerModuleBanner extends \Core\Controller {
 
         $this->data = $data;
         $this->template = 'module/banner.phtml';
+
+        $this->setOverride($setting['name']);
+
+
         return $this->render();
     }
 

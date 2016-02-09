@@ -29,9 +29,9 @@ class ControllerModuleFaq extends \Core\Controller {
 
         $data['button_save'] = $this->language->get('button_save');
         $data['button_cancel'] = $this->language->get('button_cancel');
-        
+
         $data['button_manage'] = $this->language->get('button_manage');
-        
+
         $data['manage'] = $this->url->link('extension/faq', 'token=' . $this->session->data['token'], 'SSL');
 
         if (isset($this->error['warning'])) {
@@ -96,10 +96,24 @@ class ControllerModuleFaq extends \Core\Controller {
 
         $this->model_user_user_group->addPermission($this->user->getId(), 'access', 'extension/faq');
         $this->model_user_user_group->addPermission($this->user->getId(), 'modify', 'extension/faq');
+
+        $this->load->model('extension/event');
+        $this->model_extension_event->addEvent('module_faq', 'admin.module.menu', 'module/faq/menu');
     }
 
     public function uninstall() {
         $this->db->query("DROP TABLE IF EXISTS `#__faq`");
+        $this->load->model('extension/event');
+        $this->model_extension_event->deleteEvent('module_faq');
+    }
+
+    public function menu(&$menu) {
+        $this->load->language('module/faq');
+        $menu['module_faq'] = array(
+            'icon' => 'fa-question-circle',
+            'label' => $this->language->get('button_manage'),
+            'href' => $this->url->link('extension/faq', 'token=' . $this->session->data['token'], 'SSL')
+        );
     }
 
 }

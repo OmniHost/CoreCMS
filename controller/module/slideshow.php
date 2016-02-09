@@ -37,6 +37,7 @@ class ControllerModuleSlideshow extends \Core\Controller {
         
          $this->data = $data;
         $this->template = 'module/slideshow.phtml';
+        $this->setOverride($setting['name']);
         return $this->render();
 
      

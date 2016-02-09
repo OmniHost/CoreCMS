@@ -76,6 +76,7 @@ class ControllerModuleGoogleMaps extends \Core\Controller
                 
                 $this->data = $data;
         $this->template = 'module/google_maps.phtml';
+        $this->setOverride($setting['name']);
         return $this->render();
 
 		

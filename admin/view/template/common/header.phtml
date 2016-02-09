@@ -147,28 +147,7 @@
                 <!-- sidebar: style can be found in sidebar.less -->
                 <section class="sidebar">
 
-                    <!-- Sidebar user panel (optional) -->
-                    <div class="user-panel">
-                        <div class="pull-left image">
-                            <img src="<?php echo $profile_img; ?>" class="img-circle" alt="User Image" />
-                        </div>
-                        <div class="pull-left info">
-                            <p><?php echo $this->user->getFullName(); ?></p>
-                            <!-- Status -->
-                            <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
-                        </div>
-                    </div>
-
-                    <!-- search form (Optional) -->
-                    <form action="#" method="get" class="sidebar-form">
-                        <div class="input-group">
-                            <input type="text" name="q" class="form-control" placeholder="Search..."/>
-                            <span class="input-group-btn">
-                                <button type='submit' name='search' id='search-btn' class="btn btn-flat"><i class="fa fa-search"></i></button>
-                            </span>
-                        </div>
-                    </form>
-                    <!-- /.search form -->
+            
 
                     <!-- Sidebar Menu -->
                     <ul class="sidebar-menu">
@@ -189,40 +168,63 @@
                                 <li><a href="<?php echo $comments; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_comments; ?><?php if ($total_comments): ?> <span class="badge bg-red pull-right"><?php echo $total_comments; ?></span><?php endif; ?></a></li>
                                 <li><a href="<?php echo $download; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_download; ?></a></li>
                                 <li><a href="<?php echo $menu; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_menu; ?></a></li>
+
                             </ul>
                         </li>
+                        <?php if ($module_menu): ?>
+                            <?php foreach ($module_menu as $mmenu): ?>
+                                <?php if (empty($mmenu['children'])): ?>
+                                    <li><a href="<?php echo $mmenu['href']; ?>"><i class="fa <?php echo $mmenu['icon']; ?>"></i> <span><?php echo $mmenu['label']; ?></span></a></li>
+                                <?php else: ?>
+                                    <li class="treeview">
+                                        <a href="#">
+                                            <i class="fa <?php echo $mmenu['icon']; ?>"></i>
+                                            <span><?php echo $mmenu['label']; ?><</span>
+                                            <i class="fa fa-angle-left pull-right"></i>
+                                        </a>
+                                        <ul class="treeview-menu">
+                                            <?php foreach ($mmenu['children'] as $mchild): ?>
+                                                <li><a href="<?php echo $mchild['href']; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $$mchild['label']; ?></a></li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                    <li>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+
+                            <?php endif; ?>
+
                         <li class="treeview">
                             <a href="#">
                                 <i class="fa fa-envelope-o"></i>
                                 <span><?php echo $menu_communication; ?></span>
                                 <i class="fa fa-angle-left pull-right"></i>
                                 <ul class="treeview-menu">
-                                    <li><a href="<?php echo $contact_us;?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_contact_us; ?><?php if ($total_contact_us): ?> <span class="badge bg-red pull-right"><?php echo $total_contact_us; ?></span><?php endif; ?></a></li>
-                                    <li><a href="<?php echo $marketing;?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_marketing; ?></a></li>
+                                    <li><a href="<?php echo $contact_us; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_contact_us; ?><?php if ($total_contact_us): ?> <span class="badge bg-red pull-right"><?php echo $total_contact_us; ?></span><?php endif; ?></a></li>
+                                    <li><a href="<?php echo $marketing; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_marketing; ?></a></li>
                                     <li class="treeview">
-                                    <a href="#">
-                                        <i class="fa fa-envelope-square"></i>
-                                        <span><?php echo $menu_newsletter_system; ?></span>
-                                        <i class="fa fa-angle-left pull-right"></i>
-                                    </a>
-                                    <ul class="treeview-menu">
-                                        <li><a href="<?php echo $newsletter_overview; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_newsletter_overview; ?></a></li>
-                                        <li><a href="<?php echo $subscriber; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_subscriber; ?></a></li>
-                                        <li><a href="<?php echo $newsletter_groups; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_newsletter_group; ?></a></li>
-                                        <li><a href="<?php echo $newsletter_campaigns; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_newsletter_campaign; ?></a></li>
-                                        <li><a href="<?php echo $newsletter_newsletter; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_newsletter_newsletter; ?></a></li>
-                                        
-                                 
-                                        
-                                    </ul>
-                                </li> 
-                                
-                                     
+                                        <a href="#">
+                                            <i class="fa fa-envelope-square"></i>
+                                            <span><?php echo $menu_newsletter_system; ?></span>
+                                            <i class="fa fa-angle-left pull-right"></i>
+                                        </a>
+                                        <ul class="treeview-menu">
+                                            <li><a href="<?php echo $newsletter_overview; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_newsletter_overview; ?></a></li>
+                                            <li><a href="<?php echo $subscriber; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_subscriber; ?></a></li>
+                                            <li><a href="<?php echo $newsletter_groups; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_newsletter_group; ?></a></li>
+                                            <li><a href="<?php echo $newsletter_campaigns; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_newsletter_campaign; ?></a></li>
+                                            <li><a href="<?php echo $newsletter_newsletter; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_newsletter_newsletter; ?></a></li>
+
+
+
+                                        </ul>
+                                    </li> 
+
+
                                 </ul>
                             </a>
 
                         </li>
-                        
+
                         <li class="treeview">
                             <a href="#">
                                 <i class="fa fa-user"></i>

@@ -27,6 +27,7 @@ class ControllerModulePage extends \Core\Controller {
 
         $this->data['setting'] = $setting;
         $this->template = 'module/page.phtml';
+        $this->setOverride($setting['name']);
         return $this->render();
     }
 

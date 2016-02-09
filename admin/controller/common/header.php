@@ -174,6 +174,10 @@ $this->data['marketing'] = $this->url->link('marketing/marketing', 'token=' . $t
 
         
         $this->event->trigger('admin.header.navs', $this->data['header_navs']);
+        
+        
+        $this->data['module_menu'] = array();
+        $this->event->trigger('admin.module.menu', $this->data['module_menu']);
  
         
         $this->template = 'common/header.phtml';

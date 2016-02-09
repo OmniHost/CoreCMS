@@ -7,27 +7,21 @@
                 <label class="col-sm-2 control-label" for="input-name"><?php echo $entry_name; ?></label>
                 <div class="col-sm-10">
                     <input type="text" name="name" value="<?php echo $name; ?>" id="input-name" class="form-control" />
-                    <?php if ($error_name) { ?>
-                        <div class="text-danger"><?php echo $error_name; ?></div>
-                    <?php } ?>
+
                 </div>
             </div>
             <div class="form-group required">
                 <label class="col-sm-2 control-label" for="input-email"><?php echo $entry_email; ?></label>
                 <div class="col-sm-10">
                     <input type="text" name="email" value="<?php echo $email; ?>" id="input-email" class="form-control" />
-                    <?php if ($error_email) { ?>
-                        <div class="text-danger"><?php echo $error_email; ?></div>
-                    <?php } ?>
+
                 </div>
             </div>
             <div class="form-group required">
                 <label class="col-sm-2 control-label" for="input-enquiry"><?php echo $entry_enquiry; ?></label>
                 <div class="col-sm-10">
                     <textarea name="enquiry" rows="10" id="input-enquiry" class="form-control"><?php echo $enquiry; ?></textarea>
-                    <?php if ($error_enquiry) { ?>
-                        <div class="text-danger"><?php echo $error_enquiry; ?></div>
-                    <?php } ?>
+
                 </div>
             </div>
             <div class="form-group required">
@@ -39,9 +33,6 @@
                         <span class="input-group-btn" ><button id="img_cap_reload" type="button" class="btn btn-default"><i class="fa fa-refresh"></i></button></span>
 
                     </div>
-                    <?php if ($error_captcha) { ?>
-                        <div class="text-danger"><?php echo $error_captcha; ?></div>
-                    <?php } ?>
                 </div>
             </div>
 
@@ -61,9 +52,6 @@
                                         <?php } ?>
                                     <?php } ?>
                                 </select>
-                                <?php if (isset($error_custom_field[$custom_field['custom_field_id']])) { ?>
-                                    <div class="text-danger"><?php echo $error_custom_field[$custom_field['custom_field_id']]; ?></div>
-                                <?php } ?>
                             </div>
                         </div>
                     <?php } ?>
@@ -86,9 +74,7 @@
                                         </div>
                                     <?php } ?>
                                 </div>
-                                <?php if (isset($error_custom_field[$custom_field['custom_field_id']])) { ?>
-                                    <div class="text-danger"><?php echo $error_custom_field[$custom_field['custom_field_id']]; ?></div>
-                                <?php } ?>
+
                             </div>
                         </div>
                     <?php } ?>
@@ -111,9 +97,6 @@
                                         </div>
                                     <?php } ?>
                                 </div>
-                                <?php if (isset($error_custom_field[$custom_field['custom_field_id']])) { ?>
-                                    <div class="text-danger"><?php echo $error_custom_field[$custom_field['custom_field_id']]; ?></div>
-                                <?php } ?>
                             </div>
                         </div>
                     <?php } ?>
@@ -122,9 +105,7 @@
                             <label class="col-sm-2 control-label" for="input-custom-field<?php echo $custom_field['custom_field_id']; ?>"><?php echo $custom_field['name']; ?></label>
                             <div class="col-sm-10">
                                 <input type="text" name="custom_field[<?php echo $custom_field['custom_field_id']; ?>]" value="<?php echo (isset($contact_custom_field[$custom_field['custom_field_id']]) ? $contact_custom_field[$custom_field['custom_field_id']] : $custom_field['value']); ?>" placeholder="<?php echo $custom_field['name']; ?>" id="input-custom-field<?php echo $custom_field['custom_field_id']; ?>" class="form-control" />
-                                <?php if (isset($error_custom_field[$custom_field['custom_field_id']])) { ?>
-                                    <div class="text-danger"><?php echo $error_custom_field[$custom_field['custom_field_id']]; ?></div>
-                                <?php } ?>
+
                             </div>
                         </div>
                     <?php } ?>
@@ -133,9 +114,7 @@
                             <label class="col-sm-2 control-label" for="input-custom-field<?php echo $custom_field['custom_field_id']; ?>"><?php echo $custom_field['name']; ?></label>
                             <div class="col-sm-10">
                                 <textarea name="custom_field[<?php echo $custom_field['custom_field_id']; ?>]" rows="5" placeholder="<?php echo $custom_field['name']; ?>" id="input-custom-field<?php echo $custom_field['custom_field_id']; ?>" class="form-control"><?php echo (isset($contact_custom_field[$custom_field['custom_field_id']]) ? $contact_custom_field[$custom_field['custom_field_id']] : $custom_field['value']); ?></textarea>
-                                <?php if (isset($error_custom_field[$custom_field['custom_field_id']])) { ?>
-                                    <div class="text-danger"><?php echo $error_custom_field[$custom_field['custom_field_id']]; ?></div>
-                                <?php } ?>
+
                             </div>
                         </div>
                     <?php } ?>
@@ -145,9 +124,7 @@
                             <div class="col-sm-10">
                                 <button type="button" id="button-custom-field<?php echo $custom_field['custom_field_id']; ?>" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-default"><i class="fa fa-upload"></i> <?php echo $button_upload; ?></button>
                                 <input type="hidden" name="custom_field[<?php echo $custom_field['custom_field_id']; ?>]" value="<?php echo (isset($contact_custom_field[$custom_field['custom_field_id']]) ? $contact_custom_field[$custom_field['custom_field_id']] : ''); ?>" />
-                                <?php if (isset($error_custom_field[$custom_field['custom_field_id']])) { ?>
-                                    <div class="text-danger"><?php echo $error_custom_field[$custom_field['custom_field_id']]; ?></div>
-                                <?php } ?>
+
                             </div>
                         </div>
                     <?php } ?>
@@ -160,9 +137,7 @@
                                     <span class="input-group-btn">
                                         <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
                                     </span></div>
-                                <?php if (isset($error_custom_field[$custom_field['custom_field_id']])) { ?>
-                                    <div class="text-danger"><?php echo $error_custom_field[$custom_field['custom_field_id']]; ?></div>
-                                <?php } ?>
+
                             </div>
                         </div>
                     <?php } ?>
@@ -175,9 +150,7 @@
                                     <span class="input-group-btn">
                                         <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
                                     </span></div>
-                                <?php if (isset($error_custom_field[$custom_field['custom_field_id']])) { ?>
-                                    <div class="text-danger"><?php echo $error_custom_field[$custom_field['custom_field_id']]; ?></div>
-                                <?php } ?>
+
                             </div>
                         </div>
                     <?php } ?>
@@ -190,9 +163,7 @@
                                     <span class="input-group-btn">
                                         <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
                                     </span></div>
-                                <?php if (isset($error_custom_field[$custom_field['custom_field_id']])) { ?>
-                                    <div class="text-danger"><?php echo $error_custom_field[$custom_field['custom_field_id']]; ?></div>
-                                <?php } ?>
+
                             </div>
                         </div>
                     <?php } ?>
@@ -210,105 +181,105 @@
 
 <script type="text/javascript"><!--
     docReady(function () {
-        
-        $('#contact-module-form').submit(function(form){
+
+        $('#contact-module-form').submit(function (form) {
             $('#contact-module-form').find('.text-danger').remove();
-            $.post('index.php?p=module/contact/submit', $('#contact-module-form').serialize(), function(res) { 
-                if(res.error != undefined){
-                    $.each(res.error, function(i,j) {
-                        if(i == "custom_field"){
-                           $.each(j, function(ii,jj) { 
-                               console.log($('#input-custom-field-' + ii));
+            $.post('index.php?p=module/contact/submit', $('#contact-module-form').serialize(), function (res) {
+                if (res.error != undefined) {
+                    $.each(res.error, function (i, j) {
+                        if (i == "custom_field") {
+                            $.each(j, function (ii, jj) {
+                                console.log($('#input-custom-field-' + ii));
                                 $('#input-custom-field' + ii).closest('.form-group > div').append('<span class="text-danger">' + jj + '</span>');
-                           }); 
-                        }else{
+                            });
+                        } else {
                             $('[name="' + i + '"]').closest('.form-group > div').append('<span class="text-danger">' + j + '</span>');
                         }
-          
+
                     });
                 }
-                if(res.success != undefined){
+                if (res.success != undefined) {
                     $('#contact-module-form').slideUp();
                     $('#contact-module-form').after('<div class="alert alert-success">' + res.success + '</div>');
-                }   
-            },'json');
+                }
+            }, 'json');
             return false;
         });
-        
+
         function sortOurFields() {
 // Sort the custom fields
-        $('.form-group[data-sort]').detach().each(function () {
-            if ($(this).attr('data-sort') >= 0 && $(this).attr('data-sort') <= $('.form-group').length) {
-                $('.form-group').eq($(this).attr('data-sort')).before(this);
-            }
-
-            if ($(this).attr('data-sort') > $('.form-group').length) {
-                $('.form-group:last').after(this);
-            }
-
-            if ($(this).attr('data-sort') < -$('.form-group').length) {
-                $('.form-group:first').before(this);
-            }
-        });
-        $('button[id^=\'button-custom-field\']').on('click', function () {
-            var node = this;
-            $('#form-upload').remove();
-            $('body').prepend('<form enctype="multipart/form-data" id="form-upload" style="display: none;"><input type="file" name="file" /></form>');
-            $('#form-upload input[name=\'file\']').trigger('click');
-            if (typeof timer != 'undefined') {
-                clearInterval(timer);
-            }
-
-            timer = setInterval(function () {
-                if ($('#form-upload input[name=\'file\']').val() != '') {
-                    clearInterval(timer);
-                    $.ajax({
-                        url: 'index.php?p=tool/upload',
-                        type: 'post',
-                        dataType: 'json',
-                        data: new FormData($('#form-upload')[0]),
-                        cache: false,
-                        contentType: false,
-                        processData: false,
-                        beforeSend: function () {
-                            $(node).button('loading');
-                        },
-                        complete: function () {
-                            $(node).button('reset');
-                        },
-                        success: function (json) {
-                            $(node).parent().find('.text-danger').remove();
-                            if (json['error']) {
-                                $(node).parent().find('input').after('<div class="text-danger">' + json['error'] + '</div>');
-                            }
-
-                            if (json['success']) {
-                                alert(json['success']);
-                                $(node).parent().find('input').attr('value', json['code']);
-                            }
-                        },
-                        error: function (xhr, ajaxOptions, thrownError) {
-                            alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-                        }
-                    });
+            $('.form-group[data-sort]').detach().each(function () {
+                if ($(this).attr('data-sort') >= 0 && $(this).attr('data-sort') <= $('.form-group').length) {
+                    $('.form-group').eq($(this).attr('data-sort')).before(this);
                 }
-            }, 500);
-        });
 
-        $('.date').datetimepicker({
-            pickTime: false
-        });
-        $('.datetime').datetimepicker({
-            pickDate: true,
-            pickTime: true
-        });
-        $('.time').datetimepicker({
-            pickDate: false
-        });
-        
+                if ($(this).attr('data-sort') > $('.form-group').length) {
+                    $('.form-group:last').after(this);
+                }
+
+                if ($(this).attr('data-sort') < -$('.form-group').length) {
+                    $('.form-group:first').before(this);
+                }
+            });
+            $('button[id^=\'button-custom-field\']').on('click', function () {
+                var node = this;
+                $('#form-upload').remove();
+                $('body').prepend('<form enctype="multipart/form-data" id="form-upload" style="display: none;"><input type="file" name="file" /></form>');
+                $('#form-upload input[name=\'file\']').trigger('click');
+                if (typeof timer != 'undefined') {
+                    clearInterval(timer);
+                }
+
+                timer = setInterval(function () {
+                    if ($('#form-upload input[name=\'file\']').val() != '') {
+                        clearInterval(timer);
+                        $.ajax({
+                            url: 'index.php?p=tool/upload',
+                            type: 'post',
+                            dataType: 'json',
+                            data: new FormData($('#form-upload')[0]),
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            beforeSend: function () {
+                                $(node).button('loading');
+                            },
+                            complete: function () {
+                                $(node).button('reset');
+                            },
+                            success: function (json) {
+                                $(node).parent().find('.text-danger').remove();
+                                if (json['error']) {
+                                    $(node).parent().find('input').after('<div class="text-danger">' + json['error'] + '</div>');
+                                }
+
+                                if (json['success']) {
+                                    alert(json['success']);
+                                    $(node).parent().find('input').attr('value', json['code']);
+                                }
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) {
+                                alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                            }
+                        });
+                    }
+                }, 500);
+            });
+
+            $('.date').datetimepicker({
+                pickTime: false
+            });
+            $('.datetime').datetimepicker({
+                pickDate: true,
+                pickTime: true
+            });
+            $('.time').datetimepicker({
+                pickDate: false
+            });
+
         }
-        
+
         sortOurFields();
-        
+
     });
 //--></script>

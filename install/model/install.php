@@ -47,7 +47,7 @@ class ModelInstall extends \Core\Model {
             $db->query("DELETE FROM `" . $data['db_prefix'] . "setting` WHERE `key` = 'config_encryption'");
             $db->query("INSERT INTO `" . $data['db_prefix'] . "setting` SET `code` = 'config', `key` = 'config_encryption', value = '" . $db->escape(md5(mt_rand())) . "'");
 
-            $db->query("DELETE FROM `" . $data['db_prefix'] . "setting` WHERE `code` = '_version_' and key='_version_");
+            $db->query("DELETE FROM `" . $data['db_prefix'] . "setting` WHERE `code` = '_version_' and `key`='_version_'");
             $db->query("INSERT INTO `" . $data['db_prefix'] . "setting` SET `code` = '_version_', `key` = '_version_', value = '" . $db->escape(VERSION) . "'");
 
 

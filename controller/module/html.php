@@ -13,6 +13,7 @@ class ControllerModuleHTML extends \Core\Controller {
         $this->data['html'] = html_entity_decode($setting['module_description'], ENT_QUOTES, 'UTF-8');
         
         $this->template = 'module/html.phtml';
+        $this->setOverride($setting['name']);
         return $this->render();
     }
 

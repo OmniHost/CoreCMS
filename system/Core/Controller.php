@@ -146,6 +146,19 @@ abstract class Controller {
         }
     }
 
+    public function setOverride($key) {
+        if (!$this->template) {
+            throw new \Core\Exception("Template needs to be set first");
+        }
+        $key = slug($key);
+        $path = substr($this->template, 0, -5) . $key . '.phtml';
+
+        $theme = $this->config->get('config_template');
+        if (is_file(DIR_TEMPLATE . $theme . '/' . $path)) {
+            $this->template = $path;
+        }
+    }
+
     /**
      * Returns the output
      * @return string

@@ -9,7 +9,7 @@ abstract class Page extends \Core\Controller {
 
     protected function getPage() {
         $this->_model = $this->load->model($this->_namespace);
-
+ $page = false;
         $this->user = new \Core\User();
         if (!empty($this->request->get['preview_id'])) {
         

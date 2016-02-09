@@ -27,8 +27,8 @@ Class Core {
             $config->load('config', DIR_SYSTEM . 'config/');
         }
 
-        
-        
+
+
         $hostname = str_replace('www.', '', $_SERVER['HTTP_HOST']);
 
 
@@ -38,11 +38,11 @@ Class Core {
         if (is_file(DIR_CONFIG . $hostname . '.' . $ns . '.php')) {
             $config->load($hostname . '.' . $ns);
         }
-        
-         require_once('Event.php');
-         $event = new \Core\Event();
-          self::$registry->set('event', $event);
-        
+
+        require_once('Event.php');
+        $event = new \Core\Event();
+        self::$registry->set('event', $event);
+
 
         define('CORE_IS_ADMIN', $ns == 'admin');
         if ($ns != 'installer') {
@@ -64,20 +64,20 @@ Class Core {
                     $config->set($setting['key'], unserialize($setting['value']));
                 }
             }
-            
+
             //Core Events:::
-            $this->event->register('cms.pagelist','cms/page/event_pagelist');
-            $this->event->register('cron.run','marketing/cron');
-            
+            $this->event->register('cms.pagelist', 'cms/page/event_pagelist');
+            $this->event->register('cron.run', 'marketing/cron');
+
             $events = $db->query('Select * from #__event')->rows;
-          
-            foreach($events as $_event){
+
+            foreach ($events as $_event) {
                 $this->event->register($_event['trigger'], $_event['action']);
             }
             
            
         }
-        
+
         define('HTTP_SERVER', $config->get('config_url'));
         define('HTTPS_SERVER', $config->get('config_ssl'));
         define('HTTP_CATALOG', $config->get('config_catalog'));
@@ -88,6 +88,11 @@ Class Core {
         $log = new \Core\Log(DATE("Ymd") . '_error_log.txt');
         self::$registry->set('log', $log);
         set_error_handler(array($this, 'error_handler'));
+        set_exception_handler(array($this, 'exception_handler'));
+
+
+
+
 
         require_once('Loader.php');
         $loader = new \Core\Loader();
@@ -184,6 +189,29 @@ Class Core {
         spl_autoload_register(__NAMESPACE__ . "\\Core::autoload");
     }
 
+    /**
+     * 
+     * @param \Core\Exception $exception
+     */
+    function exception_handler($exception) {
+        
+        
+        $config = self::$registry->get('config');
+        $log = self::$registry->get('log');
+
+        if ($config->get('config_error_display')) {
+            //FLUSH THE OUPUT
+            @ob_end_clean();
+            echo '<b>' . "Uncaught exception: </b>" . $exception->getMessage() . '<br />';
+            debugPre($exception->getTrace());
+        }
+
+        if ($config->get('config_error_log')) {
+            $log->write('PHP Exeption' . "Uncaught exception: " . $exception->getMessage());
+        }
+        exit;
+    }
+
     public function error_handler($errno, $errstr, $errfile = '', $errline = 0) {
 
         if (!(error_reporting() & $errno)) {
@@ -257,8 +285,8 @@ Class Core {
         } else {
             $action = new \Core\Action($this->default_route);
         }
-        
-        
+
+
         $controller->dispatch($action, new \Core\Action($this->error_route));
 
 // Output
@@ -267,14 +295,14 @@ Class Core {
 
     public function dispatch_cli() {
 
-            @ini_set("memory_limit", "128M");
+        @ini_set("memory_limit", "128M");
 
         // Front Controller 
         $controller = new \Core\Front();
         foreach ($this->pre_actions as $pre_action) {
             $controller->addPreAction(new \Core\Action($pre_action));
         }
-        
+
         if (isset($this->request->get['p'])) {
             $action = new \Core\Action($this->request->get['p']);
         } else {

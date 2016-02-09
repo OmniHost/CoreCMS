@@ -1,0 +1,112 @@
+<?php echo $header; ?>
+<?php include(__DIR__ . '/../../common/page-header.phtml'); ?>
+
+<section class="content">
+
+    <div class="box">
+        <div class="box-header">
+
+            <h3 class="box-title"><i class="fa fa-bars"></i> <?php echo $heading_title; ?></h3>
+            <div class="box-tools"> 
+                <a href="<?php echo $insert; ?>" data-toggle="tooltip" question="<?php echo $button_insert; ?>" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+                <button type="button" data-toggle="tooltip" question="<?php echo $button_delete; ?>" class="btn btn-danger" onclick="confirm('<?php echo $text_confirm; ?>') ? $('#form-module').submit() : false;"><i class="fa fa-trash-o"></i></button>
+            </div>
+        </div>
+        <div class="box-body">
+         
+
+
+            <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form-module" class="form-horizontal">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></th>
+                                <th class="left"><?php if ($sort == 'firstname') { ?>
+                <a href="<?php echo $sort_firstname; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_firstname; ?></a>
+                <?php } else { ?>
+                <a href="<?php echo $sort_firstname; ?>"><?php echo $column_firstname; ?></a>
+                <?php } ?></th>
+              <th class="left"><?php if ($sort == 'lastname') { ?>
+                <a href="<?php echo $sort_lastname; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_lastname; ?></a>
+                <?php } else { ?>
+                <a href="<?php echo $sort_lastname; ?>"><?php echo $column_lastname; ?></a>
+                <?php } ?></th>
+              <th class="left"><?php if ($sort == 'email') { ?>
+                <a href="<?php echo $sort_email; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_email; ?></a>
+                <?php } else { ?>
+                <a href="<?php echo $sort_email; ?>"><?php echo $column_email; ?></a>
+                <?php } ?></th>
+              <th class="left"><?php if ($sort == 'website') { ?>
+                <a href="<?php echo $sort_website; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_website; ?></a>
+                <?php } else { ?>
+                <a href="<?php echo $sort_website; ?>"><?php echo $column_website; ?></a>
+                <?php } ?></th>
+              <th class="left"><?php if ($sort == 'status') { ?>
+                <a href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?></a>
+                <?php } else { ?>
+                <a href="<?php echo $sort_status; ?>"><?php echo $column_status; ?></a>
+                <?php } ?></th>
+              <th class="left"><?php if ($sort == 'rating') { ?>
+                <a href="<?php echo $sort_rating; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_rating; ?></a>
+                <?php } else { ?>
+                <a href="<?php echo $sort_rating; ?>"><?php echo $column_rating; ?></a>
+                <?php } ?></th>
+              <th class="left"><?php if ($sort == 'featured') { ?>
+                <a href="<?php echo $sort_featured; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_featured; ?></a>
+                <?php } else { ?>
+                <a href="<?php echo $sort_featured; ?>"><?php echo $column_featured; ?></a>
+                <?php } ?></th>
+              <th class="left"><?php if ($sort == 'sort_order') { ?>
+                <a href="<?php echo $sort_sort_order; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_sort_order; ?></a>
+                <?php } else { ?>
+                <a href="<?php echo $sort_sort_order; ?>"><?php echo $column_sort_order; ?></a>
+                <?php } ?></th>
+              <th class="left"><?php if ($sort == 'date_added') { ?>
+                <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
+                <?php } else { ?>
+                <a href="<?php echo $sort_date_added; ?>"><?php echo $column_date_added; ?></a>
+                <?php } ?></th>
+                                <th class="text-right"><?php echo $column_action; ?></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if ($testimonials) { ?>
+                                <?php foreach ($testimonials as $testimonial) { ?>
+                                    <tr>
+                                        <td style="text-align: center;"><?php if ($testimonial['selected']) { ?>
+                <input type="checkbox" name="selected[]" value="<?php echo $testimonial['testimonial_id']; ?>" checked="checked" />
+                <?php } else { ?>
+                <input type="checkbox" name="selected[]" value="<?php echo $testimonial['testimonial_id']; ?>" />
+                <?php } ?></td>
+              <td class="left"><?php echo $testimonial['firstname']; ?></td>
+              <td class="left"><?php echo $testimonial['lastname']; ?></td>
+              <td class="left"><a href="mailto:<?php echo $testimonial['email']; ?>"><?php echo $testimonial['email']; ?></a></td>
+              <td class="left"><a onclick="window.open('<?php echo $testimonial['website']; ?>');"><?php echo $testimonial['website']; ?></a></td>
+              <td class="left"><?php echo $testimonial['status']; ?></td>
+              <td class="left"><?php echo $testimonial['rating']; ?></td>
+              <td class="left"><?php echo $testimonial['featured']; ?></td>
+              <td class="left"><?php echo $testimonial['sort_order']; ?></td>
+              <td class="left"><?php echo $testimonial['date_added']; ?></td>
+              <td class="right"><?php foreach ($testimonial['action'] as $action) { ?>
+                <a class="btn btn-primary" href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a>
+                <?php } ?></td>
+                                    </tr>
+                                <?php } ?>
+                            <?php } else { ?>
+                                <tr>
+                                    <td colspan="11" class="text-center"><?php echo $text_no_results; ?></td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                        <tfoot>
+                            <tr><th colspan="11"><?php echo $pagination; ?></th></tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<?php echo $footer; ?>

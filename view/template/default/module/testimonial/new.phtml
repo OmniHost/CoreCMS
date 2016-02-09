@@ -1,0 +1,79 @@
+<?php echo $header; ?>
+
+<?php echo $column_top; ?>
+<section class="content">
+    <div class="container">
+        <div class="row">
+            <?php if ($column_left): ?>
+                <?php echo $column_left; ?>
+            <?php endif; ?>
+            <?php if ($column_left && $column_right) { ?>
+                <?php $class = 'col-sm-6'; ?>
+            <?php } elseif ($column_left || $column_right) { ?>
+                <?php $class = 'col-sm-9'; ?>
+            <?php } else { ?>
+                <?php $class = 'col-sm-12'; ?>
+            <?php } ?>
+            <div class="<?php echo $class; ?>">
+                <?php echo $content_top; ?>
+                <div class="form-content">
+                    <div style="width: 100%; margin-bottom: 10px;">
+                        <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="testimonial" name="testimonial">
+                            <div style="margin:10px auto 20px auto;overflow:hidden">
+                                <div style="width:48%; float:left;" id="div-firstname">
+                                    <b><?php echo $entry_firstname; ?></b> <span class="required">*</span><br/>
+                                    <input type="text" name="firstname" value="<?php echo $firstname; ?>" size="30" />
+                                </div>
+                                <div style="width:48%; float:right;" id="div-lastname">
+                                    <b><?php echo $entry_lastname; ?></b> <span class="required">*</span><br/>
+                                    <input type="text" name="lastname" value="<?php echo $lastname; ?>" size="30" />
+                                </div>
+                            </div>
+                            <b><?php echo $entry_email; ?></b> <span class="required">*</span><br/>
+                            <input type="text" name="testify_email" value="<?php echo $testify_email; ?>" size="64" />
+                            <br/><br/>
+                            <b><?php echo $entry_website; ?></b><br/>
+                            <input type="text" name="website" size="64" />
+                            <br/><br/>
+                            <b><?php echo $entry_company; ?></b><br/>
+                            <input type="text" name="company" size="64" />
+                            <br/><br/>
+                            <b><?php echo $entry_title; ?></b><br/>
+                            <input type="text" name="title" size="64" />
+                            <br/><br/>
+                            <b><?php echo $entry_testimony; ?></b> <span class="required">*</span><br/>
+                            <textarea name="testimony" style="width: 99%;" rows="6"></textarea>
+                            <br/>
+                            <span style="font-size: 11px;"><?php echo $text_note; ?></span><br/><br/>
+                            <b><?php echo $entry_rating; ?></b> <span><?php echo $text_bad; ?></span>&nbsp;
+                            <input type="radio" name="rating" value="1" style="margin: 0;" />
+                            &nbsp;
+                            <input type="radio" name="rating" value="2" style="margin: 0;" />
+                            &nbsp;
+                            <input type="radio" name="rating" value="3" style="margin: 0;" />
+                            &nbsp;
+                            <input type="radio" name="rating" value="4" style="margin: 0;" />
+                            &nbsp;
+                            <input type="radio" name="rating" value="5" style="margin: 0;" checked="true" />
+                            &nbsp;<span><?php echo $text_good; ?></span>
+                            <br/><br/>
+                            <b><?php echo $entry_captcha; ?></b><br />
+                            <input type="text" name="captcha" value="" autocomplete="off" />
+                            <br />
+                            <img src="index.php?route=information/testimonial/captcha" id="captcha" />
+                        </form>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <div class="right"><a onclick="testify();" class="button" id="save_button"><span><?php echo $button_save; ?></span></a>&nbsp;&nbsp;<a onclick="location = '<?php echo $cancel; ?>';" class="button" id="cancel_button"><span><?php echo $button_cancel; ?></span></a></div>
+                </div>
+                <?php echo $content_bottom; ?>
+            </div><!-- end col-sm-12 -->
+            <?php if ($column_right): ?>
+                <?php echo $column_right; ?>
+            <?php endif; ?>
+        </div><!-- end row -->
+    </div><!-- end container -->
+</section>
+<?php echo $column_bottom; ?>
+<?php echo $footer; ?>
