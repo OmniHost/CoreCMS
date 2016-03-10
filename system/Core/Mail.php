@@ -13,7 +13,6 @@ class Mail {
     protected $text;
     protected $html;
     protected $attachments = array();
-    protected $mandrill;
     public $protocol = 'mail';
     public $hostname;
     public $username;
@@ -25,8 +24,25 @@ class Mail {
     public $verp = false;
     public $parameter = '';
     public $MessageId = 'omniCoreFramework';
-    public $mandrill_key;
     public $tags = array();
+
+    /**
+     * Returns object from registry
+     * @param string $key
+     * @return mixed
+     */
+    public function __get($key) {
+        return \Core\Core::$registry->get($key);
+    }
+
+    /**
+     * Sets object to the registry
+     * @param string $key
+     * @param mixed $value
+     */
+    public function __set($key, $value) {
+        \Core\Core::$registry->set($key, $value);
+    }
 
     public function setTo($to) {
         $this->to = $to;
@@ -110,8 +126,9 @@ class Mail {
 
         $header .= 'MIME-Version: 1.0' . $this->newline;
 
-        if ($this->protocol == 'mandrill') {
-            $this->sendMandrillSingle();
+
+        if ($this->protocol == 'sendgrid') {
+            $this->sendViaSendGrid();
         } else {
 
             if ($this->protocol != 'mail') {
@@ -434,85 +451,41 @@ class Mail {
         }
     }
 
-    protected function initMandrill() {
-        $this->mandrill = new \Mandrill($this->mandrill_key);
-
-        $message = array(
-            'html' => $this->html,
-            'text' => $this->text,
-            'subject' => $this->subject,
-            'from_email' => $this->from,
-            'from_name' => $this->sender,
-            'to' => array(),
-            'headers' => array(),
-            'important' => false,
-            'track_opens' => false,
-            'track_clicks' => false,
-            'auto_text' => true,
-            'auto_html' => true,
-            'inline_css' => true,
-            'url_strip_qs' => false,
-            'preserve_recipients' => false,
-            'view_content_link' => true,
-            'merge_language' => 'mailchimp',
-            'global_merge_vars' => array(),
-            'merge_vars' => array(),
-            'tags' => $this->tags,
-            'attachments' => array(),
-            'async' => true,
-            'send_at' => gmdate("Y-m-d H:i:s", time())
-        );
-
-        if (!is_array($this->to)) {
-            $to = array($this->to);
-        } else {
-            $to = $this->to;
+    public function sendViaSendGrid() {
+        $sendgrid = new \SendGrid($this->config->get('config_sendgrid_key'));
+        $email = new \SendGrid\Email();
+        $email->setSmtpapiTos(explode(",", $this->to))
+                ->setFrom($this->from)
+                ->setFromName($this->sender)
+                ->setSubject($this->subject);
+        if (!empty($this->reply_to_email)) {
+            $email->setReplyto($this->reply_to_email);
         }
-        foreach ($to as $t) {
-            $message['to'][] = array('email' => $t);
+        if ($this->text) {
+            $email->setText($this->text);
         }
-
-        if ($this->reply_to) {
-            $message['headers']['Reply-To'] = $this->reply_to_email;
+        if ($this->html) {
+            $email->setHtml($this->html);
         }
-
+        if ($this->tags) {
+            $email->setCategories($this->tags);
+        }
+        if ($this->attachments) {
+            $email->setAttachements($this->attachements);
+        }
         if ($this->MessageId) {
-            $message['headers']["Message-Id"] = $this->MessageId;
+            $email->addHeader("Message-Id", $this->MessageId);
+            $email->addHeader("X-Message-Id", $this->MessageId);
         }
 
-        foreach ($this->attachments as $afn => $attachment) {
-            if (file_exists($attachment)) {
-                $handle = fopen($attachment, 'r');
-
-                $content = fread($handle, filesize($attachment));
-
-                fclose($handle);
-
-                $message['attachments'][] = array(
-                    'type' => 'application/octet-stream',
-                    'name' => basename($afn),
-                    'content' => chunk_split(base64_encode($content))
-                );
-            }
-        }
-
-
-        return $message;
-    }
-
-    public function sendMandrillSingle() {
-        $message = $this->initMandrill();
         try {
-            $result = $this->mandrill->messages->send($message, false);
-            return true;
-        } catch (Mandrill_Error $ex) {
-            throw new \Core\Exception($ex->getMessage());
+            return $sendgrid->send($email);
+        } catch (\SendGrid\Exception $e) {
+            //Hmm -- did not send via sendgrid.... 
+            debugPre($e);
+            exit;
             return false;
         }
-    }
-
-    public function sendMandrillBatch() {
-        
     }
 
 }

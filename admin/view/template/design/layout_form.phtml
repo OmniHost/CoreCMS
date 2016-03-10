@@ -13,7 +13,8 @@
         </div>
 
         <div class="box-body table-responsive">
-            <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
+            <form class="form-horizontal" action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
+                
                 <div class="form-group">
                     <label for="nameInput" class="col-sm-2 control-label required"><?php echo $entry_name; ?></label>
                     <div class="col-sm-9">
@@ -21,6 +22,18 @@
                         <?php if ($error_name) { ?>
                             <span class="error text-danger"><?php echo $error_name; ?></span>
                         <?php } ?>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="nameInput" class="col-sm-2 control-label">Template Override</label>
+                    <div class="col-sm-9">
+                        <select name="override" class="form-control">
+                               <?php foreach($templates as $tpl): ?>
+                                <option value="<?php echo $tpl; ?>" 
+                                        <?php if($tpl == $override):?> selected <?php endif; ?>
+                                        ><?php echo $tpl; ?><?php if($tpl == $this->config->get('config_template')): ?> (Site Default) <?php endif; ?></option>
+                                <?php endforeach; ?>
+                        </select>
                     </div>
                 </div>
                 <br />

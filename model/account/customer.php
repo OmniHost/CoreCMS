@@ -51,7 +51,7 @@ class ModelAccountCustomer extends \Core\Model {
 
         $mail = new \Core\Mail();
         $mail->tags = array('Customer Registration');
-        $mail->mandrill_key = $this->config->get('config_mandrill_key');
+        
         $mail->protocol = $this->config->get('config_mail_protocol');
         $mail->parameter = $this->config->get('config_mail_parameter');
         $mail->hostname = $this->config->get('config_mail_smtp_hostname');

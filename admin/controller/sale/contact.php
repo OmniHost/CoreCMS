@@ -374,7 +374,7 @@ class ControllerSaleContact extends \Core\Controller {
                     . "date_created = now()");
             
             $mail = new \Core\Mail();
-            $mail->mandrill_key = $this->config->get('config_mandrill_key');
+            
             $mail->tags = array('Contact Reply');
             $mail->protocol = $this->config->get('config_mail_protocol');
             $mail->parameter = $this->config->get('config_mail_parameter');

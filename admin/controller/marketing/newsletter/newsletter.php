@@ -89,8 +89,8 @@ class ControllerMarketingNewsletterNewsletter extends \Core\Controller {
         $this->load->model('marketing/newsletter');
 
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
-            foreach ($this->request->post['selected'] as $subscriber_id) {
-                $this->model_marketing_newsletter > deleteSubscriber($subscriber_id);
+            foreach ($this->request->post['selected'] as $newsletter_id) {
+                $this->model_marketing_newsletter->deleteNewsletter($newsletter_id);
             }
 
             $this->session->data['success'] = $this->language->get('text_success');
@@ -492,30 +492,7 @@ class ControllerMarketingNewsletterNewsletter extends \Core\Controller {
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
-        $this->load->model('setting/store');
-        $this->load->model('sale/customer');
 
-        foreach ($this->request->post['selected'] as $customer_group_id) {
-            if ($this->config->get('config_customer_group_id') == $customer_group_id) {
-                $this->error['warning'] = $this->language->get('error_default');
-            }
-
-            $store_total = $this->model_setting_store->getTotalStoresByCustomerGroupId($customer_group_id);
-
-            if ($store_total) {
-                $this->error['warning'] = sprintf($this->language->get('error_store'), $store_total);
-            }
-
-            $customer_total = $this->model_sale_customer->getTotalCustomersByCustomerGroupId($customer_group_id);
-
-            if ($customer_total) {
-                $this->error['warning'] = sprintf($this->language->get('error_customer'), $customer_total);
-            }
-
-            if ($customer_group_id < 0) {
-                $this->error['warning'] = $this->language->get('error_builtin');
-            }
-        }
 
         return !$this->error;
     }
@@ -557,4 +534,81 @@ class ControllerMarketingNewsletterNewsletter extends \Core\Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    
+    public function preview(){
+        $html = html_entity_decode($this->request->post['newsletter']);
+        $this->load->model('marketing/newsletter');
+        $newsletter_html = $this->model_marketing_newsletter->fix_image_paths($html);
+        
+
+        $replace = array(
+                "email_subject" => 'Preview - ' . $this->request->post['subject'],
+                "from_name" => $this->request->post['from_name'],
+                "from_email" => $this->request->post['from_email'],
+                "to_email" => $this->request->post['to_email'],
+                "sent_date" => date("jS M, Y"),
+                "sent_month" => date("M Y"),
+                "unsubscribe" => $this->config->get('config_url') . 'ext/unsubcribe#',
+                "view_online" => $this->config->get('config_url') . 'ext/view#',
+                /*   "link_account" => $this->settings['url_update'], */
+                "member_id" => 0,
+                "send_id" => 0,
+                "MEMBER_HASH" => md5("Member Hash for , with member_id ,"),
+                "first_name" => "John",
+                "last_name" => "Smith",
+                "email" => $this->request->post['to_email'],
+            );
+        
+        foreach ($replace as $key => $val) {
+                $newsletter_html = preg_replace('/\{' . strtoupper(preg_quote($key, '/')) . '\}/', $val, $newsletter_html);
+                $newsletter_html = preg_replace('/' . strtoupper(preg_quote("*|" . $key . "|*", '/')) . '/', $val, $newsletter_html);
+                $newsletter_html = preg_replace('/\{' . strtolower(preg_quote($key, '/')) . '\}/', $val, $newsletter_html);
+                $newsletter_html = preg_replace('/' . strtolower(preg_quote("*|" . $key . "|*", '/')) . '/', $val, $newsletter_html);
+            }
+            
+            $options = array(
+                "bounce_email" => $this->request->post['bounce_email'],
+                "message_id" => "Newsletter-Preview",
+            );
+            
+              $send_email_status = $this->send_email($replace['to_email'], $replace['email_subject'], $newsletter_html, $replace['from_email'], $replace['from_name'], $options);
+
+    }
+    
+    protected function send_email($to_email, $email_subject, $newsletter_html, $from_email, $from_name, $options = array()) {
+
+        $mail = new \Core\Mail();
+        $mail->tags = array('Newsletter System');
+        
+        $mail->protocol = $this->config->get('config_mail_protocol');
+        $mail->parameter = $this->config->get('config_mail_parameter');
+        $mail->hostname = $this->config->get('config_mail_smtp_hostname');
+        $mail->username = $this->config->get('config_mail_smtp_username');
+        $mail->password = $this->config->get('config_mail_smtp_password');
+        $mail->port = $this->config->get('config_mail_smtp_port');
+        $mail->timeout = $this->config->get('config_mail_smtp_timeout');
+        if (!empty($options['message_id'])) {
+            $mail->message_id = $options['message_id'];
+        }
+        $mail->setFrom($this->config->get('config_email'));
+        if (!empty($options['bounce_email'])) {
+            $mail->setFrom($options['bounce_email']);
+        }
+        $mail->setTo($to_email);
+
+        $mail->setReplyTo($from_email, $from_name);
+        $mail->setSender($from_name);
+        $mail->setSubject($email_subject);
+        $mail->setHtml($newsletter_html);
+
+        try {
+            $mail->send();
+            return true;
+        } catch (\Core\Exception $e) {
+
+            return false;
+        }
+    }
+
+    
 }

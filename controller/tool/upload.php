@@ -144,7 +144,7 @@ class ControllerToolUpload extends \Core\Controller {
         }
 
         if (!$json) {
-            $file = 'newsletters/' . $filename . '.' . md5(mt_rand());
+            $file = 'newsletters/'.  md5(mt_rand()) . $filename ;
 
             move_uploaded_file($this->request->files['file']['tmp_name'], DIR_IMAGE . $file);
 

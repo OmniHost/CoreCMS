@@ -32,7 +32,9 @@ if(BASE_REQUEST_TYPE == 'cli'){
 }else{
 
 $core->addPreAction('common/maintenance');
-$core->addPreAction('common/seo_url');
 $core->addPreAction('common/home/marketing');
+
+//Should always be last!!! NB
+$core->addPreAction('common/seo_url');
 $core->dispatch();
 }

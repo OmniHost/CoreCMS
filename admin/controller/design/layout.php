@@ -268,7 +268,7 @@ class ControllerDesignLayout extends \Core\Controller {
         $this->data['text_disabled'] = $this->language->get('text_disabled');
         $this->data['text_content_top'] = $this->language->get('text_content_top');
         $this->data['text_content_bottom'] = $this->language->get('text_content_bottom');
-        
+
         $this->data['text_column_top'] = $this->language->get('text_column_top');
         $this->data['text_column_bottom'] = $this->language->get('text_column_bottom');
         $this->data['text_content_top'] = $this->language->get('text_content_top');
@@ -294,6 +294,12 @@ class ControllerDesignLayout extends \Core\Controller {
         $this->data['text_default'] = $this->language->get('text_default');
 
 
+        
+         $this->data['templates'] = array();
+        $directories = glob(DIR_ROOT . 'view/template/*', GLOB_ONLYDIR);
+        foreach ($directories as $directory) {
+            $this->data['templates'][] = basename($directory);
+        }
 
 
         if (isset($this->error['warning'])) {
@@ -355,7 +361,14 @@ class ControllerDesignLayout extends \Core\Controller {
         } else {
             $this->data['name'] = '';
         }
-
+        
+        if (isset($this->request->post['override'])) {
+            $this->data['override'] = $this->request->post['override'];
+        } elseif (!empty($layout_info)) {
+            $this->data['override'] = ($layout_info['template']) ? $layout_info['template']:$this->config->get('config_template');
+        } else {
+            $this->data['override'] = $this->config->get('config_template');
+        }
 
         if (isset($this->request->post['layout_route'])) {
             $this->data['layout_routes'] = $this->request->post['layout_route'];
@@ -404,17 +417,19 @@ class ControllerDesignLayout extends \Core\Controller {
                 );
             }
         }
-        
+
         $this->data['template_positions'] = array();
-        
+
         $templates = array('default' => json_decode(file_get_contents(DIR_ROOT . 'view/template/default/config.json')));
-        $template = $this->config->get('config_template');
+        //$template = $this->config->get('config_template');
+        $template = $this->data['override'];
+
         $template_configs = array();
-        if(is_file(DIR_ROOT . 'view/template/' . $template . '/config.json')){
-            $template_configs = json_decode(file_get_contents(DIR_ROOT . 'view/template/' . $template . '/config.json'),1);
+        if (is_file(DIR_ROOT . 'view/template/' . $template . '/config.json')) {
+            $template_configs = json_decode(file_get_contents(DIR_ROOT . 'view/template/' . $template . '/config.json'), 1);
         }
-        if($template_configs && !empty($template_configs['extra_positions'])){
-           $this->data['template_positions'] = $template_configs['extra_positions'];
+        if ($template_configs && !empty($template_configs['extra_positions'])) {
+            $this->data['template_positions'] = $template_configs['extra_positions'];
         }
         
 
@@ -435,6 +450,10 @@ class ControllerDesignLayout extends \Core\Controller {
         if ((utf8_strlen($this->request->post['name']) < 3) || (utf8_strlen($this->request->post['name']) > 64)) {
             $this->error['name'] = $this->language->get('error_name');
         }
+        
+        if(!empty($this->request->post['refresh'])){
+            return false;
+        }
 
         if (!$this->error) {
             return true;
@@ -448,38 +467,17 @@ class ControllerDesignLayout extends \Core\Controller {
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
-        $this->load->model('setting/store');
-        $this->load->model('catalog/product');
-        $this->load->model('catalog/category');
-        $this->load->model('catalog/information');
 
         foreach ($this->request->post['selected'] as $layout_id) {
+
             if ($this->config->get('config_layout_id') == $layout_id) {
                 $this->error['warning'] = $this->language->get('error_default');
             }
 
-            $store_total = $this->model_setting_store->getTotalStoresByLayoutId($layout_id);
 
-            if ($store_total) {
-                $this->error['warning'] = sprintf($this->language->get('error_store'), $store_total);
-            }
-
-            $product_total = $this->model_catalog_product->getTotalProductsByLayoutId($layout_id);
-
-            if ($product_total) {
-                $this->error['warning'] = sprintf($this->language->get('error_product'), $product_total);
-            }
-
-            $category_total = $this->model_catalog_category->getTotalCategoriesByLayoutId($layout_id);
-
-            if ($category_total) {
-                $this->error['warning'] = sprintf($this->language->get('error_category'), $category_total);
-            }
-
-            $information_total = $this->model_catalog_information->getTotalInformationsByLayoutId($layout_id);
-
-            if ($information_total) {
-                $this->error['warning'] = sprintf($this->language->get('error_information'), $information_total);
+            $page_total = $this->db->query("select count(*) as total from #__ams_pages where layout_id='" . (int) $layout_id . "' and status='1'")->row['total'];
+            if ($page_total) {
+                $this->error['warning'] = sprintf($this->language->get('error_information'), $page_total);
             }
         }
 

@@ -2,7 +2,7 @@
 class ModelDesignLayout extends \Core\Model {
 	public function addLayout($data) {
             
-		$this->db->query("INSERT INTO #__layout SET name = '" . $this->db->escape($data['name']) . "'");
+		$this->db->query("INSERT INTO #__layout SET name = '" . $this->db->escape($data['name']) . "', template='" . $this->db->escape($data['override'])."'");
 
 		$layout_id = $this->db->getLastId();
 
@@ -21,7 +21,7 @@ class ModelDesignLayout extends \Core\Model {
 	}
 
 	public function editLayout($layout_id, $data) {
-		$this->db->query("UPDATE #__layout SET name = '" . $this->db->escape($data['name']) . "' WHERE layout_id = '" . (int)$layout_id . "'");
+		$this->db->query("UPDATE #__layout SET name = '" . $this->db->escape($data['name']) . "', template='" . $this->db->escape($data['override'])."' WHERE layout_id = '" . (int)$layout_id . "'");
 
 		$this->db->query("DELETE FROM #__layout_route WHERE layout_id = '" . (int)$layout_id . "'");
 

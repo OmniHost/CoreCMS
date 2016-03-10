@@ -1,0 +1,1 @@
+ALTER TABLE `#__layout` ADD `template` VARCHAR(255) NOT NULL ;

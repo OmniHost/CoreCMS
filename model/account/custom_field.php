@@ -24,7 +24,7 @@ class ModelAccountCustomField extends \Core\Model {
                 $custom_field_value_query = $this->db->query("SELECT * FROM #__custom_field_value cfv WHERE cfv.custom_field_id = '" . (int) $custom_field['custom_field_id'] . "' ORDER BY cfv.sort_order ASC");
 
                 foreach ($custom_field_value_query->rows as $custom_field_value) {
-                    $custom_field_value_data[] = array(
+                    $custom_field_value_data[$custom_field_value['custom_field_value_id']] = array(
                         'custom_field_value_id' => $custom_field_value['custom_field_value_id'],
                         'name' => $custom_field_value['name']
                     );

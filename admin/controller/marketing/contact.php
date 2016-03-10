@@ -203,7 +203,7 @@ class ControllerMarketingContact extends \Core\Controller {
                         if (preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $email)) {
 
                             $mail = new \Core\Mail();
-                            $mail->mandrill_key = $this->config->get('config_mandrill_key');
+                           
                             $mail->protocol = $this->config->get('config_mail_protocol');
                             $mail->parameter = $this->config->get('config_mail_parameter');
                             $mail->hostname = $this->config->get('config_mail_smtp_hostname');

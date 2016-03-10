@@ -93,8 +93,12 @@ class ModelBlogPost extends \Core\Ams\Page {
         foreach ($categories->rows as $a) {
             $new[$a['parent_id']][] = $a;
         }
+        $tree = array();
+        $options = array();
+        if($new){
         $tree = $this->_createTree($new, $new[0]);
         $options = $this->_indent($tree);
+        }
 
 
         $tabs['general']['categories'] = array(

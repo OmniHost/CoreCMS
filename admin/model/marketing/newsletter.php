@@ -165,7 +165,7 @@ class ModelMarketingNewsletter extends \Core\Model {
         return false;
     }
 
-    protected function fix_image_paths($data, $send_id = false, $dir = '', $inc_http = true) {
+    public function fix_image_paths($data, $send_id = false, $dir = '', $inc_http = true) {
         $dir = trim($dir, '/');
         if (strlen($dir)) {
             $dir.='/';
@@ -196,7 +196,7 @@ class ModelMarketingNewsletter extends \Core\Model {
                             $this->db->query("INSERT INTO `#__newsletter_link` SET link_url = '" . $this->db->escape($newlink) . "'");
 
                             $link_id = $this->db->insertId();
-                            $newlink = $this->config->get('config_catalog') . 'marketing/ext/link?lid=' . $link_id . '&sid={SEND_ID}&mid={MEMBER_ID}&mhash={MEMBER_HASH}';
+                            $newlink = $this->config->get('config_catalog') . 'marketing/ext/link?id=' . $link_id . '&sid={SEND_ID}&mid={MEMBER_ID}&mhash={MEMBER_HASH}';
                         }
                         $replace = $type . '="' . $newlink . '"';
                         //echo $replace."<br>\n";
@@ -289,6 +289,13 @@ class ModelMarketingNewsletter extends \Core\Model {
             $send['start_date'] = date("Y-m-d g:i a", $send['start_time']);
         }
         return $sends;
+    }
+    
+    
+    public function deleteNewsletter($newsletter_id){
+        $this->db->query("delete from #__newsletter where newsletter_id='" . (int)$newsletter_id . "'");
+        $this->db->query("delete from #__newsletter_campaign_newsletter where newsletter_id='" . (int)$newsletter_id . "'");
+         $this->db->query("delete from #__newsletter_send where newsletter_id='" . (int)$newsletter_id . "'");
     }
 
 }

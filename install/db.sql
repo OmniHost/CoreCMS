@@ -659,6 +659,7 @@ DROP TABLE  IF EXISTS `#__layout`;
 CREATE TABLE `#__layout` (
   `layout_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL,
+  `template` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`layout_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 

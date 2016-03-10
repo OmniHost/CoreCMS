@@ -52,9 +52,11 @@ class ControllerCommonSeoUrl extends \Core\Controller {
             }
 
             if (isset($this->request->get['p'])) {
+                $this->template($this->request->get['p']);
                 unset($this->request->get['_route_']);
                 return $this->forward($this->request->get['p']);
             }
+            $this->template();
         }
     }
 
@@ -121,6 +123,32 @@ class ControllerCommonSeoUrl extends \Core\Controller {
             }
 
             return $url_info['scheme'] . '://' . $url_info['host'] . (isset($url_info['port']) ? ':' . $url_info['port'] : '') . str_replace('/index.php', '', $url_info['path']) . $url . $query;
+        }
+    }
+    
+    
+    public function template($route = 'common/home') {
+
+        //Layout Override::
+        $this->load->model('design/layout');
+        $layout_id = 0;
+
+        if (isset($this->request->get['ams_page_id'])) {
+            $layout_id = $this->model_design_layout->getAmsLayout($this->request->get['ams_page_id']);
+        } else {
+            $layout_id = $this->model_design_layout->getLayout($route);
+        }
+
+        if (!$layout_id) {
+            $layout_id = $this->config->get('config_layout_id');
+        }
+     
+        
+
+        $template = $this->model_design_layout->getTemplate($layout_id);
+        if ($template) {
+            $this->config->set('config_template', $template);
+      
         }
     }
 

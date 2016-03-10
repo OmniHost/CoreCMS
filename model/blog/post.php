@@ -19,12 +19,13 @@ class ModelBlogPost extends \Core\Ams\Page {
         $return = array();
         
         $categories = json_decode($data['content']);
-    
+    if($categories){
         foreach($categories as $category){
             $category = $this->loadParent($category)->toArray();
             $category['href'] = \Core\Registry::getInstance()->get('url')->link('blog/category', 'ams_page_id=' . $category['id']);
             $return[] = $category;
         }
+    }
         return $return;
         
     }

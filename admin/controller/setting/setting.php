@@ -396,12 +396,12 @@ class ControllerSettingSetting extends \Core\Controller {
             $data['config_mail_smtp_port'] = 25;
         }
         
-        if (isset($this->request->post['config_mandrill_key'])) {
-            $data['config_mandrill_key'] = $this->request->post['config_mandrill_key'];
-        } elseif ($this->config->has('config_mandrill_key')) {
-            $data['config_mandrill_key'] = $this->config->get('config_mandrill_key');
+        if (isset($this->request->post['config_sendgrid_key'])) {
+            $data['config_sendgrid_key'] = $this->request->post['config_sendgrid_key'];
+        } elseif ($this->config->has('config_sendgrid_key')) {
+            $data['config_sendgrid_key'] = $this->config->get('config_sendgrid_key');
         } else {
-            $data['config_mandrill_key'] = '';
+            $data['config_sendgrid_key'] = '';
         }
         
         //config_mandrill_key

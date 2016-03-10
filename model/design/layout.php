@@ -22,12 +22,19 @@ class ModelDesignLayout extends \Core\Model {
         }
     }
 
+    public function getTemplate($layout_id) {
+        if ($layout_id) {
+            return $this->db->query("Select template from #__layout where layout_id='" . (int) $layout_id . "'")->row['template'];
+        }
+        return '';
+    }
+
     public function getLayoutModules($layout_id, $position) {
         $modules = $this->db->query("SELECT * FROM #__layout_module WHERE layout_id = '" . (int) $layout_id . "' AND position = '" . $this->db->escape($position) . "' ORDER BY sort_order")->rows;
         $all_layouts_id = $this->model_design_layout->getLayout('*');
         if ($all_layouts_id) {
             $allModules = $this->db->query("SELECT * FROM #__layout_module WHERE layout_id = '" . (int) $all_layouts_id . "' AND position = '" . $this->db->escape($position) . "' ORDER BY sort_order")->rows;
-            return array_merge($allModules,$modules);
+            return array_merge($allModules, $modules);
         }
         return $modules;
     }

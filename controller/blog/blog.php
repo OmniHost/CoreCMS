@@ -8,6 +8,7 @@ class ControllerBlogBlog extends \Core\Controller {
 
         $page['name'] = $this->language->get('heading_archives');
 
+        $this->data['heading_title'] = $page['name'];
 
         $this->document->setTitle(strip_tags( $page['name']));
 

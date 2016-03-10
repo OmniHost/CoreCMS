@@ -27,7 +27,7 @@ CKEDITOR.editorConfig = function( config ) {
 
 	config.extraPlugins = 'justify,font';
 
-	config.removePlugins = 'liststyle,tabletools,scayt,menubutton,contextmenu,removeformat';
+	config.removePlugins = 'liststyle,tabletools,scayt,menubutton,contextmenu,removeformat,autocorrect';
 
 	// Remove some buttons provided by the standard plugins, which are
 	// not needed in the Standard(s) toolbar.

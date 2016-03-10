@@ -584,10 +584,10 @@
                                     <?php } else { ?>
                                         <option value="smtp"><?php echo $text_smtp; ?></option>
                                     <?php } ?>
-                                    <?php if ($config_mail_protocol == 'mandrill') { ?>
-                                        <option value="mandrill" selected="selected"><?php echo $text_mandrill; ?></option>
+                                    <?php if ($config_mail_protocol == 'sendgrid') { ?>
+                                        <option value="sendgrid" selected="selected">SendGrid</option>
                                     <?php } else { ?>
-                                        <option value="mandrill"><?php echo $text_mandrill; ?></option>
+                                        <option value="sendgrid">SendGrid</option>
                                     <?php } ?>
                                 </select>
                             </div>
@@ -608,11 +608,12 @@
                             </div>
                         </fieldset>
                         <fieldset>
-                            <legend>Mandrill Parameters</legend>
+                            <legend>SendGrid Parameters</legend>
+                            <div class="alert alert-info"><?php echo $help_sendgrid_key; ?></div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="input-mandrill-key"><span data-toggle="tooltip" title="<?php echo $help_mandrill_key; ?>"><?php echo $entry_mandrill_key; ?></span></label>
+                                <label class="col-sm-2 control-label" for="input-sendgrid-key"><?php echo $entry_sendgrid_key; ?></label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="config_mandrill_key" value="<?php echo $config_mandrill_key; ?>" placeholder="<?php echo $entry_mandrill_key; ?>" id="input-mandrill-key" class="form-control" />
+                                    <input type="text" name="config_sendgrid_key" value="<?php echo $config_sendgrid_key; ?>" placeholder="<?php echo $entry_sendgrid_key; ?>" id="input-sendgrid-key" class="form-control" />
                                 </div>
                             </div>
                         </fieldset>

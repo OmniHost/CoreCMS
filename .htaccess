@@ -11,6 +11,8 @@ AddDefaultCharset utf-8
 RewriteEngine On
 # If your CoreCMS installation does not run on the main web folder make sure you folder it does run in ie. / becomes /cms/ 
 RewriteBase /
+
+
 #css / js compressors
 RewriteRule ^view/(.*\.css) cssjs.php?type=css&files=$1 [L]
 RewriteRule ^view/(.*\.js) cssjs.php?type=javascript&files=$1 [L]

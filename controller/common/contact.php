@@ -20,7 +20,7 @@ class ControllerCommonContact extends \Core\Controller {
 
             $mail = new \Core\Mail();
             $mail->tags = array('Contact Request');
-            $mail->mandrill_key = $this->config->get('config_mandrill_key');
+
             $mail->protocol = $this->config->get('config_mail_protocol');
             $mail->parameter = $this->config->get('config_mail_parameter');
             $mail->hostname = $this->config->get('config_mail_smtp_hostname');
@@ -33,16 +33,23 @@ class ControllerCommonContact extends \Core\Controller {
             unset($post['custom_field']);
 
             $mailbody = "Contact form Submission \n";
-            
+
             $mailbody .= $this->language->get('entry_name') . ": " . $this->request->post['name'] . "\n";
             $mailbody .= $this->language->get('entry_email') . ": " . $this->request->post['email'] . "\n";
             $mailbody .= $this->language->get('entry_enquiry') . ": " . $this->request->post['enquiry'] . "\n";
-            
+
             $fields = $this->model_account_custom_field->getCustomFields();
+
+           
             foreach ($fields as $cfield) {
                 if ($cfield['location'] == 'contact') {
-                    $mailbody .= $cfield['name'] . ": " . $this->request->post['custom_field'][$cfield['custom_field_id']] . "\n";
-                    $post['custom_field'][$cfield['name']] = $this->request->post['custom_field'][$cfield['custom_field_id']];
+                    if ($cfield['type'] == 'select' || $cfield['type'] == 'radio' || $cfield['type'] == 'checkbox') {
+                        $mailbody .= $cfield['name'] . ": " . $cfield['custom_field_value'][$this->request->post['custom_field'][$cfield['custom_field_id']]]['name'] . "\n";
+                        $post['custom_field'][$cfield['name']] = $cfield['custom_field_value'][$this->request->post['custom_field'][$cfield['custom_field_id']]]['name'];
+                    } else {
+                        $mailbody .= $cfield['name'] . ": " . $this->request->post['custom_field'][$cfield['custom_field_id']] . "\n";
+                        $post['custom_field'][$cfield['name']] = $this->request->post['custom_field'][$cfield['custom_field_id']];
+                    }
                 }
             }
 
@@ -51,8 +58,8 @@ class ControllerCommonContact extends \Core\Controller {
 
             $mailbody .= "\n\n\n------------------------------------------\n";
             $mailbody .= "" . DATE("Y-m-d h:i a") . " | " . $this->request->server['REMOTE_ADDR'];
-            
-            
+
+
 
 
 
@@ -64,10 +71,10 @@ class ControllerCommonContact extends \Core\Controller {
 
             $this->load->model('account/contact');
             $this->model_account_contact->addContact($post);
-         
+
 
             $mail->setTo($this->config->get('config_email'));
-            $mail->setFrom($this->config->get('config_email'),$this->request->post['name']);
+            $mail->setFrom($this->config->get('config_email'), $this->request->post['name']);
             $mail->setReplyTo($this->request->post['email']);
             $mail->setSender($this->request->post['name']);
             $mail->setSubject($mailsubject);
@@ -182,6 +189,8 @@ class ControllerCommonContact extends \Core\Controller {
 
         $data['custom_fields'] = $this->model_account_custom_field->getCustomFields();
 
+
+
         if (isset($this->request->post['custom_field'])) {
             $data['contact_custom_field'] = $this->request->post['custom_field'];
         } else {
@@ -191,8 +200,8 @@ class ControllerCommonContact extends \Core\Controller {
         $this->document->addScript('view/plugins/datetimepicker/moment.js');
         $this->document->addScript('view/plugins/datetimepicker/bootstrap-datetimepicker.min.js');
         $this->document->addStyle('view/plugins/datetimepicker/bootstrap-datetimepicker.min.css');
-        
-        
+
+
 
         $this->children = array(
             'common/column_top',
@@ -269,7 +278,7 @@ class ControllerCommonContact extends \Core\Controller {
         if (empty($this->session->data['captcha']) || ($this->session->data['captcha'] != $this->request->post['captcha'])) {
             $this->error['captcha'] = $this->language->get('error_captcha');
         }
-        
+
         $this->load->model('account/custom_field');
 
         $custom_fields = $this->model_account_custom_field->getCustomFields($this->config->get('config_customer_group_id'));

@@ -313,40 +313,7 @@ class ControllerDesignMenu extends \Core\Controller {
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
-        $this->load->model('setting/store');
-        $this->load->model('catalog/product');
-        $this->load->model('catalog/category');
-        $this->load->model('catalog/information');
-
-        foreach ($this->request->post['selected'] as $layout_id) {
-            if ($this->config->get('config_layout_id') == $layout_id) {
-                $this->error['warning'] = $this->language->get('error_default');
-            }
-
-            $store_total = $this->model_setting_store->getTotalStoresByLayoutId($layout_id);
-
-            if ($store_total) {
-                $this->error['warning'] = sprintf($this->language->get('error_store'), $store_total);
-            }
-
-            $product_total = $this->model_catalog_product->getTotalProductsByLayoutId($layout_id);
-
-            if ($product_total) {
-                $this->error['warning'] = sprintf($this->language->get('error_product'), $product_total);
-            }
-
-            $category_total = $this->model_catalog_category->getTotalCategoriesByLayoutId($layout_id);
-
-            if ($category_total) {
-                $this->error['warning'] = sprintf($this->language->get('error_category'), $category_total);
-            }
-
-            $information_total = $this->model_catalog_information->getTotalInformationsByLayoutId($layout_id);
-
-            if ($information_total) {
-                $this->error['warning'] = sprintf($this->language->get('error_information'), $information_total);
-            }
-        }
+       
 
         if (!$this->error) {
             return true;

@@ -31,7 +31,7 @@ class ControllerUserForgotten extends \Core\Controller {
             $message .= sprintf($this->language->get('text_ip'), $this->request->server['REMOTE_ADDR']) . "\n\n";
 
             $mail = new \Core\Mail();
-            $mail->mandrill_key = $this->config->get('config_mandrill_key');
+            
             $mail->tags = array('Forgotten Password');
             $mail->protocol = $this->config->get('config_mail_protocol');
             $mail->parameter = $this->config->get('config_mail_parameter');
