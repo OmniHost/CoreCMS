@@ -1,11 +1,12 @@
-/*Copyright (c) 2015 Oasiswork.
+/*Copyright (c) 2016 Oasiswork.
 All Rights Reserved.
 
 This Source Code Form is subject to the
 terms of the Mozilla Public License, v. 2.0.
 If a copy of the MPL was not distributed with this file,
 You can obtain one at
-http://mozilla.org/MPL/2.0/.*/
+http://mozilla.org/MPL/2.0/.
+All Rights Reserved.*/
 
 /* ==========================================================================
 Sommaire
@@ -104,7 +105,7 @@ button {
   right: 0;
   margin: 5px;
   color: #FFF;
-  z-index: 999;
+  z-index: 81;
 }
 
 #dtf-toolbar {
@@ -160,7 +161,7 @@ button {
 
 .dtf-drop-down-btn {
   float: right;
-  background: #FF622C;
+  background: #f4a62a;
   position: relative;
   margin-right: 0.3em;
 }
@@ -190,7 +191,7 @@ button {
   position: absolute;
   padding: 0;
   margin: 0;
-  background: #c53200;
+  background: #df8e0c;
   top: -9999px;
   width: 100%;
 }
@@ -206,7 +207,7 @@ button {
 }
 
 .dtf-drop-down button:hover {
-  background: #f83f00;
+  background: #f4a62a;
 }
 
 /* ==========================================================================
@@ -296,7 +297,7 @@ button {
 
 .dtf-background {
   margin:0 0 1em 3%;
-  width: 65px;
+  width: 65px /*45.5%;*/;
   float: left;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -771,7 +772,6 @@ li .spanDelete { transform: translate(0, -50%); }
     transform: rotate(359deg);
   }
 }
-
 /* Add this attribute to the element that needs a tooltip */
 [data-tooltip] {
   position: relative;
