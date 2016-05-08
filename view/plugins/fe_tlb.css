@@ -1,0 +1,78 @@
+/* Global */
+@import url(https://fonts.googleapis.com/css?family=Lato|Ubuntu|Oswald);
+#oc_fetlb{
+    height:35px;
+    border-bottom:1px solid #ddd;
+    position:fixed;
+    top:0px;
+    left:0px;
+    right:0px;
+    z-index:999999;
+    font-family: 'Ubuntu', serif;
+}
+.fe_tlb_style1{
+    background:#fff url(../img/nav.png) repeat-x center left;
+}
+.fe_tlb_style2{
+    background:#fff url(../img/nav2.png) repeat-x center left;
+}
+.fe_tlb_style3{
+    background:#fff url(../img/nav3.png) repeat-x center left;
+}
+#oc_fetlb .fa{
+    font-size: 18px; 
+    padding-right: 5px;
+    display: block;
+    float: left;
+    padding-top: 3px;
+}
+#oc_fetlb ul{
+    height:25px;
+    list-style:none;
+    margin:8px 0px 0px 0px;
+    width:100%;
+    padding: 0 5%;
+}
+#oc_fetlb ul li{
+    display:inline;
+    float:left;
+    margin:0px 2px;
+    font-size: 14px; 
+    font-weight: 700;
+    padding-right:15px;
+}
+.fe_tlb_style1 ul li a{
+    color: #777777;
+}
+.fe_tlb_style1 ul li a:hover{
+    color: #232323;
+}
+.fe_tlb_style2 ul li a{
+    color: white;
+}
+.fe_tlb_style2 ul li a:hover{
+    color: #E2E2E2;
+}
+.fe_tlb_style3 ul li a{
+    color: white;
+}
+.fe_tlb_style3 ul li a:hover{
+    color: grey;
+}
+.fe_tlb_style1 ul li.oc_fetlb_user{
+    color: #777777;
+}
+.fe_tlb_style2 ul li.oc_fetlb_user{
+    color: white;
+}
+.fe_tlb_style3 ul li.oc_fetlb_user{
+    color: white;
+}
+@media only screen 
+  and (min-device-width: 320px) 
+  and (max-device-width: 768px){
+    .fa_tlb_mobile{
+        display: none;
+    }
+}
+

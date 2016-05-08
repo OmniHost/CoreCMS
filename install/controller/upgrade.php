@@ -5,12 +5,14 @@ class ControllerUpgrade extends \Core\Controller {
     private $error = array();
 
     public function index() {
+         
+        
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->load->model('upgrade');
-
+     
             $this->model_upgrade->mysql();
 
-            $this->response->redirect($this->url->link('upgrade/success'));
+            $this->redirect($this->url->link('upgrade/success'));
         }
 
         $data = array();
@@ -45,6 +47,7 @@ class ControllerUpgrade extends \Core\Controller {
 
     private function validate() {
         $config = $this->config;
+    
         $db = new \Core\Db($config->get('DB_DRIVER'), $config->get('DB_HOSTNAME'), $config->get('DB_USERNAME'), $config->get('DB_PASSWORD'), $config->get('DB_DATABASE'), $config->get('DB_PREFIX'));
 
         return !$this->error;

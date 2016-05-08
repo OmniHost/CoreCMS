@@ -403,7 +403,10 @@ CAROUSEL;
             'banner_id' => 0,
             'resize' => false,
                 ), $attribs);
-        $filter = array();
+        $filter = array(
+            'name' => $attribs['name'],
+            'resize' => $attribs['resize']
+        );
         if ($attribs['name']) {
             $filter['filter_name'] = $attribs['name'];
         }

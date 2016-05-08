@@ -1,6 +1,6 @@
 <?php
 
-define('VERSION', '1.5.0');
+define('VERSION', '1.6.0');
 define('NS', 'installer');
 
 define('APP_NAMESPACE', 'installer');
@@ -21,6 +21,7 @@ define('DIR_CORE', DIR_SYSTEM . 'Core/');
 define('DIR_LANGUAGE', DIR_APPLICATION . 'language/');
 define('DIR_TEMPLATE', DIR_APPLICATION . 'view/template/');
 define('DIR_CONFIG', DIR_SYSTEM . 'config/');
+define('DIR_CACHE', DIR_SYSTEM . 'cache/');
 define('DIR_MODIFICATION', DIR_SYSTEM . 'modification/');
 
 
@@ -119,14 +120,27 @@ if (file_exists(DIR_ROOT . 'config.php')) {
         $upgrade = true;
         $core->default_route = 'upgrade';
 
-        $lines = file(DIR_ROOT . 'config.php');
+       
+        include(DIR_ROOT . 'config.php');
+        
+        
+         $hostname = str_replace('www.', '', $_SERVER['HTTP_HOST']);
 
-        foreach ($lines as $line) {
+
+        if (is_file(DIR_ROOT . '/_configs/' . $hostname . '.php')) {
+            $core->config->load($hostname, DIR_ROOT . '/_configs/');
+        }
+
+        
+        foreach ($config as $line => $value) {
             if (strpos(strtoupper($line), 'DB_') !== false) {
-                $parts = explode("=>", $line);
+                if(!$core->config->get($line)){
+                    $core->config->set($line,$value);
+                }
+           /*     $parts = explode("=>", $line);
                 $_k = str_replace(array("'", '"'), "", trim($parts[0]));
                 $_v = str_replace(array("'", '"'), "", trim($parts[1]));
-                $core->config->set($_k,$_v);
+                $core->config->set($_k,$_v);*/
             }
         }
     }

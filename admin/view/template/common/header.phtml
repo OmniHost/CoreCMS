@@ -12,8 +12,7 @@
         <!-- Ionicons -->
         <link href="//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css" />
         <!-- Theme style -->
-        <link href="view/css/AdminLTE.min.css,css/skins.min.css" rel="stylesheet" type="text/css" />
-
+        <link href="view/css/AdminLTE.min.css,css/skins.min.css,plugins/sweetalert/sweetalert.css" rel="stylesheet" type="text/css" />
 
         <!-- Custom CSS -->
 
@@ -79,6 +78,7 @@
                     <!-- Navbar Right Menu -->
                     <div class="navbar-custom-menu">
                         <ul class="nav navbar-nav">
+                            
                             <?php foreach ($header_navs as $hnav): ?>
                                 <li class="dropdown notifications-menu">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -95,7 +95,9 @@
                                                 <?php foreach ($hnav['items'] as $hitem): ?>
                                                     <li>
                                                         <a href="<?php echo $hitem['href']; ?>">
+                                                            <?php if(isset($hitem['total'])): ?>
                                                             <span class="label label-<?php echo $hitem['class']; ?>"><?php echo $hitem['total']; ?></span>
+                                                            <?php endif; ?>
                                                             <?php echo $hitem['text']; ?>
                                                         </a>
                                                     </li>
@@ -179,12 +181,12 @@
                                     <li class="treeview">
                                         <a href="#">
                                             <i class="fa <?php echo $mmenu['icon']; ?>"></i>
-                                            <span><?php echo $mmenu['label']; ?><</span>
+                                            <span><?php echo $mmenu['label']; ?></span>
                                             <i class="fa fa-angle-left pull-right"></i>
                                         </a>
                                         <ul class="treeview-menu">
                                             <?php foreach ($mmenu['children'] as $mchild): ?>
-                                                <li><a href="<?php echo $mchild['href']; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $$mchild['label']; ?></a></li>
+                                                <li><a href="<?php echo $mchild['href']; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $mchild['label']; ?></a></li>
                                             <?php endforeach; ?>
                                         </ul>
                                     <li>
@@ -277,6 +279,7 @@
                                 <li><a href="<?php echo $modules; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_modules; ?></a></li>
                                 <li><a href="<?php echo $modifications; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_modifications; ?></a></li>
                                 <li><a href="<?php echo $installer; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_install; ?></a></li>
+                                <li><a href="<?php echo $seo_urls ?>"><i class="fa fa-angle-double-right"></i> Seo Urls</a></li>
                                 <li><a href="<?php echo $feeds; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_feeds; ?></a></li>
                             </ul>
                         </li>

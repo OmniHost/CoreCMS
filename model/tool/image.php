@@ -158,7 +158,8 @@ class ModelToolImage extends \Core\Model {
     }
 
     public function realname($filename) {
-        if ($this->request->server['HTTPS']) {
+         if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
+
             return $this->config->get('config_ssl') . 'img/' . $filename;
         } else {
             return $this->config->get('config_url') . 'img/' . $filename;

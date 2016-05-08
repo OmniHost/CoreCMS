@@ -199,7 +199,7 @@ Class Core {
         $config = self::$registry->get('config');
         $log = self::$registry->get('log');
 
-        if ($config->get('config_error_display')) {
+        if ($config->get('config_error_display') || NS == 'installer') {
             //FLUSH THE OUPUT
             @ob_end_clean();
             echo '<b>' . "Uncaught exception: </b>" . $exception->getMessage() . '<br />';
@@ -239,7 +239,7 @@ Class Core {
                 break;
         }
 
-        if ($config->get('config_error_display')) {
+        if ($config->get('config_error_display') || (NS == 'installer' && $error != 'Notice')) {
             echo '<b>#' . $error . '</b>: ' . $errstr . ' in <b>' . $errfile . '</b> on line <b>' . $errline . '</b><br />';
         }
 

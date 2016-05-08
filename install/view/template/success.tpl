@@ -8,12 +8,12 @@
 </div>
 <div id="content">
   <div class="warning">Don't forget to delete your installation directory!</div>
-  <p>Congratulations! You have successfully upgraded OpenCart.</p>
+  <p>Congratulations! You have successfully upgraded CoreCMS.</p>
   <div class="success">
-    <div><a href="../"><img src="view/image/screenshot_1.png" alt="" /></a><br />
-      <a href="../">Goto your Online Shop</a> </div>
-    <div><a href="../admin/"><img src="view/image/screenshot_2.png" alt="" /></a><br />
-      <a href="../admin/">Login to your Administration</a> </div>
+    <div><a href="../"><img src="view/image/icon-site.png" alt="" /></a><br />
+      <a href="../">Go to the frontend</a></div>
+    <div><a href="../admin/"><img src="view/image/icon-admin.png" alt="" /></a><br />
+      <a href="../admin/">Login to your Administration</a></div>
   </div>
 </div>
 <?php echo $footer; ?>

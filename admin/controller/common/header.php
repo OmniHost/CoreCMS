@@ -39,7 +39,7 @@ class ControllerCommonHeader extends \Core\Controller {
         $this->data['backup'] = $this->url->link('tool/backup', 'token=' . $this->session->data['token'], 'SSL');
         $this->data['language'] = $this->url->link('localisation/language', 'token=' . $this->session->data['token'], 'SSL');
         $this->data['api_user'] = $this->url->link('user/api', 'token=' . $this->session->data['token'], 'SSL');
-$this->data['marketing'] = $this->url->link('marketing/marketing', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['marketing'] = $this->url->link('marketing/marketing', 'token=' . $this->session->data['token'], 'SSL');
         $this->data['zone'] = $this->url->link('localisation/zone', 'token=' . $this->session->data['token'], 'SSL');
         $this->data['custom_field'] = $this->url->link('sale/custom_field', 'token=' . $this->session->data['token'], 'SSL');
         $this->data['upload'] = $this->url->link('tool/upload', 'token=' . $this->session->data['token'], 'SSL');
@@ -50,8 +50,9 @@ $this->data['marketing'] = $this->url->link('marketing/marketing', 'token=' . $t
         $this->data['newsletter_newsletter'] = $this->url->link('marketing/newsletter/newsletter', 'token=' . $this->session->data['token'], 'SSL');
         $this->data['subscriber'] = $this->url->link('marketing/newsletter/subscriber', 'token=' . $this->session->data['token'], 'SSL');
         $this->data['newsletter'] = $this->url->link('marketing/contact', 'token=' . $this->session->data['token'], 'SSL');
-        
-        
+        $this->data['seo_urls'] = $this->url->link('tool/seourl', 'token=' . $this->session->data['token'], 'SSL');
+
+
         $this->data['menu_dashboard'] = $this->language->get('menu_dashboard');
         $this->data['menu_logout'] = $this->language->get('menu_logout');
         $this->data['menu_user'] = $this->language->get('menu_user');
@@ -91,9 +92,9 @@ $this->data['marketing'] = $this->url->link('marketing/marketing', 'token=' . $t
         $this->data['menu_zone'] = $this->language->get('menu_zone');
         $this->data['menu_upload'] = $this->language->get('menu_upload');
         $this->data['menu_custom_field'] = $this->language->get('menu_custom_field');
-        
-        
-        
+
+
+
 
 
         $this->data['text_customer'] = $this->language->get('text_customer');
@@ -172,14 +173,29 @@ $this->data['marketing'] = $this->url->link('marketing/marketing', 'token=' . $t
             )
         );
 
+        if ($this->config->get('config_maintenance')) {
+            $this->data['header_navs']['alerts']['items']['maintenance'] = array(
+                    'href' => $this->url->link('setting/setting', 'token=' . $this->session->data['token'], 'SSL'),
+                    'text' => $this->language->get('Change Maintenance Settings'),
+                    'class' => 'danger',
+                'total' => 1
+                );
+            $this->data['header_navs']['alerts']['total']++;
+            $this->data['header_navs']['alerts']['class'] = 'danger';
+        }
         
+        if($this->data['header_navs']['alerts']['total'] < 1){
+             $this->data['header_navs']['alerts']['class'] = 'success';
+        }
+
+
         $this->event->trigger('admin.header.navs', $this->data['header_navs']);
-        
-        
+
+
         $this->data['module_menu'] = array();
         $this->event->trigger('admin.module.menu', $this->data['module_menu']);
- 
-        
+
+
         $this->template = 'common/header.phtml';
         $this->render();
     }

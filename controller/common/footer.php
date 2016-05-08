@@ -3,7 +3,7 @@
 class ControllerCommonFooter extends \Core\Controller {
 
     public function index() {
-        
+
         if ($this->config->get('config_google_analytics_status')) {
             $this->data['google_analytics'] = $this->config->get('config_google_analytics');
         } else {
@@ -33,15 +33,32 @@ class ControllerCommonFooter extends \Core\Controller {
 
         $this->model_tool_online->whosonline($ip, $this->customer->getId(), $url, $referer);
 
-         $this->load->model('tool/image');
+        $this->load->model('tool/image');
         $this->data['config_logo'] = $this->model_tool_image->resize($this->config->get('config_logo'), 0, 100);
         $this->data['home'] = $this->url->link('common/home');
         $this->data['site_name'] = $this->config->get('config_name');
-        
-           //Header menu
+
+        //Header menu
         $this->load->model('design/menu');
         $this->data['menu_items'] = $this->model_design_menu->getFooterMenu();
 
+        if ($this->config->get('fe_tlb_status')) {
+            $this->data['fe_tlb'] = $this->load->controller('module/fe_tlb');
+        } else {
+            $this->data['fe_tbl'] = '';
+        }
+
+        $this->load->model('cms/page');
+        if ($this->config->get('config_site_terms_id')) {
+            $this->data['terms_url'] = $this->model_cms_page->getPublicUrl($this->config->get('config_site_terms_id'));
+        } else {
+            $this->data['terms_url'] = '';
+        }
+        if ($this->config->get('config_site_privacy_id')) {
+            $this->data['privacy_url'] = $this->model_cms_page->getPublicUrl($this->config->get('config_site_privacy_id'));
+        } else {
+            $this->data['privacy_url'] = '';
+        }
 
         $this->template = 'common/footer.phtml';
         $this->render();

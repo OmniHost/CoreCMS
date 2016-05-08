@@ -1,0 +1,38 @@
+       <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>
+                                Original Link
+                            </th>
+                            <th>
+                                Custom Keyword
+                            </th>
+                            <th>
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+
+                        <?php foreach ($urls as $issue) { ?>
+                            <tr>
+                                <td>
+                                    <input type="hidden" name="id" value="<?php echo $issue['url_alias_id']; ?>" />
+
+                                    <a href="<?php echo $issue['query']; ?>" target="_blank"><?php echo $issue['query']; ?></a>
+                                </td>
+                                <td>
+                                    <a href="<?php echo HTTP_CATALOG; ?><?php echo $issue['keyword']; ?>" target="_blank"><?php echo HTTP_CATALOG; ?><?php echo $issue['keyword']; ?></a>
+                                </td>
+
+                                <td>
+                                    <input class="btn btn-danger" type="button" name="delete" onclick="deleteit('<?php echo $issue['url_alias_id']; ?>')" value="X" />
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+                    <tfoot>
+                        <tr><td colspan="3"><?php echo $pagination; ?></td></tr>
+                    </tfoot>
+                </table>

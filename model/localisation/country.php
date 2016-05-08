@@ -7,6 +7,11 @@ class ModelLocalisationCountry extends \Core\Model {
 
         return $query->row;
     }
+    public function getCountryByIso($country_id) {
+        $query = $this->db->query("SELECT * FROM #__country WHERE country_id = '" . (int) $country_id . "' AND status = '1'");
+
+        return $query->row;
+    }
 
     public function getCountries() {
         $country_data = $this->cache->get('country.status');

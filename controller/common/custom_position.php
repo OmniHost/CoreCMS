@@ -7,6 +7,7 @@ class ControllerCommonCustomPosition extends \Core\Controller {
         
         
         $pos = func_get_arg(0);
+      
         if(!$pos){
             return '';
         }
@@ -14,6 +15,8 @@ class ControllerCommonCustomPosition extends \Core\Controller {
         $this->data['pos'] = $pos;
         $this->data['pos_class'] = 'widget-' . slug($pos);
         $this->load->model('design/layout');
+        
+
 
         if (isset($this->request->get['p'])) {
             $route = (string) $this->request->get['p'];
@@ -61,6 +64,8 @@ class ControllerCommonCustomPosition extends \Core\Controller {
  
         
         $this->template = 'common/custom_position.phtml';
+
+        
         return $this->render();
     }
 

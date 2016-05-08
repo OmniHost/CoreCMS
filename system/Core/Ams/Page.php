@@ -290,18 +290,36 @@ Abstract class Page {
         return $this;
     }
 
+    public function getPublicUrl($id = false){
+        if($id){
+            $parent = $this->loadParent($id);
+            return registry('url')->link(str_replace(".","/", $parent->getNamespace()), 'ams_page_id=' . $parent->id);
+        }
+        return registry('url')->link(str_replace(".","/", $this->getNamespace()), 'ams_page_id=' . $this->id);
+    }
+    
     public function getSlug() {
         $query = $this->_db->query("SELECT keyword FROM #__url_alias WHERE `query` = '" . $this->_db->escape('ams_page_id=' . (int) $this->id) . "'");
         return $query->row ? $query->row['keyword'] : '';
     }
 
+    public function copy(){
+        
+        $this->id = 0;
+        $this->name = 'Copy: ' . $this->name;
+        $this->_insert();
+        
+    }
+    
+   
+    
     public function loadParent($id) {
 
         $path = DIR_APPLICATION;
 
         $row = $this->_db->query("select * from #__ams_pages where ams_page_id='" . (int) $id . "'");
-        // var_dump($row);
-
+  
+        
         $file = $path . 'model/' . str_replace(".", "/", $row->row['namespace']) . '.php';
         $class = 'Model' . preg_replace('/[^a-zA-Z0-9]/', '', $row->row['namespace']);
 
@@ -497,8 +515,8 @@ Abstract class Page {
      * @return array
      */
     protected function _formTypeImage($name, $label, $required = false) {
-        if (isset($this->request->post[$name])) {
-            $data[$name] = $this->request->post[$name];
+        if (isset(request()->post[$name])) {
+            $data[$name] = request()->post[$name];
         } elseif (!empty($this->{$name})) {
             $data[$name] = $this->{$name};
         } else {
@@ -528,8 +546,8 @@ Abstract class Page {
     }
 
     protected function _formTypeSelect($name, $label, $values, $required = false, $multiple = false) {
-        if (isset($this->request->post[$name])) {
-            $data[$name] = $this->request->post[$name];
+        if (isset(request()->post[$name])) {
+            $data[$name] = request()->post[$name];
         } elseif (!empty($this->{$name})) {
             $data[$name] = $this->{$name};
         } else {
@@ -565,8 +583,8 @@ Abstract class Page {
      * @return array
      */
     protected function _formTypeHtml($name, $label, $required = false) {
-        if (isset($this->request->post[$name])) {
-            $data[$name] = $this->request->post[$name];
+        if (isset(request()->post[$name])) {
+            $data[$name] = request()->post[$name];
         } elseif (!empty($this->{$name})) {
             $data[$name] = $this->{$name};
         } else {
@@ -590,9 +608,9 @@ Abstract class Page {
      * @param bool $required - is the field required
      * @return array
      */
-    protected function _formTypeInput($name, $label, $type = 'text', $required = false) {
-        if (isset($this->request->post[$name])) {
-            $data[$name] = $this->request->post[$name];
+    protected function _formTypeInput($name, $label, $type = 'text', $required = false,$params = array()) {
+        if (isset(request()->post[$name])) {
+            $data[$name] = request()->post[$name];
         } elseif (!empty($this->{$name})) {
             $data[$name] = $this->{$name};
         } else {
@@ -604,7 +622,8 @@ Abstract class Page {
             'type' => $type,
             'value' => $data[$name],
             'label' => $this->_language->get($label),
-            'required' => $required
+            'required' => $required,
+            'params' => $params
         );
     }
 
@@ -625,8 +644,8 @@ Abstract class Page {
         }
 
 
-        if (isset($this->request->post[$name])) {
-            $data[$name] = $this->request->post[$name];
+        if (isset(request()->post[$name])) {
+            $data[$name] = request()->post[$name];
         } elseif ($this->{$name} > 0) {
             $data[$name] = DATE($this->_language->get($format), strtotime($this->{$name}));
         } else {
@@ -655,11 +674,11 @@ Abstract class Page {
      * @return array
      */
     protected function _formTypeAutocompleteList($name, $label, $map_route, $required = false, $mapFunction = null) {
-        if (isset($this->request->post[$name])) {
+        if (isset(request()->post[$name])) {
             if (!null($mapFunction)) {
-                $data[$name] = call_user_func($mapFunction, $this->request->post[$name]);
+                $data[$name] = call_user_func($mapFunction, request()->post[$name]);
             } else {
-                $data[$name] = $this->request->post[$name];
+                $data[$name] = request()->post[$name];
             }
         } elseif (!empty($this->{$name})) {
             $data[$name] = $this->{$name};
@@ -679,11 +698,12 @@ Abstract class Page {
     }
 
     protected function _formTypeAutocomplete($name, $label, $map_route, $required = false, $mapFunction = null) {
-        if (isset($this->request->post[$name])) {
-            if (!null($mapFunction)) {
-                $data[$name] = call_user_func($mapFunction, $this->request->post[$name]);
+        if (isset(request()->post[$name])) {
+      
+            if (!is_null($mapFunction)) {
+                $data[$name] = call_user_func($mapFunction, request()->post[$name]);
             } else {
-                $data[$name] = $this->request->post[$name];
+                $data[$name] = request()->post[$name];
             }
         } elseif (!empty($this->{$name})) {
             $data[$name] = $this->{$name};
@@ -703,8 +723,8 @@ Abstract class Page {
     }
 
     protected function _formTypeMultiText($name, $label, $required = false) {
-        if (isset($this->request->post[$name])) {
-            $data[$name] = $this->request->post[$name];
+        if (isset(request()->post[$name])) {
+            $data[$name] = request()->post[$name];
         } elseif (!empty($this->{$name})) {
             $data[$name] = json_decode($this->{$name}, 1);
         } else {
@@ -719,5 +739,23 @@ Abstract class Page {
             'required' => $required
         );
     }
+    
+    protected function _formTypeCustom($name, $class) {
+        if (isset(request()->post[$name])) {
+            $data[$name] = request()->post[$name];
+        } elseif (!empty($this->{$name})) {
+            $data[$name] = json_decode($this->{$name},1);
+        } else {
+            $data[$name] = array();
+        }
+        return array(
+            'key' => $name,
+            'type' => 'custom',
+            'value' => $data[$name],
+            'callable' => $class
+        );
+    }
+    
+    
 
 }

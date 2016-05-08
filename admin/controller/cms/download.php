@@ -178,6 +178,7 @@ class ControllerCmsDownload extends \Core\Controller {
                 'download_id' => $result['download_id'],
                 'name' => $result['name'],
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
+                'link' => $this->config->get('config_url') . 'index.php?p=cms/download?download_id=' . $result['download_id'] . '&cmslink=' . md5(strrev($result['download_id']) . 'dl'),
                 'edit' => $this->url->link('cms/download/edit', 'token=' . $this->session->data['token'] . '&download_id=' . $result['download_id'] . $url, 'SSL')
             );
         }

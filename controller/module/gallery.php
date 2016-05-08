@@ -32,13 +32,18 @@ class ControllerModuleGallery extends \Core\Controller {
 
         if (!empty($setting['module_description'])) {
             $data['heading_title'] = html_entity_decode($setting['module_description'], ENT_QUOTES, 'UTF-8');
+        }else{
+        
+        $data['heading_title'] = '';
         }
 
         $data['module'] = $module++;
 
         $this->data = $data;
         $this->template = 'module/gallery.phtml';
+        if(!empty($setting['name'])) {
         $this->setOverride($setting['name']);
+        }
         return $this->render();
     }
 

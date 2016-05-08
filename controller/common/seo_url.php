@@ -3,11 +3,8 @@
 class ControllerCommonSeoUrl extends \Core\Controller {
 
     protected $_internals = array(
-        'account' => 'account/account',
-        'blog' => 'blog/blog',
-        'contact-us' => 'common/contact',
-        'maintenance' => 'common/maintenance',
         
+        'maintenance.html' => 'common/maintenance',
     );
 
     public function index() {
@@ -19,12 +16,41 @@ class ControllerCommonSeoUrl extends \Core\Controller {
 
         if (isset($this->request->get['_route_'])) {
             unset($this->request->get['p']);
-            
-            if($this->request->get['_route_'] == 'robots.txt'){
-                 header('X-Powered-By: CoreCMS - http://www.omnihost.co.nz');
-                 header('Content-Type: text/plain; charset=utf-8;');
-                 echo $this->config->get('config_robots');
-                 exit;
+
+            if ($this->request->get['_route_'] == 'robots.txt') {
+                header('X-Powered-By: CoreCMS - http://www.omnihost.co.nz');
+                header('Content-Type: text/plain; charset=utf-8;');
+                echo $this->config->get('config_robots');
+                exit;
+            }
+
+            $query = $this->db->query("SELECT * FROM #__url_alias WHERE keyword = '" . $this->db->escape($this->request->get['_route_']) . "'")->row;
+
+
+            if ($query) {
+
+                if (strpos($query['query'], '?')) {
+                    $url = explode('?', $query['query']);
+                } else {
+                    $url = array(1 => $query['query']);
+                }
+
+                if (isset($url[1])) {
+                    $urls = explode('&', $url[1]);
+
+                    foreach ($urls as $url) {
+                        $route = explode('=', $url);
+
+                        if (isset($route[0]) && isset($route[1]) && $route[0])
+                            $this->request->get[$route[0]] = $route[1];
+                    }
+                }
+
+                if (isset($this->request->get['p'])) {
+                    $this->template($this->request->get['p']);
+                    unset($this->request->get['_route_']);
+                    return $this->forward($this->request->get['p']);
+                }
             }
 
             if (isset($this->_internals[$this->request->get['_route_']])) {
@@ -91,6 +117,30 @@ class ControllerCommonSeoUrl extends \Core\Controller {
             }
         }
 
+        if (!$url) {
+            $query = $this->db->query("SELECT * FROM #__url_alias WHERE `query` = '" . $this->db->escape($url_info['query']) . "' or `query` = '?" . $this->db->escape($url_info['query']) . "'");
+            if ($query->num_rows) {
+                $url .= '/' . $query->row['keyword'];
+                $data = array();
+            } else {
+                if (!empty($data['page'])) {
+                    $sdata = $data;
+                    unset($sdata['page']);
+                    $paged = $this->http_build_query($sdata);
+                    $query = $this->db->query("SELECT * FROM #__url_alias WHERE `query` = '" . $this->db->escape($paged) . "' or `query` = '?" . $this->db->escape($paged) . "'");
+                    if ($query->num_rows) {
+                        $url .= '/' . $query->row['keyword'];
+                        $page = $data['page'];
+                       $data = array();
+                        $data['page'] = $page;
+                    }
+                }
+            }
+
+
+            // $query = $this->db->query("SELECT * FROM #__url_alias WHERE `query` = '" . $this->db->escape($url_info['query']) . "'");
+        }
+
         if ($url) {
             unset($data['p']);
 
@@ -125,8 +175,7 @@ class ControllerCommonSeoUrl extends \Core\Controller {
             return $url_info['scheme'] . '://' . $url_info['host'] . (isset($url_info['port']) ? ':' . $url_info['port'] : '') . str_replace('/index.php', '', $url_info['path']) . $url . $query;
         }
     }
-    
-    
+
     public function template($route = 'common/home') {
 
         //Layout Override::
@@ -142,14 +191,25 @@ class ControllerCommonSeoUrl extends \Core\Controller {
         if (!$layout_id) {
             $layout_id = $this->config->get('config_layout_id');
         }
-     
-        
+
+
 
         $template = $this->model_design_layout->getTemplate($layout_id);
         if ($template) {
             $this->config->set('config_template', $template);
       
         }
+    }
+
+    protected function http_build_query($data) {
+        $url = '';
+        foreach ($data as $key => $value) {
+            $url .= '&' . $key . '=' . $value;
+        }
+        if ($url) {
+            $url = trim($url, '&');
+        }
+        return $url;
     }
 
 }

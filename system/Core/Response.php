@@ -110,7 +110,6 @@ class Response {
             }
 
 
-
             $output = \Core\Shortcode::doShortcode($output);
 
             $doc = \Core\Registry::getInstance()->get('document');

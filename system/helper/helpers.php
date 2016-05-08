@@ -286,6 +286,7 @@ function init_wysiwyg() {
 
     \Core\Registry::getInstance()->get('document')->addScript('view/plugins/ckeditor/ckeditor.js?');
     \Core\Registry::getInstance()->get('document')->addScript($uri . '?p=cms/page/ajaxlist');
+    \Core\Registry::getInstance()->get('document')->addScript($uri . '?p=cms/page/downloadlist');
 }
 
 function add_shortcode($tag, $func) {
@@ -305,8 +306,9 @@ function __modification($filename) {
 }
 
 function formfield($field) {
+    
     $class = 'form-control';
-    if ($field['required']) {
+    if (!empty($field['required']) && $field['required']) {
         $class .= ' required';
     }
 
@@ -318,6 +320,14 @@ function formfield($field) {
         $field['id'] = slug($field['key']) . 'Input';
     }
 
+    
+    $params = '';
+    if(!empty($field['params'])){
+        foreach($field['params'] as $pk => $pv){
+            $params .= $pk . '="' . $pv . '" ';
+        }
+    }
+    
     switch ($field['type']):
 
 
@@ -326,7 +336,7 @@ function formfield($field) {
             break;
         case 'textarea':
             $rows = (!empty($field['rows'])) ? $field['rows'] : 5;
-            return '<textarea id="' . $field['id'] . '"  name="' . $field['key'] . '" class="' . $class . '" rows="' . $rows . '">' . $field['value'] . '</textarea>';
+            return '<textarea ' . $params . ' id="' . $field['id'] . '"  name="' . $field['key'] . '" class="' . $class . '" rows="' . $rows . '">' . $field['value'] . '</textarea>';
             break;
 
         case "multitext":
@@ -393,7 +403,7 @@ function formfield($field) {
             break;
 
         case "select":
-            $return = '<select name="' . $field['key'] . '" id="' . $field['key'] . 'Input" class="form-control">';
+            $return = '<select  ' . $params . '  name="' . $field['key'] . '" id="' . $field['key'] . 'Input" class="form-control">';
             foreach ($field['options'] as $ok => $ov) {
                 if ($ok == $field['value']) {
                     $return .= '<option selected value="' . $ok . '">' . $ov . '</option>';
@@ -420,7 +430,7 @@ function formfield($field) {
             $dateformat = dateformat_PHP_to_MomentJs(\Core\Registry::getInstance()->get('language')->get('date_format_short'));
             $id = !empty($field['id']) ? $field['id'] : slug('input-' . $field['key']);
 
-            return '<input id="' . $id . '" data-date-format="' . $dateformat . '" type="text" name="' . $field['key'] . '" class="' . $class . ' dateinput" value="' . $field['value'] . '" />'
+            return '<input ' . $params . '  id="' . $id . '" data-date-format="' . $dateformat . '" type="text" name="' . $field['key'] . '" class="' . $class . ' dateinput" value="' . $field['value'] . '" />'
                     . ''
                     . '<script>docReady(function () {'
                     . '$(\'#' . $id . '\').datepicker({format: "' . $dateformat . '"});});'
@@ -433,7 +443,7 @@ function formfield($field) {
             $dateformat = dateformat_PHP_to_MomentJs(\Core\Registry::getInstance()->get('language')->get('date_time_format_short'));
             $id = !empty($field['id']) ? $field['id'] : slug('input-' . $field['key']);
 
-            return '<input id="' . $id . '" data-date-format="' . $dateformat . '" type="text" name="' . $field['key'] . '" class="' . $class . ' datetimeinput" value="' . $field['value'] . '" />'
+            return '<input ' . $params . '  id="' . $id . '" data-date-format="' . $dateformat . '" type="text" name="' . $field['key'] . '" class="' . $class . ' datetimeinput" value="' . $field['value'] . '" />'
                     . ''
                     . '<script>docReady(function () {'
                     . '$(\'#' . $id . '\').datetimepicker({format: "' . $dateformat . '"});});'
@@ -442,11 +452,36 @@ function formfield($field) {
         case "display":
             return '<span class="' . $class . '">' . $field['value'] . '</span><input type="hidden" name="' . $field['key'] . '" class="' . $class . '" value="' . $field['value'] . '" />';
             break;
+        
+        case "custom":
+            
+        //    protected function getChild($child, &$args = array()) {
+        $action = new \Core\Action($field['callable'], $field);
+
+        if (file_exists($action->getFile())) {
+            require_once(__modification($action->getFile()));
+
+            $class = $action->getClass();
+
+            $controller = new $class();
+
+            $controller->{$action->getMethod()}($action->getArgs());
+            return $controller->getOutput();
+        } else {
+            throw new \Core\Exception('Error: Could not load controller ' . $child . '!');
+            exit();
+        }
+    //}
+            
+       //     return call_user_func_array($field['callable'], $field);
+            break;
+        
         case "text":
         default:
-            return '<input type="' . $field['type'] . '" name="' . $field['key'] . '" class="' . $class . '" value="' . $field['value'] . '" />';
+            return '<input ' . $params . '  type="' . $field['type'] . '" name="' . $field['key'] . '" class="' . $class . '" value="' . $field['value'] . '" />';
     endswitch;
 }
+
 
 function render_select($arr, $selected = 0, $level = 0) {
     $html = '';
@@ -466,6 +501,10 @@ function registry($key = false) {
         return \Core\Registry::getInstance()->get($key);
     }
     return \Core\Registry::getInstance();
+}
+
+function request(){
+    return registry('request');
 }
 
 function dateformat_PHP_to_MomentJs($php_format) {

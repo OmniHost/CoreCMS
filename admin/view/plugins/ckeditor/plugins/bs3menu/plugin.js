@@ -166,7 +166,12 @@ CKEDITOR.plugins.add('bs3menu', {
 
 
 
-                if (!(alertText = childrenArray[ 1 ]).hasClass('alert-text'))
+                        if(childrenArray[1] == undefined)
+                            return; 
+                        
+                      
+                        
+                if (!(alertText = childrenArray[1].hasClass('alert-text')))
                     return;
 
                 // Acceptable alert types

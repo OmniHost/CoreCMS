@@ -40,4 +40,25 @@ class ModelToolSeo extends \Core\Model {
         return $slugname;
     }
 
+    
+    public function getAll($data = array()) {
+        
+        $sql = "select SQL_CALC_FOUND_ROWS * from #__url_alias where 1";
+        
+        if(!empty($data['filter_keyword'])){
+            $sql .= " and keyword like '%" . $this->db->escape($data['filter_keyword']) . "%' ";
+        }
+        if(!empty($data['filter_query'])){
+            $sql .= " and `query` like '%" . $this->db->escape($data['filter_query']) . "%' ";
+        }
+        
+        $sql .= " and `custom` = '1' ";
+        
+        $sql .= " order by keyword asc limit " . $data['start'] . ", " . $data['limit'];
+        
+        $all = $this->db->query($sql);
+        $all->total = $this->db->query("select found_rows() as total")->row['total'];
+        return $all;
+    }
+    
 }

@@ -17,6 +17,38 @@ class Url {
         $this->rewrite[] = $rewrite;
     }
 
+    public function path($name, $args = '') {
+        
+              
+        $url = 'index.php?p=' . $route;
+
+        if ($args) {
+            if (is_array($args)) {
+                $args = http_build_query($args);
+            }
+            $url .= str_replace('&', '&amp;', '&' . ltrim($args, '&'));
+        }
+
+        foreach ($this->rewrite as $rewrite) {
+            $url = $rewrite->rewrite($url);
+        }
+
+        if ($connection == 'PATH') {
+            $path = parse_url($url, PHP_URL_PATH);
+            $query = parse_url($url, PHP_URL_QUERY);
+            $frag = parse_url($url, PHP_URL_FRAGMENT);
+
+            $url = $path;
+            if ($query) {
+                $url .= '?' . $query;
+            }
+            if ($frag) {
+                $url .= '#' . $frag;
+            }
+        }
+        return $url;
+    }
+
     public function rest($name, $args = '', $connection = 'NONSSL') {
         if ($connection == 'NONSSL') {
             $url = $this->url;

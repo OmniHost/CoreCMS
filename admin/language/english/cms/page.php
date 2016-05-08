@@ -52,3 +52,5 @@ $_['text_last_saved'] = 'Last auto-saved';
 $_['heading_page_details'] = 'Page Details';
 $_['text_autosave_in_progress'] = '... saving, please do not reload page ...';
 $_['text_autosave_warning'] = 'Warning: Please check the form carefully for errors!';
+
+$_['text_copy'] = 'Duplicate';

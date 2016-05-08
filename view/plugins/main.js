@@ -4,19 +4,78 @@ $(document).ready(function () {
             callback();
         }
     });
-    
+
     try {
         $(".vid-container").fitVids();
-    }catch(err){
-        
+    } catch (err) {
+
     }
-    
-    $(document).on("click","#img_cap_reload", function(e) { 
+
+    $(document).on("click", "#img_cap_reload", function (e) {
         e.preventDefault();
         $('#captcha').attr('src', 'index.php?p=common/captcha&ts=' + new Date().getTime());
     });
-    
+
     $("[rel='tooltip']").tooltip();
+
+
+    $(window).scroll(function () {
+        var scrollTop = $(window).scrollTop();
+        if (scrollTop != 0)
+            $('#oc_fetlb').stop().animate({'opacity': '0.2'}, 400);
+        else
+            $('#oc_fetlb').stop().animate({'opacity': '1'}, 400);
+    });
+
+    $('#oc_fetlb').hover(
+            function (e) {
+                var scrollTop = $(window).scrollTop();
+                if (scrollTop != 0) {
+                    $('#oc_fetlb').stop().animate({'opacity': '1'}, 400);
+                }
+            },
+            function (e) {
+                var scrollTop = $(window).scrollTop();
+                if (scrollTop != 0) {
+                    $('#oc_fetlb').stop().animate({'opacity': '0.2'}, 400);
+                }
+            }
+    );
+    
+     $(document).delegate('.agree', 'click', function (e) {
+            e.preventDefault();
+
+            $('#modal-agree').remove();
+
+            var element = this;
+
+            $.ajax({
+                url: $(element).attr('href'),
+                type: 'get',
+                dataType: 'html',
+                success: function (data) {
+                    html = '<div id="modal-agree" class="modal">';
+                    html += '  <div class="modal-dialog">';
+                    html += '    <div class="modal-content">';
+                    html += '      <div class="modal-header">';
+                    html += '        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>';
+                    html += '        <h4 class="modal-title">' + $(element).text() + '</h4>';
+                    html += '      </div>';
+                    html += '      <div class="modal-body">' + data + '</div>';
+                    html += '    </div';
+                    html += '  </div>';
+                    html += '</div>';
+
+                    $('body').append(html);
+
+                    $('#modal-agree').modal('show');
+                },
+                error: function () {
+                    alert("Page Not Found");
+                }
+            });
+        });
+
 });
 
 (function ($) {

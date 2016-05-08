@@ -1,7 +1,7 @@
 <?php
 
 define('NS', 'front');
-define('VERSION', '1.5.0');
+define('VERSION', '1.6.0');
 error_reporting(E_ALL);
 
 if (!is_file('config.php')) {
@@ -26,6 +26,13 @@ $core->currency = $currency;
 if(is_file(DIR_VENDOR . 'autoload.php')){
  require(DIR_VENDOR . 'autoload.php');
 }
+
+
+//EVENT DISPATCH
+
+
+$core->event->trigger("core.pre.dispatch", $core);
+
 
 if(BASE_REQUEST_TYPE == 'cli'){
     $core->dispatch_cli();

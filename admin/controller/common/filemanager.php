@@ -259,6 +259,7 @@ class ControllerCommonFileManager extends \Core\Controller {
             $json['error'] = $this->language->get('error_directory');
         }
 
+        
         if (!$json) {
             if (!empty($this->request->files['file']['name']) && is_file($this->request->files['file']['tmp_name'])) {
                 // Sanitize the filename

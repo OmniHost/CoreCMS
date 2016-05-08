@@ -73,6 +73,7 @@ $(document).ready(function () {
 
     // Progress Load
     if ($(".progress > .progress-bar")[0]) {
+        try{
         $('.progress > .progress-bar').waypoint(function () {
             $(this).each(function () {
                 $(this).animate({
@@ -83,6 +84,7 @@ $(document).ready(function () {
             triggerOnce: true,
             offset: 'bottom-in-view'
         });
+    }catch(err) {}
     }
   
 

@@ -27,9 +27,9 @@ CKEDITOR.editorConfig = function (config) {
     ];
 
 
-config.uiColor = '#ffffff';
-	
-	config.toolbarCanCollapse = true;
+    config.uiColor = '#ffffff';
+
+    config.toolbarCanCollapse = true;
 
     config.removeButtons = 'Font,FontSize,About';
 
@@ -48,7 +48,7 @@ config.uiColor = '#ffffff';
     config.justifyClasses = ['text-left', 'text-center', 'text-right', 'text-justify'];
     
     config.extraPlugins = 'bs3menu,fontawesome';
-    
-    config.contentsCss = ['view/bootstrap/css/bootstrap.min.css','//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css'];
+
+    config.contentsCss = ['https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css', '//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css'];
     //config.contentsCss = [config.contentsCss, 'view/bootstrap/css/bootstrap.min.css',CKEDITOR.getUrl(this.path + 'contents.css')];
 };

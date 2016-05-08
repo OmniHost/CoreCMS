@@ -57,13 +57,40 @@ class ControllerCommonHeader extends \Core\Controller {
             $this->document->addMeta('fb:app-id', $this->config->get('config_facebook_appid'), 'property');
         }
         if (!$this->document->hasMeta('og:image') && $this->config->get('config_facebook_ogimage')) {
-            $this->document->addMeta('og:image', $this->config->get('config_ssl') .'img/' . $this->config->get('config_facebook_ogimage'), 'property');
+            $this->document->addMeta('og:image', $this->config->get('config_ssl') . 'img/' . $this->config->get('config_facebook_ogimage'), 'property');
         }
-        if (!$this->document->hasMeta('og:type') ) {
+        if (!$this->document->hasMeta('og:type')) {
             $this->document->addMeta('og:type', 'website', 'property');
         }
 
+        if (!$this->document->hasMeta('twitter:image') && $this->config->get('config_facebook_ogimage')) {
+            $this->document->addMeta('twitter:image', $this->config->get('config_ssl') . 'img/' . $this->config->get('config_facebook_ogimage'), 'name');
+        }
 
+        $this->document->addMeta("twitter:card", "summary", "name");
+
+        if ($this->config->get('config_twitter_card_site')) {
+            $this->document->addMeta("twitter:site", "@" . ltrim($this->config->get('config_twitter_card_site'),'@'), "name");
+        }
+        if ($this->config->get('config_twitter_card_creator')) {
+            $this->document->addMeta("twitter:creator", "@" . ltrim($this->config->get('config_twitter_card_creator'),'@'), "name");
+        }
+
+        if (!$this->document->hasMeta('twitter:title') && $this->config->get('config_facebook_ogtitle')) {
+            $this->document->addMeta('twitter:title', $this->config->get('config_facebook_ogtitle'), 'name');
+        }
+        if (!$this->document->hasMeta('twitter:description') && $this->config->get('config_facebook_ogdescription')) {
+            $this->document->addMeta('twitter:description', $this->config->get('config_facebook_ogdescription'), 'name');
+        }
+
+
+
+        /*
+         * 
+ 
+          <meta name="twitter:creator" content="@author_handle">
+
+         */
 
         /*
          * config_facebook_ogdescription

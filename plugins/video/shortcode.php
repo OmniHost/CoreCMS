@@ -11,6 +11,8 @@ class Plugin_video extends \Core\Plugin {
             'autoplay' => 0), $atts);
 
         $aspect_ratio = str_replace(':', '-', $this->attribute('aspect_ratio'));
+        
+
 
         return $this->get_embed_video($content, $this->attribute('align'), $aspect_ratio, $this->attribute('width'), $this->attribute('autoplay'), $this->attribute('params'));
     }
@@ -38,7 +40,7 @@ class Plugin_video extends \Core\Plugin {
         $autoEmbed = new AutoEmbed();
         $embed_code = $autoEmbed->get_html($url, array('width' => '100%', 'height' => '100%', 'autoplay' => $autoplay, 'params' => $params));
         if (!$embed_code) {
-            return '<strong>' . __('Error: Invalid URL!', 'respvid') . '</strong>';
+            return '<strong>Error: Invalid URL!</strong>';
         }
         
         $this->document->addScript('view/plugins/fitvids/jquery.fitvids.js');

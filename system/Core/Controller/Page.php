@@ -9,28 +9,28 @@ abstract class Page extends \Core\Controller {
 
     protected function getPage() {
         $this->_model = $this->load->model($this->_namespace);
- $page = false;
+        $page = false;
         $this->user = new \Core\User();
         if (!empty($this->request->get['preview_id'])) {
-        
+
             if (!$this->user->isLogged()) {
                 $this->_error = 'not_found';
-            }else{
-                $rev = $this->db->query("select * from #__ams_revisions where ams_revision_id='" . (int)$this->request->get['preview_id'] . "'")->row;
-                $page = json_decode($rev['pagedata'],1);
-                if(!$page){
-                     $this->_error = 'not_found';
-                }else{
-                   
-                    if($this->_namespace != $rev['namespace']){
-                        return $this->redirect('index.php?p=' . $rev['namespace'] . '&preview_id=' . $this->request->get['preview_id']);    
+            } else {
+                $rev = $this->db->query("select * from #__ams_revisions where ams_revision_id='" . (int) $this->request->get['preview_id'] . "'")->row;
+                $page = json_decode($rev['pagedata'], 1);
+                if (!$page) {
+                    $this->_error = 'not_found';
+                } else {
+
+                    if ($this->_namespace != $rev['namespace']) {
+                        return $this->redirect('index.php?p=' . $rev['namespace'] . '&preview_id=' . $this->request->get['preview_id']);
                     }
                     $this->request->get['ams_page_id'] = $rev['ams_page_id'];
                 }
             }
         }
 
-        
+
 
         if ($page) {
             $page = $this->_model->loadPagePreview($page)->toArray();
@@ -38,30 +38,33 @@ abstract class Page extends \Core\Controller {
             $page = $this->_model->loadPageObject($this->request->get['ams_page_id'])->toArray();
         }
 
-       
+
 
 
 
         if (!$page) {
             $this->_error = 'not_found';
         } elseif (!$page['status']) {
-            
+
             if (!$this->user->isLogged()) {
                 $this->_error = 'not_found';
             }
         }
 
-        if (!$this->_error && !$this->user->isLogged()) {
+        if (!$this->_error) {
             $this->load->model('setting/rights');
             $allowed = $this->model_setting_rights->getRight($this->request->get['ams_page_id'], 'ams_page');
-            if (!$allowed) {
+
+            if (!$allowed && !$this->user->isLogged()) {
                 $this->_error = 'not_allowed';
+            } elseif (!$allowed) {
+                $page['_access_rights'] = 'Not Allowed';
             }
         }
 
         if (!$this->_error) {
-            if(empty($this->request->get['preview_id'])){
-            $this->_model->updateViews();
+            if (empty($this->request->get['preview_id'])) {
+                $this->_model->updateViews();
             }
             $this->language->load('cms/page');
             if ($this->_namespace != 'cms/page') {
@@ -83,12 +86,21 @@ abstract class Page extends \Core\Controller {
 
             if (!empty($page['meta_og_title'])) {
                 $this->document->addMeta('og:title', $page['meta_og_title'], 'property');
+                $this->document->addMeta('twitter:title', $page['meta_og_title'], 'name');
+            } else {
+                $this->document->addMeta('og:title', strip_tags($page['meta_title']), 'property');
+                $this->document->addMeta('twitter:title', strip_tags($page['meta_title']), 'name');
             }
             if (!empty($page['meta_og_description'])) {
                 $this->document->addMeta('og:description', $page['meta_og_description'], 'property');
+                $this->document->addMeta('twitter:description', $page['meta_og_description'], 'name');
+            } else {
+                $this->document->addMeta('og:description', $page['meta_description'], 'property');
+                $this->document->addMeta('twitter:description', $page['meta_description'], 'name');
             }
             if (!empty($page['meta_og_image'])) {
                 $this->document->addMeta('og:image', $this->config->get('config_ssl') . 'img/' . $page['meta_og_image'], 'property');
+                $this->document->addMeta('twitter:image', $this->config->get('config_ssl') . 'img/' . $this->config->get('config_facebook_ogimage'), 'name');
             }
 
             $this->document->addLink($this->url->link($this->_namespace, 'ams_page_id=' . $page['id']), 'canonical');
@@ -219,7 +231,7 @@ abstract class Page extends \Core\Controller {
             array(
                 'name' => 'FAQ Page',
                 'type' => 'core',
-                'link' => $this->url->link('module/faq', '', 'SSL'),
+                'link' => $this->url->link('module/faq', ''),
                 'ams_page_id' => "0",
                 'config' => 'faq_status'
             )
@@ -339,13 +351,92 @@ abstract class Page extends \Core\Controller {
 
         $this->response->setOutput($html);
     }
+    
+    public function downloadlist() {
+        $html = "CKEDITOR.plugins.add('downloadlink');";
+        
+  
+        
+//$pages .= "var InternPagesSelectBox = [ ['Basketball','http://goto.baseball' ], [ 'Baseball' ], [ 'Hockey' ], [ 'Football' ] ];";
+        $html.= "var DownloadPagesSelectBox = ";
+        $this->response->addHeader('Content-type: application/javascript');
+        $this->response->addHeader('Cache-Control: no-store, no-cache, must-revalidate');
+        $this->response->addHeader('Cache-Control: post-check=0, pre-check=0, false');
+        $this->response->addHeader('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
+        $this->response->addHeader('Pragma: no-cache');
+
+        $pages = array();
+        $query = $this->db->query("select * from #__download order by name asc");
+       
+        foreach ($query->rows as $row) {
+            $pages[] = array(
+                'name' => $row['name'] . '(' . $row['mask'] . ')',
+                'type' => 'ams_download',
+                'link' => 'index.php?p=cms/download&download_id=' . $row['download_id'] . '&cmslink=' . md5(strrev($row['download_id']) . 'dl'),
+                'download_id' => $row['download_id']
+            );
+        }
+        
+
+        $this->event->trigger('downloads.autocomplete.list', $pages);
+
+        $json = array();
+        foreach ($pages as $page) {
+            $json[] = array(
+                $page['name'], $page['link']
+            );
+        }
+
+
+        $html .= json_encode($json) . ";\n";
+
+        $html .= "CKEDITOR.on('dialogDefinition', function (event) {"
+                . "var dialogName = event.data.name;"
+                . "var dialogDefinition = event.data.definition;"
+                . "if ( dialogName == 'link' ) {"
+                . "var infoTab = dialogDefinition.getContents('info');"
+                . "infoTab.add( {
+         type : 'select',
+         id : 'download',
+         label : 'Download Link',
+         'default' : '',
+         style : 'width:100%',
+         items : DownloadPagesSelectBox,
+         onChange : function()
+            {
+                var d = CKEDITOR.dialog.getCurrent();
+                d.setValueOf('info', 'url', this.getValue());
+                if (!this.getValue()){ d.setValueOf('info', 'protocol','other')};
+               
+            },
+         setup : function( data )
+         {
+            this.allowOnChange = false;
+            this.setValue( data.url ? data.url.url : '' );
+            this.allowOnChange = true;
+         }
+        }, 'browse' );
+        
+        dialogDefinition.onLoad = function()
+        {
+            var downloadField = this.getContentElement( 'info', 'download' );
+            downloadField.reset();
+        };
+   }";
+
+        $html .= "});";
+
+        $this->response->setOutput($html);
+    }
 
     public function agree() {
         $this->load->model('cms/page');
         $page = $this->model_cms_page->loadPageObject($this->request->get['page_id'])->toArray();
 
         if (!$page || !$page['status']) {
-            return $this->not_found();
+         //   return $this->not_found();
+            $this->response->addHeader($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
+           return $this->response->setOutput('NOT FOUND');
         }
 
         $this->load->model('setting/rights');
@@ -505,7 +596,11 @@ abstract class Page extends \Core\Controller {
 
         $this->load->model('setting/rights');
 
+ 
+        
         if (isset($this->request->get['download_id']) && isset($this->request->get['ams_page_id']) && $this->model_setting_rights->getRight($this->request->get['ams_page_id'], 'ams_page')) {
+            $download_id = $this->request->get['download_id'];
+        } elseif (isset($this->request->get['download_id']) && isset($this->request->get['cmslink']) && md5(strrev($this->request->get['download_id']) . 'dl') == $this->request->get['cmslink']) {
             $download_id = $this->request->get['download_id'];
         } else {
             $download_id = 0;

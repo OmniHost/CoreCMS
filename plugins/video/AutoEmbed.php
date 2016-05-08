@@ -135,6 +135,8 @@ class AutoEmbed {
             $provider = $this->discover($url);
         }
 
+
+        
         if (!$provider || false === $data = $this->fetch($provider, $url, $args)) {
             return $url;
         }
@@ -226,6 +228,7 @@ class AutoEmbed {
 
         foreach (array('json', 'xml') AS $format) {
             $result = $this->_fetch_with_format($provider, $format);
+   
 
             //   return str_replace('?feature=oembed', '?feature=oembed&rel=0&?wmode=transparent&iv_load_policy=3&showinfo=0&vq=hd1080', $embed );
 
@@ -408,6 +411,7 @@ class AutoEmbed {
         curl_setopt($handle, CURLOPT_HEADER, false);
         curl_setopt($handle, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
         $response = curl_exec($handle);
+     
         curl_close($handle);
         return $response;
     }
