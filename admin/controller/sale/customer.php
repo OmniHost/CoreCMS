@@ -852,9 +852,9 @@ class ControllerSaleCustomer extends \Core\Controller {
         if (isset($this->request->post['customer_group_id'])) {
             $data['customer_group_id'] = $this->request->post['customer_group_id'];
         } elseif (!empty($customer_info)) {
-            $data['customer_group_id'] = $customer_info['customer_group_id'];
+            $data['customer_group_id'] = json_decode($customer_info['customer_group_id']);
         } else {
-            $data['customer_group_id'] = $this->config->get('config_customer_group_id');
+            $data['customer_group_id'] = array($this->config->get('config_customer_group_id'));
         }
 
         if (isset($this->request->post['country_id'])) {
@@ -1026,6 +1026,10 @@ class ControllerSaleCustomer extends \Core\Controller {
             if ($this->request->post['password'] != $this->request->post['confirm']) {
                 $this->error['confirm'] = $this->language->get('error_confirm');
             }
+        }
+        
+        if(empty($this->request->post['customer_group_id'])){
+            $this->request->post['customer_group_id'] = array($this->config->get('config_customer_group_id'));
         }
         
         // Custom field validation

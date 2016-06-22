@@ -51,8 +51,20 @@ Abstract class Page {
      * @var string
      */
     public $meta_description;
+    /**
+     *
+     * @var type 
+     */
     public $meta_og_title;
+    /**
+     *
+     * @var type 
+     */
     public $meta_og_description;
+    /**
+     *
+     * @var type 
+     */
     public $meta_og_image;
 
     /**
@@ -540,12 +552,43 @@ Abstract class Page {
             'required' => $required
         );
     }
+    
+    protected function _formTypeScrollbox($name,$label,$values,$required){
+         if (isset(request()->post[$name])) {
+            $data[$name] = request()->post[$name];
+        } elseif (!empty($this->{$name})) {
+            $data[$name] = $this->{$name};
+        } else {
+            
+            $data[$name] = array();
+        }
+        
+        return array(
+            'key' => $name,
+            'type' => 'scrollbox',
+            'options' => $values,
+            'value' => $data[$name],
+            'label' => $this->_language->get($label),
+            'required' => $required
+        );
+        /*
+         *  'key' => 'categories',
+            'type' => 'scrollbox',
+            'value' => $data['categories'],
+            'options' => $options,
+            'label' => $this->_language->get('entry_categories'),
+            'required' => false
+         */
+    }
 
     protected function _formTypeMultiSelect($name, $label, $values, $required = false) {
-        return $this->_formTypeSelect($name, $label, $values, $required, true);
+        return $this->_formTypeScrollbox($name, $label, $values, $required);
     }
 
     protected function _formTypeSelect($name, $label, $values, $required = false, $multiple = false) {
+        if($multiple){
+            return $this->_formTypeScrollbox($name, $label, $values, $required);
+        }
         if (isset(request()->post[$name])) {
             $data[$name] = request()->post[$name];
         } elseif (!empty($this->{$name})) {
@@ -573,6 +616,31 @@ Abstract class Page {
             1 => registry('language')->get('text_enabled')
         );
         return $this->_formTypeSelect($name, $label, $values);
+    }
+    
+    /**
+     * Generates a Grid Generator
+     * @param type $name
+     * @param type $label
+     * @param type $required
+     * @return type
+     */
+    public function _formTypeGrid($name, $label, $required = false) {
+        if (isset(request()->post[$name])) {
+            $data[$name] = request()->post[$name];
+        } elseif (!empty($this->{$name})) {
+            $data[$name] = $this->{$name};
+        } else {
+            $data[$name] = '';
+        }
+
+        return array(
+            'key' => $name,
+            'type' => 'builder',
+            'value' => $data[$name],
+            'label' => $this->_language->get($label),
+            'required' => $required
+        );
     }
 
     /**

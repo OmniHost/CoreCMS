@@ -89,22 +89,33 @@ class ControllerReportCustomerActivity extends \Core\Controller {
         $results = $this->model_report_customer->getCustomerActivities($filter_data);
 
         foreach ($results as $result) {
-            $comment = vsprintf($this->language->get('text_' . $result['key']), unserialize($result['data']));
 
-            $find = array(
-                'customer_id=',
-                'order_id='
-            );
+            if ($result['key'] == 'custom') {
+                
+                $activity = unserialize($result['data']);
+                
+                 $comment = str_replace("%TOKEN%", $this->session->data['token'],vsprintf($activity['comment'],$activity));
+                
+                
+            } else {
 
-            $replace = array(
-                $this->url->link('sale/customer/edit', 'token=' . $this->session->data['token'] . '&customer_id=', 'SSL'),
-            );
+                $comment = vsprintf($this->language->get('text_' . $result['key']), unserialize($result['data']));
 
-            $data['activities'][] = array(
-                'comment' => str_replace($find, $replace, $comment),
-                'ip' => $result['ip'],
-                'date_added' => date($this->language->get('date_time_format_long'), strtotime($result['date_added']))
-            );
+            }
+                $find = array(
+                    'customer_id='
+                );
+
+                $replace = array(
+                    $this->url->link('sale/customer/edit', 'token=' . $this->session->data['token'] . '&customer_id=', 'SSL'),
+                );
+
+                $data['activities'][] = array(
+                    'comment' => str_replace($find, $replace, $comment),
+                    'ip' => '<a href="http://whatismyipaddress.com/ip/' .$result['ip'] . '" target="_blank">' . $result['ip'] . '</a>',
+                    'date_added' => date($this->language->get('date_time_format_long'), strtotime($result['date_added']))
+                );
+            
         }
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -158,7 +169,7 @@ class ControllerReportCustomerActivity extends \Core\Controller {
         $data['filter_ip'] = $filter_ip;
         $data['filter_date_start'] = $filter_date_start;
         $data['filter_date_end'] = $filter_date_end;
-        
+
         $this->document->addScript('view/plugins/datetimepicker/moment.min.js');
         $this->document->addScript('view/plugins/datetimepicker/bootstrap-datetimepicker.min.js');
         $this->document->addStyle('view/plugins/datetimepicker/bootstrap-datetimepicker.min.css');
@@ -170,7 +181,7 @@ class ControllerReportCustomerActivity extends \Core\Controller {
             'common/header',
             'common/footer'
         );
-        
+
         $this->response->setOutput($this->render());
     }
 

@@ -12,7 +12,7 @@ class ModelSettingRights extends \Core\Model {
 
     public function getRight($object_id, $object_type) {
 
-        $group_id = $this->customer->getGroupId();
+        $group_id = $this->customer->getGroupId();    
         $user_id = $this->customer->getId();
 
         $viewable = false;
@@ -21,7 +21,7 @@ class ModelSettingRights extends \Core\Model {
 
             //then usergroup, users, everybody
 
-            $query = $this->db->query("SELECT object_id FROM #__allowed_groups WHERE object_id = '" . (int) $object_id . "' AND object_type = '" . $this->db->escape($object_type) . "' AND group_id IN (-1,-3," . $group_id . ")");
+            $query = $this->db->query("SELECT object_id FROM #__allowed_groups WHERE object_id = '" . (int) $object_id . "' AND object_type = '" . $this->db->escape($object_type) . "' AND group_id IN (-1,-3," . implode(",",$group_id) . ")");
 
             if ($query->row) {
                 $viewable = true;
@@ -33,7 +33,7 @@ class ModelSettingRights extends \Core\Model {
               $viewable = true;
               } */
 
-            $query = $this->db->query("SELECT object_id FROM #__denied_groups WHERE object_id = '" . (int) $object_id . "' AND object_type = '" . $this->db->escape($object_type) . "' AND group_id IN (-1,-3," . $group_id . ")");
+            $query = $this->db->query("SELECT object_id FROM #__denied_groups WHERE object_id = '" . (int) $object_id . "' AND object_type = '" . $this->db->escape($object_type) . "' AND group_id IN (-1,-3," . implode(",",$group_id)  . ")");
 
             if ($query->row) {
                 $viewable = false;

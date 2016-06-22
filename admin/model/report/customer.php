@@ -164,6 +164,10 @@ class ModelReportCustomer extends \Core\Model {
 		if (!empty($data['filter_ip'])) {
 			$implode[] = "ca.ip LIKE '" . $this->db->escape($data['filter_ip']) . "'";
 		}
+                
+                if (!empty($data['filter_customer_id'])) {
+			$implode[] = "ca.customer_id = '" . (int)$this->db->escape($data['filter_customer_id']) . "'";
+		}
 
 		if (!empty($data['filter_date_start'])) {
 			$implode[] = "DATE(ca.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
@@ -207,6 +211,10 @@ class ModelReportCustomer extends \Core\Model {
 
 		if (!empty($data['filter_ip'])) {
 			$implode[] = "ca.ip LIKE '" . $this->db->escape($data['filter_ip']) . "'";
+		}
+                
+                if (!empty($data['filter_customer_id'])) {
+			$implode[] = "ca.customer_id = '" . (int)$this->db->escape($data['filter_customer_id']) . "'";
 		}
 
 		if (!empty($data['filter_date_start'])) {

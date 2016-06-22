@@ -74,8 +74,6 @@ Class Core {
             foreach ($events as $_event) {
                 $this->event->register($_event['trigger'], $_event['action']);
             }
-            
-           
         }
 
         define('HTTP_SERVER', $config->get('config_url'));
@@ -139,8 +137,14 @@ Class Core {
 // Encryption
         self::$registry->set('encryption', new \Core\Encryption($config->get('config_encryption')));
 
-
-        date_default_timezone_set(self::$registry->get('config')->get('config_gttimezone'));
+        if (self::$registry->get('config')->get('config_timezone')) {
+            date_default_timezone_set(self::$registry->get('config')->get('config_timezone'));
+        } else {
+            date_default_timezone_set(self::$registry->get('config')->get('config_gttimezone'));
+        }
+        
+        //require_once(DIR_SYSTEM . 'Core/Formfield.php');
+         self::$registry->set('formbuilder', new \Core\Formbuilder());
 
         //Get all the plugins!!!
         if ($ns != 'installer') {
@@ -194,8 +198,8 @@ Class Core {
      * @param \Core\Exception $exception
      */
     function exception_handler($exception) {
-        
-        
+
+
         $config = self::$registry->get('config');
         $log = self::$registry->get('log');
 

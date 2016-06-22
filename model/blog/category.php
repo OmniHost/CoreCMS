@@ -12,7 +12,7 @@ class ModelBlogCategory extends \Core\Ams\Page {
     public function countLatestPosts() {
         $group_id = $this->_customer->getGroupId();
         if ($this->_customer->getId()) {
-            $groups = "-1,-3," . $group_id;
+            $groups = "-1,-3," . implode(",",$group_id);
         } else {
             $groups = "-1,-2";
         }
@@ -27,7 +27,7 @@ class ModelBlogCategory extends \Core\Ams\Page {
 
         $group_id = $this->_customer->getGroupId();
         if ($this->_customer->getId()) {
-            $groups = "-1,-3," . $group_id;
+            $groups = "-1,-3," . implode(",",$group_id);
         } else {
             $groups = "-1,-2";
         }
@@ -88,7 +88,7 @@ class ModelBlogCategory extends \Core\Ams\Page {
 
         $group_id = $this->_customer->getGroupId();
         if ($this->_customer->getId()) {
-            $groups = "-1,-3," . $group_id;
+            $groups = "-1,-3," . implode(",",$group_id);
         } else {
             $groups = "-1,-2";
         }

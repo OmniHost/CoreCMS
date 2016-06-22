@@ -9,7 +9,6 @@ Abstract class Base extends \Core\Controller {
     protected $_pageInfo;
     protected $_enableComments = true;
     protected $_enableParents = true;
-    
     protected $error;
 
     public function index() {
@@ -32,7 +31,7 @@ Abstract class Base extends \Core\Controller {
 
 
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            // $this->model_user_user->editUser($this->request->get['user_id'], $this->request->post);
+// $this->model_user_user->editUser($this->request->get['user_id'], $this->request->post);
             $this->_pageModel->loadPageObject($this->request->get['ams_page_id']);
             $this->_pageModel->storeRevision($this->request->post, $this->user->getId());
             $this->_pageModel->populate($this->request->post);
@@ -59,7 +58,7 @@ Abstract class Base extends \Core\Controller {
                 $url .= '&page=' . $this->request->get['page'];
             }
             if (isset($this->request->get['update'])) {
-                $this->redirect(fixajaxurl($this->url->link($this->_namespace . '/update',  'ams_page_id=' . $this->_pageModel->id . '&token=' . $this->session->data['token'] . $url, 'SSL')));
+                $this->redirect(fixajaxurl($this->url->link($this->_namespace . '/update', 'ams_page_id=' . $this->_pageModel->id . '&token=' . $this->session->data['token'] . $url, 'SSL')));
             } else {
                 $this->redirect(fixajaxurl($this->url->link($this->_namespace, 'token=' . $this->session->data['token'] . $url, 'SSL')));
             }
@@ -94,7 +93,7 @@ Abstract class Base extends \Core\Controller {
             $this->load->model('setting/rights');
             $this->model_setting_rights->setAllowedGroups($this->_pageModel->id, 'ams_page', $this->request->post['allowed_groups']);
             $this->model_setting_rights->setDeniedGroups($this->_pageModel->id, 'ams_page', $this->request->post['denied_groups']);
-            //  $this->model_user_user->addUser($this->request->post);
+//  $this->model_user_user->addUser($this->request->post);
 
             $this->session->data['success'] = $this->language->get('text_success');
 
@@ -119,7 +118,7 @@ Abstract class Base extends \Core\Controller {
 
 
 
-            //   $this->redirect(fixajaxurl($this->url->link($this->_namespace, 'token=' . $this->session->data['token'] . $url, 'SSL')));
+//   $this->redirect(fixajaxurl($this->url->link($this->_namespace, 'token=' . $this->session->data['token'] . $url, 'SSL')));
         }
 
         $this->getForm();
@@ -141,7 +140,7 @@ Abstract class Base extends \Core\Controller {
         $this->load->model('setting/rights');
         $allowed_groups = $this->model_setting_rights->getAllowedGroups($this->request->get['ams_page_id'], 'ams_page');
         $denied_groups = $this->model_setting_rights->getDeniedGroups($this->request->get['ams_page_id'], 'ams_page'); //1 is information type
-        //Get allowed groups
+//Get allowed groups
 
         $this->model_setting_rights->setAllowedGroups($this->_pageModel->id, 'ams_page', $allowed_groups);
         $this->model_setting_rights->setDeniedGroups($this->_pageModel->id, 'ams_page', $denied_groups);
@@ -222,7 +221,7 @@ Abstract class Base extends \Core\Controller {
     }
 
     protected function getForm() {
-        //    $this->language->load('cms/page');
+//    $this->language->load('cms/page');
 
         $this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -425,7 +424,7 @@ Abstract class Base extends \Core\Controller {
         }
         $this->data['src_og_image'] = $src_og_image;
         $this->data['placeholder'] = $image_model->resizeExact('no_image.jpg', 100, 100);
-        //  $this->data['meta_og_image'] = $meta_og_image;
+//  $this->data['meta_og_image'] = $meta_og_image;
 
         if (isset($this->request->post['meta_keywords'])) {
             $this->data['meta_keywords'] = $this->request->post['meta_keywords'];
@@ -458,7 +457,7 @@ Abstract class Base extends \Core\Controller {
         $this->data['layouts'] = $this->model_design_layout->getLayouts();
 
 
-        //User Groups
+//User Groups
         $this->load->model('sale/customer_group');
         $this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups(array('sort' => 'cg.sort_order'));
 
@@ -503,20 +502,20 @@ Abstract class Base extends \Core\Controller {
 
 
 
-        //Autosave::
+//Autosave::
         $this->data['autosave_enabled'] = $this->config->get('config_autosave_status');
         $this->data['autosave_time'] = ($this->config->get('config_autosave_time') && (int) $this->config->get('config_autosave_time') > 30) ? (int) $this->config->get('config_autosave_time') : 120;
 
 
-        // $this->document->addScript('view/plugins/ckeditor/ckeditor.js');
+// $this->document->addScript('view/plugins/ckeditor/ckeditor.js');
         init_wysiwyg();
         $this->template = 'cms/page_form.phtml';
         $this->children = array(
             'common/header',
             'common/footer'
         );
-        
-        
+
+
         $this->response->setOutput($this->render());
     }
 
@@ -582,18 +581,8 @@ Abstract class Base extends \Core\Controller {
 
         $this->data['pages'] = array();
         foreach ($pages->rows as $_page) {
-            $action = array();
-            $action[] = array(
-                'class' => 'primary',
-                'text' => $this->language->get('text_edit'),
-                'href' => $this->url->link($this->_namespace . '/update', 'token=' . $this->session->data['token'] . '&ams_page_id=' . $_page['ams_page_id'] . $url, 'SSL')
-            );
-            $action[] = array(
-                'class'=> 'info',
-                'text' => $this->language->get('text_copy'),
-                'href' => $this->url->link($this->_namespace . '/copy', 'token=' . $this->session->data['token'] . '&ams_page_id=' . $_page['ams_page_id'] . $url, 'SSL')
-            );
-            $_page['action'] = $action;
+
+            $_page['action'] = $this->getlistactions($_page, $url);
             $_page['status'] = ($_page['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled'));
             $_page['selected'] = (isset($this->request->post['selected']) && in_array($_page['ams_page_id'], $this->request->post['selected'])) ? '1' : false;
             $_page['date_created'] = DATE($this->language->get('date_time_format_short'), $_page['date_created']);
@@ -696,6 +685,37 @@ Abstract class Base extends \Core\Controller {
         $this->response->setOutput($this->render());
     }
 
+    protected function getlistactions($page, $url = '') {
+        $action = array();
+        $action['edit'] = array(
+            'class' => 'primary',
+            'text' => $this->language->get('text_edit'),
+            'href' => $this->url->link($this->_namespace . '/update', 'token=' . $this->session->data['token'] . '&ams_page_id=' . $page['ams_page_id'] . $url, 'SSL')
+        );
+        $action['copy'] = array(
+            'class' => 'info',
+            'text' => $this->language->get('text_copy'),
+            'href' => $this->url->link($this->_namespace . '/copy', 'token=' . $this->session->data['token'] . '&ams_page_id=' . $page['ams_page_id'] . $url, 'SSL')
+        );
+
+
+
+
+        if ($page['public']) {
+            $slug = $this->model_tool_seo->getUrl('ams_page_id=' . $page['ams_page_id']);
+            $action['view'] = array(
+                'class' => 'default',
+                'text' => $this->language->get('View Page'),
+                'href' => $this->config->get('config_catalog') . $slug,
+                'target' => '_preview'
+            );
+        }
+
+
+
+        return $action;
+    }
+
     public function delete() {
         $this->language->load($this->_namespace);
 
@@ -713,7 +733,7 @@ Abstract class Base extends \Core\Controller {
                     $this->_pageModel->loadPageObject($ams_page_id)->delete();
                     $this->model_tool_seo->deleteUrl('ams_page_id=' . $ams_page_id);
                 } catch (Core\Exception $e) {
-                    //is ok.
+//is ok.
                 }
             }
 
@@ -797,7 +817,7 @@ Abstract class Base extends \Core\Controller {
         $version++;
         $this->response->addHeader('Content-Type: application/json');
         try {
-            //  if ($last_pagedata != $this->db->escape(json_encode($page_data))) {
+//  if ($last_pagedata != $this->db->escape(json_encode($page_data))) {
             $this->db->query("insert into #__ams_revisions set ams_page_id = '" . (int) $id . "', "
                     . " user_id = '" . (int) $this->user->getId() . "', "
                     . " autosave = '" . (int) $autosave . "', "
@@ -806,9 +826,9 @@ Abstract class Base extends \Core\Controller {
                     . " created = '" . time() . "', "
                     . " version = '" . $version . "'");
             $this->response->setOutput(json_encode(array('saved' => $this->db->insertId())));
-            // } else {
-            //   $this->response->setOutput(json_encode(array('saved' => '1')));
-            //  }
+// } else {
+//   $this->response->setOutput(json_encode(array('saved' => '1')));
+//  }
         } catch (Exception $e) {
             $this->response->setOutput(json_encode(array('saved' => '0')));
         }

@@ -7,6 +7,7 @@
     <div class="box">
         <div class="box-header text-right">
             <a href="<?php echo $insert; ?>" data-toggle="tooltip" title="<?php echo $button_insert; ?>" class="btn btn-app"><i class="fa fa-plus text-primary"></i> <?php echo $button_insert; ?></a>
+            <button id="upload-g-folder" data-toggle="tooltip" title="Create From Upload" class="btn btn-app"><i class="fa fa-plus text-primary"></i> Create & Upload </a>
             <button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-app" onclick="confirm('<?php echo $text_confirm; ?>') ? $('#form-banner').submit() : false;"><i class="fa fa-trash-o text-danger"></i> <?php echo $button_delete; ?></button>  </div>
         <div class="box-body">
 
@@ -61,4 +62,159 @@
         </div>
     </div>
 </section>
+<div id="upload-progress" class="hide" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; background-color: rgba(100, 100, 100, .8); z-index: 99999;">
+    <table style="width: 80%; height: 100%; margin: auto;">
+        <tr>
+            <td style="vertical-align: middle;">
+                <div class="progress">
+                    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">0%</div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<script>
+
+    var $folderName;
+    var $galleryName;
+
+    docReady(function () {
+
+
+
+        $(document).on("click", '#button-upload', function () {
+            $('#form-upload').remove();
+
+            $('.content-wrapper').prepend('<form enctype="multipart/form-data" id="form-upload" style="display: none;"><input type="file" name="file[]" multiple="multiple" /></form>');
+
+            $('#form-upload input[name=\'file[]\']').trigger('click');
+
+            timer = setInterval(function () {
+                if ($('#form-upload input[name=\'file[]\']').val() != '') {
+                    clearInterval(timer);
+
+                    $.ajax({
+                        url: 'index.php?p=common/filemanager/upload&token=<?php echo $this->session->data['token']; ?>&directory=' + $folderName,
+                        type: 'post',
+                        dataType: 'json',
+                        data: new FormData($('#form-upload')[0]),
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function () {
+                            //     $('#button-upload i').replaceWith('<i class="fa fa-circle-o-notch fa-spin"></i>');
+                            //     $('#button-upload').prop('disabled', true);
+                            $('#upload-progress').removeClass('hide');
+                        },
+                        complete: function () {
+                            //     $('#button-upload i').replaceWith('<i class="fa fa-upload"></i>');
+                            //     $('#button-upload').prop('disabled', false);
+                            $('#upload-progress').addClass('hide');
+                        },
+                        success: function (json) {
+                            if (json['error']) {
+                                alert(json['error']);
+                            }
+
+                            if (json['success']) {
+                                //alert(json['success']);
+
+                                // $('#button-refresh').trigger('click');
+                                var pdata = {
+                                    name: $galleryName,
+                                    status: '1',
+                                    banner_image: {}
+                                };
+                                var bidx = 0;
+                                console.log(json);
+                                $(json.files).each(function (i, j) {
+                                    console.log(j);
+                                    pdata.banner_image[bidx] = {
+                                        title: $galleryName,
+                                        description: '',
+                                        link: '',
+                                        sort_order: bidx++,
+                                        image: 'uploads/' + $folderName + '/' + j
+                                    };
+                                });
+                                //console.log(pdata);
+                                $.redirect('index.php?p=cms/banner/add&json=1&token=<?php echo $this->session->data['token']; ?>', pdata);
+                                //    $.post('index.php?p=cms/banner/add&json=1&token=<?php echo $this->session->data['token']; ?>',pdata,function(res) { 
+                                //         $(document).html(res);
+                                //      });
+                            }
+                        },
+                        xhr: function () {
+                            var xhr = new window.XMLHttpRequest();
+
+                            xhr.upload.addEventListener("progress", function (evt) {
+                                if (evt.lengthComputable) {
+                                    var percentComplete = evt.loaded / evt.total;
+                                    percentComplete = parseInt(percentComplete * 100);
+                                    console.log(percentComplete);
+                                    $('.progress-bar').html(percentComplete + '%').attr('aria-valuenow', percentComplete).css('width', percentComplete + '%');
+                                }
+                            }, false);
+
+                            return xhr;
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                        }
+                    });
+                }
+            }, 500);
+        });
+
+$(document).on("click","#upload-g-folder", function () { 
+        swal({
+            title: "Add Gallery",
+            text: "Enter Gallery Name for the New Gallery",
+            type: "input",
+            showCancelButton: true,
+            closeOnConfirm: false,
+            animation: "slide-from-top",
+            inputPlaceholder: "folder Name"
+        }, function (inputValue) {
+            if (inputValue === false)
+                return false;
+            if (inputValue === "") {
+                swal.showInputError("You need to name the gallery!");
+                return false
+            }
+
+            $galleryName = inputValue;
+            $folderName = slugify(inputValue);
+            //swal("Nice!", "You wrote: " + inputValue, "success");
+            $.ajax({
+                url: 'index.php?p=common/filemanager/folder&token=<?php echo $this->session->data['token']; ?>',
+                type: 'post',
+                dataType: 'json',
+                data: 'folder=' + $folderName,
+                success: function (json) {
+                    if (json['error']) {
+                        alert(json['error']);
+                    }
+
+                    if (json['success']) {
+
+                        swal({showConfirmButton: false, title: "Folder Created!", text: '<button id="button-upload" class="btn btn-primary btn-lg">Add Images</button>', html: true});
+
+
+
+
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                }
+            });
+        });
+        });
+    });
+
+</script>
+
 <?php echo $footer; ?>
+

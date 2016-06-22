@@ -104,11 +104,9 @@
                                     <td class="left"><?php echo $page['date_modified']; ?></td>
                                     <td class="text-right">
                                         <?php foreach ($page['action'] as $action) { ?>
-                                            <a class="btn btn-xs btn-<?php echo $action['class']; ?>" href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a>
+                                        <a target="<?php echo (!empty($action['target']))?$action['target']:'_self';?>" class="btn btn-xs btn-<?php echo $action['class']; ?>" href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a>
                                         <?php } ?>
-                                        <?php if ($page['public']): ?>
-                                            <a class="btn btn-xs btn-default" target="_blank" href="<?php echo $this->config->get('config_catalog') . $page['slug']; ?>">View Page</a></td>
-                                    <?php endif; ?>
+                                        
                                 </tr>
                             <?php } ?>
                         <?php } else { ?>

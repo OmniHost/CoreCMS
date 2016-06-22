@@ -14,7 +14,10 @@ class ModelAccountCustomField extends \Core\Model {
         if (!$customer_group_id) {
             $custom_field_query = $this->db->query("SELECT * FROM `#__custom_field` WHERE status = '1' AND status = '1' ORDER BY sort_order ASC");
         } else {
-            $custom_field_query = $this->db->query("SELECT * FROM `#__custom_field_customer_group` cfcg LEFT JOIN `#__custom_field` cf ON (cfcg.custom_field_id = cf.custom_field_id) WHERE cf.status = '1'  AND cfcg.customer_group_id = '" . (int) $customer_group_id . "' ORDER BY cf.sort_order ASC");
+            if(is_array($customer_group_id)){
+                $customer_group_id = implode(",", $customer_group_id);
+            }
+            $custom_field_query = $this->db->query("SELECT * FROM `#__custom_field_customer_group` cfcg LEFT JOIN `#__custom_field` cf ON (cfcg.custom_field_id = cf.custom_field_id) WHERE cf.status = '1'  AND cfcg.customer_group_id in (" .  $customer_group_id . ") ORDER BY cf.sort_order ASC");
         }
 
         foreach ($custom_field_query->rows as $custom_field) {

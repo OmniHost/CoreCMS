@@ -9,6 +9,12 @@ class Customer {
 	private $newsletter;
 	private $customer_group_id;
 	private $address_id;
+        
+        private $db;
+        private $request;
+        private $session;
+        private $config;
+        
 
 	public function __construct() {
                 $registry = \Core\Registry::getInstance();
@@ -28,7 +34,7 @@ class Customer {
 				$this->telephone = $customer_query->row['telephone'];
 				$this->fax = $customer_query->row['fax'];
 				$this->newsletter = $customer_query->row['newsletter'];
-				$this->customer_group_id = $customer_query->row['customer_group_id'];
+				$this->customer_group_id = json_decode($customer_query->row['customer_group_id'],1);
 				$this->address_id = $customer_query->row['address_id'];
 
 				$query = $this->db->query("SELECT * FROM #__customer_ip WHERE customer_id = '" . (int)$this->session->data['customer_id'] . "' AND ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "'");
@@ -59,7 +65,7 @@ class Customer {
 			$this->telephone = $customer_query->row['telephone'];
 			$this->fax = $customer_query->row['fax'];
 			$this->newsletter = $customer_query->row['newsletter'];
-			$this->customer_group_id = $customer_query->row['customer_group_id'];
+			$this->customer_group_id = json_decode($customer_query->row['customer_group_id'],1);
 			$this->address_id = $customer_query->row['address_id'];
 
 			$this->db->query("UPDATE #__customer SET ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE customer_id = '" . (int)$this->customer_id . "'");

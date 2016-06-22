@@ -252,13 +252,14 @@ class ControllerExtensionModification extends \Core\Controller {
                                             // Add
                                             $add = $operation->getElementsByTagName('add')->item(0)->textContent;
                                             $trim = $operation->getElementsByTagName('add')->item(0)->getAttribute('trim');
+                                            $quote = $operation->getElementsByTagName('search')->item(0)->getAttribute('quote');
                                             $_position = $operation->getElementsByTagName('add')->item(0)->getAttribute('position');
                                             $_offset = $operation->getElementsByTagName('add')->item(0)->getAttribute('offset');
-                                            
-                                            if($_offset){
+
+                                            if ($_offset) {
                                                 $offset = $_offset;
                                             }
-                                            if($_position){
+                                            if ($_position) {
                                                 $position = $_position;
                                             }
 
@@ -285,7 +286,7 @@ class ControllerExtensionModification extends \Core\Controller {
                                             $i = 0;
 
                                             $lines = explode("\n", $modification[$key]);
-                                      
+
                                             for ($line_id = 0; $line_id < count($lines); $line_id++) {
                                                 $line = $lines[$line_id];
 
@@ -322,16 +323,16 @@ class ControllerExtensionModification extends \Core\Controller {
                                                             break;
                                                         case 'before':
                                                             $new_lines = explode("\n", $add);
-                                                            
-                                                            
-                                                         
+
+
+
                                                             array_splice($lines, $line_id - $offset, 0, $new_lines);
 
                                                             $line_id += count($new_lines);
                                                             break;
                                                         case 'after':
                                                             $new_lines = explode("\n", $add);
-                                                            
+
                                                             //array_unshift($new_lines, $search);
 
                                                             array_splice($lines, ($line_id + 1) + $offset, 0, $new_lines);
@@ -351,11 +352,16 @@ class ControllerExtensionModification extends \Core\Controller {
                                         } else {
                                             $search = trim($operation->getElementsByTagName('search')->item(0)->textContent);
                                             $limit = $operation->getElementsByTagName('search')->item(0)->getAttribute('limit');
+                                            $quote = $operation->getElementsByTagName('search')->item(0)->getAttribute('quote');
                                             $replace = trim($operation->getElementsByTagName('add')->item(0)->textContent);
 
                                             // Limit
                                             if (!$limit) {
                                                 $limit = -1;
+                                            }
+
+                                            if ($quote == 'true') {
+                                                $search = preg_quote($search);
                                             }
 
                                             // Log

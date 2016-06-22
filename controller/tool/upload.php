@@ -68,6 +68,8 @@ class ControllerToolUpload extends \Core\Controller {
 
             // Hide the uploaded file name so people can not link to it directly.
             $this->load->model('tool/upload');
+            
+            $json['filename'] = html_entity_decode($this->request->files['file']['name'], ENT_QUOTES, 'UTF-8');
 
             $json['code'] = $this->model_tool_upload->addUpload($filename, $file);
 

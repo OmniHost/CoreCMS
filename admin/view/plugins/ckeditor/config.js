@@ -38,6 +38,11 @@ CKEDITOR.editorConfig = function (config) {
 
     // Simplify the dialog windows.
     config.removeDialogTabs = 'link:advanced:image:Upload';
+    
+    config.floatSpacePinnedOffsetY = 20;
+    config.floatSpacePinnedOffsetX = 20;
+    config.floatSpaceDockedOffsetX = 0;
+    config.floatSpaceDockedOffsetY = 20;
 
     config.skin = 'moonocolor';
 

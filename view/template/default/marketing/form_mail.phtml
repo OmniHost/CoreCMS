@@ -1,0 +1,34 @@
+<p>Form submission from : <?php echo $formname;?></p>
+
+<table style="border-collapse: collapse; width: 100%; border-top: 1px solid #DDDDDD; border-left: 1px solid #DDDDDD; margin-bottom: 20px;">
+
+<?php foreach ($postdata as  $row) {
+	$type_input = "text";
+     
+     
+     if(in_array($row['type'], array('checkbox','multidropdow'))) { $type_input="multi"; }
+     if($row['type'] == 'upload') { $type_input = 'file';}
+     if($row['type'] == 'linebreak' || $row['type'] == 'title' || $row['type'] == 'paragraph' || $row['type'] == 'submit' || $row['type'] == 'captcha') { continue; }
+ ?>
+    <tr>
+    	<td style="font-size: 12px; border-right: 1px solid #DDDDDD; border-bottom: 1px solid #DDDDDD; background-color: #EFEFEF; font-weight: bold; text-align: left; padding: 7px; color: #222222;" valign="top"><?php echo $this->db->escape($row['title']); ?></td>
+    	<td style="font-size: 12px;	border-right: 1px solid #DDDDDD; border-bottom: 1px solid #DDDDDD; text-align: left; padding: 7px;" valign="top">
+    		<?php if($type_input=="multi" && is_array($row['post'])) { ?>
+				<ul>
+				<?php foreach($row['post'] as $tmp){ ?>
+					<li><?php echo $tmp; ?></li>
+				<?php } ?>
+				</ul>
+                <?php }elseif($type_input == 'file'){ 
+                    echo !empty($row['file']['name'])?$row['file']['name'] :'';
+                    } else { echo $row['post']; } ?>
+    	</td>
+    </tr>
+<?php }  ?>
+</table>
+<hr>
+<small>
+    Submitted: <em><?php echo DATE("r"); ?></em><br />
+    IP: <em><?php echo get_client_ip(); ?></em><br />   
+    Browser (User Agent) Info: <em><?php echo $_SERVER['HTTP_USER_AGENT']; ?></em>
+</small>

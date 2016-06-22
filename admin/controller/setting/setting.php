@@ -483,6 +483,16 @@ class ControllerSettingSetting extends \Core\Controller {
         } else {
             $data['config_login_attempts'] = 5;
         }
+        
+        $data['timezones'] = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
+        
+         if (isset($this->request->post['config_timezone'])) {
+            $data['config_timezone'] = $this->request->post['config_timezone'];
+        } elseif ($this->config->has('config_timezone')) {
+            $data['config_timezone'] = $this->config->get('config_timezone');
+        } else {
+            $data['config_timezone'] = 'Pacific/Auckland';
+        }
 
         $this->load->model('cms/page');
         $data['informations'] = $this->model_cms_page->getPages()->rows;

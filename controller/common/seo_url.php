@@ -3,7 +3,6 @@
 class ControllerCommonSeoUrl extends \Core\Controller {
 
     protected $_internals = array(
-        
         'maintenance.html' => 'common/maintenance',
     );
 
@@ -57,22 +56,33 @@ class ControllerCommonSeoUrl extends \Core\Controller {
                 $this->request->get['p'] = $this->_internals[$this->request->get['_route_']];
             } else {
 
-                $parts = explode('/', $this->request->get['_route_']);
 
-                foreach ($parts as $part) {
-                    $query = $this->db->query("SELECT * FROM #__url_alias WHERE keyword = '" . $this->db->escape($part) . "'");
+                $forward = $this->forward($this->request->get['_route_']);
+                if ($forward->getFile()) {
+                    $this->request->get['p'] = $this->request->get['_route_'];
+                } else {
 
-                    if ($query->num_rows) {
-                        $url = explode('=', $query->row['query']);
+                    $parts = explode('/', $this->request->get['_route_']);
+
+                    foreach ($parts as $part) {
+                        $query = $this->db->query("SELECT * FROM #__url_alias WHERE keyword = '" . $this->db->escape($part) . "'");
+
+                        if ($query->num_rows) {
+                            $url = explode('=', $query->row['query']);
 
 
-                        if ($url[0] == 'ams_page_id') {
-                            $this->request->get['ams_page_id'] = $url[1];
-                            $page = $this->db->fetchRow("select namespace from #__ams_pages where ams_page_id = '" . (int) $url[1] . "'");
-                            $this->request->get['p'] = str_replace(".", "/", $page['namespace']);
+                            if ($url[0] == 'ams_page_id') {
+                                $this->request->get['ams_page_id'] = $url[1];
+                                $page = $this->db->fetchRow("select namespace from #__ams_pages where ams_page_id = '" . (int) $url[1] . "'");
+                                $this->request->get['p'] = str_replace(".", "/", $page['namespace']);
+                            }
+                            if($url[0] == 'form_id'){
+                                $this->request->get['form_id'] = $url[1];
+                                $this->request->get['p'] = "marketing/form";
+                            }
+                        } else {
+                            $this->request->get['p'] = $this->request->get['_route_'];
                         }
-                    } else {
-                        $this->request->get['p'] = $this->request->get['_route_'];
                     }
                 }
             }
@@ -96,10 +106,10 @@ class ControllerCommonSeoUrl extends \Core\Controller {
         parse_str($url_info['query'], $data);
 
 
-        
+
         foreach ($data as $key => $value) {
             if (isset($data['p'])) {
-                if ($key == 'ams_page_id') {
+                if ($key == 'ams_page_id' || $key == 'form_id') {
                     $query = $this->db->query("SELECT * FROM #__url_alias WHERE `query` = '" . $this->db->escape($key . '=' . (int) $value) . "'");
 
                     if ($query->num_rows) {
@@ -131,7 +141,7 @@ class ControllerCommonSeoUrl extends \Core\Controller {
                     if ($query->num_rows) {
                         $url .= '/' . $query->row['keyword'];
                         $page = $data['page'];
-                       $data = array();
+                        $data = array();
                         $data['page'] = $page;
                     }
                 }
@@ -197,7 +207,6 @@ class ControllerCommonSeoUrl extends \Core\Controller {
         $template = $this->model_design_layout->getTemplate($layout_id);
         if ($template) {
             $this->config->set('config_template', $template);
-      
         }
     }
 

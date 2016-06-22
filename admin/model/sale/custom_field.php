@@ -91,9 +91,13 @@ class ModelSaleCustomField extends \Core\Model {
         }
 
         if (!empty($data['filter_customer_group_id'])) {
-            $sql .= " AND cfcg.customer_group_id = '" . (int) $data['filter_customer_group_id'] . "'";
+            if(!is_array($data['filter_customer_group_id'])){
+                $data['filter_customer_group_id'] = array($data['filter_customer_group_id']);
+            }
+        
+            $sql .= " AND cfcg.customer_group_id in (" . implode("," , $data['filter_customer_group_id']) . ")";
         }
-
+        
         $sort_data = array(
             'cf.name',
             'cf.type',

@@ -751,7 +751,7 @@ CREATE TABLE `#__modification` (
   `author` varchar(64) NOT NULL,
   `version` varchar(32) NOT NULL,
   `link` varchar(255) NOT NULL,
-  `xml` text NOT NULL,
+  `xml` mediumtext NOT NULL,
   `status` tinyint(1) NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`modification_id`)
@@ -5187,3 +5187,28 @@ INSERT INTO `#__zone` (`zone_id`, `country_id`, `name`, `code`, `status`) VALUES
 INSERT INTO `#__zone` (`zone_id`, `country_id`, `name`, `code`, `status`) VALUES ('4229', '118', 'North', 'LB-NR', '1');
 INSERT INTO `#__zone` (`zone_id`, `country_id`, `name`, `code`, `status`) VALUES ('4230', '118', 'South', 'LB-ST', '1');
 
+
+ALTER TABLE `#__url_alias` ADD `custom` TINYINT(1) NOT NULL DEFAULT '0' AFTER `keyword`;
+
+INSERT INTO `#__url_alias` (`query`, `keyword`, `custom`) VALUES
+('p=module/faq', 'help/faq', 1),
+('p=blog/blog', 'blog', 1),
+('p=common/contact', 'contact-us', 1),
+('p=account/account', 'my-account', 1);
+
+ALTER TABLE `#___customer` CHANGE `customer_group_id` `customer_group_id` VARCHAR(250) NOT NULL;
+ALTER TABLE `#__customer` ADD `profile_img` VARCHAR(255) NOT NULL ;
+
+CREATE TABLE IF NOT EXISTS `#__formcreator` (
+                            `form_id` int(11) NOT NULL AUTO_INCREMENT,
+                            `title` varchar(225) COLLATE utf8_unicode_ci DEFAULT NULL,
+                            `url` varchar(225) COLLATE utf8_unicode_ci DEFAULT NULL,
+                            `email` varchar(225) COLLATE utf8_unicode_ci DEFAULT NULL,
+                            `success_msg` varchar(500) COLLATE utf8_unicode_ci DEFAULT NULL,
+                            `status` int(11) NOT NULL,
+                            `formdata` text NOT NULL,
+                            `total_value` float NOT NULL,
+                            `form_ip` varchar(16) COLLATE utf8_unicode_ci NOT NULL,
+                            `date_added` int(1) NOT NULL,
+                            PRIMARY KEY (`form_id`)
+                            ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=46 ;

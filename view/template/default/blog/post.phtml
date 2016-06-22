@@ -44,6 +44,74 @@
                         <div class="post-body">
                             <?php echo $page['content']; ?>
                         </div>
+                        
+                                        <?php if ($page['downloads']): ?>
+                    <h3><?php echo $heading_download; ?></h3>
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <td class="text-left"><?php echo $column_name; ?></td>
+                                <td class="text-left"><?php echo $column_size; ?></td>
+                                <td class="text-left"><?php echo $column_date_added; ?></td>
+                                <td></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($page['downloads'] as $download) { ?>
+                                <tr>
+                                    <td class="text-left"><?php echo $download['name']; ?></td>
+                                    <td class="text-left"><?php echo $download['size']; ?></td>
+                                    <td class="text-left"><?php echo DATE("F j, Y", strtotime($download['date_modified'])); ?></td>
+                                    <td><a href="<?php echo $download['href']; ?>" data-toggle="tooltip" title="<?php echo $button_download; ?>" class="btn btn-primary"><i class="fa fa-cloud-download"></i></a></td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+
+
+                <?php endif; ?>
+
+                <?php if ($page['galleries']): ?>
+
+                    <?php if (count($page['galleries']) == 1): ?>
+
+                        <div id="gallery-page">
+
+
+                            <?php $gallery = $page['galleries'][0]; ?>
+                            <div class="sec-title">
+                                <h3><?php echo $gallery['name']; ?></h3>
+                            </div>
+
+                            [gallery name="<?php echo $gallery['name']; ?>" banner_id="<?php echo $gallery['banner_id']; ?>"][/gallery]
+
+
+
+                        </div>
+                    <?php else: ?>
+                        <div id="gallery-list" class="row">
+                            <?php foreach ($page['galleries'] as $gallery): ?>
+                                <div class="col-xs-6 col-sm-4 col-md-3">
+                                    <a class="thumbnail inthegallery" href="<?php echo $this->url->link('cms/gallery', 'gallery_id=' . $gallery['banner_id'] . '&ref_id=' . $page['id']); ?>">
+                                        <img src="<?php echo $gallery['thumb']; ?>" class="img" />
+                                        <div class="caption">
+                                            <?php echo $gallery['name']; ?>
+                                        </div>
+                                    </a>
+                                </div>
+                            <?php endforeach; ?>
+
+                        </div>
+                        <br class="clearfix" />
+
+                        <div style="width:0px;height:0px;overflow:hidden;" id="thegallery">
+
+                        </div>
+
+                    <?php endif; ?>
+
+
+                <?php endif; ?>
                     </div>
                     
                     <ul class="list-inline social-share-buttons">

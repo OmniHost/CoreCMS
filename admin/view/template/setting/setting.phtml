@@ -136,6 +136,21 @@
                                     </select>
                                 </div>
                             </div>
+                            
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-timezone"><?php echo $this->language->get("Site Timezone"); ?></label>
+                                <div class="col-sm-10">
+                                    <select name="config_timezone" id="input-timezone" class="form-control">
+                                        <?php foreach ($timezones as $timezone) { ?>
+                                            <?php if ($timezone == $config_timezone) { ?>
+                                                <option value="<?php echo $timezone; ?>" selected="selected"><?php echo $timezone; ?></option>
+                                            <?php } else { ?>
+                                                <option value="<?php echo $timezone; ?>"><?php echo $timezone; ?></option>
+                                            <?php } ?>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
 
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="input-currency"><span data-toggle="tooltip" title="<?php echo $help_currency; ?>"><?php echo $entry_currency; ?></span></label>

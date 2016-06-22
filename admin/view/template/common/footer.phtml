@@ -17,17 +17,18 @@
 <script src="view/plugins/sweetalert/sweetalert.min.js"></script>
 
 <!-- Custom JS -->
-    <script src="view/plugins/fastclick/fastclick.min.js"></script>
+<script src="view/plugins/fastclick/fastclick.min.js"></script>
 <script src="view/js/app.min.js" type="text/javascript"></script>
 <script src="view/js/admin.js" type="text/javascript"></script>
 
 <script>
- function EditorOn(id) {
-        CKEDITOR.replace(id, {
-            baseHref: '<?php echo registry('config')->get('config_catalog'); ?> ',
-            height: 150
-        });
+ 
+
+    function EditorOn(id) {
+        CKEDITOR.replace(id);
+
     }
+    
 </script>
 
 

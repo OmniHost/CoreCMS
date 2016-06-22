@@ -78,7 +78,7 @@ abstract class Page extends \Core\Controller {
 
 
 
-            $this->document->setTitle(strip_tags($page['meta_title']));
+            $this->document->setTitle(strip_tags(($page['meta_title'])?$page['meta_title']:$page['name']));
             $this->document->setKeywords($page['meta_keywords']);
             $this->document->setDescription($page['meta_description']);
 
@@ -231,7 +231,7 @@ abstract class Page extends \Core\Controller {
             array(
                 'name' => 'FAQ Page',
                 'type' => 'core',
-                'link' => $this->url->link('module/faq', ''),
+                'link' => $this->url->link('module/faq', '', 'SSL'),
                 'ams_page_id' => "0",
                 'config' => 'faq_status'
             )
@@ -598,7 +598,7 @@ abstract class Page extends \Core\Controller {
 
  
         
-        if (isset($this->request->get['download_id']) && isset($this->request->get['ams_page_id']) && $this->model_setting_rights->getRight($this->request->get['ams_page_id'], 'ams_page')) {
+        if (isset($this->request->get['download_id']) && isset($this->request->get['ref_id']) && $this->model_setting_rights->getRight($this->request->get['ref_id'], 'ams_page')) {
             $download_id = $this->request->get['download_id'];
         } elseif (isset($this->request->get['download_id']) && isset($this->request->get['cmslink']) && md5(strrev($this->request->get['download_id']) . 'dl') == $this->request->get['cmslink']) {
             $download_id = $this->request->get['download_id'];

@@ -1,7 +1,10 @@
 <?php
 class ModelSaleCustomer extends \Core\Model {
 	public function addCustomer($data) {
-		$this->db->query("INSERT INTO #__customer SET customer_group_id = '" . (int)$data['customer_group_id'] . "', "
+            if(!is_array($data['customer_group_id'])){
+                $data['customer_group_id'] = array($data['customer_group_id']);
+            }
+		$this->db->query("INSERT INTO #__customer SET customer_group_id = '" . json_encode($data['customer_group_id']) . "', "
                         . " firstname = '" . $this->db->escape($data['firstname']) . "', "
                         . " lastname = '" . $this->db->escape($data['lastname']) . "', "
                         . " email = '" . $this->db->escape($data['email']) . "', "
@@ -20,8 +23,11 @@ class ModelSaleCustomer extends \Core\Model {
 	}
 
 	public function editCustomer($customer_id, $data) {
+            if(!is_array($data['customer_group_id'])){
+                $data['customer_group_id'] = array($data['customer_group_id']);
+            }
 
-		$this->db->query("UPDATE #__customer SET customer_group_id = '" . (int)$data['customer_group_id'] . "', "
+		$this->db->query("UPDATE #__customer SET customer_group_id = '" . json_encode($data['customer_group_id']) . "', "
                         . " firstname = '" . $this->db->escape($data['firstname']) . "', "
                         . " lastname = '" . $this->db->escape($data['lastname']) . "', "
                         . " email = '" . $this->db->escape($data['email']) . "', "
@@ -61,7 +67,7 @@ class ModelSaleCustomer extends \Core\Model {
 	}
 
 	public function getCustomers($data = array()) {
-		$sql = "SELECT *, CONCAT(c.firstname, ' ', c.lastname) AS name, cgd.name AS customer_group FROM #__customer c LEFT JOIN #__customer_group cgd ON (c.customer_group_id = cgd.customer_group_id) WHERE 1";
+		$sql = "SELECT *, CONCAT(c.firstname, ' ', c.lastname) AS name FROM #__customer c  WHERE 1";
 
 		$implode = array();
 
@@ -78,7 +84,7 @@ class ModelSaleCustomer extends \Core\Model {
 		}
 
 		if (!empty($data['filter_customer_group_id'])) {
-			$implode[] = "c.customer_group_id = '" . (int)$data['filter_customer_group_id'] . "'";
+			$implode[] = "c.customer_group_id like '%\"" . (int)$data['filter_customer_group_id'] . "\"%'";
 		}
 
 		if (!empty($data['filter_ip'])) {
@@ -104,7 +110,7 @@ class ModelSaleCustomer extends \Core\Model {
 		$sort_data = array(
 			'name',
 			'c.email',
-			'customer_group',
+			
 			'c.status',
 			'c.approved',
 			'c.ip',
@@ -136,6 +142,19 @@ class ModelSaleCustomer extends \Core\Model {
 		}
 
 		$query = $this->db->query($sql);
+                
+                foreach($query->rows as &$row){
+                    $row['customer_group_id'] = json_decode($row['customer_group_id'],1);
+                    
+                    $customer_groups = array();
+                    foreach($row['customer_group_id'] as $cgid){
+                        $cq = $this->db->query("select name from #__customer_group where customer_group_id = '" . (int)$cgid . "'")->row;
+                        if(!empty($cq['name'])){
+                            $customer_groups[] = $cq['name'];
+                        }
+                    }
+                    $row['customer_group'] = implode(", ", $customer_groups);
+                }
 
 		return $query->rows;
 	}
@@ -198,7 +217,7 @@ class ModelSaleCustomer extends \Core\Model {
 		}
 
 		if (!empty($data['filter_customer_group_id'])) {
-			$implode[] = "customer_group_id = '" . (int)$data['filter_customer_group_id'] . "'";
+			$implode[] = "customer_group_id like '%\"" . (int)$data['filter_customer_group_id'] . "\"%'";
 		}
 
 		if (!empty($data['filter_ip'])) {

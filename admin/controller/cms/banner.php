@@ -389,7 +389,7 @@ class ControllerCmsBanner extends \Core\Controller {
                  'description' => $banner_image['description'],
                 'link' => $banner_image['link'],
                 'image' => $image,
-                'thumb' => $this->model_tool_image->resize($thumb, 100, 100),
+                'thumb' => $this->model_tool_image->resizeExact($thumb, 100, 100),
                 'sort_order' => $banner_image['sort_order']
             );
         }
@@ -414,11 +414,17 @@ class ControllerCmsBanner extends \Core\Controller {
             $this->error['name'] = $this->language->get('error_name');
         }
 
+      
+        
         if (isset($this->request->post['banner_image'])) {
             foreach ($this->request->post['banner_image'] as $banner_image_id => $banner_image) {
              
-                    if ((utf8_strlen($banner_image['title']) < 2) || (utf8_strlen($banner_image['title']) > 64)) {
-                        $this->error['banner_image'][$banner_image_id] = $this->language->get('error_title');
+                     if (utf8_strlen($banner_image['title']) <= 1) {
+                         $this->request->post['banner_image'][$banner_image_id]['title'] = utf8_substr($this->request->post['name'], 0, 64);
+                         $banner_image['title'] = $this->request->post['banner_image'][$banner_image_id]['title'];
+                     }
+                    if (utf8_strlen($banner_image['title']) > 64) {
+                        $this->request->post['banner_image'][$banner_image_id]['title'] = utf8_substr($banner_image['title'], 0, 64);
                     }
                 
             }

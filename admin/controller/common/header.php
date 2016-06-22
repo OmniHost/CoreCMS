@@ -51,6 +51,7 @@ class ControllerCommonHeader extends \Core\Controller {
         $this->data['subscriber'] = $this->url->link('marketing/newsletter/subscriber', 'token=' . $this->session->data['token'], 'SSL');
         $this->data['newsletter'] = $this->url->link('marketing/contact', 'token=' . $this->session->data['token'], 'SSL');
         $this->data['seo_urls'] = $this->url->link('tool/seourl', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['formbuilder'] = $this->url->link('marketing/form', 'token=' . $this->session->data['token'], 'SSL');
 
 
         $this->data['menu_dashboard'] = $this->language->get('menu_dashboard');
@@ -83,6 +84,7 @@ class ControllerCommonHeader extends \Core\Controller {
         $this->data['menu_report_user_activity'] = $this->language->get('menu_report_user_activity');
         $this->data['menu_report_user_online'] = $this->language->get('menu_report_user_online');
         $this->data['menu_marketing'] = $this->language->get('menu_marketing');
+        $this->data['menu_formbuilder'] = $this->language->get('Form Builder');
 
 
         $this->data['menu_currency'] = $this->language->get('menu_currency');

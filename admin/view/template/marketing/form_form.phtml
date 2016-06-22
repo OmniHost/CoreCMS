@@ -1,0 +1,714 @@
+<?php echo $header; ?>
+<div id="content">
+    <div class="content-header">
+
+        <h1><?php echo $heading_title; ?></h1>
+        <ul class="breadcrumb">
+            <?php foreach ($breadcrumbs as $breadcrumb) { ?>
+                <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
+            <?php } ?>
+        </ul>
+
+    </div>
+
+    <div class="container-fluid">
+        <?php if ($error_warning) { ?>
+            <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> <?php echo $error_warning; ?>
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+        <?php } ?>
+        <!-- BEGIN CONTENT -->
+        <div class="box box-default">
+            <div class="box-header">
+                <h3 class="box-title"><i class="fa fa-list"></i> <?php echo $heading_title; ?></h3>
+                <div class="box-tools">
+                    <a onclick="submitform()" class="btn btn-primary"><i class="fa fa-save"></i></a>&nbsp;&nbsp;<a onclick="location = '<?php echo $cancel; ?>';" class="btn btn-default"><i class="fa fa-reply"></i></a>
+
+                </div>
+            </div>
+            <div class="box-body">
+
+                <form id="form_settings" class="form-horizontal">
+                    <legend>Form Settings</legend>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Form Name</label>
+                        <div class="col-sm-9">
+                            <input id="nameInput" type="text" value="<?php echo $title ?>" class="form-control settingl"  name="title">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="slugInput" class="col-sm-3  control-label required">Form Url</label>
+                        <div class="col-sm-9 ">
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <?php echo $this->config->get('config_catalog'); ?>                                           </div>
+                                <input disabled="disabled" type="text" value="<?php echo $url ?>" class="form-control required " id="form_url">
+                                <?php if (isset($this->request->get['form_id']) && $this->request->get['form_id'] > 0): ?>
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" type="button" id="resetSlug">Reset</button>
+                                    </span>
+                                <?php endif; ?>
+                                <input class="settingl" type="hidden" name="url" value="<?php echo $url ?>" id="form_urlValue">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Form Email</label>
+                        <div class="col-sm-9">
+                            <input type="email" id="form_email" value="<?php echo $email ?>" class="settingl form-control"  name="email" size="10">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Success Message</label>
+                        <div class="col-sm-9">
+                            <input type="text" value="<?php echo $success_msg ?>" class="settingl form-control"  name="success_msg">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="statusInput" class="control-label col-sm-3 required"><?php echo $entry_status; ?></label>
+                        <div class="col-sm-9">
+                            <select name="status" id="statusInput" class="form-control settingl">
+                                <option value="0"><?php echo $text_disabled; ?></option>
+                                <option value="1" <?php echo ($status) ? 'selected' : ''; ?>><?php echo $text_enabled; ?></option>
+
+                            </select>
+                        </div>
+                    </div>
+
+                </form>
+                <legend class="clearfix">Form Fields <a class="btn btn-danger pull-right" href="javascript:void(0)" onclick="$('#sortable').empty()">Clear Form</a></legend>
+
+
+                <div id="t_form_tab" class="tab">
+
+
+                    <div class="well well-sm ">
+                        <div class="table-responsive">
+                            <div id="global_content" >
+
+                                <table class="table">
+                                    <tr>
+                                        <td valign="top" width="220" >
+                                            <!-- LEFT MENU -->
+                                            <ul class="tablist">
+                                                <li id="tab_title">
+                                                    <img src="view/template/marketing/externals/images/image.png"/> Title
+                                                    <div class="tab_element">
+                                                        <div class="widget-content well well-sm">
+                                                            <table class="table"><tr><td class="tab_title">New Title</td><td></td><td><span class="edit" onclick="showedit($(this).parentsUntil('li').parent().attr('id'))">Edit</span> &nbsp;&nbsp; <span class="delete" onclick="$(this).parentsUntil('li').parent().remove()">Delete</span></td></tr></table>
+                                                            <div class="expand">
+                                                                <div class="form-group">
+                                                                    <label for="" class="">Title</label>
+
+                                                                    <input type="text" value="New Title" class="widefat val_title form-control" name="title" />
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li id="tab_paragraph">
+                                                    <img src="view/template/marketing/externals/images/para.png"/> Paragraph
+                                                    <div class="tab_element">
+                                                        <div class="widget-content well well-sm">
+                                                            <table class="table"><tr><td class="tab_title">New Paragraph</td><td></td><td><span class="edit" onclick="showedit($(this).parentsUntil('li').parent().attr('id'))">Edit</span> &nbsp;&nbsp; <span class="delete" onclick="$(this).parentsUntil('li').parent().remove()">Delete</span></td></tr></table>
+                                                            <div class="expand">
+                                                                <div class="form-group">
+                                                                    <label for="">Paragraph</label>
+                                                                    <textarea cols="10" rows="4" class="widefat form-control val_title" name="paragraph" >New Paragraph</textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li id="tab_linebreak">
+                                                    <img src="view/template/marketing/externals/images/submit.png"/> Line Break
+                                                    <div class="tab_element">
+                                                        <div class="widget-content well well-sm">
+                                                            <table class="table"><tr><td class="tab_title">Line Break</td><td></td><td> &nbsp;&nbsp; <span class="delete" onclick="$(this).parentsUntil('li').parent().remove()">Delete</span></td></tr></table>
+                                                            <div class="expand">
+                                                                <div class="form-group">
+                                                                    <label for="">Label</label>
+                                                                    <input type="text" value="Line Break" class="form-control widefat  val_title" name="title">
+                                                                </div>
+                                                                </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li id="tab_email">
+                                                    <img src="view/template/marketing/externals/images/email.png"/> Email
+                                                    <div class="tab_element">
+                                                        <div class="widget-content well well-sm">
+                                                            <table class="table"><tr><td class="tab_title">Email</td><td>
+                                                                        <input type="text" class="boxhidden form-control " /></td><td><span class="edit" onclick="showedit($(this).parentsUntil('li').parent().attr('id'))">Edit</span> &nbsp;&nbsp; <span class="delete" onclick="$(this).parentsUntil('li').parent().remove()">Delete</span></td></tr></table>
+                                                            <div class="expand">
+                                                                <div class="form-group">
+                                                                    <label for="">Label</label>
+                                                                    <input type="text" value="Email" class="form-control widefat  val_title" name="title">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Help Text</label>
+                                                                    <input type="text" value="" class="form-control widefat " name="help">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Class</label>
+                                                                    <input type="text" value="" class="form-control widefat" name="width">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Required <span class="red">*</span></label>
+                                                                    <input type="checkbox" value="1" class="widefat checkbox " name="required">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li id="tab_signlelinetext">
+                                                    <img src="view/template/marketing/externals/images/singleline.png"/> Single Line Text
+                                                    <div class="tab_element">
+                                                        <div class="widget-content well well-sm">
+                                                            <table class="table"><tr><td class="tab_title">Single Line Text</td><td><input type="text" class="boxhidden" /></td><td><span class="edit" onclick="showedit($(this).parentsUntil('li').parent().attr('id'))">Edit</span> &nbsp;&nbsp; <span class="delete" onclick="$(this).parentsUntil('li').parent().remove()">Delete</span></td></tr></table>
+                                                            <div class="expand">
+                                                                <div class="form-group">
+                                                                    <label for="">Label</label>
+                                                                    <input type="text" value="Single Line Text" class="widefat val_title form-control" name="title">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Help Text</label>
+                                                                    <input type="text" value="" class="form-control widefat " name="help">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Class</label>
+                                                                    <input type="text" value="" class="form-control widefat" name="width">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Required <span class="red">*</span></label>
+                                                                    <input type="checkbox" value="1" class="widefat" name="required">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li id="tab_multilinetext">
+                                                    <img src="view/template/marketing/externals/images/multiline.png"/> Multi-Line Text
+                                                    <div class="tab_element">
+                                                        <div class="widget-content well well-sm">
+                                                            <table class="table"><tr><td class="tab_title">Multi-Lines Text</td><td><textarea class="boxhidden"></textarea></td><td><span class="edit" onclick="showedit($(this).parentsUntil('li').parent().attr('id'))">Edit</span> &nbsp;&nbsp; <span class="delete" onclick="$(this).parentsUntil('li').parent().remove()">Delete</span></td></tr></table>
+                                                            <div class="expand">
+                                                                <div class="form-group">
+                                                                    <label for="">Label</label>
+                                                                    <input type="text" value="Multi-lines Text" class="widefat val_title form-control" name="title">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Help Text</label>
+                                                                    <input type="text" value="" class="form-control widefat " name="help">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Class</label>
+                                                                    <input type="text" value="" class="form-control widefat" name="width">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Rows</label>
+                                                                    <input type="text" value="" class="widefat" name="rows">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Cols</label>
+                                                                    <input type="text" value="" class="widefat" name="cols">
+                                                                </div>  
+                                                                <div class="form-group">
+                                                                    <label for="">Required <span class="red">*</span></label>
+                                                                    <input type="checkbox" value="1" class="widefat" name="required">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li id="tab_checkbox">
+                                                    <img src="view/template/marketing/externals/images/checkbox.png"/> Checkboxes
+                                                    <div class="tab_element">
+                                                        <div class="widget-content well well-sm">
+                                                            <table class="table"><tr><td class="tab_title">Checkboxes</td><td><input type="checkbox"> &nbsp; <input type="checkbox"></td><td><span class="edit" onclick="showedit($(this).parentsUntil('li').parent().attr('id'))">Edit</span> &nbsp;&nbsp; <span class="delete" onclick="$(this).parentsUntil('li').parent().remove()">Delete</span></td></tr></table>
+                                                            <div class="expand">
+                                                                <div class="form-group">
+                                                                    <label for="">Label</label>
+                                                                    <input type="text" value="Checkboxes" class="widefat val_title" name="title">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Help Text</label>
+                                                                    <input type="text" value="" class="form-control widefat " name="help">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Class</label>
+                                                                    <input type="text" value="" class="form-control widefat" name="width">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Required <span class="red">*</span></label>
+                                                                    <input type="checkbox" value="1" class="widefat" name="required">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">List Items</label>
+                                                                    <input type="button" value="Enter items as text" class="widefat" onclick="add_checkbox($(this).parentsUntil('li').parent().attr('id'))">
+                                                                    <table class="checkboxlist"></table>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li id="tab_radio">
+                                                    <img src="view/template/marketing/externals/images/radio.png"/> Radio Buttons
+                                                    <div class="tab_element">
+                                                        <div class="widget-content well well-sm">
+                                                            <table class="table"><tr><td class="tab_title">Radio Buttons</td><td><input type="radio"> &nbsp;<input type="radio"></td><td><span class="edit" onclick="showedit($(this).parentsUntil('li').parent().attr('id'))">Edit</span> &nbsp;&nbsp; <span class="delete" onclick="$(this).parentsUntil('li').parent().remove()">Delete</span></td></tr></table>
+                                                            <div class="expand">
+
+                                                                <div class="form-group">
+                                                                    <label for="">Label</label>
+                                                                    <input type="text" value="Radio Buttons" class="widefat val_title form-control" name="title">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Help Text</label>
+                                                                    <input type="text" value="" class="form-control widefat " name="help">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Class</label>
+                                                                    <input type="text" value="" class="form-control widefat" name="width">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Required <span class="red">*</span></label>
+                                                                    <input type="checkbox" value="1" class="widefat" name="required">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">List Items</label>
+                                                                    <input type="button" value="Enter items as text" class="widefat" onclick="add_checkbox($(this).parentsUntil('li').parent().attr('id'))">
+                                                                    <table class="checkboxlist"></table>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li id="tab_dropdown">
+                                                    <img src="view/template/marketing/externals/images/select.png"/> Drop-down List
+                                                    <div class="tab_element">
+                                                        <div class="widget-content well well-sm">
+                                                            <table class="table"><tr><td class="tab_title">Drop-down List</td><td><select style="width: 200px !important;" disabled><option>Select</option></select></td><td><span class="edit" onclick="showedit($(this).parentsUntil('li').parent().attr('id'))">Edit</span> &nbsp;&nbsp; <span class="delete" onclick="$(this).parentsUntil('li').parent().remove()">Delete</span></td></tr></table>
+                                                            <div class="expand">
+
+                                                                <div class="form-group">
+                                                                    <label for="">Label</label>
+                                                                    <input type="text" value="Drop-down List" class="widefat val_title form-control" name="title">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Help Text</label>
+                                                                    <input type="text" value="" class="form-control widefat " name="help">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Class</label>
+                                                                    <input type="text" value="" class="form-control widefat" name="width">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Required <span class="red">*</span></label>
+                                                                    <input type="checkbox" value="1" class="widefat" name="required">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">List Items</label>
+                                                                    <input type="button" value="Enter items as text" class="widefat" onclick="add_checkbox($(this).parentsUntil('li').parent().attr('id'))">
+                                                                    <table class="checkboxlist"></table>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li id="tab_multidropdow">
+                                                    <img src="view/template/marketing/externals/images/multiselect.png"/> Multi Select Dropdown
+                                                    <div class="tab_element">
+                                                        <div class="widget-content well well-sm">
+                                                            <table class="table"><tr><td class="tab_title">Multi Select Dropdown</td><td><select style="width: 200px !important;" disabled><option>Select</option></select></td><td><span class="edit" onclick="showedit($(this).parentsUntil('li').parent().attr('id'))">Edit</span> &nbsp;&nbsp; <span class="delete" onclick="$(this).parentsUntil('li').parent().remove()">Delete</span></td></tr></table>
+                                                            <div class="expand">
+
+                                                                <div class="form-group">
+                                                                    <label for="">Label</label>
+                                                                    <input type="text" value="Multi Select Dropdown" class="widefat val_title form-control" name="title">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Help Text</label>
+                                                                    <input type="text" value="" class="form-control widefat " name="help">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Class</label>
+                                                                    <input type="text" value="" class="form-control widefat" name="width">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Required <span class="red">*</span></label>
+                                                                    <input type="checkbox" value="1" class="widefat" name="required">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">List Items</label>
+                                                                    <input type="button" value="Enter items as text" class="widefat" onclick="add_checkbox($(this).parentsUntil('li').parent().attr('id'))">
+                                                                    <table class="checkboxlist"></table>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li id="tab_upload">
+                                                    <img src="view/template/marketing/externals/images/upload.png"/> Upload
+                                                    <div class="tab_element">
+                                                        <div class="widget-content well well-sm">
+                                                            <table class="table"><tr><td class="tab_title">Upload</td><td><input type="file" disabled></td><td><span class="edit" onclick="showedit($(this).parentsUntil('li').parent().attr('id'))">Edit</span> &nbsp;&nbsp; <span class="delete" onclick="$(this).parentsUntil('li').parent().remove()">Delete</span></td></tr></table>
+                                                            <div class="expand">
+
+                                                                <div class="form-group">
+                                                                    <label for="">Label</label>
+                                                                    <input type="text" value="Upload" class="widefat val_title form-control" name="title">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Help Text</label>
+                                                                    <input type="text" value="" class="form-control widefat " name="help">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Class</label>
+                                                                    <input type="text" value="" class="form-control widefat" name="width">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Required <span class="red">*</span></label>
+                                                                    <input type="checkbox" value="1" class="widefat" name="required">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li id="tab_date"><img src="view/template/marketing/externals/images/date.png"/> Date
+                                                    <div class="tab_element">
+                                                        <div class="widget-content well well-sm">
+                                                            <table class="table"><tr><td class="tab_title">Date</td><td><input type="text" class="boxhidden" /></td><td><span class="edit" onclick="showedit($(this).parentsUntil('li').parent().attr('id'))">Edit</span> &nbsp;&nbsp; <span class="delete" onclick="$(this).parentsUntil('li').parent().remove()">Delete</span></td></tr></table>
+                                                            <div class="expand">
+
+                                                                <div class="form-group">
+                                                                    <label for="">Label</label>
+                                                                    <input type="text" value="Date" class="widefat val_title form-control" name="title">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Help Text</label>
+                                                                    <input type="text" value="" class="form-control widefat " name="help">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Class</label>
+                                                                    <input type="text" value="" class="form-control widefat" name="width">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Required <span class="red">*</span></label>
+                                                                    <input type="checkbox" value="1" class="widefat" name="required">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li id="tab_time"><img src="view/template/marketing/externals/images/time.png"/> Time
+                                                    <div class="tab_element">
+                                                        <div class="widget-content well well-sm">
+                                                            <table class="table"><tr><td class="tab_title">Time</td><td><input type="text" class="boxhidden" /></td><td><span class="edit" onclick="showedit($(this).parentsUntil('li').parent().attr('id'))">Edit</span> &nbsp;&nbsp; <span class="delete" onclick="$(this).parentsUntil('li').parent().remove()">Delete</span></td></tr></table>
+                                                            <div class="expand">
+
+                                                                <div class="form-group">
+                                                                    <label for="">Label</label>
+                                                                    <input type="text" value="Time" class="widefat val_title form-control" name="title">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Help Text</label>
+                                                                    <input type="text" value="" class="form-control widefat " name="help">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Class</label>
+                                                                    <input type="text" value="" class="form-control widefat" name="width">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Required <span class="red">*</span></label>
+                                                                    <input type="checkbox" value="1" class="widefat" name="required">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li id="tab_captcha"><img src="view/template/marketing/externals/images/captcha.png"/> Captcha
+                                                    <div class="tab_element">
+                                                        <div class="widget-content well well-sm">
+                                                            <table class="table"><tr><td class="tab_title">Captcha</td><td><input type="text" class="boxhidden" /></td><td><span class="edit" onclick="showedit($(this).parentsUntil('li').parent().attr('id'))">Edit</span> &nbsp;&nbsp; <span class="delete" onclick="$(this).parentsUntil('li').parent().remove()">Delete</span></td></tr></table>
+                                                            <div class="expand">
+
+                                                                <div class="form-group">
+                                                                    <label for="">Label</label>
+                                                                    <input type="text" value="Captcha" class="widefat val_title form-control" name="title">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Help Text</label>
+                                                                    <input type="text" value="" class="form-control widefat " name="help">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Class</label>
+                                                                    <input type="text" value="" class="form-control widefat" name="width">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Required <span class="red">*</span></label>
+                                                                    <input type="checkbox" value="1" class="widefat" name="required">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li id="tab_submit"><img src="view/template/marketing/externals/images/submit.png"/> Submit Button
+                                                    <div class="tab_element">
+                                                        <div class="widget-content well well-sm">
+                                                            <table class="table"><tr><td class="tab_title">Submit Button</td><td></td><td><span class="edit" onclick="showedit($(this).parentsUntil('li').parent().attr('id'))">Edit</span> &nbsp;&nbsp; <span class="delete" onclick="$(this).parentsUntil('li').parent().remove()">Delete</span></td></tr></table>
+                                                            <div class="expand">
+
+                                                                <div class="form-group">
+                                                                    <label for="">Label</label>
+                                                                    <input type="text" value="Submit Button" class="widefat val_title form-control" name="title">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Row Class</label>
+                                                                    <input type="text" value="" class="form-control widefat" name="help">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Button Class</label>
+                                                                    <input type="text" name="width" class="widefat" value="">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </td><td width="1">&nbsp;</td><td valign="top" width="*">
+                                            <!-- MAIN AREA -->
+                                            <div class="settings">
+                                                <!-- Form Settings Area  -->
+
+                                                <!-- Form Fields Area --> 
+                                                <ul id="sortable" class="form-elements form-horizontal" >
+                                                    <?php if (isset($html)) echo $html; ?>
+                                                </ul>
+
+
+                                                <div style="clear: both;"></div>
+
+                                            </div>
+                                        </td></tr></table>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <script type="text/javascript">
+
+
+
+            function check_empty_form() {
+                if (!$('#sortable li').length)
+                    $('#submit-wrapper').hide();
+            }
+
+            // Custom drop actions for <div id="dropBox">
+            function dropItems(idOfDraggedItem, targetId, x, y)
+            {
+                key = Math.floor((Math.random() * 100) + 1);
+                $('#sortable').append('<li id="form_' + idOfDraggedItem + '_' + key + '"><form id="' + key + '_id">' + $('#' + idOfDraggedItem + ' .tab_element').html() + '</form></li>');
+                // check form have child ? 
+                $('#submit-wrapper').show();
+            }
+
+
+
+
+
+
+            function showedit(eleID) {
+                if ($('#' + eleID + ' .edit').hasClass('open')) {
+                    $('#' + eleID + ' .edit').removeClass('open');
+                    $('#' + eleID + ' .edit').text('Edit');
+                    $('#' + eleID + ' .expand').hide();
+                    $('#' + eleID + ' form .tab_title').text($('#' + eleID + ' form .val_title').val());
+
+                } else {
+                    $('#' + eleID + ' .edit').addClass('open');
+                    $('#' + eleID + ' .edit').text('Hide');
+                    $('#' + eleID + ' .expand').show(0, function () {
+                        $('#' + eleID + ' .widefat').click(function () {
+                            $(this).focus().select();
+                        });
+                    });
+                }
+
+            }
+
+            function checkValidate() {
+                if ($('#form_url').val() == '') {
+                    alert('Form Url can not be empty !');
+                    return false;
+                }
+
+                if ($('#form_email').val() == '') {
+                    alert('Please enter valid email!');
+                    return false;
+                }
+                return true;
+            }
+
+
+            function submitform() {
+
+                // check validate 
+                if (!checkValidate())
+                    return false;
+
+                $data = new Array();
+
+                $i = 0;
+                $('#sortable li').each(function () {
+                    $rootID = $(this).attr('id');
+                    $input = $('#' + $rootID + ' form').serializeArray();
+                    $data[$i++] = new Array($rootID, $input);
+                });
+
+                $setting = new Array();
+                $j = 0;
+                $('#form_settings .settingl').each(function () {
+
+                    $setting[$j++] = new Array($(this).attr('name'), $(this).val());
+
+                });
+
+
+
+                $.post(document.URL,
+                        {form_data: $data, form_settings: $setting},
+                        function ($redirect) {
+                            document.location.href = $redirect.replace("amp;", "");
+                            ;
+                        });
+            }
+
+            function add_checkbox(rootID) {
+                var items = prompt("Enter items separated by commas");
+                array_items = items.split(',');
+                for (var i = 0; i < array_items.length; i++)
+                {
+                    key = Math.floor((Math.random() * 10000) + 1);
+                    $('#' + rootID + ' .checkboxlist').append('<tr id="checkbox_' + key + '"><td><input type="text" name="option[]" value="' + array_items[i] + '"></td><td><a href="javascript:void(0);" onclick="remove_this(\'checkbox\',\'' + key + '\')">Remove</a></td></tr>');
+
+                }
+            }
+
+            function remove_this(key, item_id) {
+                $('#' + key + "_" + item_id).remove();
+            }
+
+            function resizeIframe(obj) {
+                obj.style.height = obj.contentWindow.document.body.offsetHeight + 'px';
+            }
+            var slugXHR = null;
+
+            docReady(function () {
+
+<?php if (isset($this->request->get['form_id']) && $this->request->get['form_id'] > 0): ?>
+                    $('#resetSlug').on("click", function () {
+                        var pdata = {name: $('#nameInput').val(), 'form_id': <?php echo $this->request->get['form_id']; ?>};
+                        if (slugXHR != null) {
+                            slugXHR.abort();
+                            slugXHR = null;
+                        }
+                        slugXHR = $.ajax({
+                            type: "POST",
+                            url: 'index.php?p=cms/page/getSlug&token=<?php echo $this->session->data['token']; ?>',
+                            data: pdata,
+                            dataType: 'json',
+                            success: function (msg) {
+                                /* handle the ajax response */
+                                $('#form_url').val(msg.slug);
+                                $('#form_urlValue').val(msg.slug);
+
+                            }
+                        });
+                    });
+<?php else: ?>
+
+                    $('#nameInput').on("keyup", function () {
+                        var pdata = {name: $(this).val()};
+                        if (slugXHR != null) {
+                            slugXHR.abort();
+                            slugXHR = null;
+                        }
+                        slugXHR = $.ajax({
+                            type: "POST",
+                            url: 'index.php?p=cms/page/getSlug&token=<?php echo $this->session->data['token']; ?>',
+                            data: pdata,
+                            dataType: 'json',
+                            success: function (msg) {
+                                /* handle the ajax response */
+                                $('#form_url').val(msg.slug);
+                                $('#form_urlValue').val(msg.slug);
+
+                            }
+                        });
+                    });
+<?php endif; ?>
+
+                var dragDropObj = new DHTMLgoodies_dragDrop();
+                $('.tablist li').each(function () {
+                    eleid = $(this).attr('id');
+                    dragDropObj.addSource(eleid, true);
+                });
+
+                dragDropObj.addTarget('sortable', 'dropItems');	// Set <div id="dropBox"> as a drop target. Call function dropItems on drop
+                dragDropObj.init();
+
+                $("#sortable").sortable({
+                    revert: true
+                });
+                $("#draggable").draggable({
+                    connectToSortable: "#sortable",
+                    helper: "clone",
+                    revert: "invalid"
+                });
+                $("ul, li, table").disableSelection();
+
+
+                $('.footerarea input').click(function () {
+                    $(this).focus();
+                });
+                $('.footerarea select').click(function () {
+                    $(this).focus();
+                });
+
+                //$('.tab-box').live('click', function () {
+                $(document).on("click", ".tab-box", function () {
+                    var id = $(this).attr('id');
+                    $('.tab-box').removeClass('active');
+                    $(this).addClass('active');
+                    $('.tab').css('display', 'none');
+                    $('#t_' + id).fadeIn('fast');
+                });
+            });
+        </script>
+        <style type="text/css">
+            iframe{
+                width: 99.8%;
+                height: 425px;
+                border: 1px solid silver;
+                border-radius: 0 0 5px 5px;
+            }
+
+            #global_content_wrapper {
+                overflow: auto;
+            }
+        </style>
+    </div>
+</div>
+<?php echo $footer; ?>

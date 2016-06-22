@@ -1,0 +1,292 @@
+<?php echo $header; ?>
+<div class="breadcrumbs">
+    <div class="container">
+        <h2 class="pull-left"><?php echo $heading_title; ?></h2>
+        <ul class="pull-right breadcrumb">
+            <?php foreach ($breadcrumbs as $breadcrumb) { ?>
+                <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
+            <?php } ?>
+        </ul>
+    </div>
+</div>
+<?php echo $column_top; ?>
+<section class="content">
+    <div class="container">
+        <div class="row">
+            <?php if ($column_left): ?>
+                <?php echo $column_left; ?>
+            <?php endif; ?>
+            <?php if ($column_left && $column_right) { ?>
+                <?php $class = 'col-sm-6'; ?>
+            <?php } elseif ($column_left || $column_right) { ?>
+                <?php $class = 'col-sm-9'; ?>
+            <?php } else { ?>
+                <?php $class = 'col-sm-12'; ?>
+            <?php } ?>
+            <div class="<?php echo $class; ?>">
+                <?php echo $content_top; ?>
+
+
+
+                <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="contact" class="form-horizontal">
+
+                    <?php if ($error_captcha || $email): ?>
+                        <div class="alert alert-danger"><?php echo $error_captcha . "<br />" . $email; ?></div>
+                    <?php endif; ?>
+                    <div class="row">
+                        <fieldset>
+                            <?php foreach ($formdata as $formfield): ?>
+                                <?php if ($formfield['key'] == 'form_tab_title'): ?>
+                                    <div class="col-xs-12"><legend><?php echo $formfield['title']; ?></legend></div>
+                                    <?php elseif($formfield['key'] == 'form_tab_linebreak'): ?>
+                                    <div class="clearfix"></div>
+                                <?php elseif ($formfield['key'] == 'form_tab_paragraph'): ?>
+                                    <div class="col-xs-12"><p><?php echo nl2br($formfield['paragraph']); ?></p></div>
+                                <?php elseif ($formfield['key'] == 'form_tab_submit'): ?>
+                                    <div class="<?php echo $formfield['help']; ?>">
+                                        <button type="submit" class="btn <?php echo $formfield['width']; ?>"><?php echo $formfield['title']; ?></button>
+                                    </div>
+                                <?php else: ?>
+                                    <div class="<?php echo (empty($formfield['width'])) ? 'col-xs-12' : $formfield['width']; ?>">
+                                        <div class="form-group <?php echo ($formfield['required']); ?> <?php echo (!empty($formfield['error'])) ? 'has-error' : ''; ?>">
+                                            <label class="col-sm-3 control-label" for="id_<?php echo $formfield['name']; ?>"><?php echo $formfield['title']; ?><?php echo ($formfield['required']) ? ' <span class="reqstar">*</span>' : ''; ?>
+                                                <?php if (!empty($formfield['help'])): ?>
+                                                    <i class="fa fa-question-circle" data-toggle="tooltip" title="<?php echo htmlspecialchars($formfield['help']); ?>" ></i>
+                                                <?php endif; ?>
+                                            </label>
+                                            <div class="col-sm-9">
+
+                                                <?php if ($formfield['type'] == 'email'): ?>
+                                                    <input  type="email" id="id_<?php echo $formfield['name']; ?>" name="<?php echo $formfield['name']; ?>" value="<?php echo $formfield['post']; ?>"    class="form-control <?php echo ($formfield['required']); ?>" >
+
+                                                <?php endif; ?>
+                                                <?php if ($formfield['type'] == 'signlelinetext'): ?>
+                                                    <input  type="text" id="id_<?php echo $formfield['name']; ?>" name="<?php echo $formfield['name']; ?>" value="<?php echo $formfield['post']; ?>"    class="form-control <?php echo ($formfield['required']); ?>" >
+
+                                                <?php endif; ?>
+
+                                                <?php if ($formfield['type'] == 'multilinetext'): ?>
+                                                    <textarea class="form-control <?php echo ($formfield['required']); ?>"  id="id_<?php echo $formfield['name']; ?>"  name="<?php echo $formfield['name']; ?>" rows="<?php echo (!empty($formfield['rows'])) ? (int) $formfield['rows'] : '5'; ?>"><?php echo $formfield['post']; ?></textarea>
+                                                <?php endif; ?>
+
+
+                                                <?php if ($formfield['type'] == 'checkbox'): ?>
+                                                    <?php foreach ($formfield['option'] as $opt): ?>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <?php if (is_array($formfield['post']) && in_array($opt, $formfield['post'])): ?>
+                                                                    <input checked type="checkbox" value="<?php echo $opt; ?>" name="<?php echo $formfield['name']; ?>[]" >
+                                                                <?php else: ?>
+                                                                    <input  type="checkbox" value="<?php echo $opt; ?>" name="<?php echo $formfield['name']; ?>[]" >
+                                                                <?php endif; ?>
+                                                                <?php echo $opt; ?>
+                                                            </label>
+                                                        </div>
+                                                    <?php endforeach; ?>
+
+                                                <?php endif; ?>
+
+                                                <?php if ($formfield['type'] == 'radio'): ?>
+                                                    <?php foreach ($formfield['option'] as $ridx => $opt): ?>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <?php if ($opt == $formfield['post'] || ($ridx == 0 && empty($formfield['post']))): ?>
+                                                                    <input checked type="radio" value="<?php echo $opt; ?>" name="<?php echo $formfield['name']; ?>" >
+                                                                <?php else: ?>
+                                                                    <input  type="radio" value="<?php echo $opt; ?>" name="<?php echo $formfield['name']; ?>" >
+                                                                <?php endif; ?>
+                                                                <?php echo $opt; ?>
+                                                            </label>
+                                                        </div>
+                                                    <?php endforeach; ?>
+
+                                                <?php endif; ?>
+
+                                                <?php if ($formfield['type'] == 'dropdown'): ?>
+                                                    <select class="form-control <?php echo ($formfield['required']); ?>"  id="id_<?php echo $formfield['name']; ?>"  name="<?php echo $formfield['name']; ?>">
+                                                        <option value=""></option>
+                                                        <?php foreach ($formfield['option'] as $opt): ?>
+                                                            <?php if ($opt == $formfield['post']): ?>
+                                                                <option value="<?php echo $opt; ?>" selected><?php echo $opt; ?></option>
+                                                            <?php else: ?>
+                                                                <option value="<?php echo $opt; ?>"><?php echo $opt; ?></option>
+                                                            <?php endif; ?>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                <?php endif; ?>
+
+                                                <?php if ($formfield['type'] == 'multidropdow'): ?>
+                                                    <select multiple="multiple" class="form-control <?php echo ($formfield['required']); ?>"  id="id_<?php echo $formfield['name']; ?>"  name="<?php echo $formfield['name']; ?>[]">
+
+                                                        <?php foreach ($formfield['option'] as $opt): ?>
+                                                            <?php if (is_array($formfield['post']) && in_array($opt, $formfield['post'])): ?>
+                                                                <option value="<?php echo $opt; ?>" selected><?php echo $opt; ?></option>
+                                                            <?php else: ?>
+                                                                <option value="<?php echo $opt; ?>"><?php echo $opt; ?></option>
+                                                            <?php endif; ?>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                <?php endif; ?>
+
+                                                <?php if ($formfield['type'] == 'upload'): ?>
+                                                    <input  type="file" id="id_<?php echo $formfield['name']; ?>" name="<?php echo $formfield['name']; ?>" value="<?php echo $formfield['post']; ?>"    class="form-control <?php echo ($formfield['required']); ?>" >
+
+                                                <?php endif; ?>
+                                                    
+                                                    <?php if($formfield['type'] == 'date' || $formfield['type'] == 'time'): ?>
+                                                    <input  type="text" data-type="<?php echo $formfield['type']; ?>" id="id_<?php echo $formfield['name']; ?>" name="<?php echo $formfield['name']; ?>" value="<?php echo $formfield['post']; ?>"    class="form-control <?php echo ($formfield['required']); ?>" >
+                                                    <?php endif; ?>
+
+
+                                                <?php if ($formfield['type'] == 'captcha'): ?>
+                                                    <div class="input-group ">
+                                                        <input type="text" name="<?php echo $formfield['name']; ?>" id="id_<?php echo $formfield['name']; ?>" class="form-control" />
+                                                        <span class="input-group-addon input-captcha" ><img src="index.php?p=common/captcha" alt="" id="captcha" /></span>
+                                                        <span class="input-group-btn" ><button id="img_cap_reload" type="button" class="btn btn-default"><i class="fa fa-refresh"></i></button></span>
+
+                                                    </div>
+                                                <?php endif; ?>
+                                                <?php if (!empty($formfield['error'])): ?><span class="help-block"><?php echo $formfield['error']; ?></span><?php endif; ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+
+                        </fieldset>
+                    </div>
+
+                    <?php
+                    // echo $formdata;
+                    ?></form>
+
+
+                <?php echo $content_bottom; ?>
+            </div><!-- end col-sm-12 -->
+            <?php if ($column_right): ?>
+                <?php echo $column_right; ?>
+            <?php endif; ?>
+        </div><!-- end row -->
+    </div><!-- end container -->
+</section>
+<?php echo $column_bottom; ?>
+<?php
+$this->document->addStyle('view/plugins/jquery-ui-datepicker/jquery-ui.min.css');
+$this->document->addStyle('https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.min.css');
+$this->document->addScript('view/plugins/jquery-ui-datepicker/jquery-ui.min.js');
+$this->document->addScript("https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.min.js");
+?>
+<script>
+    docReady(function () {
+        for (var i = 0; i < 5; i++) {
+            $('input[data-type="date"]').datepicker();
+            $('input[data-type="time"]').timepicker({
+                hourGrid: 4,
+                minuteGrid: 10
+            });
+        }
+
+    });
+
+</script>
+
+<script type="text/javascript">
+    function checkValidate() {
+        $flag = true;
+        jQuery('.required input').each(function () {
+            if (jQuery(this).val() === '') {
+
+                alert('Please enter ' + jQuery(this).closest('.form-group').children('label').text());
+                $flag = false;
+                jQuery(this).focus();
+                return false;
+
+            }
+        });
+        var checked = true;
+        var element = '';
+        jQuery('.required input[type=checkbox]').each(function () {
+            checked = false;
+            element = jQuery(this);
+            if (jQuery(this).prop('checked')) {
+                checked = true;
+                return false;
+            }
+        });
+        if (checked == false) {
+            alert('Please check ' + element.parent().children('label').text());
+            $flag = false;
+            element.focus();
+            return false;
+        }
+        var checked = true;
+        var element = '';
+        jQuery('.required input[type=radio]').each(function () {
+            checked = false;
+            element = jQuery(this);
+            if (jQuery(this).prop('checked')) {
+                checked = true;
+                return false;
+            }
+        });
+        if (checked == false) {
+            alert('Please check ' + element.parent().children('label').text());
+            $flag = false;
+            element.focus();
+            return false;
+        }
+        var checked = true;
+        var element = '';
+        jQuery('.required select[multiple=multiple] option').each(function () {
+            checked = false;
+            element = jQuery(this);
+            if (jQuery(this).prop('selected')) {
+                checked = true;
+                return false;
+            }
+        });
+        if (checked == false) {
+            alert('Please select' + element.parent().parent().children('label').text());
+            $flag = false;
+            element.focus();
+            return false;
+        }
+        jQuery('.required textarea').each(function () {
+            if (jQuery(this).val() === '') {
+                alert('Please enter ' + jQuery(this).parent().children('label').text());
+                $flag = false;
+                jQuery(this).focus();
+                return false;
+
+            }
+        });
+        jQuery('.required select').each(function () {
+            if (jQuery(this).val() === '') {
+                alert('Please enter ' + jQuery(this).parent().children('label').text());
+                $flag = false;
+                jQuery(this).focus();
+                return false;
+
+            }
+        });
+
+
+        // return result
+        if ($flag) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    docReady(function () {
+        $('[data-toggle="tooltip"]').tooltip({
+            placement: "top",
+            html: true,
+            container: 'body'
+        });
+    });
+</script>
+
+<?php echo $footer; ?>

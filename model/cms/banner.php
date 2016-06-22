@@ -28,5 +28,20 @@ class ModelCmsBanner extends \Core\Model {
 
         return $query->rows;
     }
+    
+    public function getBannerDetail($banner_id) {
+        
+        
+        $query = $this->db->query("SELECT DISTINCT * FROM #__banner WHERE banner_id = '" . (int) $banner_id . "'");
+
+        $result = $query->row;
+        $query = $this->db->query("SELECT * FROM #__banner_image  WHERE banner_id = '" . (int) $banner_id . "'  ORDER BY sort_order ASC limit 1")->row;
+        
+        if(!empty($query['image'])){
+            $result['image'] = $query['image'];
+       }
+        
+        return $result;
+    }
 
 }
