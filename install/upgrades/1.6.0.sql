@@ -1,6 +1,6 @@
 ALTER TABLE `#__customer` ADD `temp` INT(11) NOT NULL ;
 update #__customer set temp = customer_group_id;
-ALTER TABLE `#___customer` CHANGE `customer_group_id` `customer_group_id` VARCHAR(250) NOT NULL;
+ALTER TABLE `#__customer` CHANGE `customer_group_id` `customer_group_id` VARCHAR(250) NOT NULL;
 update `#__customer` set customer_group_id = concat('[' , temp, ']');
 ALTER TABLE `#__customer` ADD `profile_img` VARCHAR(255) NOT NULL ;
 

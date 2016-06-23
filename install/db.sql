@@ -5196,7 +5196,7 @@ INSERT INTO `#__url_alias` (`query`, `keyword`, `custom`) VALUES
 ('p=common/contact', 'contact-us', 1),
 ('p=account/account', 'my-account', 1);
 
-ALTER TABLE `#___customer` CHANGE `customer_group_id` `customer_group_id` VARCHAR(250) NOT NULL;
+ALTER TABLE `#__customer` CHANGE `customer_group_id` `customer_group_id` VARCHAR(250) NOT NULL;
 ALTER TABLE `#__customer` ADD `profile_img` VARCHAR(255) NOT NULL ;
 
 CREATE TABLE IF NOT EXISTS `#__formcreator` (
