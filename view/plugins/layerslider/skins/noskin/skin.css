@@ -79,3 +79,29 @@
 .ls-noskin .ls-fullscreen:hover {
 	background-position: -525px -190px;
 }
+
+html * .ls-container img.img-responsive, body * .ls-container img.img-responsive, #ls-global * .ls-container img.img-responsive{
+	max-width: 100% !important;
+}
+
+.col-center {
+    float: none;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+@media (min-width: 1200px) {
+.ls-container .container {
+    width: 600px;
+}
+}
+@media (min-width: 992px) {
+.ls-container .container {
+    width: 600px;
+}
+}
+@media (min-width: 768px) {
+.ls-container .container {
+    width: 500px;
+}
+}

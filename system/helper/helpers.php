@@ -289,9 +289,7 @@ function init_wysiwyg() {
     \Core\Registry::getInstance()->get('document')->addScript($uri . '?p=cms/page/downloadlist');
 }
 
-function add_shortcode($tag, $func) {
-    \Core\Shortcode::addShortcode($tag, $func);
-}
+
 
 function __modification($filename) {
 

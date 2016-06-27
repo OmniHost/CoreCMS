@@ -469,14 +469,14 @@ CAROUSEL;
 
     public function init() {
         if (!$this->isAdmin()) {
-            add_shortcode('bootstrap_alert', array($this, 'alert'));
-            add_shortcode('bootstrap_align', array($this, 'align'));
-            add_shortcode('gallery', array($this, 'gallery'));
-            add_shortcode('module', array($this, 'module'));
-            add_shortcode('script', array($this, 'script'));
-            add_shortcode('inlinescript', array($this, 'inlinescript'));
-            add_shortcode('bootstrap_span', array($this, 'bootstrap_span'));
-            add_shortcode('bootstrap_row', array($this, 'bootstrap_row'));
+            \Core\Shortcode::addShortcode('bootstrap_alert', array($this, 'alert'));
+            \Core\Shortcode::addShortcode('bootstrap_align', array($this, 'align'));
+            \Core\Shortcode::addShortcode('gallery', array($this, 'gallery'));
+            \Core\Shortcode::addShortcode('module', array($this, 'module'));
+            \Core\Shortcode::addShortcode('script', array($this, 'script'));
+            \Core\Shortcode::addShortcode('inlinescript', array($this, 'inlinescript'));
+            \Core\Shortcode::addShortcode('bootstrap_span', array($this, 'bootstrap_span'));
+            \Core\Shortcode::addShortcode('bootstrap_row', array($this, 'bootstrap_row'));
         }
     }
 
@@ -499,7 +499,7 @@ tags[9] = ["[bootstrap_row] [bootstrap_span size=%27%27] My Content  [/bootstrap
 tags[10] = ["[bootstrap_tabheaderwrap][bootstrap_tabheader title=%27Tab One%27 active=%27true%27][bootstrap_tabheader title=%27Tab Two%27][/bootstrap_tabheaderwrap][bootstrap_tabcontentwrap][bootstrap_tabcontent title=%27Tab One%27 active=%27true%27]Tab one contents goes here[/bootstrap_tabcontent][bootstrap_tabcontent title=%27Tab Two%27]Tab two contents goes here[/bootstrap_tabcontent][/bootstrap_tabcontentwrap]", "Tabs", "Tabs"];
 tags[11] = ["[bootstrap_well]My Content[/bootstrap_well]", "Well", "Well"];
 
-add_shortcode('baztag', 'baztag_func');*/
+\Core\Shortcode::addShortcode('baztag', 'baztag_func');*/
 /**
  * 
  */

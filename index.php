@@ -1,7 +1,7 @@
 <?php
 
 define('NS', 'front');
-define('VERSION', '1.7.0');
+define('VERSION', '1.7.1');
 error_reporting(E_ALL);
 
 if (!is_file('config.php')) {

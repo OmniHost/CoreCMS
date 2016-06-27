@@ -892,3 +892,14 @@ body * .ls-container .ls-webkit-hack,
 .ls-forcehide {
 	display: none !important;
 }
+
+
+html * .ls-container img.img-responsive, body * .ls-container img.img-responsive, #ls-global * .ls-container img.img-responsive{
+	max-width: 100% !important;
+}
+
+.col-center {
+    float: none;
+    margin-left: auto;
+    margin-right: auto;
+  }

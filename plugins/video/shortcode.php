@@ -56,7 +56,7 @@ class Plugin_video extends \Core\Plugin {
 
     public function init() {
         if (!$this->isAdmin()) {
-            add_shortcode('video', array($this, 'video_shortcode'));
+            \Core\Shortcode::addShortcode('video', array($this, 'video_shortcode'));
         }
     }
 

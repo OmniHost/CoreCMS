@@ -1,6 +1,6 @@
 <?php
 
-add_shortcode('span_color', 'span_color_func');
+\Core\Shortcode::addShortcode('span_color', 'span_color_func');
 
 function span_color_func($attribs, $innercontent = '') {
 
@@ -27,7 +27,7 @@ class Plugin_demo extends \Core\Plugin {
     }
 
     public function init() {
-        add_shortcode('div_color', array($this, 'div_color'));
+        \Core\Shortcode::addShortcode('div_color', array($this, 'div_color'));
     }
 
 }
