@@ -52,11 +52,16 @@ class ModelDesignMenu extends \Core\Model {
     }
 
     protected function insertItem($menu_id, $item, $parent_id = 0) {
+
         $this->db->query("insert into #__menu_items set menu_id='" . (int) $menu_id . "',"
                 . "parent_id = '" . (int) $parent_id . "', "
                 . "title = '" . $this->db->escape($item['title']) . "', "
                 . "ams_page_id = '" . (int) $item['ams_page_id'] . "', "
                 . "link = '" . $this->db->escape($item['link']) . "', "
+                . "target = '" . $this->db->escape($item['target']) . "', "
+                . "params = '" . $this->db->escape($item['params']) . "', "
+                . "`route` = '" . $this->db->escape($item['route']) . "', "
+                . "`ssl` = '" . (int)$item['ssl'] . "', "
                 . "linklabel = '" . $this->db->escape($item['linklabel']) . "', "
                 . "sort_order = '" . (int) $this->_sort_order++ . "'");
         $item_id = $this->db->getLastId();

@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @name Dashboard Widget - Activity Map
+ */
 class ControllerDashboardMap extends \Core\Controller {
 
     public function index() {

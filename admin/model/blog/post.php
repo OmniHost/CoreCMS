@@ -12,8 +12,10 @@ class ModelBlogPost extends \Core\Ams\Page {
     public $categories;
     public $featured_image;
     public $publish_date;
-        public $downloads;
+    public $downloads;
     public $galleries;
+    public $relatedposts;
+    public $tags;
 
     protected function _setcategories($data) {
 
@@ -36,9 +38,8 @@ class ModelBlogPost extends \Core\Ams\Page {
             return time();
         }
     }
-    
-    
-     protected function _setdownloads($data) {
+
+    protected function _setdownloads($data) {
 
         $downloads = array();
         $list = json_decode($data['content'], 1);
@@ -47,13 +48,33 @@ class ModelBlogPost extends \Core\Ams\Page {
         }
         return $downloads;
     }
-    
-     protected function _setgalleries($data) {
+
+    protected function _setgalleries($data) {
 
         $downloads = array();
         $list = json_decode($data['content'], 1);
         if ($list) {
             $downloads = $this->_linkupgalleries($list);
+        }
+        return $downloads;
+    }
+
+    protected function _setrelatedposts($data) {
+
+        $downloads = array();
+        $list = json_decode($data['content'], 1);
+        if ($list) {
+            $downloads = $this->_linkupposts($list);
+        }
+        return $downloads;
+    }
+
+    protected function _settags($data) {
+
+        $downloads = array();
+        $list = json_decode($data['content'], 1);
+        if ($list) {
+            $downloads = $this->_linkupposts($list);
         }
         return $downloads;
     }
@@ -71,6 +92,7 @@ class ModelBlogPost extends \Core\Ams\Page {
 
         return $downloads;
     }
+
     protected function _linkupgalleries($list = array()) {
         $downloads = array();
         registry('load')->model('cms/banner');
@@ -84,14 +106,33 @@ class ModelBlogPost extends \Core\Ams\Page {
 
         return $downloads;
     }
-    
+
+    protected function _linkupposts($list = array()) {
+        $downloads = array();
+
+        foreach ($list as $post_id) {
+            $posts[] = $this->loadParent($post_id)->toArray();
+        }
+
+        return $posts;
+    }
+
+    protected function _populaterelatedposts($data) {
+
+        return json_encode($data['relatedposts']);
+    }
+
+    protected function _populatetags($data) {
+
+        return json_encode($data['tags']);
+    }
 
     protected function _populatedownloads($data) {
 
         return json_encode($data['downloads']);
     }
-    
-     protected function _populategalleries($data) {
+
+    protected function _populategalleries($data) {
 
         return json_encode($data['galleries']);
     }
@@ -102,7 +143,8 @@ class ModelBlogPost extends \Core\Ams\Page {
 
 
 
- 
+
+
 
         // Blurb
         if (isset($this->request->post['blurb'])) {
@@ -122,9 +164,9 @@ class ModelBlogPost extends \Core\Ams\Page {
         );
 
 
-         $tabs['general']['content'] = $this->_formTypeHtml('content', $this->_language->get('entry_content'));
-      
-  
+        $tabs['general']['content'] = $this->_formTypeHtml('content', $this->_language->get('entry_content'));
+
+
 
         //categories
         if (isset($this->request->post['categories'])) {
@@ -206,10 +248,12 @@ class ModelBlogPost extends \Core\Ams\Page {
             'required' => false
         );
 
-
-      $tabs['links']['downloads'] = $this->_formTypeAutocompleteList('downloads', $this->_language->get('entry_downloads'), registry('url')->link('cms/download/autocomplete', 'token=' . registry('session')->data['token'], 'SSL'), false, array($this, '_linkupdownloads'));
+        $tabs['links']['tags'] = $this->_formTypeAutocompleteList('tags', $this->_language->get('Post Tags'), registry('url')->link('blog/tags/autocomplete', 'ns=blog.tags&token=' . registry('session')->data['token'], 'SSL'), false, array($this, '_linkupposts'), registry('url')->link('blog/tags/autoinsert', 'ns=blog.tags&token=' . registry('session')->data['token'], 'SSL'));
+        $tabs['links']['relatedposts'] = $this->_formTypeAutocompleteList('relatedposts', $this->_language->get('Related Posts'), registry('url')->link('blog/post/autocomplete', 'ns=blog.post&token=' . registry('session')->data['token'], 'SSL'), false, array($this, '_linkupposts'));
+        $tabs['links']['downloads'] = $this->_formTypeAutocompleteList('downloads', $this->_language->get('entry_downloads'), registry('url')->link('cms/download/autocomplete', 'token=' . registry('session')->data['token'], 'SSL'), false, array($this, '_linkupdownloads'));
         $tabs['links']['galleries'] = $this->_formTypeAutocompleteList('galleries', $this->_language->get('Galleries'), registry('url')->link('cms/banner/autocomplete', 'token=' . registry('session')->data['token'], 'SSL'), false, array($this, '_linkupgalleries'));
-       
+
+    
 
 
         return $tabs;

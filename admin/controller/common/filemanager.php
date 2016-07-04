@@ -55,7 +55,7 @@ class ControllerCommonFileManager extends \Core\Controller {
         $image_total = count($images);
 
         // Split the array based on current page number and max number of items per page of 10
-        $images = array_splice($images, ($page - 1) * 16, 16);
+        $images = array_splice($images, ($page - 1) * 36, 36);
 
 
 

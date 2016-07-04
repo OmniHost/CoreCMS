@@ -62,120 +62,154 @@ abstract class Page extends \Core\Controller {
             }
         }
 
+
         if (!$this->_error) {
-            if (empty($this->request->get['preview_id'])) {
-                $this->_model->updateViews();
-            }
-            $this->language->load('cms/page');
-            if ($this->_namespace != 'cms/page') {
-                $this->language->load($this->_namespace);
-            }
+            $can_access = true;
+            $password = $this->model_setting_rights->getPassword($this->request->get['ams_page_id']);
 
-            $page['comments'] = $this->load->controller($this->_namespace . '/commentblock', $page);
-            $this->event->trigger('ams.page.name', $page['name']);
-            $page['slug'] = $this->_model->getSlug();
+            if (!empty($password)) {
+                $can_access = false;
+                if ($this->request->isPost() && $this->request->post['auth_page_password'] == $password) {
+                    $this->session->data['auth_page_password'][$this->request->get['ams_page_id']] = $password;
+                    $can_access = true;
+                } elseif ($this->request->isPost() && $this->request->post['auth_page_password'] != $password) {
 
-
-
-
-            $this->document->setTitle(strip_tags(($page['meta_title'])?$page['meta_title']:$page['name']));
-            $this->document->setKeywords($page['meta_keywords']);
-            $this->document->setDescription($page['meta_description']);
-
-
-
-            if (!empty($page['meta_og_title'])) {
-                $this->document->addMeta('og:title', $page['meta_og_title'], 'property');
-                $this->document->addMeta('twitter:title', $page['meta_og_title'], 'name');
-            } else {
-                $this->document->addMeta('og:title', strip_tags($page['meta_title']), 'property');
-                $this->document->addMeta('twitter:title', strip_tags($page['meta_title']), 'name');
-            }
-            if (!empty($page['meta_og_description'])) {
-                $this->document->addMeta('og:description', $page['meta_og_description'], 'property');
-                $this->document->addMeta('twitter:description', $page['meta_og_description'], 'name');
-            } else {
-                $this->document->addMeta('og:description', $page['meta_description'], 'property');
-                $this->document->addMeta('twitter:description', $page['meta_description'], 'name');
-            }
-            if (!empty($page['meta_og_image'])) {
-                $this->document->addMeta('og:image', $this->config->get('config_ssl') . 'img/' . $page['meta_og_image'], 'property');
-                $this->document->addMeta('twitter:image', $this->config->get('config_ssl') . 'img/' . $this->config->get('config_facebook_ogimage'), 'name');
-            }
-
-            $this->document->addLink($this->url->link($this->_namespace, 'ams_page_id=' . $page['id']), 'canonical');
-            $this->document->addMeta('og:url', $this->url->link($this->_namespace, 'ams_page_id=' . $page['id']), 'property');
-
-            $this->data['breadcrumbs'] = array();
-
-            $this->data['breadcrumbs'][] = array(
-                'text' => $this->language->get('text_home'),
-                'href' => $this->url->link('common/home')
-            );
-
-            $parent_id = $page['parent_id'];
-
-
-            $parentCrumbs = array();
-
-            while ($parent_id > 0) {
-                $parent_obj = $this->_model->loadParent($parent_id);
-
-                $parent = $parent_obj->toArray();
-                $parent_id = $parent['parent_id'];
-                if ($parent['id']) {
-                    $parentCrumbs[] = array(
-                        'text' => strip_tags($parent['name']),
-                        'href' => $this->url->link(str_replace(".", "/", $parent_obj->getNamespace()), 'ams_page_id=' . $parent['id'])
-                    );
+                    $page['auth_page_password_error'] = true;
+                } elseif (!empty($this->session->data['auth_page_password'][$this->request->get['ams_page_id']]) && $this->session->data['auth_page_password'][$this->request->get['ams_page_id']] == $password) {
+                    $can_access = true;
                 }
             }
 
-            $parentCrumbs = array_reverse($parentCrumbs);
-            foreach ($parentCrumbs as $crumb) {
-                $this->data['breadcrumbs'][] = $crumb;
-            }
+            if ($can_access) {
+
+                if (empty($this->request->get['preview_id'])) {
+                    $this->_model->updateViews();
+                }
+                $this->language->load('cms/page');
+                if ($this->_namespace != 'cms/page') {
+                    $this->language->load($this->_namespace);
+                }
+
+                $page['comments'] = $this->load->controller($this->_namespace . '/commentblock', $page);
+                $this->event->trigger('ams.page.name', $page['name']);
+                $page['slug'] = $this->_model->getSlug();
 
 
 
-            $this->data['breadcrumbs'][] = array(
-                'text' => strip_tags($page['name']),
-                'href' => $this->url->link($this->_namespace, 'ams_page_id=' . $page['id'])
-            );
 
-            $this->data['page'] = $page;
+                $this->document->setTitle(strip_tags(($page['meta_title']) ? $page['meta_title'] : $page['name']));
+                $this->document->setKeywords($page['meta_keywords']);
+                $this->document->setDescription($page['meta_description']);
 
-            if ($page['comments'] && $this->config->get('config_review_status')) {
-                $this->data['has_comments'] = true;
+
+
+                if (!empty($page['meta_og_title'])) {
+                    $this->document->addMeta('og:title', $page['meta_og_title'], 'property');
+                    $this->document->addMeta('twitter:title', $page['meta_og_title'], 'name');
+                } else {
+                    $this->document->addMeta('og:title', strip_tags($page['meta_title']), 'property');
+                    $this->document->addMeta('twitter:title', strip_tags($page['meta_title']), 'name');
+                }
+                if (!empty($page['meta_og_description'])) {
+                    $this->document->addMeta('og:description', $page['meta_og_description'], 'property');
+                    $this->document->addMeta('twitter:description', $page['meta_og_description'], 'name');
+                } else {
+                    $this->document->addMeta('og:description', $page['meta_description'], 'property');
+                    $this->document->addMeta('twitter:description', $page['meta_description'], 'name');
+                }
+                if (!empty($page['meta_og_image'])) {
+                    $this->document->addMeta('og:image', $this->config->get('config_ssl') . 'img/' . $page['meta_og_image'], 'property');
+                    $this->document->addMeta('twitter:image', $this->config->get('config_ssl') . 'img/' . $this->config->get('config_facebook_ogimage'), 'name');
+                }
+
+                $this->document->addLink($this->url->link($this->_namespace, 'ams_page_id=' . $page['id']), 'canonical');
+                $this->document->addMeta('og:url', $this->url->link($this->_namespace, 'ams_page_id=' . $page['id']), 'property');
+
+                $this->data['breadcrumbs'] = array();
+
+                $this->data['breadcrumbs'][] = array(
+                    'text' => $this->language->get('text_home'),
+                    'href' => $this->url->link('common/home')
+                );
+
+                $parent_id = $page['parent_id'];
+
+
+                $parentCrumbs = array();
+
+                while ($parent_id > 0) {
+                    $parent_obj = $this->_model->loadParent($parent_id);
+
+                    $parent = $parent_obj->toArray();
+                    $parent_id = $parent['parent_id'];
+                    if ($parent['id']) {
+                        $parentCrumbs[] = array(
+                            'text' => strip_tags($parent['name']),
+                            'href' => $this->url->link(str_replace(".", "/", $parent_obj->getNamespace()), 'ams_page_id=' . $parent['id'])
+                        );
+                    }
+                }
+
+                $parentCrumbs = array_reverse($parentCrumbs);
+                foreach ($parentCrumbs as $crumb) {
+                    $this->data['breadcrumbs'][] = $crumb;
+                }
+
+
+
+                $this->data['breadcrumbs'][] = array(
+                    'text' => strip_tags($page['name']),
+                    'href' => $this->url->link($this->_namespace, 'ams_page_id=' . $page['id'])
+                );
+
+                $this->data['page'] = $page;
+
+                if ($page['comments'] && $this->config->get('config_review_status')) {
+                    $this->data['has_comments'] = true;
+                } else {
+                    $this->data['has_comments'] = false;
+                }
+
+                $this->load->model('cms/comment');
+                $this->data['comment_count'] = $this->model_cms_comment->countComments($page['id']);
+
+
+                $this->template = $this->_namespace . '.phtml';
+
+                $theme = $this->config->get('config_template');
+                $override = $this->_namespace . '/' . $this->_model->getSlug() . '.phtml';
+
+                if (is_file(DIR_TEMPLATE . $theme . '/' . $override)) {
+                    $this->template = $override;
+                }
+
+
+
+                $this->children = array(
+                    'common/column_top',
+                    'common/column_bottom',
+                    'common/column_left',
+                    'common/column_right',
+                    'common/content_top',
+                    'common/content_bottom',
+                    'common/footer',
+                    'common/header'
+                );
             } else {
-                $this->data['has_comments'] = false;
+                $this->data['page'] = $page;
+
+                $this->template = 'cms/page_password.phtml';
+                $this->children = array(
+                    'common/column_top',
+                    'common/column_bottom',
+                    'common/column_left',
+                    'common/column_right',
+                    'common/content_top',
+                    'common/content_bottom',
+                    'common/footer',
+                    'common/header'
+                );
             }
-
-            $this->load->model('cms/comment');
-            $this->data['comment_count'] = $this->model_cms_comment->countComments($page['id']);
-
-
-            $this->template = $this->_namespace . '.phtml';
-
-            $theme = $this->config->get('config_template');
-            $override = $this->_namespace . '/' . $this->_model->getSlug() . '.phtml';
-
-            if (is_file(DIR_TEMPLATE . $theme . '/' . $override)) {
-                $this->template = $override;
-            }
-
-
-
-            $this->children = array(
-                'common/column_top',
-                'common/column_bottom',
-                'common/column_left',
-                'common/column_right',
-                'common/content_top',
-                'common/content_bottom',
-                'common/footer',
-                'common/header'
-            );
         }
     }
 
@@ -189,51 +223,77 @@ abstract class Page extends \Core\Controller {
             array(
                 'name' => 'Home Page',
                 'type' => 'core',
-                'link' => $this->url->link('common/home'),
-                'ams_page_id' => "0"
+                'link' => '',
+                'route' => 'common/home',
+                'params' => '',
+                'ams_page_id' => "0",
+                'ssl' => false,
             ),
             array(
                 'name' => 'Contact Page',
                 'type' => 'core',
-                'link' => $this->url->link('common/contact'),
-                'ams_page_id' => "0"
+                'route' => 'common/contact',
+                'params' => '',
+                'link' => '',
+                'ams_page_id' => "0",
+                'ssl' => false,
             ),
             array(
                 'name' => 'Blog Page',
                 'type' => 'core',
-                'link' => $this->url->link('blog/blog'),
-                'ams_page_id' => "0"
+                'route' => 'blog/blog',
+                'params' => '',
+                'link' => '',
+                'ams_page_id' => "0",
+                'ssl' => false,
             ),
             array(
                 'name' => 'Account Page',
                 'type' => 'core',
-                'link' => $this->url->link('account/account', '', 'SSL'),
-                'ams_page_id' => "0"
+                'route' => 'account/account',
+                'params' => '',
+                'link' => '',
+                'ams_page_id' => "0",
+                'ssl' => true,
             ),
             array(
                 'name' => 'Login Page',
                 'type' => 'core',
-                'link' => $this->url->link('account/login', '', 'SSL'),
-                'ams_page_id' => "0"
+                'link' => '',
+                'route' => 'account/login',
+                'params' => '',
+                'link' => '',
+                'ams_page_id' => "0",
+                'ssl' => true,
             ),
             array(
                 'name' => 'Register Page',
                 'type' => 'core',
-                'link' => $this->url->link('account/register', '', 'SSL'),
-                'ams_page_id' => "0"
+                'link' => '',
+                'route' => 'account/register',
+                'params' => '',
+                'link' => '',
+                'ams_page_id' => "0",
+                'ssl' => true,
             ),
             array(
                 'name' => 'Logout Page',
                 'type' => 'core',
-                'link' => $this->url->link('account/logout', '', 'SSL'),
-                'ams_page_id' => "0"
+                'link' => '',
+                'route' => 'account/logout',
+                'params' => '',
+                'link' => '',
+                'ams_page_id' => "0",
+                'ssl' => true,
             ),
             array(
                 'name' => 'FAQ Page',
                 'type' => 'core',
-                'link' => $this->url->link('module/faq', '', 'SSL'),
+                'route' => 'module/faq',
+                'params' => '',
+                'link' => '',
                 'ams_page_id' => "0",
-                'config' => 'faq_status'
+                'ssl' => false
             )
         );
 
@@ -247,10 +307,10 @@ abstract class Page extends \Core\Controller {
         return $core_pages;
     }
 
-    public function autocomplete() {
+    public function autocomplete($return = false) {
         $pages = $this->getCorePages();
 
-        $search = $this->request->get['filter_page'];
+        $search = !empty($this->request->get['filter_page'])? $this->request->get['filter_page'] :'';
 
         if (strlen($search) >= 3) {
 
@@ -268,13 +328,20 @@ abstract class Page extends \Core\Controller {
                 $pages[] = array(
                     'name' => $row['name'],
                     'type' => 'ams_page',
-                    'link' => $this->url->link(str_replace(".", "/", $row['namespace']), 'ams_page_id=' . $row['ams_page_id']),
-                    'ams_page_id' => $row['ams_page_id']
+                    'link' => '', //$this->url->link(str_replace(".", "/", $row['namespace']), 'ams_page_id=' . $row['ams_page_id']),
+                    'ams_page_id' => $row['ams_page_id'],
+                    'route' => str_replace(".", "/", $row['namespace']),
+                    'params' => 'ams_page_id='. $row['ams_page_id'],
+                    'ssl' => false
                 );
             }
         }
 
         $this->event->trigger('pages.autocomplete.list', $pages);
+
+        if ($return) {
+            return $pages;
+        }
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($pages));
@@ -290,23 +357,30 @@ abstract class Page extends \Core\Controller {
         $this->response->addHeader('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
         $this->response->addHeader('Pragma: no-cache');
 
-        $pages = $this->getCorePages();
-        $query = $this->db->query("select * from #__ams_pages where public='1' order by name asc");
-        foreach ($query->rows as $row) {
-            $pages[] = array(
-                'name' => $row['name'],
-                'type' => 'ams_page',
-                'link' => $this->url->link(str_replace(".", "/", $row['namespace']), 'ams_page_id=' . $row['ams_page_id']),
-                'ams_page_id' => $row['ams_page_id']
-            );
-        }
+        /*  $pages = $this->getCorePages();
+          $query = $this->db->query("select * from #__ams_pages where public='1' order by name asc");
+          foreach ($query->rows as $row) {
+          $pages[] = array(
+          'name' => $row['name'],
+          'type' => 'ams_page',
+          'link' => $this->url->link(str_replace(".", "/", $row['namespace']), 'ams_page_id=' . $row['ams_page_id']),
+          'ams_page_id' => $row['ams_page_id']
+          );
+          }// */
+        $pages = $this->autocomplete(true);
 
-        $this->event->trigger('pages.autocomplete.list', $pages);
 
         $json = array();
         foreach ($pages as $page) {
+            $link = $page['link'];
+            if (!$link && $page['route']) {
+                $params = $page['params'];
+                $ssl = $page['ssl'] ? 'SSL' : 'NONSSL';
+                $link = $this->url->link($page['route'], $params, $ssl);
+            }
+
             $json[] = array(
-                $page['name'], $page['link']
+                $page['name'], $link
             );
         }
 
@@ -351,12 +425,12 @@ abstract class Page extends \Core\Controller {
 
         $this->response->setOutput($html);
     }
-    
+
     public function downloadlist() {
         $html = "CKEDITOR.plugins.add('downloadlink');";
-        
-  
-        
+
+
+
 //$pages .= "var InternPagesSelectBox = [ ['Basketball','http://goto.baseball' ], [ 'Baseball' ], [ 'Hockey' ], [ 'Football' ] ];";
         $html.= "var DownloadPagesSelectBox = ";
         $this->response->addHeader('Content-type: application/javascript');
@@ -367,7 +441,7 @@ abstract class Page extends \Core\Controller {
 
         $pages = array();
         $query = $this->db->query("select * from #__download order by name asc");
-       
+
         foreach ($query->rows as $row) {
             $pages[] = array(
                 'name' => $row['name'] . '(' . $row['mask'] . ')',
@@ -376,7 +450,7 @@ abstract class Page extends \Core\Controller {
                 'download_id' => $row['download_id']
             );
         }
-        
+
 
         $this->event->trigger('downloads.autocomplete.list', $pages);
 
@@ -434,9 +508,9 @@ abstract class Page extends \Core\Controller {
         $page = $this->model_cms_page->loadPageObject($this->request->get['page_id'])->toArray();
 
         if (!$page || !$page['status']) {
-         //   return $this->not_found();
+            //   return $this->not_found();
             $this->response->addHeader($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
-           return $this->response->setOutput('NOT FOUND');
+            return $this->response->setOutput('NOT FOUND');
         }
 
         $this->load->model('setting/rights');
@@ -596,8 +670,8 @@ abstract class Page extends \Core\Controller {
 
         $this->load->model('setting/rights');
 
- 
-        
+
+
         if (isset($this->request->get['download_id']) && isset($this->request->get['ref_id']) && $this->model_setting_rights->getRight($this->request->get['ref_id'], 'ams_page')) {
             $download_id = $this->request->get['download_id'];
         } elseif (isset($this->request->get['download_id']) && isset($this->request->get['cmslink']) && md5(strrev($this->request->get['download_id']) . 'dl') == $this->request->get['cmslink']) {

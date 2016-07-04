@@ -51,16 +51,19 @@ Abstract class Page {
      * @var string
      */
     public $meta_description;
+
     /**
      *
      * @var type 
      */
     public $meta_og_title;
+
     /**
      *
      * @var type 
      */
     public $meta_og_description;
+
     /**
      *
      * @var type 
@@ -247,7 +250,7 @@ Abstract class Page {
         unset($page['name'], $page['slug'], $page['parent_id'], $page['status']);
         $properties = $this->_getProperties();
         foreach ($page as $key => $node) {
-          
+
             if (in_array($key, $properties)) {
 // try to call the setter method
                 $value = $this->_callSetterMethod($key, array("content" => $node));
@@ -257,7 +260,7 @@ Abstract class Page {
                 $this->$key = $value;
             }
         }
-        
+
         return $this;
     }
 
@@ -302,36 +305,34 @@ Abstract class Page {
         return $this;
     }
 
-    public function getPublicUrl($id = false){
-        if($id){
+    public function getPublicUrl($id = false) {
+        if ($id) {
             $parent = $this->loadParent($id);
-            return registry('url')->link(str_replace(".","/", $parent->getNamespace()), 'ams_page_id=' . $parent->id);
+            return registry('url')->link(str_replace(".", "/", $parent->getNamespace()), 'ams_page_id=' . $parent->id);
         }
-        return registry('url')->link(str_replace(".","/", $this->getNamespace()), 'ams_page_id=' . $this->id);
+        return registry('url')->link(str_replace(".", "/", $this->getNamespace()), 'ams_page_id=' . $this->id);
     }
-    
+
     public function getSlug() {
         $query = $this->_db->query("SELECT keyword FROM #__url_alias WHERE `query` = '" . $this->_db->escape('ams_page_id=' . (int) $this->id) . "'");
         return $query->row ? $query->row['keyword'] : '';
     }
 
-    public function copy(){
-        
+    public function copy() {
+
         $this->id = 0;
         $this->name = 'Copy: ' . $this->name;
         $this->_insert();
         
     }
-    
-   
-    
+
     public function loadParent($id) {
 
         $path = DIR_APPLICATION;
 
         $row = $this->_db->query("select * from #__ams_pages where ams_page_id='" . (int) $id . "'");
-  
-        
+
+
         $file = $path . 'model/' . str_replace(".", "/", $row->row['namespace']) . '.php';
         $class = 'Model' . preg_replace('/[^a-zA-Z0-9]/', '', $row->row['namespace']);
 
@@ -455,7 +456,7 @@ Abstract class Page {
                 if ($key == 'id') {
                     $key = 'ams_page_id';
                 }
-                if($key == 'date_added') {
+                if ($key == 'date_added') {
                     $query .= " and DATE(from_unixtime(date_created)) = DATE('" . $this->_db->escape($value) . "') ";
                 }
                 if ($key == 'ams_page_id') {
@@ -552,17 +553,17 @@ Abstract class Page {
             'required' => $required
         );
     }
-    
-    protected function _formTypeScrollbox($name,$label,$values,$required){
-         if (isset(request()->post[$name])) {
+
+    protected function _formTypeScrollbox($name, $label, $values, $required) {
+        if (isset(request()->post[$name])) {
             $data[$name] = request()->post[$name];
         } elseif (!empty($this->{$name})) {
             $data[$name] = $this->{$name};
         } else {
-            
+
             $data[$name] = array();
         }
-        
+
         return array(
             'key' => $name,
             'type' => 'scrollbox',
@@ -573,11 +574,11 @@ Abstract class Page {
         );
         /*
          *  'key' => 'categories',
-            'type' => 'scrollbox',
-            'value' => $data['categories'],
-            'options' => $options,
-            'label' => $this->_language->get('entry_categories'),
-            'required' => false
+          'type' => 'scrollbox',
+          'value' => $data['categories'],
+          'options' => $options,
+          'label' => $this->_language->get('entry_categories'),
+          'required' => false
          */
     }
 
@@ -586,7 +587,7 @@ Abstract class Page {
     }
 
     protected function _formTypeSelect($name, $label, $values, $required = false, $multiple = false) {
-        if($multiple){
+        if ($multiple) {
             return $this->_formTypeScrollbox($name, $label, $values, $required);
         }
         if (isset(request()->post[$name])) {
@@ -676,7 +677,7 @@ Abstract class Page {
      * @param bool $required - is the field required
      * @return array
      */
-    protected function _formTypeInput($name, $label, $type = 'text', $required = false,$params = array()) {
+    protected function _formTypeInput($name, $label, $type = 'text', $required = false, $params = array()) {
         if (isset(request()->post[$name])) {
             $data[$name] = request()->post[$name];
         } elseif (!empty($this->{$name})) {
@@ -741,7 +742,7 @@ Abstract class Page {
      * @param mixed $mapFunction - callback function for the post variable if rquired! null will use pure post
      * @return array
      */
-    protected function _formTypeAutocompleteList($name, $label, $map_route, $required = false, $mapFunction = null) {
+    protected function _formTypeAutocompleteList($name, $label, $map_route, $required = false, $mapFunction = null, $addable = false) {
         if (isset(request()->post[$name])) {
             if (!null($mapFunction)) {
                 $data[$name] = call_user_func($mapFunction, request()->post[$name]);
@@ -761,13 +762,14 @@ Abstract class Page {
             'value' => $data[$name],
             'label' => $this->_language->get($label),
             'url' => $map_route,
-            'required' => $required
+            'required' => $required,
+            'addable' => $addable
         );
     }
 
     protected function _formTypeAutocomplete($name, $label, $map_route, $required = false, $mapFunction = null) {
         if (isset(request()->post[$name])) {
-      
+
             if (!is_null($mapFunction)) {
                 $data[$name] = call_user_func($mapFunction, request()->post[$name]);
             } else {
@@ -807,12 +809,12 @@ Abstract class Page {
             'required' => $required
         );
     }
-    
+
     protected function _formTypeCustom($name, $class) {
         if (isset(request()->post[$name])) {
             $data[$name] = request()->post[$name];
         } elseif (!empty($this->{$name})) {
-            $data[$name] = json_decode($this->{$name},1);
+            $data[$name] = json_decode($this->{$name}, 1);
         } else {
             $data[$name] = array();
         }
@@ -823,7 +825,5 @@ Abstract class Page {
             'callable' => $class
         );
     }
-    
-    
 
 }

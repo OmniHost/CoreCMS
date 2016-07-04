@@ -1,4 +1,7 @@
 <?php
+/**
+ * @name Content - Blog Category
+ */
 
 class ControllerBlogCategory extends \Core\Ams\Base {
 

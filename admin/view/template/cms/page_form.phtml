@@ -246,8 +246,8 @@
                             <?php if ($formfield['type'] != 'custom'): ?>
                                 <div class="form-group">
                                     <label for="<?php echo $el; ?>Input" class="col-sm-2 control-label <?php echo $formfield['required'] ? 'required' : ''; ?>"><?php echo $formfield['label']; ?></label>
-                                 
-                                    <div class="col-sm-<?php echo $formfield['type'] == 'builder'?12:9; ?>">
+
+                                    <div class="col-sm-<?php echo $formfield['type'] == 'builder' ? 12 : 9; ?>">
                                         <?php echo formfield($formfield); ?>
                                         <?php if (!empty($formfield['error'])) { ?>
                                             <span class="error text-danger"><?php echo $formfield['error']; ?></span>
@@ -267,7 +267,7 @@
                                     <?php if ($formfield['type'] != 'custom'): ?>
                                         <div class="form-group">
                                             <label for="<?php echo $el; ?>Input" class="col-sm-2 control-label <?php echo $formfield['required'] ? 'required' : ''; ?>"><?php echo $formfield['label']; ?></label>
-                                            <div class="col-sm-<?php echo $formfield['type'] == 'builder'?12:9; ?>">
+                                            <div class="col-sm-<?php echo $formfield['type'] == 'builder' ? 12 : 9; ?>">
                                                 <?php echo formfield($formfield); ?>
                                                 <?php if (!empty($formfield['error'])) { ?>
                                                     <span class="error text-danger"><?php echo $formfield['error']; ?></span>
@@ -284,7 +284,14 @@
 
                     <div class="tab-pane" id="tab-permission">
 
-                        <div class="row">
+                        <div class="form-group">
+                            <label for="accesspassword" class="col-sm-2 control-label "><?php echo $this->language->get('Access Password') ?></label>
+                            <div class="col-sm-9">
+                                <input type="text" name="access_password" value="<?php echo $access_password; ?>" class="form-control" id="access_password" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
                             <div class="col-sm-6">
                                 <label for="accessInput" class="col-sm-12"><?php echo $entry_allowed_groups; ?></label>
                                 <div class="col-sm-12">
@@ -334,6 +341,41 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-6">
+
+                                <label for="accessInput" class="col-sm-12"><?php echo $this->language->get('Allowed Users') ?></label>
+                                <div class="col-sm-12">
+
+                                    <?php
+                                    echo formfield(array('key' => 'allowed_users',
+                                        'type' => 'autocomplete_list',
+                                        'label' => $this->language->get('Allowed Users'),
+                                        'value' => $allowed_users,
+                                        'url' => registry('url')->link('sale/customer/autocomplete', 'token=' . $this->session->data['token'])));
+                                    ?>
+
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+
+                                <label for="accessInput" class="col-sm-12"><?php echo $this->language->get('Denied Users') ?></label>
+                                <div class="col-sm-12">
+
+                                    <?php
+                                    echo formfield(array('key' => 'denied_users',
+                                        'type' => 'autocomplete_list',
+                                        'label' => $this->language->get('Denied Users'),
+                                        'value' => $denied_users,
+                                        'url' => registry('url')->link('sale/customer/autocomplete', 'token=' . $this->session->data['token'])));
+                                    ?>
+
+                                </div>
+                            </div>
+                        </div>
+
+
 
                         <?php if (!empty($tabs['permission'])): ?>
                             <?php foreach ($tabs['permission'] as $el => $formfield): ?>

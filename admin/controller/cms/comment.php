@@ -1,4 +1,7 @@
 <?php
+/**
+ * @name Content - Blog Comments
+ */
 
 class ControllerCmsComment extends \Core\Controller {
 

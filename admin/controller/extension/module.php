@@ -75,6 +75,26 @@ class ControllerExtensionModule extends \Core\Controller {
         $this->getList();
     }
 
+    public function copy() {
+        $this->load->language('extension/module');
+
+        $this->document->setTitle($this->language->get('heading_title'));
+
+        $this->load->model('extension/extension');
+
+        $this->load->model('extension/module');
+
+        if (isset($this->request->get['module_id']) && $this->validate()) {
+            $this->model_extension_module->copyModule($this->request->get['module_id']);
+
+            $this->session->data['success'] = $this->language->get('text_success');
+
+            $this->redirect($this->url->link('extension/module', 'token=' . $this->session->data['token'], true));
+        }
+
+        $this->getList();
+    }
+
     public function delete() {
         $this->load->language('extension/module');
 
@@ -120,6 +140,7 @@ class ControllerExtensionModule extends \Core\Controller {
 
         $data['button_edit'] = $this->language->get('button_edit');
         $data['button_delete'] = $this->language->get('button_delete');
+        $data['button_copy'] = $this->language->get('button_copy');
         $data['button_install'] = $this->language->get('button_install');
         $data['button_uninstall'] = $this->language->get('button_uninstall');
 
@@ -170,10 +191,12 @@ class ControllerExtensionModule extends \Core\Controller {
                         'module_id' => $module['module_id'],
                         'name' => $this->language->get('heading_title') . ' &gt; ' . $module['name'],
                         'edit' => $this->url->link('module/' . $extension, 'token=' . $this->session->data['token'] . '&module_id=' . $module['module_id'], 'SSL'),
+                        'copy' => $this->url->link('extension/module/copy', 'token=' . $this->session->data['token'] . '&module_id=' . $module['module_id'], 'SSL'),
                         'delete' => $this->url->link('extension/module/delete', 'token=' . $this->session->data['token'] . '&module_id=' . $module['module_id'], 'SSL')
                     );
                 }
 
+               
                 $data['extensions'][] = array(
                     'name' => $this->language->get('heading_title'),
                     'module' => $module_data,
@@ -184,6 +207,7 @@ class ControllerExtensionModule extends \Core\Controller {
                 );
             }
         }
+     
         $names = array();
         foreach ($data['extensions'] as $key => $row) {
             $names[$key] = $row['name'];
@@ -194,6 +218,8 @@ class ControllerExtensionModule extends \Core\Controller {
         } else {
             $data['selected'] = array();
         }
+
+        sort_this_array($data['extensions'], 'installed');
 
         $this->data = $data;
         $this->template = 'extension/module.phtml';

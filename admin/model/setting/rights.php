@@ -3,11 +3,6 @@
 class ModelSettingRights extends \Core\Model {
 
     public function getAllowedGroups($id, $type) {
-        /*
-          $query = $this->db->query("SELECT * FROM #__customer_group cg LEFT JOIN #__customer_group_description cgd ON (cg.customer_group_id = cgd.customer_group_id) LEFT JOIN #__allowed_groups ag ON (cg.customer_group_id = ag.group_id) WHERE cgd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND ag.object_id = '" . $id. "' AND ag.object_type = '" . $type. "' ORDER BY cgd.name ASC");
-
-          return $query->rows;
-         */
 
         $right_data = array();
 
@@ -67,6 +62,14 @@ class ModelSettingRights extends \Core\Model {
         return $right_data;
     }
 
+    public function setAllowedUsers($id, $type, $allowed_users = array()) {
+        $this->db->query("delete from #__allowed_users where object_id = '" . (int) $id . "' and object_type = '" . $this->db->escape($type) . "'");
+
+        foreach ($allowed_users as $user_id) {
+            $this->db->query("INSERT INTO #__allowed_users SET object_id = '" . (int) $id . "', object_type = '" . $this->db->escape($type) . "', user_id = '" . (int) $user_id . "'");
+        }
+    }
+
     /**
      * 
      * @param type $id
@@ -87,4 +90,25 @@ class ModelSettingRights extends \Core\Model {
         return $right_data;
     }
 
+    public function setDeniedUsers($id, $type, $users = array()) {
+        $this->db->query("delete from #__denied_users where object_id = '" . (int) $id . "' and object_type = '" . $this->db->escape($type) . "'");
+
+        foreach ($users as $user_id) {
+            $this->db->query("INSERT INTO #__denied_users SET object_id = '" . (int) $id . "', object_type = '" . $this->db->escape($type) . "', user_id = '" . (int) $user_id . "'");
+        }
+    }
+
+    public function getAccessPassword($id){
+        $row = $this->db->query("select password from #__allowed_password where object_id= '" . (int) $id . "'")->row;
+        return (!empty($row['password']))?$row['password']:'';
+    }
+    
+    public function setAccessPassword($id,$password){
+        $row = $this->db->query("delete from #__allowed_password where object_id= '" . (int) $id . "'")->row;
+        if($password){
+            $this->db->query("insert into #__allowed_password set object_id='" . (int)$id . "', password='" . $this->db->escape($password) . "'");
+        }
+    }
+        
+        
 }

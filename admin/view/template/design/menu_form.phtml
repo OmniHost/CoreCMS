@@ -58,6 +58,7 @@
                     <label class="col-sm-2 control-label" for="input-footer"><?php echo $entry_structure; ?></label>
                     <div class="col-sm-9">
 
+
                         <div class="dd" id="nestable">
                             <ol class="dd-list">
                                 <?php echo buildMenuTree($items); ?>
@@ -74,7 +75,7 @@
     </div>
 </div>
 
-<div id="menu-item-modal" class="modal fade">
+<div id="menu-item-modal" class="modal fade" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -83,54 +84,132 @@
             </div>
             <div class="modal-body form-horizontal">
                 <input type="hidden" id="item_id" value="0" />
-                <div class="form-group">
-                    <label class="col-sm-3 control-label required"><?php echo $entry_title; ?></label>
-                    <div class="col-sm-9">
-                        <input type="text"  value="" class="form-control required" id="titleInput" />
+                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingOne">
+                            <h4 class="panel-title">
+                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    <?php echo $this->language->get("General"); ?>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label required"><?php echo $entry_title; ?></label>
+                                    <div class="col-sm-9">
+                                        <input type="text"  value="" class="form-control required" id="titleInput" />
 
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label required"><?php echo $entry_link; ?></label>
-                    <div class="col-sm-9">
-                        <input type="text" value="" class="form-control required" id="linkLabelInput" />
-                        <input type="hidden" id="amsPageIdInput" value="0" />
-                        <input type="hidden" id="linkInput" value="" />
-                        <span class="help-text"><?php echo $help_link; ?></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="accessInput" class="col-sm-3"><?php echo $entry_allowed_groups; ?></label>
-                    <div class="col-sm-9">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label required"><?php echo $entry_link; ?></label>
+                                    <div class="col-sm-9">
+                                        <input type="text" value="" class="form-control required" id="linkLabelInput" />
+                                        <input type="hidden" id="amsPageIdInput" value="0" />
+                                        <input type="hidden"  value="" id="linkInput" />
 
-                        <ul class="list-group">
-                            <?php $class = 'odd'; ?>
-                            <?php foreach ($customer_groups as $customer_group) : ?>
-                                <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
-                                <li class="list-group-item <?php echo $class; ?>">
-                                    <input type="checkbox" class="allowed_groups" value="<?php echo $customer_group['customer_group_id']; ?>" />
-                                    <?php echo $customer_group['name']; ?>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="accessInput" class="col-sm-3"><?php echo $entry_denied_groups; ?></label>
-                    <div class="col-sm-9">
+                                        <span class="help-text"><?php echo $help_link; ?></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="accessInput" class="control-label col-sm-3"><?php echo $this->language->get('Target'); ?></label>
+                                    <div class="col-sm-9">
+                                        <input type="text" value="" class="form-control" id="targetInput" />
+                                    </div>
+                                </div>
 
-                        <ul class="list-group">
-                            <?php $class = 'odd'; ?>
-                            <?php foreach ($customer_groups as $customer_group) : ?>
-                                <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
-                                <li class="list-group-item <?php echo $class; ?>">
-                                    <input type="checkbox" class="denied_groups" value="<?php echo $customer_group['customer_group_id']; ?>" />
-                                    <?php echo $customer_group['name']; ?>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingThree">
+                            <h4 class="panel-title">
+                                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    <?php echo $this->language->get("Permissions"); ?>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label for="accessInput" class="col-sm-3"><?php echo $entry_allowed_groups; ?></label>
+                                    <div class="col-sm-9">
+
+                                        <ul class="list-group">
+                                            <?php $class = 'odd'; ?>
+                                            <?php foreach ($customer_groups as $customer_group) : ?>
+                                                <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+                                                <li class="list-group-item <?php echo $class; ?>">
+                                                    <input type="checkbox" class="allowed_groups" value="<?php echo $customer_group['customer_group_id']; ?>" />
+                                                    <?php echo $customer_group['name']; ?>
+                                                </li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="accessInput" class="col-sm-3"><?php echo $entry_denied_groups; ?></label>
+                                    <div class="col-sm-9">
+
+                                        <ul class="list-group">
+                                            <?php $class = 'odd'; ?>
+                                            <?php foreach ($customer_groups as $customer_group) : ?>
+                                                <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+                                                <li class="list-group-item <?php echo $class; ?>">
+                                                    <input type="checkbox" class="denied_groups" value="<?php echo $customer_group['customer_group_id']; ?>" />
+                                                    <?php echo $customer_group['name']; ?>
+                                                </li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingTwo">
+                            <h4 class="panel-title">
+                                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    <?php echo $this->language->get("Advanced"); ?>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label required"><?php echo $this->language->get('route'); ?></label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="routeInput" class="form-control" value="" />
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="accessInput" class="col-sm-3 control-label"><?php echo $this->language->get('Params'); ?></label>
+                                    <div class="col-sm-9">
+                                        <input type="text" value="" class="form-control" id="paramsInput" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="accessInput" class="col-sm-3 control-label"><?php echo $this->language->get('SSL'); ?></label>
+                                    <div class="col-sm-9">
+                                        <select class="form-control" id="sslInput">
+                                            <option value="0">No</option>
+                                            <option value="1">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+
+
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -153,8 +232,14 @@ function buildMenuTree($mi, &$_id = 0) {
     $xhtml = '';
     foreach ($mi as $m) {
 
+
         $xhtml .= '<li class="dd-item" data-id="' . $_id++ . '" '
+                . 'data-route="' . $m['route'] . '" '
+                . 'data-params="' . $m['params'] . '" '
+                . 'data-ams-page-id="' . htmlentities($m['ams_page_id']) . '" '
+                . 'data-target="' . htmlentities($m['target']) . '" '
                 . 'data-title="' . htmlentities($m['title']) . '" '
+                . 'data-ssl="' . (int) $m['ssl'] . '" '
                 . 'data-link="' . $m['link'] . '" '
                 . 'data-linklabel="' . $m['linklabel'] . '" '
                 . 'data-allowed_groups="' . $m['allowed_groups'] . '" '
@@ -201,6 +286,8 @@ function buildMenuTree($mi, &$_id = 0) {
         $('#linkLabelInput').on("keyup", function () {
             $('#amsPageIdInput').val('0');
             $('#linkInput').val($(this).val());
+            $('#routeInput').val('');
+            $('#paramsInput').val('');
         });
 
         var item_ids = $('#nestable [data-id]').map(function () {
@@ -209,33 +296,53 @@ function buildMenuTree($mi, &$_id = 0) {
         ).get();
         $item_id = Math.max.apply(Math, item_ids);
 
-       // $('#add_menu_item').on("click", function () {
-        $(document). on("click", '#add_menu_item', function () {
+        // $('#add_menu_item').on("click", function () {
+        $(document).on("click", '#add_menu_item', function () {
             $item_action = 'add';
             $item_id++;
             $('#item_id').val($item_id);
             $('#titleInput').val('');
-            $('#amsPageIdInput').val('0');
+            $('#amsPageIdInput').val('');
             $('#linkInput').val('');
             $('#linkLabelInput').val('');
+            $('#targetInput').val('');
+
+            $('#routeInput').val('');
+            $('#paramsInput').val('');
+            $('#sslInput').val(0);
             $('#menu-item-modal .modal-title').text('Add Menu Item');
 
             $('.denied_groups').prop("checked", false);
             $('.allowed_groups').prop("checked", false);
             $('.allowed_groups[value="-1"]').prop("checked", "checked");
 
+
             $('#menu-item-modal').modal('show');
+            if ($($('a[href="#collapseOne"]')).hasClass('collapsed')) {
+                $('a[href="#collapseOne"]').trigger("click");
+            }
         });
 
-        $(document). on("click", '#nestable .fa-edit', function() {
-      //  $('#nestable .fa-edit').on("click", function () {
+        $(document).on("click", '#nestable .fa-edit', function () {
+            //  $('#nestable .fa-edit').on("click", function () {
             var theLi = $(this).closest('li');
             $item_action = 'edit';
+
             $('#item_id').val(theLi.attr('data-id'));
             $('#titleInput').val(theLi.attr('data-title'));
-            $('#amsPageIdInput').val(theLi.attr('data-ams_page_id'));
+            $('#amsPageIdInput').val(theLi.attr('data-ams-page-id'));
             $('#linkInput').val(theLi.attr('data-link'));
             $('#linkLabelInput').val(theLi.attr('data-linklabel'));
+            $('#targetInput').val(theLi.attr('data-target'));
+
+            $('#routeInput').val(theLi.attr('data-route'));
+            $('#paramsInput').val(theLi.attr('data-params'));
+            $('#sslInput').val(theLi.attr('data-ssl'));
+
+            //routeInput
+            //paramsInput
+            //sslInput
+
             $('#menu-item-modal .modal-title').text('Edit Menu Item');
 
             $('.denied_groups').prop("checked", false);
@@ -249,16 +356,20 @@ function buildMenuTree($mi, &$_id = 0) {
 
             }
             try {
-                 var den = theLi.attr('data-denied_groups').split(",");
-                 $.each(den, function (i, j) {
+                var den = theLi.attr('data-denied_groups').split(",");
+                $.each(den, function (i, j) {
                     $('.denied_groups[value="' + j + '"]').prop("checked", "checked");
                 });
-            }catch(err) {}
+            } catch (err) {
+            }
 
 
             //$('.allowed_groups[value="-1"]').prop("checked", "checked");
 
             $('#menu-item-modal').modal('show');
+            if ($($('a[href="#collapseOne"]')).hasClass('collapsed')) {
+                $('a[href="#collapseOne"]').trigger("click");
+            }
         });
 
 
@@ -273,7 +384,10 @@ function buildMenuTree($mi, &$_id = 0) {
                             return {
                                 label: decodeEntities(item['name']),
                                 ams_page: item['ams_page_id'],
-                                link: item['link']
+                                link: item['link'],
+                                ssl: item['ssl'],
+                                params: item['params'],
+                                route: item['route']
                             }
                         }));
                     }
@@ -284,6 +398,9 @@ function buildMenuTree($mi, &$_id = 0) {
                 $('#linkInput').val(ui.item.link);
                 $('#linkLabelInput').val(ui.item.label);
                 $('#amsPageIdInput').val(ui.item.ams_page);
+                $('#routeInput').val(ui.item.route);
+                $('#paramsInput').val(ui.item.params);
+                $('#sslInput').val((ui.item.ssl) ? '1' : '0');
                 return false;
 
                 // $('input[name=\'filter_name\']').val(item['label']);
@@ -291,13 +408,14 @@ function buildMenuTree($mi, &$_id = 0) {
         });
 
 
-        $(document). on("click", '#save_menu_item', function() {
-        //$('#save_menu_item').on("click", function () {
+        $(document).on("click", '#save_menu_item', function () {
+            //$('#save_menu_item').on("click", function () {
             var theTitle = $('#titleInput').val();
             var theLink = $('#linkInput').val();
             var theLabel = $('#linkLabelInput').val();
             var thePage = $('#amsPageIdInput').val();
             var theId = $('#item_id').val();
+            var theTarget = $('#targetInput').val();
             var theDenied = new Array();
             var theAllowed = new Array();
             $('.denied_groups:checked').each(function () {
@@ -307,17 +425,28 @@ function buildMenuTree($mi, &$_id = 0) {
                 theAllowed.push($(this).val());
             });
 
-            if (theLink == '') {
-                theLink = theLabel;
+            var theRoute = $('#routeInput').val();
+            var theParams = $('#paramsInput').val();
+            var theSSL = $('#sslInput').val();
+
+            /*  if (theLink == '') {
+             //  theLink = theLabel;
+             }*/
+            if (theLink == theLabel) {
+                theLink = '';
             }
 
             if ($item_action == 'add') {
                 var newitem = $('<li />')
                         .addClass("dd-item")
                         .attr('data-id', theId)
+                        .attr('data-route', theRoute)
+                        .attr('data-params', theParams)
                         .attr('data-title', htmlEntities(theTitle))
-                        .attr('data-ams_page_id', thePage)
+                        .attr('data-ams-page-id', thePage)
+                        .attr('data-target', theTarget)
                         .attr('data-link', theLink)
+                        .attr('data-ssl', theSSL)
                         .attr('data-linklabel', htmlEntities(theLabel))
                         .attr('data-allowed_groups', theAllowed.join())
                         .attr('data-denied_groups', theDenied.join())
@@ -329,7 +458,7 @@ function buildMenuTree($mi, &$_id = 0) {
                 ddcontent.append('<div class="tools"><i class="fa fa-edit"></i><i class="fa fa-trash-o"></i></div>');
                 newitem.append(ddcontent);
                 $('#nestable > ol').append(newitem);
-                
+
 
             } else {
                 $('li[data-id=' + theId + ']').attr('data-ams_page_id', thePage)
@@ -347,8 +476,8 @@ function buildMenuTree($mi, &$_id = 0) {
             $('#menu-item-modal').modal('hide');
         });
 
-         $(document). on("click", '#nestable .fa-trash-o', function() {
-     //   $('#nestable .fa-trash-o').on("click", function () {
+        $(document).on("click", '#nestable .fa-trash-o', function () {
+            //   $('#nestable .fa-trash-o').on("click", function () {
             if (confirm('<?php echo $text_confirm; ?>')) {
                 $(this).closest('li').remove();
                 $('#menu_items_input').val(JSON.stringify($('#nestable').nestable('serialize')));

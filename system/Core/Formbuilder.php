@@ -111,7 +111,60 @@ class Formbuilder extends \Core\Model {
                 . '<input data-target="' . $field['id'] . '" data-limit="1" data-url="' . $field['url'] . '" type="' . $field['type'] . '" name="' . $field['key'] . '_display" class="' . $field['class'] . '" value="' . $value_name . '" />';
     }
 
+    function autocomplete_list_addable($field) {
+        $this->document->addScript('//code.jquery.com/ui/1.11.4/jquery-ui.min.js');
+
+        $html = '<div class="input-group"><input type="autocomplete" data-limit="0" data-key="' . $field['key'] . '" data-target="' . $field['id'] . '" data-url="' . $field['url'] . '" value="" placeholder="' . $field['label'] . '" id="input-' . $field['id'] . '" class="form-control" /> <span class="input-group-btn">
+        <button id="' . $field['key'] . '-addnew" class="btn btn-default" type="button">' . $this->language->get("Add New") . '</button>
+      </span></div>';
+
+        $html .= '<div id="' . $field['id'] . '" class="well well-sm autocomplete-list sortable" style="height: 150px; overflow: auto;">';
+
+        if (!empty($field['value']) && is_array($field['value'])) {
+            foreach ($field['value'] as $download) {
+                $html .= '<div class="list-group-item" id="' . $field['id'] . '-' . $download['id'] . '"><div class="input-group"><span class="input-group-btn"><button class="btn btn-default btn-minus-circle" type="button"><i class="fa fa-minus-circle text-danger"></i></button></span><span class="form-control"> ' . $download['name'] . '</span><input type="hidden" name="' . $field['key'] . '[]" value="' . $download['id'] . '"></div></div>';
+            }
+        }
+
+        $html .= '</div>';
+
+        $html .= '<script>docReady(function() {
+    $( "#' . $field['id'] . '" ).sortable();
+    $( "#' . $field['id'] . '" ).disableSelection();
+$(document).on("click","#' . $field['key'] . '-addnew", function(e) { e.preventDefault(); 
+    var el = $(this).closest(".input-group").find("input");
+    if(el.val() != ""){
+        var newtag = el.val();
+        $.ajax(
+        {
+        url: "' . fixajaxurl($field['addable']) . '",
+            datatype: "json",
+            method: "POST",
+            data: {name: newtag},
+            success: function(json) {
+                if(json.id > 0){
+                   el.val("");
+                   $("#" + el.data("target")).append(\'<div class="list-group-item" id="\' + el.attr(\'data-target\') + \'-\' + json.id + \'"><div class="input-group"><span class="input-group-btn"><button class="btn btn-default btn-minus-circle" type="button"><i class="fa fa-minus-circle text-danger"></i></button></span><span class="form-control">\' + json.name + \'</span><input type="hidden" name="\' + el.attr(\'data-key\') + \'[]" value="\' + json.id + \'" /></div></div>\');    
+                 }
+            }
+        });
+
+    }
+                    
+    
+}        );
+
+  });</script>';
+
+
+        return $html;
+    }
+
     function autocomplete_list($field) {
+
+        if ($field['addable']) {
+            return $this->autocomplete_list_addable($field);
+        }
 
         $this->document->addScript('//code.jquery.com/ui/1.11.4/jquery-ui.min.js');
 
@@ -226,7 +279,7 @@ class Formbuilder extends \Core\Model {
                             <div id="' . $gridId . '">' . $field['value'] . '</div>
                         </div>
                     </div>
-                </div>' ;
+                </div>';
 
         $html .= '<script>
         docReady(function() {

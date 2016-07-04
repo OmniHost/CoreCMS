@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * 
+ */
 class ControllerCommonHeader extends \Core\Controller {
 
     public function index() {
@@ -54,7 +56,7 @@ class ControllerCommonHeader extends \Core\Controller {
         $this->data['formbuilder'] = $this->url->link('marketing/form', 'token=' . $this->session->data['token'], 'SSL');
 
 
-        $this->data['menu_dashboard'] = $this->language->get('menu_dashboard');
+
         $this->data['menu_logout'] = $this->language->get('menu_logout');
         $this->data['menu_user'] = $this->language->get('menu_user');
         $this->data['menu_user_admin'] = $this->language->get('menu_user_admin');
@@ -177,26 +179,332 @@ class ControllerCommonHeader extends \Core\Controller {
 
         if ($this->config->get('config_maintenance')) {
             $this->data['header_navs']['alerts']['items']['maintenance'] = array(
-                    'href' => $this->url->link('setting/setting', 'token=' . $this->session->data['token'], 'SSL'),
-                    'text' => $this->language->get('Change Maintenance Settings'),
-                    'class' => 'danger',
+                'href' => $this->url->link('setting/setting', 'token=' . $this->session->data['token'], 'SSL'),
+                'text' => $this->language->get('Change Maintenance Settings'),
+                'class' => 'danger',
                 'total' => 1
-                );
-            $this->data['header_navs']['alerts']['total']++;
+            );
+            $this->data['header_navs']['alerts']['total'] ++;
             $this->data['header_navs']['alerts']['class'] = 'danger';
         }
-        
-        if($this->data['header_navs']['alerts']['total'] < 1){
-             $this->data['header_navs']['alerts']['class'] = 'success';
+
+        if ($this->data['header_navs']['alerts']['total'] < 1) {
+            $this->data['header_navs']['alerts']['class'] = 'success';
         }
 
 
         $this->event->trigger('admin.header.navs', $this->data['header_navs']);
 
 
-        $this->data['module_menu'] = array();
+        $this->data['module_menu'] = array(
+            'dashboard' => array(
+                'order' => 0,
+                'icon' => 'fa-dashboard',
+                'label' => $this->language->get('menu_dashboard'),
+                'href' => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+                'children' => array()
+            ),
+            'cms' => array(
+                'order' => 1,
+                'icon' => 'fa-file-text-o',
+                'label' => $this->language->get('menu_content'),
+                'href' => '#',
+                'children' => array(
+                    'pages' => array(
+                        'label' => $this->data['menu_pages'],
+                        'href' => $this->data['pages'],
+                        'order' => 0,
+                        'route' => 'cms/page',
+                    ),
+                    'posts' => array(
+                        'label' => $this->data['menu_posts'],
+                        'href' => $this->data['posts'],
+                        'order' => 1,
+                        'route' => 'blog/post',
+                    ),
+                    'blog_category' => array(
+                        'label' => $this->data['menu_blog_category'],
+                        'href' => $this->data['blog_category'],
+                        'order' => 2,
+                        'route' => 'blog/category',
+                    ),
+                       'tags' => array(
+                      'label' => $this->language->get("Post Tags"),
+                      'href' => $this->url->link('blog/tags', 'token=' . $this->session->data['token'], 'SSL'),
+                      'order' => 3,
+                      'route' => 'blog/tags',
+                      ), 
+                    'banner' => array(
+                        'label' => $this->data['menu_banners'],
+                        'href' => $this->data['banner'],
+                        'order' => 5,
+                        'route' => 'cms/banner',
+                    ),
+                    'comments' => array(
+                        'label' => $this->data['menu_comments'],
+                        'href' => $this->data['comments'],
+                        'order' => 4,
+                        'route' => 'cms/comment',
+                    ),
+                    'download' => array(
+                        'label' => $this->data['menu_download'],
+                        'href' => $this->data['download'],
+                        'order' => 6,
+                        'route' => 'cms/download',
+                    ),
+                    'menu' => array(
+                        'label' => $this->data['menu_menus'],
+                        'href' => $this->data['menu'],
+                        'order' => 7,
+                        'route' => 'cms/menu',
+                    )
+                )
+            ),
+            'logout' => array(
+                'order' => 99,
+                'icon' => 'fa-lock',
+                'label' => $this->data['menu_logout'],
+                'href' => $this->data['logout'],
+                'children' => array()
+            ),
+            'communication' => array(
+                'order' => 2,
+                'icon' => 'fa-envelope-o',
+                'label' => $this->language->get('menu_communication'),
+                'href' => '#',
+                'children' => array(
+                    'contact_form' => array(
+                        'label' => $this->language->get('menu_contact_us'),
+                        'href' => $this->data['contact_us'],
+                        'order' => 0,
+                        'badge' => $this->data['total_contact_us'] ? '<span class="badge bg-red pull-right">' . $this->data['total_contact_us'] . '</span>' : '',
+                        'route' => 'sale/contact',
+                    ),
+                    'marketing' => array(
+                        'label' => $this->data['menu_marketing'],
+                        'href' => $this->data['marketing'],
+                        'order' => 1,
+                        'children' => array(),
+                        'route' => 'marketing/marketing',
+                    ),
+                    'forms' => array(
+                        'label' => $this->data['menu_formbuilder'],
+                        'href' => $this->data['formbuilder'],
+                        'order' => 2,
+                        'children' => array(),
+                        'route' => 'marketing/form',
+                    ),
+                    'newsletters' => array(
+                        'label' => $this->language->get('menu_newsletter_system'),
+                        'href' => '#',
+                        'order' => 3,
+                        'route' => 'marketing/newsletter',
+                        'children' => array(
+                            'overview' => array(
+                                'label' => $this->language->get('menu_newsletter_overview'),
+                                'href' => $this->data['newsletter_overview'],
+                                'order' => 0,
+                            ),
+                            'subscribers' => array(
+                                'label' => $this->language->get('menu_subscriber'),
+                                'href' => $this->data['subscriber'],
+                                'order' => 1,
+                            ),
+                            'groups' => array(
+                                'label' => $this->language->get('menu_newsletter_group'),
+                                'href' => $this->data['newsletter_groups'],
+                                'order' => 2,
+                            ),
+                            'campaigns' => array(
+                                'label' => $this->language->get('menu_newsletter_campaign'),
+                                'href' => $this->data['newsletter_campaigns'],
+                                'order' => 3,
+                            ),
+                            'newsletters' => array(
+                                'label' => $this->language->get('menu_newsletter_newsletter'),
+                                'href' => $this->data['newsletter_newsletter'],
+                                'order' => 4,
+                            ),
+                        )
+                    )
+                )
+            ),
+            'system' => array(
+                'order' => 10,
+                'icon' => 'fa-cogs',
+                'label' => $this->language->get('menu_system'),
+                'href' => '#',
+                'children' => array(
+                    'setting' => array(
+                        'label' => $this->language->get('menu_setting'),
+                        'href' => $this->data['setting'],
+                        'order' => 0,
+                        'route' => 'setting/setting',
+                    ),
+                    'layout' => array('label' => $this->language->get('menu_layout'),
+                        'href' => $this->data['layout'],
+                        'order' => 1,
+                        'route' => 'design/layout',
+                    ),
+                    'custom_field' => array('label' => $this->language->get('menu_custom_field'),
+                        'href' => $this->data['custom_field'],
+                        'order' => 3,
+                        'route' => 'sale/custom_field',
+                    ),
+                    'upload' => array('label' => $this->language->get('menu_upload'),
+                        'href' => $this->data['upload'],
+                        'order' => 4,
+                        'route' => 'tool/upload',
+                    ),
+                    'backup' => array('label' => $this->language->get('menu_backup'),
+                        'href' => $this->data['backup'],
+                        'order' => 5,
+                        'route' => 'tool/backup',
+                    ),
+                    'localisation' => array('label' => $this->language->get('menu_localisation'),
+                        'href' => '#',
+                        'order' => 2,
+                        'children' => array(
+                            'country' => array('label' => $this->language->get('menu_country'),
+                                'href' => $this->data['country'],
+                                'order' => 0,
+                                'route' => 'localisation/country',
+                            ),
+                            'zone' => array('label' => $this->language->get('menu_zone'),
+                                'href' => $this->data['zone'],
+                                'order' => 1,
+                                'route' => 'localisation/zone',
+                            ),
+                            'currency' => array('label' => $this->language->get('menu_currency'),
+                                'href' => $this->data['currency'],
+                                'order' => 2,
+                                'route' => 'localisation/currency',
+                            ),
+                            'language' => array('label' => $this->language->get('menu_language'),
+                                'href' => $this->data['language'],
+                                'order' => 3,
+                                'route' => 'localisation/language',
+                            ),
+                        )
+                    )
+                )
+            ),
+            'users' => array(
+                'order' => 3,
+                'icon' => 'fa-user',
+                'label' => $this->language->get('menu_user'),
+                'href' => '#',
+                'children' => array(
+                    'user_admin' => array(
+                        'label' => $this->language->get('menu_user_admin'),
+                        'href' => '#',
+                        'order' => 0,
+                        'children' => array(
+                            'user' => array('label' => $this->language->get('menu_user'),
+                                'href' => $this->data['user'],
+                                'order' => 0,
+                                'route' => 'user/user',
+                            ),
+                            'user_group' => array('label' => $this->language->get('menu_user_group'),
+                                'href' => $this->data['user_group'],
+                                'order' => 1,
+                                'route' => 'user/user_permission',
+                            ),
+                        )
+                    ),
+                    'user_public' => array(
+                        'label' => $this->language->get('menu_user_public'),
+                        'href' => '#',
+                        'order' => 1,
+                        'children' => array(
+                            'user' => array('label' => $this->language->get('menu_user'),
+                                'href' => $this->data['user_front'],
+                                'order' => 0,
+                                'route' => 'sale/customer',
+                            ),
+                            'user_group' => array('label' => $this->language->get('menu_user_group'),
+                                'href' => $this->data['user_group_front'],
+                                'order' => 1,
+                                'route' => 'sale/customer_group',
+                            ),
+                            'user_ban' => array('label' => $this->language->get('menu_user_ip_ban'),
+                                'href' => $this->data['user_group_ban'],
+                                'order' => 2,
+                                'route' => 'sale/customer_ban_ip',
+                            )
+                        )
+                    ),
+                    'user_api' => array('label' => $this->language->get('menu_api_user'),
+                        'href' => $this->data['api_user'],
+                        'order' => 2,
+                        'route' => 'user/api',
+                    ),
+                )
+            ),
+            'reports' => array(
+                'order' => 4,
+                'icon' => 'fa-bar-chart',
+                'label' => $this->language->get('menu_reports'),
+                'href' => '#',
+                'children' => array(
+                    'user_activity' => array('label' => $this->language->get('menu_report_user_activity'),
+                        'href' => $this->data['report_user_activity'],
+                        'order' => 0,
+                        'route' => 'report/customer_activity',
+                    ),
+                    'user_online' => array('label' => $this->language->get('menu_report_user_online'),
+                        'href' => $this->data['report_user_online'],
+                        'order' => 1,
+                        'route' => 'report/customer_online',
+                    ),
+                )
+            ),
+            'extensions' => array(
+                'order' => 5,
+                'icon' => 'fa-puzzle-piece',
+                'label' => $this->language->get('menu_extension'),
+                'href' => '#',
+                'children' => array(
+                    'modules' => array('label' => $this->language->get('menu_modules'),
+                        'href' => $this->data['modules'],
+                        'order' => 0,
+                        'route' => 'extension/module',
+                    ),
+                    'modifications' => array('label' => $this->language->get('menu_modifications'),
+                        'href' => $this->data['modifications'],
+                        'order' => 99,
+                        'route' => 'extension/modification',
+                    ),
+                    'installer' => array('label' => $this->language->get('menu_install'),
+                        'href' => $this->data['installer'],
+                        'order' => 98,
+                        'route' => 'extension/installer',
+                    ),
+                    'seo_urls' => array('label' => $this->language->get('SEO Urls'),
+                        'href' => $this->data['seo_urls'],
+                        'order' => 2,
+                        'route' => 'tool/seourl',
+                    ),
+                    'feeds' => array('label' => $this->language->get('menu_feeds'),
+                        'href' => $this->data['feeds'],
+                        'order' => 1,
+                        'route' => 'extension/feed',
+                    ),
+                )
+            )
+               
+        );
         $this->event->trigger('admin.module.menu', $this->data['module_menu']);
 
+
+        //sort our Menu!!
+        //first lets sort by the top key:::
+        sort_this_array($this->data['module_menu'], 'order', SORT_ASC);
+        foreach ($this->data['module_menu'] as &$menu_item) {
+            if (!empty($menu_item['children'])) {
+                sort_this_array($menu_item['children'], 'order', SORT_ASC);
+            }
+        }
 
         $this->template = 'common/header.phtml';
         $this->render();

@@ -2,10 +2,10 @@
 
 $cache = true;
 $compress = true;
-$cachedir = dirname(dirname(__FILE__)) . '/_cache';
+$cachedir = DIRNAME(dirname(__FILE__)) . '/_cache';
 $cssdir = dirname(__FILE__) . '/view';
 $jsdir = dirname(__FILE__) . '/view';
-define("PATHROOT",  ltrim(dirname($_SERVER['PHP_SELF']) . '/',"/"));
+define("PATHROOT", ltrim(dirname($_SERVER['PHP_SELF']) . '/', "/"));
 
 
 header("X-Powered-By: CoreFW");
@@ -24,18 +24,57 @@ switch ($_GET['type']) {
 };
 
 
+
 $type = $_GET['type'];
 $elements = explode(',', $_GET['files']);
+
+
+
+
+if ($type == 'css') {
+    $old_els = $elements;
+    $elements = array();
+    foreach ($old_els as $el) {
+
+        $pattern2 = "@import url\((.*?)\);";
+        $content = file_get_contents(realpath($base . '/' . $el));
+        $cfilepath = dirname($el);
+
+
+        if (preg_match_all('/' . $pattern2 . '/', $content, $matches)) {
+
+            foreach ($matches[1] as $idx => $url) {
+
+                if (strpos($url, "//") === false) {
+                    $cel = $cfilepath . '/' . str_replace(array('"', "'"), "", $url);
+                    $elements[$cel] = file_get_contents(realpath($base . '/' . $cel));
+                    $content = str_replace($matches[0][$idx], "", $content);
+                }
+            }
+        } else {
+            //print "No matches";
+        }
+
+        $elements[$el] = $content;
+    }
+    $elements = array_keys($elements);
+}
+
+
+
 
 // Determine last modification date of the files 
 $lastmodified = 0;
 
+
 while (list(, $element) = each($elements)) {
     $path = realpath($base . '/' . $element);
 
+    // echo '*' . $element  . ':' . $path . '<br />';
 
     if (($type == 'javascript' && substr($path, -3) != '.js') ||
             ($type == 'css' && substr($path, -4) != '.css')) {
+
 
         header("HTTP/1.0 403 Forbidden");
         exit;
@@ -46,6 +85,7 @@ while (list(, $element) = each($elements)) {
         header("HTTP/1.0 404 Not Found");
         exit;
     }
+
 
     $lastmodified = max($lastmodified, filemtime($path));
 }
@@ -93,8 +133,8 @@ if (isset($_SERVER['HTTP_IF_NONE_MATCH']) &&
 
         $old = glob($cachedir . "/*" . md5($_GET['files']) . "*");
         foreach ($old as $o) {
-            if ($o !=  $cachedir . '/' . $cachefile){
-                  @unlink($o);
+            if ($o != $cachedir . '/' . $cachefile) {
+                @unlink($o);
             }
         }
        
@@ -119,7 +159,7 @@ if (isset($_SERVER['HTTP_IF_NONE_MATCH']) &&
                 header("Content-Length: " . filesize($cachedir . '/' . $cachefile));
                 header('Vary: Accept-Encoding');
                 $offset = 60 * 60 * 24 * 30;
-                $expire = "expires: " . gmdate("D, d M Y H:i:s", time() + $offset) . " GMT";
+                $expire = "Expires: " . gmdate("D, d M Y H:i:s", time() + $offset) . " GMT";
                 header($expire);
 
                 fpassthru($fp);
@@ -141,15 +181,30 @@ if (isset($_SERVER['HTTP_IF_NONE_MATCH']) &&
 
         while (list(, $element) = each($elements)) {
             $path = realpath($base . '/' . $element);
+            
+            $content = file_get_contents($path);
+            if (preg_match_all('/' . $pattern2 . '/', $content, $matches)) {
+
+            foreach ($matches[1] as $idx => $url) {
+
+                if (strpos($url, "//") === false) {
+                    $cel = $cfilepath . '/' . str_replace(array('"', "'"), "", $url);
+                   // $elements[$cel] = file_get_contents(realpath($base . '/' . $cel));
+                    $content = str_replace($matches[0][$idx], "", $content);
+                }
+            }
+        }
+            
 
             $contents .= preg_replace_callback('/' . $pattern . '/', function($input) use($element) {
-                
+
                         return fix_path($input, $element);
-                    }, file_get_contents($path)) . "\n";
+                    }, $content) . "\n";
             // $contents .= "\n\n" . file_get_contents($path);
         }
 
-      
+
+
 
 
         if ($compress) {

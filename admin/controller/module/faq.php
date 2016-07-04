@@ -109,8 +109,8 @@ class ControllerModuleFaq extends \Core\Controller {
 
     public function menu(&$menu) {
         $this->load->language('module/faq');
-        $menu['module_faq'] = array(
-            'icon' => 'fa-question-circle',
+        $menu['cms']['children']['module_faq'] = array(
+            'order' => '3',
             'label' => $this->language->get('button_manage'),
             'href' => $this->url->link('extension/faq', 'token=' . $this->session->data['token'], 'SSL')
         );

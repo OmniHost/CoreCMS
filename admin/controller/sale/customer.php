@@ -3,6 +3,7 @@
 class ControllerSaleCustomer extends \Core\Controller {
 
     private $error = array();
+    
 
     public function index() {
         $this->load->language('sale/customer');
@@ -1267,6 +1268,7 @@ class ControllerSaleCustomer extends \Core\Controller {
     }
 
     public function autocomplete() {
+
         $json = array();
 
         if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_email'])) {
@@ -1295,6 +1297,7 @@ class ControllerSaleCustomer extends \Core\Controller {
 
             foreach ($results as $result) {
                 $json[] = array(
+                    'id' => $result['customer_id'],
                     'customer_id' => $result['customer_id'],
                     'customer_group_id' => $result['customer_group_id'],
                     'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),

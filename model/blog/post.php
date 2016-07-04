@@ -13,6 +13,7 @@ class ModelBlogPost extends \Core\Ams\Page {
     public $featured_image;
     public $publish_date;
 
+    public $relatedposts;
     
           public $downloads;
     public $galleries;

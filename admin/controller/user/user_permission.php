@@ -236,7 +236,7 @@ class ControllerUserUserPermission extends \Core\Controller {
             $url .= '&order=' . $this->request->get['order'];
         }
 
-        
+
         $pagination = new \Core\Pagination();
         $pagination->total = $user_group_total;
         $pagination->page = $page;
@@ -334,6 +334,7 @@ class ControllerUserUserPermission extends \Core\Controller {
         $ignore = array(
             'common/home',
             'common/startup',
+            'common/filemanager',
             'user/login',
             'user/logout',
             'user/forgotten',
@@ -352,11 +353,35 @@ class ControllerUserUserPermission extends \Core\Controller {
             $data = explode('/', dirname($file));
 
             $permission = end($data) . '/' . basename($file, '.php');
+            $friendlyName = str_replace("_", " ", ucFirst(end($data)) . ' ' . ucFirst(basename($file, '.php')));
 
             if (!in_array($permission, $ignore)) {
-                $this->data['permissions'][] = $permission;
+                include_once($file);
+                $className = 'Controller' . ucFirst(end($data)) . ucFirst(basename($file, '.php'));
+
+                try {
+                    $rc = new ReflectionClass($className);
+                    if ($rc->getDocComment()) {
+                        $data = trim(preg_replace('/\r?\n *\* *\/*/', ' ', $rc->getDocComment()));
+                        preg_match_all('/@([a-z]+)\s+(.*?)\s*(?=$|@[a-z]+\s)/s', $data, $matches);
+                        $info = array_combine($matches[1], $matches[2]);
+                        if (!empty($info['name'])) {
+                            $friendlyName = $info['name'];
+                        }
+                        if(!empty($info['visibility']) && strtolower($info['visibility']) == 'private'){
+                            continue;
+                        }
+                    }
+
+
+                    $this->data['permissions'][$permission] = $friendlyName;
+                } catch (Exception $e) {
+                    
+                }
             }
         }
+
+        asort($this->data['permissions']);
 
         if (isset($this->request->post['permission']['access'])) {
             $this->data['access'] = $this->request->post['permission']['access'];

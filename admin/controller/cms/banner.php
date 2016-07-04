@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @name Content - Banners & Gallary Manager
+ */
+
 class ControllerCmsBanner extends \Core\Controller {
 
     private $error = array();

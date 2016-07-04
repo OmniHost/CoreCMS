@@ -73,6 +73,16 @@ class ModelDesignMenu extends \Core\Model {
                 if (isset($list[$l['menu_item_id']])) {
                     $l['children'] = $this->_createTree($list, $list[$l['menu_item_id']]);
                 }
+                if(empty($l['link']) && !empty($l['route'])){
+                    $ssl = ($l['ssl'])?'SSL':'NONSSL';
+                    $l['link'] = $this->url->link($l['route'],$l['params'],$ssl);
+                }
+                if(empty($l['link'])){
+                    $l['link'] = $l['linklabel'];
+                }
+                if(!empty($l['target'])){
+                    $l['target'] = 'target="' . $l['target'] . '"';
+                }
                 $tree[] = $l;
             }
         }

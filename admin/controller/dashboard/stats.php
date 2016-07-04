@@ -1,4 +1,7 @@
 <?php
+/**
+ * @name Dashboard Widget - At a Glance
+ */
 
 class ControllerDashboardStats extends \Core\Controller {
 

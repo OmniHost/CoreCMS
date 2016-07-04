@@ -8,5 +8,11 @@ class ModelBlogTags extends \Core\Ams\Page {
      */
     protected $_namespace = 'blog.tags';
     public $public = 0;
+    
+    
+    public function findByName($name){
+        $query = $this->_db->query("select ams_page_id from #__ams_pages where namespace='blog.tags' and name like '" . $this->_db->escape(trim($name)) . "'");
+        return (!empty($query->row['ams_page_id']))?$query->row['ams_page_id']: 0;
+    }
 
 }

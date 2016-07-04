@@ -142,9 +142,11 @@ Class Core {
         } else {
             date_default_timezone_set(self::$registry->get('config')->get('config_gttimezone'));
         }
-        
+
         //require_once(DIR_SYSTEM . 'Core/Formfield.php');
-         self::$registry->set('formbuilder', new \Core\Formbuilder());
+        self::$registry->set('formbuilder', new \Core\Formbuilder());
+        require_once('ModulePosition.php');
+        self::$registry->set('modulepos', new ModulePosition());
 
         //Get all the plugins!!!
         if ($ns != 'installer') {
@@ -309,13 +311,20 @@ Class Core {
 
         if (isset($this->request->get['p'])) {
             $action = new \Core\Action($this->request->get['p']);
+            $controller->dispatch($action, new \Core\Action('cron/error'));
         } else {
-            $action = new \Core\Action('cron/error');
+            require_once('Cron.php');
+            $cron = new Cron();
+            $cronjobs = $this->db->query("select * from #__crons where status='1'")->rows;
+            foreach ($cronjobs as $cronjob) {
+                $cron->call($cronjob['route'], json_decode($cronjob['time'], 1), json_decode($cronjob['params'], 1));
+            }
+            if ($cron->isRun()) {
+                $cron->run();
+            }
         }
 
-        $controller->dispatch($action, new \Core\Action('cron/error'));
-
-// Output
+   
         $this->response->output();
     }
 

@@ -135,6 +135,10 @@ class ControllerExtensionFeed extends \Core\Controller {
             }
         }
 
+        //sort_this_array($data['extensions'], 'installed');
+       // sort_this_array($data['extensions'], 'status');
+        sort_enabled_installed($data['extensions']);
+        
         $this->data = $data;
         $this->template = 'extension/feed.phtml';
         $this->children = array(

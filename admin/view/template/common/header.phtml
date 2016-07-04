@@ -6,14 +6,14 @@
         <base href="<?php echo $base; ?>" />
         <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
         <!-- Bootstrap 3.3.4 -->
-        <link href="view/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+         <link href="view/bootstrap/css/bootstrap.min.css,css/admin.css,css/skins.min.css,plugins/sweetalert/sweetalert.css" rel="stylesheet" type="text/css" />
+
         <!-- Font Awesome Icons -->
         <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
         <!-- Ionicons -->
         <link href="//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css" />
         <!-- Theme style -->
-        <link href="view/css/AdminLTE.min.css,css/skins.min.css,plugins/sweetalert/sweetalert.css" rel="stylesheet" type="text/css" />
-
+       
         <!-- Custom CSS -->
 
         <?php foreach ($links as $link) { ?>
@@ -78,7 +78,7 @@
                     <!-- Navbar Right Menu -->
                     <div class="navbar-custom-menu">
                         <ul class="nav navbar-nav">
-                            
+
                             <?php foreach ($header_navs as $hnav): ?>
                                 <li class="dropdown notifications-menu">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -95,8 +95,8 @@
                                                 <?php foreach ($hnav['items'] as $hitem): ?>
                                                     <li>
                                                         <a href="<?php echo $hitem['href']; ?>">
-                                                            <?php if(isset($hitem['total'])): ?>
-                                                            <span class="label label-<?php echo $hitem['class']; ?>"><?php echo $hitem['total']; ?></span>
+                                                            <?php if (isset($hitem['total'])): ?>
+                                                                <span class="label label-<?php echo $hitem['class']; ?>"><?php echo $hitem['total']; ?></span>
                                                             <?php endif; ?>
                                                             <?php echo $hitem['text']; ?>
                                                         </a>
@@ -138,6 +138,9 @@
                                     </li>
                                 </ul>
                             </li>
+                            <li>
+                                <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+          </li>
 
                         </ul>
                     </div>
@@ -149,175 +152,203 @@
                 <!-- sidebar: style can be found in sidebar.less -->
                 <section class="sidebar">
 
-            
+
 
                     <!-- Sidebar Menu -->
                     <ul class="sidebar-menu">
                         <li class="header">Navigation</li>
                         <!-- Optionally, you can add icons to the links -->
-                        <li><a href="<?php echo $home; ?>"><i class="fa fa-dashboard"></i>  <span><?php echo $menu_dashboard; ?></span></a></li>
-                        <li class="treeview">
-                            <a href="#">
-                                <i class="fa fa-file-text-o"></i>
-                                <span><?php echo $menu_content; ?></span>
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li><a href="<?php echo $pages; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_pages; ?></a></li>
-                                <li><a href="<?php echo $posts; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_posts; ?></a></li>
-                                <li><a href="<?php echo $blog_category; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_blog_category; ?></a></li>
-                                <li><a href="<?php echo $banner; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_banners; ?></a></li>
-                                <li><a href="<?php echo $comments; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_comments; ?><?php if ($total_comments): ?> <span class="badge bg-red pull-right"><?php echo $total_comments; ?></span><?php endif; ?></a></li>
-                                <li><a href="<?php echo $download; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_download; ?></a></li>
-                                <li><a href="<?php echo $menu; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_menu; ?></a></li>
 
-                            </ul>
-                        </li>
+                        <?php
+
+                        function menuTree($menu) {
+                            if (empty($menu['icon'])) {
+                                $menu['icon'] = 'fa-angle-double-right';
+                            }
+
+                            $menu['badge'] = empty($menu['badge']) ? '' : $menu['badge'];
+
+                            if (!empty($menu['route'])) {
+                                if (!registry('user')->hasPermission('access', $menu['route'])) {
+                                    return;
+                                }
+                            } else {
+                                if (!empty($menu['children'])) {
+
+                                    $access = false;
+                                    foreach ($menu['children'] as $rt) {
+                                        if (empty($rt['route']) || registry('user')->hasPermission('access', $rt['route'])) {
+                                            $access = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!$access) {
+                                        return;
+                                    }
+                                }
+                            }
+
+                            if (empty($menu['children'])) {
+                                echo '<li><a href="' . $menu['href'] . '"><i class="fa ' . $menu['icon'] . '"></i> <span>' . $menu['label'] . '</span>' . $menu['badge'] . '</a></li>';
+                            } else {
+                                echo '<li class="treeview">
+                                        <a href="#">
+                                            <i class="fa ' . $menu['icon'] . '"></i>
+                                            <span>' . $menu['label'] . '</span>
+                                            <i class="fa fa-angle-left pull-right"></i>
+                                        </a>
+                                        <ul class="treeview-menu">';
+                                foreach ($menu['children'] as $mchild) {
+                                    menuTree($mchild);
+                                }
+                                echo '</ul></li>';
+                            }
+                        }
+                        ?>
+
                         <?php if ($module_menu): ?>
                             <?php foreach ($module_menu as $mmenu): ?>
-                                <?php if (empty($mmenu['children'])): ?>
-                                    <li><a href="<?php echo $mmenu['href']; ?>"><i class="fa <?php echo $mmenu['icon']; ?>"></i> <span><?php echo $mmenu['label']; ?></span></a></li>
-                                <?php else: ?>
-                                    <li class="treeview">
-                                        <a href="#">
-                                            <i class="fa <?php echo $mmenu['icon']; ?>"></i>
-                                            <span><?php echo $mmenu['label']; ?></span>
-                                            <i class="fa fa-angle-left pull-right"></i>
-                                        </a>
-                                        <ul class="treeview-menu">
-                                            <?php foreach ($mmenu['children'] as $mchild): ?>
-                                                <li><a href="<?php echo $mchild['href']; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $mchild['label']; ?></a></li>
-                                            <?php endforeach; ?>
-                                        </ul>
-                                    <li>
-                                    <?php endif; ?>
-                                <?php endforeach; ?>
+                                <?php menuTree($mmenu); ?>
+                            <?php endforeach; ?>
 
-                            <?php endif; ?>
-
-                        <li class="treeview">
-                            <a href="#">
-                                <i class="fa fa-envelope-o"></i>
-                                <span><?php echo $menu_communication; ?></span>
-                                <i class="fa fa-angle-left pull-right"></i>
-                                <ul class="treeview-menu">
-                                    <li><a href="<?php echo $contact_us; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_contact_us; ?><?php if ($total_contact_us): ?> <span class="badge bg-red pull-right"><?php echo $total_contact_us; ?></span><?php endif; ?></a></li>
-                                    <li><a href="<?php echo $formbuilder; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_formbuilder; ?></a></li>
-                                    <li><a href="<?php echo $marketing; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_marketing; ?></a></li>
-                                    <li class="treeview">
-                                        <a href="#">
-                                            <i class="fa fa-envelope-square"></i>
-                                            <span><?php echo $menu_newsletter_system; ?></span>
-                                            <i class="fa fa-angle-left pull-right"></i>
-                                        </a>
-                                        <ul class="treeview-menu">
-                                            <li><a href="<?php echo $newsletter_overview; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_newsletter_overview; ?></a></li>
-                                            <li><a href="<?php echo $subscriber; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_subscriber; ?></a></li>
-                                            <li><a href="<?php echo $newsletter_groups; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_newsletter_group; ?></a></li>
-                                            <li><a href="<?php echo $newsletter_campaigns; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_newsletter_campaign; ?></a></li>
-                                            <li><a href="<?php echo $newsletter_newsletter; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_newsletter_newsletter; ?></a></li>
+                        <?php endif; ?>
 
 
 
-                                        </ul>
-                                    </li> 
-
-
-                                </ul>
-                            </a>
-
-                        </li>
-
-                        <li class="treeview">
-                            <a href="#">
-                                <i class="fa fa-user"></i>
-                                <span><?php echo $menu_user; ?></span>
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li class="treeview">
-                                    <a href="#">
-                                        <i class="fa fa-user"></i>
-                                        <span><?php echo $menu_user_admin; ?></span>
-                                        <i class="fa fa-angle-left pull-right"></i>
-                                    </a>
-                                    <ul class="treeview-menu">
-                                        <li><a href="<?php echo $user; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_user; ?></a></li>
-                                        <li><a href="<?php echo $user_group; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_user_group; ?></a></li>
-                                    </ul>
-                                </li>  
-                                <li class="treeview">
-                                    <a href="#">
-                                        <i class="fa fa-user"></i>
-                                        <span><?php echo $menu_user_public; ?></span>
-                                        <i class="fa fa-angle-left pull-right"></i>
-                                    </a>
-                                    <ul class="treeview-menu">
-                                        <li><a href="<?php echo $user_front; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_user; ?></a></li>
-                                        <li><a href="<?php echo $user_group_front; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_user_group; ?></a></li>
-                                        <li><a href="<?php echo $user_group_ban; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_user_ip_ban; ?></a></li>
-                                    </ul>
-                                </li>   
-                                <li><a href="<?php echo $api_user; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_api_user; ?></a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a class="top">
-                                <i class="fa fa-bar-chart"></i> <Span><?php echo $menu_reports; ?></span><i class="fa fa-angle-left pull-right"></i>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li><a href="<?php echo $report_user_activity; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_report_user_activity; ?></a></li>
-                                <li><a href="<?php echo $report_user_online; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_report_user_online; ?></a></li>
-                            </ul>
-                        </li>
-                        <li class="treeview">
-                            <a href="#">
-                                <i class="fa fa-puzzle-piece"></i>
-                                <span><?php echo $menu_extension; ?></span>
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li><a href="<?php echo $modules; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_modules; ?></a></li>
-                                <li><a href="<?php echo $modifications; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_modifications; ?></a></li>
-                                <li><a href="<?php echo $installer; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_install; ?></a></li>
-                                <li><a href="<?php echo $seo_urls ?>"><i class="fa fa-angle-double-right"></i> Seo Urls</a></li>
-                                <li><a href="<?php echo $feeds; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_feeds; ?></a></li>
-                            </ul>
-                        </li>
-                        <li><a class="top">
-                                <i class="fa fa-cogs"></i> <Span><?php echo $menu_system; ?></span><i class="fa fa-angle-left pull-right"></i>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li><a href="<?php echo $setting; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_setting; ?></a></li>
-                                <li><a href="<?php echo $layout; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_layout; ?></a></li>
-                                <li class="treeview">
-                                    <a href="#">
-                                        <i class="fa fa-globe"></i>
-                                        <span><?php echo $menu_localisation; ?> </span>
-                                        <i class="fa fa-angle-left pull-right"></i>
-                                    </a>
-                                    <ul class="treeview-menu">
-                                        <li><a href="<?php echo $country; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_country; ?></a></li>
-                                        <li><a href="<?php echo $zone; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_zone; ?></a></li>
-                                        <li><a href="<?php echo $currency; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_currency; ?></a></li>
-                                        <li><a href="<?php echo $language; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_language; ?></a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="<?php echo $custom_field; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_custom_field; ?></a></li>
-                                <li><a href="<?php echo $upload; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_upload; ?></a></li>
-                                <li><a href="<?php echo $backup; ?>"><i class="fa fa-angle-double-right"></i> <?php echo $menu_backup; ?></a></li>
-                            </ul>
-                        </li>
 
 
 
-                        <li><a href="<?php echo $logout; ?>"><i class="fa fa-lock"></i> <span><?php echo $menu_logout; ?></span></a></li>
+
+
+
+
 
                     </ul><!-- /.sidebar-menu -->
                 </section>
                 <!-- /.sidebar -->
             </aside>
 
+             <aside class="control-sidebar control-sidebar-light">
+    <!-- Create the tabs -->
+    <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
+      
+    </ul>
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <!-- Home tab content -->
+      <div class="tab-pane" id="control-sidebar-home-tab">
+        <h3 class="control-sidebar-heading">Recent Activity</h3>
+        <ul class="control-sidebar-menu">
+          <li>
+            <a href="javascript:void(0)">
+              <i class="menu-icon fa fa-birthday-cake bg-red"></i>
+
+              <div class="menu-info">
+                <h4 class="control-sidebar-subheading">Langdon's Birthday</h4>
+
+                <p>Will be 23 on April 24th</p>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:void(0)">
+              <i class="menu-icon fa fa-user bg-yellow"></i>
+
+              <div class="menu-info">
+                <h4 class="control-sidebar-subheading">Frodo Updated His Profile</h4>
+
+                <p>New phone +1(800)555-1234</p>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:void(0)">
+              <i class="menu-icon fa fa-envelope-o bg-light-blue"></i>
+
+              <div class="menu-info">
+                <h4 class="control-sidebar-subheading">Nora Joined Mailing List</h4>
+
+                <p>nora@example.com</p>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:void(0)">
+              <i class="menu-icon fa fa-file-code-o bg-green"></i>
+
+              <div class="menu-info">
+                <h4 class="control-sidebar-subheading">Cron Job 254 Executed</h4>
+
+                <p>Execution time 5 seconds</p>
+              </div>
+            </a>
+          </li>
+        </ul>
+        <!-- /.control-sidebar-menu -->
+
+        <h3 class="control-sidebar-heading">Tasks Progress</h3>
+        <ul class="control-sidebar-menu">
+          <li>
+            <a href="javascript:void(0)">
+              <h4 class="control-sidebar-subheading">
+                Custom Template Design
+                <span class="label label-danger pull-right">70%</span>
+              </h4>
+
+              <div class="progress progress-xxs">
+                <div class="progress-bar progress-bar-danger" style="width: 70%"></div>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:void(0)">
+              <h4 class="control-sidebar-subheading">
+                Update Resume
+                <span class="label label-success pull-right">95%</span>
+              </h4>
+
+              <div class="progress progress-xxs">
+                <div class="progress-bar progress-bar-success" style="width: 95%"></div>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:void(0)">
+              <h4 class="control-sidebar-subheading">
+                Laravel Integration
+                <span class="label label-warning pull-right">50%</span>
+              </h4>
+
+              <div class="progress progress-xxs">
+                <div class="progress-bar progress-bar-warning" style="width: 50%"></div>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:void(0)">
+              <h4 class="control-sidebar-subheading">
+                Back End Framework
+                <span class="label label-primary pull-right">68%</span>
+              </h4>
+
+              <div class="progress progress-xxs">
+                <div class="progress-bar progress-bar-primary" style="width: 68%"></div>
+              </div>
+            </a>
+          </li>
+        </ul>
+        <!-- /.control-sidebar-menu -->
+
+      </div>
+      <!-- /.tab-pane -->
+   
+    </div>
+  </aside>
+  <!-- /.control-sidebar -->
+  <!-- Add the sidebar's background. This div must be placed
+       immediately after the control sidebar -->
+  <div class="control-sidebar-bg"></div>
+            
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
 

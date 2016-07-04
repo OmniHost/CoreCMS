@@ -1,4 +1,8 @@
 <?php
+/**
+ * @name Content - Manage Downloads
+ */
+
 
 class ControllerCmsDownload extends \Core\Controller {
 

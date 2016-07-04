@@ -765,8 +765,8 @@ class ControllerModuleTestimonial extends \Core\Controller {
     
     public function menu(&$menu) {
         $this->load->language('module/testimonial');
-        $menu['module_testimonials'] = array(
-            'icon' => 'fa-quote-left',
+        $menu['cms']['children']['module_testimonials'] = array(
+            'order' => '6',
             'label' => $this->language->get('button_testimonials'),
             'href' => $this->url->link('module/testimonial/listing', 'token=' . $this->session->data['token'], 'SSL')
         );

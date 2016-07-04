@@ -1,4 +1,7 @@
 <?php
+/**
+ * @name Dashboard Widget - Activity
+ */
 
 class ControllerDashboardActivity extends \Core\Controller {
 

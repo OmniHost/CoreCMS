@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @name System - Menu editor
+ */
 class ControllerDesignMenu extends \Core\Controller {
 
     private $error = array();

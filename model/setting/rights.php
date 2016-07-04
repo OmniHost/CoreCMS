@@ -10,9 +10,14 @@ class ModelSettingRights extends \Core\Model {
 
      */
 
+    public function getPassword($object_id) {
+        $row = $this->db->query("select password from #__allowed_password where object_id= '" . (int) $object_id . "'")->row;
+        return (!empty($row['password'])) ? $row['password'] : '';
+    }
+
     public function getRight($object_id, $object_type) {
 
-        $group_id = $this->customer->getGroupId();    
+        $group_id = $this->customer->getGroupId();
         $user_id = $this->customer->getId();
 
         $viewable = false;
@@ -21,29 +26,29 @@ class ModelSettingRights extends \Core\Model {
 
             //then usergroup, users, everybody
 
-            $query = $this->db->query("SELECT object_id FROM #__allowed_groups WHERE object_id = '" . (int) $object_id . "' AND object_type = '" . $this->db->escape($object_type) . "' AND group_id IN (-1,-3," . implode(",",$group_id) . ")");
+            $query = $this->db->query("SELECT object_id FROM #__allowed_groups WHERE object_id = '" . (int) $object_id . "' AND object_type = '" . $this->db->escape($object_type) . "' AND group_id IN (-1,-3," . implode(",", $group_id) . ")");
 
             if ($query->row) {
                 $viewable = true;
             }
 
-            /* $query = $this->db->query("SELECT object_id FROM #__allowed_users WHERE object_id = '" . $object_id . "' AND object_type = '" . $object_type . "' AND user_id = '" . $user_id . "'");
+            $query = $this->db->query("SELECT object_id FROM #__allowed_users WHERE object_id = '" . $object_id . "' AND object_type = '" . $this->db->escape($object_type) . "' AND user_id = '" . $user_id . "'");
 
-              if ($query->row) {
-              $viewable = true;
-              } */
+            if ($query->row) {
+                $viewable = true;
+            }
 
-            $query = $this->db->query("SELECT object_id FROM #__denied_groups WHERE object_id = '" . (int) $object_id . "' AND object_type = '" . $this->db->escape($object_type) . "' AND group_id IN (-1,-3," . implode(",",$group_id)  . ")");
+            $query = $this->db->query("SELECT object_id FROM #__denied_groups WHERE object_id = '" . (int) $object_id . "' AND object_type = '" . $this->db->escape($object_type) . "' AND group_id IN (-1,-3," . implode(",", $group_id) . ")");
 
             if ($query->row) {
                 $viewable = false;
             }
 
-            /* $query = $this->db->query("SELECT object_id FROM #__denied_users WHERE object_id = '" . $object_id . "' AND object_type = '" . $object_type . "' AND user_id = '" . $user_id . "'");
+            $query = $this->db->query("SELECT object_id FROM #__denied_users WHERE object_id = '" . $object_id . "' AND object_type = '" . $this->db->escape($object_type) . "' AND user_id = '" . $user_id . "'");
 
-              if ($query->row) {
-              $viewable = false;
-              } */
+            if ($query->row) {
+                $viewable = false;
+            }
         } else {
 
             //everybody, guests

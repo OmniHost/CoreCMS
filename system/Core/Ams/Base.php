@@ -41,6 +41,10 @@ Abstract class Base extends \Core\Controller {
             $this->load->model('setting/rights');
             $this->model_setting_rights->setAllowedGroups($this->_pageModel->id, 'ams_page', $this->request->post['allowed_groups']);
             $this->model_setting_rights->setDeniedGroups($this->_pageModel->id, 'ams_page', $this->request->post['denied_groups']);
+            $this->model_setting_rights->setAllowedUsers($this->_pageModel->id, 'ams_page', $this->request->post['allowed_users']);
+            $this->model_setting_rights->setDeniedUsers($this->_pageModel->id, 'ams_page', $this->request->post['denied_users']);
+            $this->model_setting_rights->setAccessPassword($this->_pageModel->id, $this->request->post['access_password']);
+
 
             $this->session->data['success'] = $this->language->get('text_success');
 
@@ -93,6 +97,12 @@ Abstract class Base extends \Core\Controller {
             $this->load->model('setting/rights');
             $this->model_setting_rights->setAllowedGroups($this->_pageModel->id, 'ams_page', $this->request->post['allowed_groups']);
             $this->model_setting_rights->setDeniedGroups($this->_pageModel->id, 'ams_page', $this->request->post['denied_groups']);
+            $this->model_setting_rights->setAllowedUsers($this->_pageModel->id, 'ams_page', $this->request->post['allowed_users']);
+            $this->model_setting_rights->setDeniedUsers($this->_pageModel->id, 'ams_page', $this->request->post['denied_users']);
+             $this->model_setting_rights->setAccessPassword($this->_pageModel->id, $this->request->post['access_password']);
+
+
+
 //  $this->model_user_user->addUser($this->request->post);
 
             $this->session->data['success'] = $this->language->get('text_success');
@@ -139,11 +149,17 @@ Abstract class Base extends \Core\Controller {
 
         $this->load->model('setting/rights');
         $allowed_groups = $this->model_setting_rights->getAllowedGroups($this->request->get['ams_page_id'], 'ams_page');
-        $denied_groups = $this->model_setting_rights->getDeniedGroups($this->request->get['ams_page_id'], 'ams_page'); //1 is information type
-//Get allowed groups
+        $denied_groups = $this->model_setting_rights->getDeniedGroups($this->request->get['ams_page_id'], 'ams_page');
+        $allowed_users = $this->model_setting_rights->getAllowedUsers($this->request->get['ams_page_id'], 'ams_page');
+        $denied_users = $this->model_setting_rights->getDeniedUsers($this->request->get['ams_page_id'], 'ams_page');
+        $access_password = $this->model_setting_rights->getAccessPassword($this->request->get['ams_page_id']);
 
         $this->model_setting_rights->setAllowedGroups($this->_pageModel->id, 'ams_page', $allowed_groups);
         $this->model_setting_rights->setDeniedGroups($this->_pageModel->id, 'ams_page', $denied_groups);
+        $this->model_setting_rights->setAllowedUsers($this->_pageModel->id, 'ams_page', $allowed_users);
+        $this->model_setting_rights->setDeniedUsers($this->_pageModel->id, 'ams_page', $denied_users);
+         $this->model_setting_rights->setAccessPassword($this->_pageModel->id, $access_password);
+
 
         $this->session->data['success'] = $this->language->get('text_success');
 
@@ -484,6 +500,65 @@ Abstract class Base extends \Core\Controller {
         }
 
         $this->data['denied_groups'] = $denied_groups;
+
+        //Users Level
+
+        if (isset($this->request->post['allowed_users'])) {
+            $allowed_users = $this->request->post['allowed_users'];
+        } elseif (isset($this->request->get['ams_page_id'])) {
+            $allowed_users = $this->model_setting_rights->getAllowedUsers($this->request->get['ams_page_id'], 'ams_page'); //1 is information type
+        } else {
+            $allowed_users[] = array();
+        }
+
+        //$this->data['allowed_users'] = $allowed_users;
+
+        if (isset($this->request->post['denied_users'])) {
+            $denied_users = $this->request->post['denied_users'];
+        } elseif (isset($this->request->get['ams_page_id'])) {
+            $denied_users = $this->model_setting_rights->getDeniedUsers($this->request->get['ams_page_id'], 'ams_page'); //1 is information type
+        } else {
+            $denied_users = array();
+        }
+
+        //$this->data['denied_users'] = $denied_users;
+        
+        
+        if (isset($this->request->post['access_password'])) {
+            $this->data['access_password'] = $this->request->post['access_password'];
+        } elseif (isset($this->request->get['ams_page_id'])) {
+            $this->data['access_password'] = $this->model_setting_rights->getAccessPassword($this->request->get['ams_page_id']); //1 is information type
+        } else {
+            $this->data['access_password'] = '';
+        }
+
+
+        $this->load->model('sale/customer');
+
+        foreach ($allowed_users as $user_id) {
+            $user_info = $this->model_sale_customer->getCustomer($user_id);
+
+            if ($user_info) {
+                $this->data['allowed_users'][] = array(
+                    'id' => $user_info['customer_id'],
+                    'name' => $user_info['firstname'] . " " . $user_info['lastname']
+                );
+            }
+        }
+
+        foreach ($denied_users as $user_id) {
+            $user_info = $this->model_sale_customer->getCustomer($user_id);
+
+            if ($user_info) {
+                $this->data['denied_users'][] = array(
+                    'id' => $user_info['customer_id'],
+                    'name' => $user_info['firstname'] . " " . $user_info['lastname']
+                );
+            }
+        }
+
+     
+
 
 
         $this->data['parents'] = $this->getPageTree();
@@ -840,7 +915,12 @@ Abstract class Base extends \Core\Controller {
 
         if (isset($this->request->get['filter_name'])) {
 
-            $query = $this->db->query("select * from #__ams_pages where name like '%" . $this->db->escape($this->request->get['filter_name']) . "%' and public='1' order by name asc limit 0,5");
+            $ns = '';
+            if(!empty($this->request->get['ns'])){
+                $ns = " and namespace = '" . $this->db->escape($this->request->get['ns']) . "' ";
+            }
+            
+            $query = $this->db->query("select * from #__ams_pages where name like '%" . $this->db->escape($this->request->get['filter_name']) . "%' and public='1' " . $ns . " order by name asc limit 0,5");
             foreach ($query->rows as $row) {
                 $json[] = array(
                     'ams_page_id' => $row['ams_page_id'],

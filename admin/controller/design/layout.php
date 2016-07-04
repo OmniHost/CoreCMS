@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @name System - Layout Manager
+ */
 class ControllerDesignLayout extends \Core\Controller {
 
     private $error = array();

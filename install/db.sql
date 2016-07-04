@@ -724,7 +724,14 @@ CREATE TABLE `#__menu_items` (
   PRIMARY KEY (`menu_item_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=92 DEFAULT CHARSET=utf8;
 
-INSERT INTO `#__menu_items` (`menu_item_id`, `menu_id`, `parent_id`, `title`, `ams_page_id`, `link`, `linklabel`, `sort_order`) VALUES ('90', '2', '0', 'Home', '0', '{{{config_url}}}/', 'Home Page', '0');
+
+ALTER TABLE `#__menu_items` 
+ADD `target` VARCHAR(50) NOT NULL AFTER `linklabel`, 
+ADD `route` VARCHAR(150) NOT NULL AFTER `target`, 
+ADD `params` VARCHAR(255) NOT NULL AFTER `route`,
+ADD `ssl` int(1) NOT NULL DEFAULT 0 AFTER `params`;
+
+INSERT INTO `#__menu_items` (`menu_item_id`, `menu_id`, `parent_id`, `title`, `ams_page_id`, `link`, `linklabel`, `sort_order`) VALUES ('90', '2', '0', 'Home', '0', '', 'Home Page', '0');
 INSERT INTO `#__menu_items` (`menu_item_id`, `menu_id`, `parent_id`, `title`, `ams_page_id`, `link`, `linklabel`, `sort_order`) VALUES ('91', '2', '0', 'Contact Us', '0', '{{{config_url}}}/contact-us', 'Contact Page', '1');
 
 
@@ -5212,3 +5219,43 @@ CREATE TABLE IF NOT EXISTS `#__formcreator` (
                             `date_added` int(1) NOT NULL,
                             PRIMARY KEY (`form_id`)
                             ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=46 ;
+
+CREATE TABLE IF NOT EXISTS `#__crons` (
+`cron_id` int(11) NOT NULL,
+`name` varchar(255) NOT NULL,
+`route` varchar(255) NOT NULL,
+  `status` int(1) NOT NULL DEFAULT '0',
+  `time` varchar(255) NOT NULL DEFAULT '{}',
+  `params` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+ALTER TABLE `#__crons`  ADD PRIMARY KEY (`cron_id`);
+ALTER TABLE `#__crons`
+MODIFY `cron_id` int(11) NOT NULL AUTO_INCREMENT;
+
+CREATE TABLE IF NOT EXISTS `#__allowed_users` (
+  `object_id` int(11) NOT NULL,
+  `object_type` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `#__denied_users` (
+  `object_id` int(11) NOT NULL,
+  `object_type` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+ALTER TABLE `#__allowed_users`
+ ADD PRIMARY KEY (`object_id`,`object_type`,`user_id`);
+
+ALTER TABLE `#__denied_users`
+ ADD PRIMARY KEY (`object_id`,`object_type`,`user_id`);
+
+
+CREATE TABLE IF NOT EXISTS `#__allowed_password` (
+  `object_id` int(11) NOT NULL,
+  `password` varchar(255) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+ALTER TABLE `#__allowed_password`
+ ADD PRIMARY KEY (`object_id`);

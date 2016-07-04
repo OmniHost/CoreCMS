@@ -1,6 +1,6 @@
 <?php
 
-define('VERSION', '1.7.1');
+define('VERSION', '1.8.0');
 define('NS','admin');
 error_reporting(E_ALL);
 

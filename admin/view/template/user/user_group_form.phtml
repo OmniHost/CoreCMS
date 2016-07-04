@@ -25,15 +25,15 @@
                             <div class="scrollbox">
                                 <ul class="list-group">
                                     <?php $class = 'odd'; ?>
-                                    <?php foreach ($permissions as $permission) : ?>
+                                    <?php foreach ($permissions as $permission => $ptitle) : ?>
                                         <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
                                         <li class="list-group-item <?php echo $class; ?>">
                                             <?php if (in_array($permission, $access)) { ?>
                                                 <input type="checkbox" name="permission[access][]" value="<?php echo $permission; ?>" checked="checked" />
-                                                <?php echo $permission; ?>
+                                                <?php echo $ptitle; ?>
                                             <?php } else { ?>
                                                 <input type="checkbox" name="permission[access][]" value="<?php echo $permission; ?>" />
-                                                <?php echo $permission; ?>
+                                                <?php echo $ptitle; ?>
                                             <?php } ?>
                                         </li>
                                     <?php endforeach; ?>
@@ -48,15 +48,15 @@
                             <div class="scrollbox">
                                 <ul class="list-group">
                                     <?php $class = 'odd'; ?>
-                                    <?php foreach ($permissions as $permission) : ?>
+                                    <?php foreach ($permissions as $permission => $ptitle) : ?>
                                         <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
                                         <li class="list-group-item <?php echo $class; ?>">
                                             <?php if (in_array($permission, $modify)) { ?>
                                                 <input type="checkbox" name="permission[modify][]" value="<?php echo $permission; ?>" checked="checked" />
-                                                <?php echo $permission; ?>
+                                                <?php echo $ptitle; ?>
                                             <?php } else { ?>
                                                 <input type="checkbox" name="permission[modify][]" value="<?php echo $permission; ?>" />
-                                                <?php echo $permission; ?>
+                                                <?php echo $ptitle; ?>
                                             <?php } ?>
                                         </li>
                                     <?php endforeach; ?>

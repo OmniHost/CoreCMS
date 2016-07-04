@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @name Dashboard Widget - Empty Sample
+ */
+
+
 class ControllerDashboardEmpty extends \Core\Controller {
 
     public function index() {

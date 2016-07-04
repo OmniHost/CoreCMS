@@ -289,8 +289,6 @@ function init_wysiwyg() {
     \Core\Registry::getInstance()->get('document')->addScript($uri . '?p=cms/page/downloadlist');
 }
 
-
-
 function __modification($filename) {
 
     $file = DIR_MODIFICATION . ltrim(substr($filename, strlen(DIR_ROOT)), "/");
@@ -307,7 +305,6 @@ function formfield($field) {
 
     return registry('formbuilder')->render($field);
 }
-
 
 function render_select($arr, $selected = 0, $level = 0) {
     $html = '';
@@ -403,4 +400,26 @@ function dateformat_PHP_to_MomentJs($php_format) {
         }
     }
     return $jqueryui_format;
+}
+
+function sort_this_array(&$base_array, $column, $sort_order = SORT_DESC) {
+
+    $sort_column = array();
+    foreach ($base_array as $key => $row) {
+        $sort_column[$key] = $row[$column];
+    }
+
+    array_multisort($sort_column, $sort_order, $base_array);
+}
+
+function sort_enabled_installed(&$base_array, $statuscol = 'status', $installed = 'installed', $sort_order_status = SORT_DESC, $sort_order_installed = SORT_DESC) {
+
+    $sort_column = array();
+    $status = $install = array();
+    foreach ($base_array as $key => $row) {
+        $status[$key] = $row[$statuscol];
+        $install[$key] = $row[$installed];
+    }
+
+    array_multisort($status, $sort_order_status, $install, $sort_order_installed, $base_array);
 }
