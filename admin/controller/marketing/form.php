@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * CoreCMS - Bootstrap Based PHP 5 CMS
+ * @name Communication - Form Builder
+ * @author      Craig Smith <vxdhost@gmail.com>
+ * @copyright   2016 Craig smith
+ * @link        http://www.omnihost.co.nz
+ * @license     http://www.omnihost.co.nz/cms-license
+ * @version     1.8.0
+ * @package     CoreCMS
+ */
+
 class ControllerMarketingForm extends \Core\Controller {
 
     private $error = array();
@@ -141,7 +152,7 @@ class ControllerMarketingForm extends \Core\Controller {
         $data['text_no_results'] = $this->language->get('text_no_results');
 
         $data['column_name'] = $this->language->get('column_name');
-        $data['column_sort_order'] = $this->language->get('column_sort_order');
+        $data['column_status'] = $this->language->get('column_status');
         $data['column_action'] = $this->language->get('column_action');
 
         $data['button_insert'] = $this->language->get('button_insert');
@@ -233,8 +244,10 @@ class ControllerMarketingForm extends \Core\Controller {
 
         if (!isset($this->request->get['creator_id'])) {
             $data['action'] = $this->url->link('marketing/form/insert', 'token=' . $this->session->data['token'], 'SSL');
+            $data['text_edit'] = $this->language->get('text_add');
         } else {
             $data['action'] = $this->url->link('marketing/form/update', 'token=' . $this->session->data['token'] . '&creator_id=' . $this->request->get['creator_id'], 'SSL');
+            $data['text_edit'] = $this->language->get('text_edit');
         }
 
         $data['cancel'] = $this->url->link('marketing/form', 'token=' . $this->session->data['token'], 'SSL');
@@ -291,7 +304,7 @@ class ControllerMarketingForm extends \Core\Controller {
 
         
         $this->document->addStyle("view/template/marketing/externals/css/custom.css");
-        $this->document->addScript('//code.jquery.com/ui/1.11.4/jquery-ui.min.js');
+        $this->document->addScript('view/plugins/jQueryUI/jquery-ui.js');
 //$this->document->addScript("//code.jquery.com/jquery-migrate-1.4.1.js");
       //  $this->document->addScript("view/template/marketing/externals/js/jquery.js");
        // $this->document->addScript("view/template/marketing/externals/js/jquery_003.js");

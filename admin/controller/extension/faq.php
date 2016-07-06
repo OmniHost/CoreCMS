@@ -1,5 +1,14 @@
 <?php
-
+/**
+ * CoreCMS - Bootstrap Based PHP 5 CMS
+ * @name Content - FAQ System
+ * @author      Craig Smith <vxdhost@gmail.com>
+ * @copyright   2016 Craig smith
+ * @link        http://www.omnihost.co.nz
+ * @license     http://www.omnihost.co.nz/cms-license
+ * @version     1.8.0
+ * @package     CoreCMS
+ */
 class ControllerExtensionFaq extends \Core\Controller {
 
     private $error = array();
@@ -143,7 +152,7 @@ class ControllerExtensionFaq extends \Core\Controller {
                 $this->document->addScript('view/plugins/datetimepicker/moment.min.js');
         $this->document->addScript('view/plugins/datetimepicker/bootstrap-datetimepicker.min.js');
         $this->document->addStyle('view/plugins/datetimepicker/bootstrap-datetimepicker.min.css');
-        $this->document->addScript('//code.jquery.com/ui/1.11.4/jquery-ui.min.js');
+       // $this->document->addScript('view/plugins/jQueryUI/jquery-ui.js');
 
         $this->response->setOutput($this->render('extension/faq_list.phtml', $data));
     }

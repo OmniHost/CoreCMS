@@ -1,6 +1,14 @@
 <?php
 /**
+ * CoreCMS - Bootstrap Based PHP 5 CMS
  * @name Content - Manage Downloads
+ * @author      Craig Smith <vxdhost@gmail.com>
+ * @copyright   2016 Craig smith
+ * @link        http://www.omnihost.co.nz
+ * @license     http://www.omnihost.co.nz/cms-license
+ * @version     1.8.0
+ * @package     CoreCMS
+ * 
  */
 
 
@@ -182,7 +190,7 @@ class ControllerCmsDownload extends \Core\Controller {
                 'download_id' => $result['download_id'],
                 'name' => $result['name'],
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
-                'link' => $this->config->get('config_url') . 'index.php?p=cms/download?download_id=' . $result['download_id'] . '&cmslink=' . md5(strrev($result['download_id']) . 'dl'),
+                'link' => HTTP_CATALOG. 'index.php?p=cms/download?download_id=' . $result['download_id'] . '&cmslink=' . md5(strrev($result['download_id']) . 'dl'),
                 'edit' => $this->url->link('cms/download/edit', 'token=' . $this->session->data['token'] . '&download_id=' . $result['download_id'] . $url, 'SSL')
             );
         }
@@ -341,6 +349,8 @@ class ControllerCmsDownload extends \Core\Controller {
             $data['action'] = $this->url->link('cms/download/edit', 'token=' . $this->session->data['token'] . '&download_id=' . $this->request->get['download_id'] . $url, 'SSL');
         }
 
+        $data['text_edit'] = $this->language->get('text_edit');
+        
         $data['cancel'] = $this->url->link('cms/download', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
        

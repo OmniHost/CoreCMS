@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * CoreCMS - Bootstrap Based PHP 5 CMS
+ * @name Communication - Site User communications
+ * @author      Craig Smith <vxdhost@gmail.com>
+ * @copyright   2016 Craig smith
+ * @link        http://www.omnihost.co.nz
+ * @license     http://www.omnihost.co.nz/cms-license
+ * @version     1.8.0
+ * @package     CoreCMS
+ */
+
 class ControllerMarketingContact extends \Core\Controller {
 
     private $error = array();
@@ -103,22 +114,7 @@ class ControllerMarketingContact extends \Core\Controller {
                 $override_permission = isset($this->request->post['override_permission']) ? true : false;
 
                 switch ($this->request->post['to']) {
-                    case 'newsletter':
-
-                        $customer_data = array(
-                            'filter_opt_in' => 1,
-                            'start' => ($page - 1) * 10,
-                            'limit' => 10
-                        );
-
-                        $email_total = $this->model_marketing_subscriber->getTotalSubscribers($customer_data);
-
-                        $results = $this->model_marketing_subscriber->getSubscribers($customer_data);
-
-                        foreach ($results as $result) {
-                            $emails[] = $result['email'];
-                        }
-                        break;
+                    
                     case 'customer_all':
                         $customer_data = array(
                             'start' => ($page - 1) * 10,

@@ -1,4 +1,15 @@
 <?php
+/**
+ * CoreCMS - Bootstrap Based PHP 5 CMS
+ * @name Marketing - Inbound tracking
+ * @author      Craig Smith <vxdhost@gmail.com>
+ * @copyright   2016 Craig smith
+ * @link        http://www.omnihost.co.nz
+ * @license     http://www.omnihost.co.nz/cms-license
+ * @version     1.8.0
+ * @package     CoreCMS
+ */
+
 
 class ControllerMarketingMarketing extends \Core\Controller {
 
@@ -454,10 +465,13 @@ class ControllerMarketingMarketing extends \Core\Controller {
 
         if (!isset($this->request->get['marketing_id'])) {
             $data['action'] = $this->url->link('marketing/marketing/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['text_edit'] = $this->language->get('text_add');
         } else {
             $data['action'] = $this->url->link('marketing/marketing/edit', 'token=' . $this->session->data['token'] . '&marketing_id=' . $this->request->get['marketing_id'] . $url, 'SSL');
+            $data['text_edit'] = $this->language->get('text_edit');
         }
 
+        $data['store'] = $this->config->get('config_catalog');
         $data['cancel'] = $this->url->link('marketing/marketing', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
         if (isset($this->request->get['marketing_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
@@ -465,8 +479,6 @@ class ControllerMarketingMarketing extends \Core\Controller {
         }
 
         $data['token'] = $this->session->data['token'];
-
-        $data['store'] = $this->config->get('config_catalog');
 
         if (isset($this->request->post['name'])) {
             $data['name'] = $this->request->post['name'];

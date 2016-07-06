@@ -302,8 +302,12 @@ $(document).ready(function () {
                                 url: 'index.php?p=common/filemanager&token=' + getURLVar('token') + '&ckeditor=' + editor.name,
                                 dataType: 'html',
                                 success: function (html) {
-                                    $('body').append('<div id="modal-image" class="modal" style="z-index: 99991;">' + html + '</div>');
-                                    $('#modal-image').modal('show');
+                              //      console.log(html);
+                                  $('body').append('<div id="modal-image" class="modal">' + html + '</div>');
+
+                    $('#modal-image').modal('show');
+                               //     $('body').append('<div id="modal-image" class="modal" style="z-index: 99991;">' + html + '</div>');
+                              //      $('#modal-image').modal('show');
                                 }
                             });
 

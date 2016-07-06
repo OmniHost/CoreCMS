@@ -170,3 +170,6 @@ $_['entry_meta_ogimage_help'] = 'Visit <a href="https://developers.facebook.com/
 
 $_['entry_sso'] = 'SSO API User';
 $_['help_sso'] = 'Which api credentials to use when using SSO (with system like Vanilla forums)';
+
+$_['entry_account_rememberme'] = "Allow Remember Me";
+$_['help_account_rememberme'] = "Allows users to remain in accross different sessions instead of closing end of browser session";

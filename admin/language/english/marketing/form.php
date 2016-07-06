@@ -8,13 +8,15 @@ $_['text_default']           = 'Default';
 $_['text_image_manager']     = 'Image Manager';
 $_['text_browse']            = 'Browse Files';
 $_['text_clear']             = 'Clear Image';
+$_['text_edit']   = 'Edit Form';
+$_['text_add']   = 'Add Form ';
 
-$_['text_edit']   = 'Edit ';
+$_['button_edit']   = 'Edit Form';
 $_['button_insert']   = 'Add Form ';
 
 // Column
 $_['column_name']            = 'Form Name';
-$_['column_sort_order']      = 'Sort Order';
+$_['column_status']      = 'Status';
 $_['column_action']          = 'Action';
 
 // Entry

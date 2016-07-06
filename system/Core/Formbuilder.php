@@ -78,7 +78,7 @@ class Formbuilder extends \Core\Model {
 
     public function multitext($field) {
 
-        $this->document->addScript('//code.jquery.com/ui/1.11.4/jquery-ui.min.js');
+        $this->document->addScript('view/plugins/jQueryUI/jquery-ui.js');
 
         $html = '<div class="input-group">'
                 . '<input type="text" data-key="' . $field['key'] . '" data-target="' . $field['id'] . '" value="" placeholder="' . $field['label'] . '" id="input-' . $field['id'] . '" class="form-control" />'
@@ -112,7 +112,7 @@ class Formbuilder extends \Core\Model {
     }
 
     function autocomplete_list_addable($field) {
-        $this->document->addScript('//code.jquery.com/ui/1.11.4/jquery-ui.min.js');
+       $this->document->addScript('view/plugins/jQueryUI/jquery-ui.js');
 
         $html = '<div class="input-group"><input type="autocomplete" data-limit="0" data-key="' . $field['key'] . '" data-target="' . $field['id'] . '" data-url="' . $field['url'] . '" value="" placeholder="' . $field['label'] . '" id="input-' . $field['id'] . '" class="form-control" /> <span class="input-group-btn">
         <button id="' . $field['key'] . '-addnew" class="btn btn-default" type="button">' . $this->language->get("Add New") . '</button>
@@ -162,11 +162,11 @@ $(document).on("click","#' . $field['key'] . '-addnew", function(e) { e.preventD
 
     function autocomplete_list($field) {
 
-        if ($field['addable']) {
+        if (!empty($field['addable'])) {
             return $this->autocomplete_list_addable($field);
         }
 
-        $this->document->addScript('//code.jquery.com/ui/1.11.4/jquery-ui.min.js');
+        $this->document->addScript('view/plugins/jQueryUI/jquery-ui.js');
 
         $html = '<input type="autocomplete" data-limit="0" data-key="' . $field['key'] . '" data-target="' . $field['id'] . '" data-url="' . $field['url'] . '" value="" placeholder="' . $field['label'] . '" id="input-' . $field['id'] . '" class="form-control" />';
         $html .= '<div id="' . $field['id'] . '" class="well well-sm autocomplete-list sortable" style="height: 150px; overflow: auto;">';
@@ -259,7 +259,7 @@ $(document).on("click","#' . $field['key'] . '-addnew", function(e) { e.preventD
 
     function builder($field) {
         $this->init_wysiwyg();
-        $this->document->addScript('//code.jquery.com/ui/1.11.4/jquery-ui.min.js');
+        $this->document->addScript('view/plugins/jQueryUI/jquery-ui.js');
         $this->document->addScript('view/plugins/grid-editor/dist/jquery.grideditor.js');
         $this->document->addStyle('view/plugins/grid-editor/dist/grideditor.css');
 

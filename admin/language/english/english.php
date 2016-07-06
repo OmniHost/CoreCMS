@@ -70,3 +70,5 @@ $_['time_format'] = 'h:i:s A';
 
 $_['entry_allowed_groups'] = 'Allowed Groups';
 $_['entry_denied_groups'] = 'Denied Groups';
+$_['entry_class_suffix'] = 'Module Class Suffix';
+$_['help_class_suffix']       = 'A suffix to be applied to the module CSS class, this allows an individual style';

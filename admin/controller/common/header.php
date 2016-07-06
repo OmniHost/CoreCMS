@@ -1,7 +1,17 @@
 <?php
 /**
- * 
+ * CoreCMS - Bootstrap Based PHP 5 CMS
+ * @name Administraton common header
+ * @author      Craig Smith <vxdhost@gmail.com>
+ * @copyright   2016 Craig smith
+ * @link        http://www.omnihost.co.nz
+ * @license     http://www.omnihost.co.nz/cms-license
+ * @version     1.8.0
+ * @package     CoreCMS
+ *  @visibility private
  */
+ 
+
 class ControllerCommonHeader extends \Core\Controller {
 
     public function index() {
@@ -256,7 +266,7 @@ class ControllerCommonHeader extends \Core\Controller {
                         'label' => $this->data['menu_menus'],
                         'href' => $this->data['menu'],
                         'order' => 7,
-                        'route' => 'cms/menu',
+                        'route' => 'design/menu',
                     )
                 )
             ),
@@ -279,6 +289,13 @@ class ControllerCommonHeader extends \Core\Controller {
                         'order' => 0,
                         'badge' => $this->data['total_contact_us'] ? '<span class="badge bg-red pull-right">' . $this->data['total_contact_us'] . '</span>' : '',
                         'route' => 'sale/contact',
+                    ),
+'contact_emai' => array(
+                        'label' => $this->language->get('Email Users'),
+                        'href' => $this->url->link('marketing/contact', 'token=' . $this->session->data['token'], 'SSL'),
+                        'order' => 0,
+                        
+                        'route' => 'marketing/contact',
                     ),
                     'marketing' => array(
                         'label' => $this->data['menu_marketing'],

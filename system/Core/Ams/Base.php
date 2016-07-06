@@ -242,6 +242,7 @@ Abstract class Base extends \Core\Controller {
         $this->data['heading_title'] = $this->language->get('heading_title');
 
         $this->data['text_enabled'] = $this->language->get('text_enabled');
+        $this->data['text_edit'] = $this->language->get('text_edit');
         $this->data['text_disabled'] = $this->language->get('text_disabled');
 
         $this->data['entry_name'] = $this->language->get('entry_name');
@@ -259,10 +260,12 @@ Abstract class Base extends \Core\Controller {
         $this->data['tab_general'] = $this->language->get('tab_general');
         $this->data['tab_meta'] = $this->language->get('tab_meta');
         $this->data['tab_permission'] = $this->language->get('tab_permission');
+        $this->data['tab_links'] = $this->language->get('tab_links');
         $this->data['tab_revision'] = $this->language->get('tab_revision');
 
         $this->data['button_save'] = $this->language->get('button_save');
         $this->data['button_cancel'] = $this->language->get('button_cancel');
+        $this->data['button_preview'] = $this->language->get('button_preview');
 
         $this->data['site_url'] = $this->config->get('config_catalog');
 
@@ -597,6 +600,8 @@ Abstract class Base extends \Core\Controller {
     protected function getList() {
         $page = isset($this->request->get['page']) ? (int) $this->request->get['page'] : 1;
         $limit = $this->config->get('config_limit_admin');
+        
+     
         $filter = !empty($this->request->get['filter']) ? $this->request->get['filter'] : array();
 
         if (isset($this->request->get['sort'])) {
@@ -690,6 +695,7 @@ Abstract class Base extends \Core\Controller {
         $this->data['pagination'] = $pagination->render();
 
         $this->data['heading_title'] = $this->language->get('heading_title');
+        $this->data['text_list'] = $this->language->get('text_list');
 
         $this->data['text_no_results'] = $this->language->get('text_no_results');
 
@@ -764,11 +770,13 @@ Abstract class Base extends \Core\Controller {
         $action = array();
         $action['edit'] = array(
             'class' => 'primary',
+            'icon' => 'fa fa-edit',
             'text' => $this->language->get('text_edit'),
             'href' => $this->url->link($this->_namespace . '/update', 'token=' . $this->session->data['token'] . '&ams_page_id=' . $page['ams_page_id'] . $url, 'SSL')
         );
         $action['copy'] = array(
             'class' => 'info',
+            'icon' => 'fa fa-clone',
             'text' => $this->language->get('text_copy'),
             'href' => $this->url->link($this->_namespace . '/copy', 'token=' . $this->session->data['token'] . '&ams_page_id=' . $page['ams_page_id'] . $url, 'SSL')
         );
@@ -780,6 +788,7 @@ Abstract class Base extends \Core\Controller {
             $slug = $this->model_tool_seo->getUrl('ams_page_id=' . $page['ams_page_id']);
             $action['view'] = array(
                 'class' => 'default',
+                'icon' => 'fa fa-eye',
                 'text' => $this->language->get('View Page'),
                 'href' => $this->config->get('config_catalog') . $slug,
                 'target' => '_preview'

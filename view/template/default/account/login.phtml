@@ -33,13 +33,13 @@
                 <?php } ?>
                 <div class="row">
                     <div class="col-sm-6">
-                        <?php if($account_register): ?>
-                        <div class="well">
-                            <h4 class="heading text-center"><?php echo $text_new_customer; ?></h4>
-                            <h6><?php echo $text_register; ?></h6>
-                            <p><?php echo $text_register_account; ?></p>
-                            <a href="<?php echo $register; ?>" class="btn btn-primary"><?php echo $button_continue; ?></a></div>
-                            <?php endif; ?>
+                        <?php if ($account_register): ?>
+                            <div class="well">
+                                <h4 class="heading text-center"><?php echo $text_new_customer; ?></h4>
+                                <h6><?php echo $text_register; ?></h6>
+                                <p><?php echo $text_register_account; ?></p>
+                                <a href="<?php echo $register; ?>" class="btn btn-primary"><?php echo $button_continue; ?></a></div>
+                        <?php endif; ?>
                     </div>
                     <div class="col-sm-6">
                         <div class="well">
@@ -55,6 +55,13 @@
                                     <label class="control-label" for="input-password"><?php echo $entry_password; ?></label>
                                     <input type="password" name="password" value="<?php echo $password; ?>" placeholder="<?php echo $entry_password; ?>" id="input-password" class="form-control" />
                                     <a href="<?php echo $forgotten; ?>"><?php echo $text_forgotten; ?></a></div>
+                                <?php if ($remember_me): ?>
+                                    <div class="form-group">
+                                        <label for="input-remember">
+                                            <input type="checkbox" name="remember_me" id="input-remember" value="remember_checked" /> <?php echo $text_remember_me; ?>
+                                        </label>
+                                    </div>
+                                <?php endif; ?>
                                 <input type="submit" value="<?php echo $button_login; ?>" class="btn btn-primary" />
                                 <?php if ($redirect) { ?>
                                     <input type="hidden" name="redirect" value="<?php echo $redirect; ?>" />

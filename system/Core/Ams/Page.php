@@ -405,6 +405,7 @@ Abstract class Page {
 
     public function storeRevision($page_data, $user_id) {
 
+        $ns = str_replace(".","/",$this->_namespace);
         $this->_db->query("delete from #__ams_revisions where ams_page_id = '" . (int) $this->id . "' and autosave = '1'");
         $this->_db->query("delete from #__ams_revisions where ams_page_id = '0' and autosave = '1'");
         $version = 0;
@@ -420,6 +421,7 @@ Abstract class Page {
 
             $this->_db->query("insert into #__ams_revisions set ams_page_id = '" . (int) $this->id . "', "
                     . " user_id = '" . (int) $user_id . "', "
+                    . " namespace= '" . $this->_db->escape($ns) . "', "
                     . " autosave = '0', "
                     . " pagedata = '" . $this->_db->escape(json_encode($page_data)) . "', "
                     . " created = '" . time() . "', "

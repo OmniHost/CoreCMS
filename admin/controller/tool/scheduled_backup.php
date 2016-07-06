@@ -1,5 +1,15 @@
 <?php 
-
+ /* CoreCMS - Bootstrap Based PHP 5 CMS
+ * @name Communication - Contact Requests
+ * @author      Craig Smith <vxdhost@gmail.com>
+ * @copyright   2016 Craig smith
+ * @link        http://www.omnihost.co.nz
+ * @license     http://www.omnihost.co.nz/cms-license
+ * @version     1.8.0
+ * @package     CoreCMS
+@visibility hidden
+@TODO - MIGRATE TO SETTINGS / FRONT
+ */
 /** @should migrate to a setting in the system settings --- does not need its own module/controller!!!! (only frontend)
 
 define("DIR_BACKUP", DIR_SYSTEM."backup/");

@@ -11,6 +11,7 @@ $_['text_register_account']        = 'By creating an account you will be able to
 $_['text_returning_customer']      = 'Existing User';
 $_['text_i_am_returning_customer'] = 'I am an existing user';
 $_['text_forgotten']               = 'Forgotten Password';
+$_['text_remember_me']              = 'Remember Me';
 
 // Entry
 $_['entry_email']                  = 'E-Mail Address';

@@ -3,14 +3,14 @@
 
 <section class="content">
 
-    <div class="box">
-        <div class="box-header text-right">
-
-            <button onclick="$('#form').submit();" class="btn btn-app"><i class="fa fa-save text-green"></i> <?php echo $button_save; ?></button>
-            <a href="<?php echo $cancel; ?>" class="btn btn-app"><i class="fa fa-reply"></i>  <?php echo $button_cancel; ?></a>
-
-
+    <div class="box box-theme">
+        <div class="box-header ">
+            <h3 class="box-title"><i class="fa fa-edit"></i> <?php echo $text_edit; ?></h3>
+             <div class="box-tools pull-right">
+            <button type="submit" form="form" data-toggle="tooltip" title="<?php echo $button_save; ?>" class="btn btn-success"><i class="fa fa-save"></i></button>
+            <a href="<?php echo $cancel; ?>" data-toggle="tooltip" title="<?php echo $button_cancel; ?>" class="btn btn-default"><i class="fa fa-reply"></i></a></div>
         </div>
+       
 
         <div class="box-body">
             <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form" class="form-horizontal">
@@ -66,12 +66,21 @@
                             </ol>
                         </div>
                         <input type="hidden" id="menu_items_input" name="items" value="" />
-                        <button type="button" id="add_menu_item">Add Menu Item</button>
+                        
                     </div>
 
-            </form>
+            
         </div>
+                <div class="form-group">
+                   
+                    <div class="col-sm-12 text-right">
 
+                        <button class="btn btn-primary" type="button" id="add_menu_item"><i class="fa fa-plus"></i> Add Menu Item</button>
+                    </div>
+
+            
+        </div>
+</form>
     </div>
 </div>
 
@@ -462,10 +471,14 @@ function buildMenuTree($mi, &$_id = 0) {
 
             } else {
                 $('li[data-id=' + theId + ']').attr('data-ams_page_id', thePage)
-                        .attr('data-link', theLink)
-
-                        .attr('data-linklabel', htmlEntities(theLabel))
+                         .attr('data-route', theRoute)
+                        .attr('data-params', theParams)
                         .attr('data-title', htmlEntities(theTitle))
+                        .attr('data-ams-page-id', thePage)
+                        .attr('data-target', theTarget)
+                        .attr('data-link', theLink)
+                        .attr('data-ssl', theSSL)
+                        .attr('data-linklabel', htmlEntities(theLabel))
                         .attr('data-allowed_groups', theAllowed.join())
                         .attr('data-denied_groups', theDenied.join())
                         .prop('data-allowed_groups', theAllowed.join())

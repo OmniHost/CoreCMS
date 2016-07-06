@@ -83,7 +83,7 @@ Class Core {
 
 
         require_once('Log.php');
-        $log = new \Core\Log(DATE("Ymd") . '_error_log.txt');
+        $log = new \Core\Log(DATE("Ym") . '_error_log.txt');
         self::$registry->set('log', $log);
         set_error_handler(array($this, 'error_handler'));
         set_exception_handler(array($this, 'exception_handler'));

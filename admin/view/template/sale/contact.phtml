@@ -3,14 +3,17 @@
 
 <section class="content">
 
-    <div class="box">
-        <div class="box-header text-right">
-            <a href="<?php echo $csvfile; ?>" class="btn btn-app"><i class="fa fa-download"></i><?php echo $button_csv; ?> </a>
+    <div class="box box-theme">
+        <div class="box-header with-border">
+            <h3 class="box-title"><i class="fa fa-list"></i> <?php echo $heading_title_contact_list; ?></h3>
+            <div class="box-tools pull-right">
+            <a href="<?php echo $csvfile; ?>" class="btn btn-info" data-toggle="tooltip" title="<?php echo $button_csv; ?>"><i class="fa fa-download"></i> </a>
             <a onclick="$('#execute').val('markasread');
-                    $('#form').submit();" class="btn btn-app"><i class="fa fa-check text-success"></i><?php echo $button_read; ?> </a>
-            <a onclick="$('#execute').val('delete');
-                    $('#form').submit();" class="btn btn-app"><i class="fa fa-trash text-danger"></i><?php echo $button_delete; ?> </a>
+                    $('#form').submit();" class="btn btn-success" data-toggle="tooltip" title="<?php echo $button_read; ?>"><i class="fa fa-check"></i> </a>
+            <a onclick="confirmDelete('Are you Sure?', '', function () {$('#execute').val('delete');
+                $('#form').submit();});" class="btn btn-danger" data-toggle="tooltip" title="<?php echo $button_delete; ?>"><i class="fa fa-trash"></i> </a>
 
+        </div>
         </div>
         <div class="box-body">
 

@@ -68,6 +68,8 @@ class ControllerModuleContact extends \Core\Controller {
         $this->document->addStyle('view/plugins/datetimepicker/bootstrap-datetimepicker.min.css');
 
 
+        $data['suffix'] = html_entity_decode($this->config->get('contact_class_suffix'));
+        
         $this->data = $data;
 
         $this->template = 'module/contact.phtml';

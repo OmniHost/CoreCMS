@@ -1,44 +1,72 @@
 <?php echo $header; ?>
-<?php include(__DIR__ . '/../common/page-header.phtml'); ?>
+<?php include(__DIR__ . '/../common/page-header.phtml'); ?>.
+<?php
+
+function placeFormField($formfield) {
+    ?>
+    <?php if ($formfield['type'] != 'custom'): ?>
+        <div class="form-group">
+            <label for="<?php echo $el; ?>Input" class="col-sm-2 control-label <?php echo $formfield['required'] ? 'required' : ''; ?>"><?php echo $formfield['label']; ?></label>
+
+            <div class="col-sm-<?php echo $formfield['type'] == 'builder' ? 12 : 9; ?>">
+                <?php echo formfield($formfield); ?>
+                <?php if (!empty($formfield['error'])) { ?>
+                    <span class="error text-danger"><?php echo $formfield['error']; ?></span>
+                <?php } ?>
+            </div>
+        </div>
+    <?php else: ?>
+        <?php echo formfield($formfield); ?>
+    <?php
+    endif;
+}
+?>
 <!-- Main content -->
 <section class="content">
 
     <form action="<?php echo $action; ?>" class="form-horizontal form-validate" method="post" enctype="multipart/form-data" id="form">
-        <div class="box">
-            <div class="box-header text-right">
+        <div class="box box-theme">
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="fa fa-pencil"></i> <?php echo $text_edit; ?></h3>
+
+                <div class="box-tools pull-right">
+                    <button class="btn btn-success" data-toggle="tooltip" title="<?php echo $button_save; ?>">
+                        <i class="fa fa-save"></i>
+                    </button>
+                    <?php if ($ams_is_public): ?>
+                        <button type="button" class="btn btn-default preview-page" title="<?php echo $button_preview; ?>" data-toggle="tooltip">
+                            <i class="fa fa-eye "></i>
+                        </button>
+                    <?php endif; ?>
+                    <a href="<?php echo $cancel; ?>" class="btn btn-default" title="<?php echo $button_cancel; ?>"  data-toggle="tooltip">
+                        <i class="fa fa-reply"></i> 
+                    </a>
+                </div>
+            </div>
+
+            <div class="box-body">
                 <?php if ($autosave_enabled): ?>
-                    <div id="autosave" style="float:left;">
+                    <div id="autosave">
                         <a href="#" id="autosave-on" class="fa fa-check-circle-o text-green" title="<?php echo $text_autosaving_on; ?>" /></a>
                         <a href="#" style="display:none;" id="autosave-off" class="fa fa-times-circle-o text-red" title="<?php echo $text_autosaving_off; ?>" /></a>
                         <?php echo $text_last_saved; ?> <span class="autosave-timer">0</span> <?php echo $text_seconds_ago; ?>. <span id="autosave-error"></span>
                     </div>
                 <?php else: ?>
-                    <div id="autosave" style="float:left;">
+                    <div id="autosave">
                         <a href="#" style="display:none;" id="autosave-on" class="fa fa-check-circle-o text-green" title="<?php echo $text_autosaving_on; ?>" /></a>
                         <a href="#"  id="autosave-off" class="fa fa-times-circle-o text-red" title="<?php echo $text_autosaving_off; ?>" /></a>
                         <?php echo $text_last_saved; ?> <span class="autosave-timer">0</span> <?php echo $text_seconds_ago; ?>. <span id="autosave-error"></span>
                     </div>
                 <?php endif; ?>
-                <button class="btn btn-app">
-                    <i class="fa fa-save text-green"></i> <?php echo $button_save; ?>
-                </button>
-                <?php if ($ams_is_public): ?>
-                    <button type="button" class="btn btn-app preview-page">
-                        <i class="fa fa-eye text-primary "></i> Preview Page
-                    </button>
-                <?php endif; ?>
-                <a href="<?php echo $cancel; ?>" class="btn btn-app" onclick="$('#form').submit();">
-                    <i class="fa fa-reply"></i> <?php echo $button_cancel; ?>
-                </a>
-            </div>
-            <div class="box-body">
 
                 <ul class="nav nav-tabs" style='margin-bottom:15px;'>
 
                     <li class="active"><a href="#tab-general" data-toggle="tab"><?php echo $tab_general; ?></a></li>
-
+                    <?php if(!empty($tabs['links'])): ?>
+                    <li><a href="#tab-links" data-toggle="tab"><?php echo $tab_links; ?></a></li>
+                    <?php endif; ?>
                     <?php foreach ($tabs as $tabid => $tab): ?>
-                        <?php if ($tabid != 'permission' && $tabid != 'general' && $tabid != 'meta' && $tabid != 'general_details'): ?>
+                        <?php if ($tabid != 'links' && $tabid != 'permission' && $tabid != 'general' && $tabid != 'meta' && $tabid != 'general_details'): ?>
                             <li class=""><a href="#tab-<?php echo slug($tabid); ?>" data-toggle="tab"><?php echo ucfirst($tabid); ?></a></li>
                         <?php endif; ?>
                     <?php endforeach; ?>
@@ -83,34 +111,23 @@
                                             <?php } ?>
                                         </div>
                                     </div>
+                                    <div class="form-group">
+                                        <label for="designInput" class="control-label required col-sm-3 col-md-2"><?php echo $entry_layout; ?></label>
+                                        <div class="col-sm-9 col-md-10">
+                                            <select name="layout_id" id="designInput" class="form-control">
+                                                <?php foreach ($layouts as $layout): ?>
+                                                    <?php if ($layout_id == $layout['layout_id']): ?>
+                                                        <option value="<?php echo $layout['layout_id']; ?>" selected><?php echo $layout['name']; ?></option>
+                                                    <?php else: ?>
+                                                        <option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
+                                                    <?php endif; ?>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                    </div>
                                 <?php endif; ?>
                                 <?php foreach ($tabs['general'] as $el => $formfield): ?>
-                                    <?php if ($formfield['type'] != 'custom'): ?>
-                                        <?php if ($formfield['type'] != 'builder'): ?>
-                                            <div class="form-group">
-                                                <label for="<?php echo $el; ?>Input" class="col-sm-3 col-md-2 control-label <?php echo $formfield['required'] ? 'required' : ''; ?>"><?php echo $formfield['label']; ?></label>
-                                                <div class="col-sm-9 col-md-10">
-                                                    <?php echo formfield($formfield); ?>
-                                                    <?php if (!empty($formfield['error'])) { ?>
-                                                        <span class="error text-danger"><?php echo $formfield['error']; ?></span>
-                                                    <?php } ?>
-                                                </div>
-                                            </div>
-                                        <?php else: ?>
-                                            <div class="form-group">
-                                                <label for="<?php echo $el; ?>Input" class="col-sm-3 col-md-2 control-label <?php echo $formfield['required'] ? 'required' : ''; ?>"><?php echo $formfield['label']; ?></label>
-                                                <div class="col-sm-12 col-md-12">
-                                                    <?php echo formfield($formfield); ?>
-                                                    <?php if (!empty($formfield['error'])) { ?>
-                                                        <span class="error text-danger"><?php echo $formfield['error']; ?></span>
-                                                    <?php } ?>
-                                                </div>
-                                            </div>
-                                        <?php endif; ?>
-                                    <?php else: ?>
-                                        <?php echo formfield($formfield); ?>
-                                    <?php endif; ?>
-
+                                    <?php placeFormField($formfield); ?>
                                 <?php endforeach; ?>
                             </div>
                             <div class="col-lg-2 col-md-4 col-sm-12">
@@ -123,18 +140,7 @@
                                     </div>
                                     <div class="box-body">
 
-                                        <label for="designInput" class="control-label required text-left"><?php echo $entry_layout; ?></label>
-                                        <div class="">
-                                            <select name="layout_id" id="designInput" class="form-control">
-                                                <?php foreach ($layouts as $layout): ?>
-                                                    <?php if ($layout_id == $layout['layout_id']): ?>
-                                                        <option value="<?php echo $layout['layout_id']; ?>" selected><?php echo $layout['name']; ?></option>
-                                                    <?php else: ?>
-                                                        <option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
-                                                    <?php endif; ?>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </div>
+
                                         <?php if ($ams_parents): ?>
                                             <div class="">
                                                 <label for="parentInput" class="control-label required"><?php echo $entry_parent; ?></label>
@@ -170,19 +176,7 @@
 
                                         <?php endif; ?>
                                         <?php foreach ($tabs['general_details'] as $el => $formfield): ?>
-                                            <?php if ($formfield['type'] != 'custom'): ?>
-                                                <div class="">
-                                                    <label for="<?php echo $el; ?>Input" class="control-label <?php echo $formfield['required'] ? 'required' : ''; ?>"><?php echo $formfield['label']; ?></label>
-                                                    <div class="">
-                                                        <?php echo formfield($formfield); ?>
-                                                        <?php if (!empty($formfield['error'])) { ?>
-                                                            <span class="error text-danger"><?php echo $formfield['error']; ?></span>
-                                                        <?php } ?>
-                                                    </div>
-                                                </div>
-                                            <?php else: ?>
-                                                <?php echo formfield($formfield); ?>
-                                            <?php endif; ?>
+                                            <?php placeFormField($formfield); ?>
                                         <?php endforeach; ?>
                                     </div>
                                 </div>
@@ -196,6 +190,13 @@
 
                         </div>
                     </div>
+                    <?php if(!empty($tabs['links'])): ?>
+                    <div class="tab-pane" id="tab-links">
+ <?php foreach ($tabs['links'] as $el => $formfield): ?>
+                                    <?php placeFormField($formfield); ?>
+                                <?php endforeach; ?>
+                    </div>
+                    <?php endif; ?>
                     <div class="tab-pane" id="tab-meta">
                         <div class="form-group">
                             <label for="metaTitleInput" class="col-sm-2 control-label "><?php echo $entry_meta_title; ?></label>
@@ -243,40 +244,15 @@
                         </fieldset>
 
                         <?php foreach ($tabs['meta'] as $el => $formfield): ?>
-                            <?php if ($formfield['type'] != 'custom'): ?>
-                                <div class="form-group">
-                                    <label for="<?php echo $el; ?>Input" class="col-sm-2 control-label <?php echo $formfield['required'] ? 'required' : ''; ?>"><?php echo $formfield['label']; ?></label>
-
-                                    <div class="col-sm-<?php echo $formfield['type'] == 'builder' ? 12 : 9; ?>">
-                                        <?php echo formfield($formfield); ?>
-                                        <?php if (!empty($formfield['error'])) { ?>
-                                            <span class="error text-danger"><?php echo $formfield['error']; ?></span>
-                                        <?php } ?>
-                                    </div>
-                                </div>
-                            <?php else: ?>
-                                <?php echo formfield($formfield); ?>
-                            <?php endif; ?>
+                            <?php placeFormField($formfield); ?>
                         <?php endforeach; ?>
                     </div>
 
                     <?php foreach ($tabs as $tabid => $tab): ?>
-                        <?php if ($tab != 'permission' && $tabid != 'general' && $tabid != 'meta' && $tabid != 'general_details'): ?>
+                        <?php if ($tabid != 'links' && $tabid != 'permission' && $tabid != 'general' && $tabid != 'meta' && $tabid != 'general_details'): ?>
                             <div class="tab-pane" id="tab-<?php echo slug($tabid); ?>">
                                 <?php foreach ($tab as $el => $formfield): ?>
-                                    <?php if ($formfield['type'] != 'custom'): ?>
-                                        <div class="form-group">
-                                            <label for="<?php echo $el; ?>Input" class="col-sm-2 control-label <?php echo $formfield['required'] ? 'required' : ''; ?>"><?php echo $formfield['label']; ?></label>
-                                            <div class="col-sm-<?php echo $formfield['type'] == 'builder' ? 12 : 9; ?>">
-                                                <?php echo formfield($formfield); ?>
-                                                <?php if (!empty($formfield['error'])) { ?>
-                                                    <span class="error text-danger"><?php echo $formfield['error']; ?></span>
-                                                <?php } ?>
-                                            </div>
-                                        </div>
-                                    <?php else: ?>
-                                        <?php echo formfield($formfield); ?>
-                                    <?php endif; ?>
+                                    <?php placeFormField($formfield); ?>
                                 <?php endforeach; ?>
                             </div>
                         <?php endif; ?>
@@ -379,19 +355,7 @@
 
                         <?php if (!empty($tabs['permission'])): ?>
                             <?php foreach ($tabs['permission'] as $el => $formfield): ?>
-                                <?php if ($formfield['type'] != 'custom'): ?>
-                                    <div class="form-group">
-                                        <label for="<?php echo $el; ?>Input" class="col-sm-2 control-label <?php echo $formfield['required'] ? 'required' : ''; ?>"><?php echo $formfield['label']; ?></label>
-                                        <div class="col-sm-9">
-                                            <?php echo formfield($formfield); ?>
-                                            <?php if (!empty($formfield['error'])) { ?>
-                                                <span class="error text-danger"><?php echo $formfield['error']; ?></span>
-                                            <?php } ?>
-                                        </div>
-                                    </div>
-                                <?php else: ?>
-                                    <?php echo formfield($formfield); ?>
-                                <?php endif; ?>
+                                <?php placeFormField($formfield); ?>
                             <?php endforeach; ?>
                         <?php endif; ?>
                     </div>

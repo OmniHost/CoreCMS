@@ -1,6 +1,13 @@
 <?php
 /**
- * @name System - Menu editor
+ * CoreCMS - Bootstrap Based PHP 5 CMS
+ * @name System Menu Manager
+ * @author      Craig Smith <vxdhost@gmail.com>
+ * @copyright   2016 Craig smith
+ * @link        http://www.omnihost.co.nz
+ * @license     http://www.omnihost.co.nz/cms-license
+ * @version     1.8.0
+ * @package     CoreCMS
  */
 class ControllerDesignMenu extends \Core\Controller {
 
@@ -67,6 +74,8 @@ class ControllerDesignMenu extends \Core\Controller {
             $action = array();
 
             $action[] = array(
+                'class' => 'primary',
+                'icon' => 'fa fa-edit',
                 'text' => $this->language->get('text_edit'),
                 'href' => $this->url->link('design/menu/edit', 'token=' . $this->session->data['token'] . '&menu_id=' . $result['menu_id'], 'SSL')
             );
@@ -270,6 +279,8 @@ class ControllerDesignMenu extends \Core\Controller {
         } else {
             $items = array();
         }
+        
+        $this->data['text_edit'] = $this->language->get('text_edit');
         
         
         $this->data['items'] = $items;

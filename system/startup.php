@@ -1,8 +1,9 @@
 <?php
 
-define('DIR_UPLOAD', DIR_SYSTEM . 'upload/');
-define('DIR_MODIFICATION', DIR_SYSTEM . 'modification/');
-
+if (!defined('DIR_UPLOAD')) {
+    define('DIR_UPLOAD', DIR_SYSTEM . 'upload/');
+    define('DIR_MODIFICATION', DIR_SYSTEM . 'modification/');
+}
 //require_once(DIR_SYSTEM . 'helper/xhprof.php');
 // Check Version
 if (version_compare(phpversion(), '5.3.0', '<') == true) {
@@ -90,7 +91,7 @@ if (BASE_REQUEST_TYPE == 'cli') {
     $_SERVER['HTTP_HOST'] = $_SERVER['SERVER_NAME'] = $host;
 
 
-    
+
     if ($g) {
         parse_str($g, $_GET);
     }

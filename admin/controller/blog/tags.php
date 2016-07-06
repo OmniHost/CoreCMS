@@ -1,7 +1,16 @@
 <?php
 /**
- * @name Content - Blog Post Tags
+ * CoreCMS - Bootstrap Based PHP 5 CMS
+ * @name Content - Blog Tags
+ * @author      Craig Smith <vxdhost@gmail.com>
+ * @copyright   2016 Craig smith
+ * @link        http://www.omnihost.co.nz
+ * @license     http://www.omnihost.co.nz/cms-license
+ * @version     1.8.0
+ * @package     CoreCMS
+ * 
  */
+ 
 class ControllerBlogTags extends \Core\Ams\Base {
 
     protected $_namespace = 'blog/tags';

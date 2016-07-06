@@ -1,8 +1,17 @@
 <?php
 
 /**
- * @name Content - Banners & Gallary Manager
+ * CoreCMS - Bootstrap Based PHP 5 CMS
+ * @name Content - Banner / Gallery Managment
+ * @author      Craig Smith <vxdhost@gmail.com>
+ * @copyright   2016 Craig smith
+ * @link        http://www.omnihost.co.nz
+ * @license     http://www.omnihost.co.nz/cms-license
+ * @version     1.8.0
+ * @package     CoreCMS
+ * 
  */
+ 
 
 class ControllerCmsBanner extends \Core\Controller {
 
@@ -197,6 +206,7 @@ class ControllerCmsBanner extends \Core\Controller {
         $data['column_action'] = $this->language->get('column_action');
 
         $data['button_insert'] = $this->language->get('button_insert');
+        $data['button_insert_folder'] = $this->language->get('button_insert_folder');
         $data['button_edit'] = $this->language->get('button_edit');
         $data['button_delete'] = $this->language->get('button_delete');
 
@@ -336,8 +346,10 @@ class ControllerCmsBanner extends \Core\Controller {
 
         if (!isset($this->request->get['banner_id'])) {
             $data['action'] = $this->url->link('cms/banner/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['text_edit'] = $this->language->get('text_edit');
         } else {
             $data['action'] = $this->url->link('cms/banner/edit', 'token=' . $this->session->data['token'] . '&banner_id=' . $this->request->get['banner_id'] . $url, 'SSL');
+            $data['text_edit'] = $this->language->get('text_edit');
         }
 
         $data['cancel'] = $this->url->link('cms/banner', 'token=' . $this->session->data['token'] . $url, 'SSL');

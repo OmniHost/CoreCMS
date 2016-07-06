@@ -39,11 +39,13 @@ $_['entry_allowed_groups']    = 'Allowed groups';
 $_['entry_denied_groups']     = 'Denied groups';
 
 $_['tab_revision'] = 'Revisions';
+$_['tab_links'] = 'Links';
 
 $_['column_revision_date'] = 'Revision Date';
 $_['column_autosave'] = 'Autosave';
 $_['column_author'] = 'Author';
 $_['button_load_revision'] = 'Load Revision';
+$_['button_preview'] = 'Preview Page';
 
 $_['text_autosaving_on'] = 'Autosaving is on. Click here to turn it off.';
 $_['text_autosaving_off'] = 'Autosaving is on. Click here to turn it off.';
@@ -54,3 +56,5 @@ $_['text_autosave_in_progress'] = '... saving, please do not reload page ...';
 $_['text_autosave_warning'] = 'Warning: Please check the form carefully for errors!';
 
 $_['text_copy'] = 'Duplicate';
+$_['text_list'] = 'Page List';
+$_['text_edit'] = 'Edit Page';

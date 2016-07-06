@@ -46,6 +46,10 @@ class ControllerAccountLogin extends \Core\Controller {
 
             $this->model_account_activity->addActivity('login', $activity_data);
 
+            if (isset($this->request->post['remember_me'])) {
+                setcookie("corecms_customer_remember", $this->encryption->encrypt($activity_data['customer_id']), time() + (10 * 365 * 24 * 60 * 60), "/");
+            }
+
             // Added strpos check to pass McAfee PCI compliance test 
             if (isset($this->request->post['redirect']) && (strpos($this->request->post['redirect'], $this->config->get('config_url')) !== false || strpos($this->request->post['redirect'], $this->config->get('config_ssl')) !== false)) {
                 $this->redirect(str_replace('&amp;', '&', $this->request->post['redirect']));
@@ -78,6 +82,8 @@ class ControllerAccountLogin extends \Core\Controller {
         $data['text_register_account'] = $this->language->get('text_register_account');
         $data['text_returning_customer'] = $this->language->get('text_returning_customer');
         $data['text_i_am_returning_customer'] = $this->language->get('text_i_am_returning_customer');
+        $data['text_remember_me'] = $this->language->get('text_remember_me');
+
         $data['text_forgotten'] = $this->language->get('text_forgotten');
 
         $data['entry_email'] = $this->language->get('entry_email');
@@ -91,9 +97,10 @@ class ControllerAccountLogin extends \Core\Controller {
         } else {
             $data['error_warning'] = '';
         }
-        
+
         $data['account_register'] = $this->config->get('config_account_register');
-        
+        $data['remember_me'] = $this->config->get('config_account_rememberme');
+
 
         $data['action'] = $this->url->link('account/login', '', 'SSL');
         $data['register'] = $this->url->link('account/register', '', 'SSL');

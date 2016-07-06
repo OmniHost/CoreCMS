@@ -334,7 +334,7 @@ class ControllerUserUserPermission extends \Core\Controller {
         $ignore = array(
             'common/home',
             'common/startup',
-            'common/filemanager',
+       /*     'common/filemanager',*/
             'user/login',
             'user/logout',
             'user/forgotten',
@@ -357,7 +357,8 @@ class ControllerUserUserPermission extends \Core\Controller {
 
             if (!in_array($permission, $ignore)) {
                 include_once($file);
-                $className = 'Controller' . ucFirst(end($data)) . ucFirst(basename($file, '.php'));
+                //'Controller' . preg_replace('/[^a-zA-Z0-9]/', '', $path);
+                $className = 'Controller' . preg_replace('/[^a-zA-Z0-9]/', '',ucFirst(end($data)) . ucFirst(basename($file, '.php')));
 
                 try {
                     $rc = new ReflectionClass($className);

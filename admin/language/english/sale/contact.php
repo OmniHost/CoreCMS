@@ -1,5 +1,5 @@
 <?php 
-$_['heading_title']        				= 'Contact Us Submissions'; 
+$_['heading_title']        				= 'Contact Us Requests'; 
 $_['heading_title_contact_list']        = 'Contact List'; 
 $_['heading_title_contact_details']        = 'Contact Details';
 $_['heading_title_reply']        = 'Reply to Message';

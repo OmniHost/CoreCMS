@@ -1,318 +1,127 @@
-<div class="modal-dialog modal-lg">
-    <div class="modal-content modal-lg">
+
+<link href="view/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<link href="view/plugins/cropper/cropper.min.css" rel="stylesheet">
+<link href="view/css/filemanager.css" rel="stylesheet">
+
+<script async src="view/plugins/jQueryUI/jquery-ui.js" type="text/javascript"></script>
+<script async src="view/plugins/sweetalert/sweetalert.min.js" type="text/javascript"></script>
+<script async src="view/plugins/cropper/cropper.min.js" type="text/javascript"></script>
+<script async src="view/js/filemanager.js" type="text/javascript"></script>
+
+<div class="modal-dialog modal-lg" style="width: 98%;">
+    <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4 class="modal-title"><?php echo $heading_title; ?></h4>
         </div>
         <div class="modal-body">
-            <div class="row">
-                <div class="col-sm-5">
-                    <a href="<?php echo $parent; ?>" data-toggle="tooltip" title="<?php echo $button_parent; ?>" id="button-parent" class="btn btn-default"><i class="fa fa-level-up"></i></a> <a href="<?php echo $refresh; ?>" data-toggle="tooltip" title="<?php echo $button_refresh; ?>" id="button-refresh" class="btn btn-default"><i class="fa fa-refresh"></i></a>
-                    <button type="button" data-toggle="tooltip" title="<?php echo $button_upload; ?>" id="button-upload" class="btn btn-primary"><i class="fa fa-upload"></i></button>
-                    <button type="button" data-toggle="tooltip" title="<?php echo $button_folder; ?>" id="button-folder" class="btn btn-default"><i class="fa fa-folder"></i></button>
-                    <button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" id="button-delete" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
-                </div>
-                <div class="col-sm-7">
-                    <div class="input-group">
-                        <input type="text" name="search" value="<?php echo $filter_name; ?>" placeholder="<?php echo $entry_search; ?>" class="form-control">
-                        <span class="input-group-btn">
-                            <button type="button" data-toggle="tooltip" title="<?php echo $button_search; ?>" id="button-search" class="btn btn-primary"><i class="fa fa-search"></i></button>
-                        </span></div>
-                </div>
-            </div>
-            <hr />
-            <?php foreach (array_chunk($images, 6) as $imag) { ?>
-
-                <div class="row">
-                    <?php foreach ($imag as $image) { ?>
-                        <div class="col-sm-2 text-center">
-                            <?php if ($image['type'] == 'directory') { ?>
-                                <div class="text-center"><a href="<?php echo $image['href']; ?>" class="directory" style="vertical-align: middle;"><i class="fa fa-folder fa-5x"></i></a></div>
-                                <label>
-                                    <input type="checkbox" name="path[]" value="<?php echo $image['path']; ?>" />
-                                    <?php echo $image['name']; ?></label>
-                            <?php } ?>
-                            <?php if ($image['type'] == 'image') { ?>
-                                <a href="<?php echo $image['href']; ?>" class="thumbnail"><img src="<?php echo $image['thumb']; ?>" alt="<?php echo $image['name']; ?>" title="<?php echo $image['name']; ?>" /></a>
-                                <label>
-                                    <input type="checkbox" name="path[]" value="<?php echo $image['path']; ?>" />
-                                    <?php echo $image['name']; ?></label>
-                            <?php } ?>
+            <input type="hidden" id="phfm-helpers" value='<?php echo json_encode($helpers); ?>'>
+            <ul class="nav nav-pills nav-justified" id="phfm-navs">
+                <li class="active"><a data-toggle="tab" href="#gallery"><i class="fa fa-picture-o"></i> <?php echo $tab_gallery; ?></a></li>
+                <li><a data-toggle="tab" href="#imageEditor"><i class="fa fa-edit"></i> <?php echo $tab_editor; ?></a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="gallery" class="tab-pane fade in active">
+                    <div class="row">
+                        <div class="col-sm-7">
+                            <a href="<?php echo $refresh; ?>" data-toggle="tooltip" title="<?php echo $button_refresh; ?>" id="button-refresh" class="btn btn-default"><i class="fa fa-refresh"></i></a>
+                            <button type="button" data-toggle="tooltip" title="<?php echo $button_folder; ?>" id="button-folder" class="btn btn-default"><i class="fa fa-folder"></i></button>
+                            <label for="inputImage" class="btn btn-primary" data-toggle="tooltip" title="<?php echo $button_upload; ?>"><i class="fa fa-upload"></i><form enctype="multipart/form-data" id="form-upload" style="display: none;"><input type="file" multiple class="sr-only" id="inputImage" name="file[]" accept="image/*"></form></label>
+                            <button type="button" data-toggle="tooltip" title="<?php echo $button_remote_upload; ?>" id="button-remote" class="btn btn-primary"><i class="fa fa-external-link"></i></button>
+                            <button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" id="button-delete" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
                         </div>
-                    <?php } ?>
-                </div>
-                <br />
-            <?php } ?>
-                 <div id="upload-progress" class="hide" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; background-color: rgba(100, 100, 100, .8); z-index: 99999;">
-                <table style="width: 80%; height: 100%; margin: auto;">
-                    <tr>
-                        <td style="vertical-align: middle;">
-                            <div class="progress">
-                                <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">0%</div>
+                        <div class="col-sm-5">
+                            <div class="input-group">
+                                <input type="text" name="search" placeholder="<?php echo $entry_search; ?>" class="form-control">
+                                <span class="input-group-btn">
+                                    <button type="button" data-toggle="tooltip" title="<?php echo $button_search; ?>" id="button-search" class="btn btn-primary"><i class="fa fa-search"></i></button>
+                                </span>
                             </div>
-                        </td>
-                    </tr>
-                </table>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-sm-9">
+                            <div class="row">
+                                <div class="col-sm-6" id="phfm-breadcrumb">
+                                    <ol class="breadcrumb breadcrumb-manager">
+                                        <li><a class="active"><?php echo $text_library; ?></a></li>
+                                    </ol>
+                                </div>
+                                <div class="col-sm-6 text-right status-manager" id="phfm-status" data-text-loading="<?php echo $status_loading; ?>" data-text-error="<?php echo $status_error; ?>" data-text-success="<?php echo $status_success; ?>"></div>
+                            </div>
+                            <div class="row selectable" id="phfm-library"></div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="row details">
+                                <p class="lead"><?php echo $text_details; ?></p>
+                                <div id="phfm-details">
+                                    <?php echo $text_details_none; ?>
+                                </div>
+                                <div class="text-center">
+                                    <button class="btn btn-sm btn-default" style="display: none; margin-top: 5px;" id="button-cancel-selection"><i class="fa fa-ban text-danger"></i> <?php echo $button_cancel_selection ?></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="imageEditor" class="tab-pane fade">
+                    <div class="row">
+                        <div class="col-md-12" id="editorInitial">
+                            <div class="jumbotron text-center">
+                                <h1 class="lead hidden-xs" style="text-transform: uppercase"><?php echo $entry_image_editor; ?></h1>
+                                <p><?php echo $entry_image_editor_desc_1; ?></p>
+                                <p><?php echo $entry_image_editor_desc_2; ?></p>
+                            </div>
+                        </div>
+                        <div class="col-md-12" style="display: none" id="editorDivCanvas">
+                            <div class="row">
+                                <div class="col-md-12 text-center">
+                                    <div class="btn-group">
+                                        <button id="editorDragMode" data-toggle="tooltip" title="<?php echo $editor_drag; ?>" class="btn btn-default"><i class="fa fa-arrows"></i></button>
+                                        <button id="editorCropMode" data-toggle="tooltip" title="<?php echo $editor_crop; ?>" class="btn btn-default"><i class="fa fa-crop"></i></button>
+                                    </div>
+                                    <div class="btn-group">
+                                        <button id="editorRotateLeft" data-toggle="tooltip" title="<?php echo $editor_rotate_left; ?>" class="btn btn-default"><i class="fa fa-rotate-left"></i></button>
+                                        <button id="editorRotateRight" data-toggle="tooltip" title="<?php echo $editor_rotate_right; ?>" class="btn btn-default"><i class="fa fa-rotate-right"></i></button>
+                                    </div>
+                                    <div class="btn-group">
+                                        <button id="editorFlipHorizontal" data-scale="1" data-toggle="tooltip" title="<?php echo $editor_flip_horizontal; ?>" class="btn btn-default"><i class="fa fa-arrows-h"></i></button>
+                                        <button id="editorFlipVertical" data-scale="1" data-toggle="tooltip" title="<?php echo $editor_flip_vertical; ?>" class="btn btn-default"><i class="fa fa-arrows-v"></i></button>
+                                    </div>
+                                    <div class="btn-group">
+                                        <button id="editorZoomIn" data-toggle="tooltip" title="<?php echo $editor_zoom_in; ?>" class="btn btn-default"><i class="fa fa-search-plus"></i></button>
+                                        <button id="editorZoomOut" data-toggle="tooltip" title="<?php echo $editor_zoom_out; ?>" class="btn btn-default"><i class="fa fa-search-minus"></i></button>
+                                    </div>
+                                    <div class="btn-group">
+                                        <button id="editorSaveCrop" data-toggle="tooltip" title="<?php echo $editor_save_crop; ?>" class="btn btn-success"><i class="fa fa-check"></i></button>
+                                        <button id="editorCancelCrop" data-toggle="tooltip" title="<?php echo $editor_cancel_crop; ?>" class="btn btn-default"><i class="fa fa-ban text-danger"></i></button>
+                                        <button id="editorResetCrop" data-toggle="tooltip" title="<?php echo $editor_reset_crop; ?>" class="btn btn-default"><i class="fa fa-refresh text-primary"></i></button>
+                                    </div>
+                                    <label for="inputImageEditor" class="btn btn-primary" data-toggle="tooltip" title="<?php echo $editor_upload_new_image; ?>"><i class="fa fa-upload"></i></label>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-12" id="editorContainerImg">
+                                    <div style="max-height: 500px;">
+                                        <div class="col-xs-2 text-center" id="editorStatus" style="z-index: 9999; background: #eee; margin-top: 5px; margin-left: 5px; border-radius: 5px;"></div>
+                                        <img id="editorImage" style="width: 100%" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="modal-footer"><?php echo $pagination; ?></div>
+        <div class="modal-footer">
+            <div class="col-xs-2 text-left"></div>
+            <div class="col-xs-10" id="phfm-pagination"></div>
+        </div>
+     
     </div>
 </div>
-<script type="text/javascript"><!--
-
-    sessionStorage.setItem("lastFolder", '<?php echo $directory; ?>');
-    
-$('a.thumbnail').on('click', function (e) {
-        e.preventDefault();
-
-<?php if ($thumb) { ?>
-            $('#<?php echo $thumb; ?>').find('img').attr('src', $(this).find('img').attr('src'));
-<?php } ?>
-
-<?php if ($target) { ?>
-            $('#<?php echo $target; ?>').attr('value', $(this).parent().find('input').attr('value')).trigger("change");
-<?php } ?>
-    <?php if($ckeditor) : ?>
-    //CKEDITOR.tools.callFunction(CKEDITOR.instances.<?php echo $ckeditor; ?>._.filebrowserFn, $(this).attr('href'));
-    CKEDITOR.tools.callFunction(CKEDITOR.instances.<?php echo $ckeditor; ?>._.filebrowserFn, 'img/' + $(this).parent().find('input').attr('value'));
-<?php endif; ?>
-
-    /*    var range, sel = window.getSelection();
-
-        if (sel.rangeCount) {
-            var img = document.createElement('img');
-            img.src = $(this).attr('href');
-         //   img.classes = 'demo';
-            range = sel.getRangeAt(0);
-            range.insertNode(img);
-        }*/
-
-        $('#modal-image').modal('hide');
-    });
-
-    $('a.directory').on('click', function (e) {
-        e.preventDefault();
-
-        $('#modal-image').load($(this).attr('href'));
-    });
-
-    $('.pagination a').on('click', function (e) {
-        e.preventDefault();
-
-        $('#modal-image').load($(this).attr('href'));
-    });
-
-    $('#button-parent').on('click', function (e) {
-        e.preventDefault();
-
-        $('#modal-image').load($(this).attr('href'));
-    });
-
-    $('#button-refresh').on('click', function (e) {
-        e.preventDefault();
-
-        $('#modal-image').load($(this).attr('href'));
-    });
-
-    $('#button-search').on('click', function () {
-        var url = 'index.php?p=common/filemanager&token=<?php echo $token; ?>&directory=<?php echo $directory; ?>';
-
-        var filter_name = $('input[name=\'search\']').val();
-
-        if (filter_name) {
-            url += '&filter_name=' + encodeURIComponent(filter_name);
-        }
-
-<?php if ($thumb) { ?>
-            url += '&thumb=' + '<?php echo $thumb; ?>';
-<?php } ?>
-
-<?php if ($target) { ?>
-            url += '&target=' + '<?php echo $target; ?>';
-<?php } ?>
-    <?php if ($ckeditor) { ?>
-            url += '&ckeditor=' + '<?php echo $ckeditor; ?>';
-<?php } ?>
-
-
-        $('#modal-image').load(url);
-    });
-//--></script> 
-<script type="text/javascript"><!--
-    $('#button-upload').on('click', function () {
-        $('#form-upload').remove();
-
-        $('body').prepend('<form enctype="multipart/form-data" id="form-upload" style="display: none;"><input type="file" name="file[]" multiple="multiple" /></form>');
-
-        $('#form-upload input[name=\'file[]\']').trigger('click');
-        
-        timer = setInterval(function () {
-            if ($('#form-upload input[name=\'file[]\']').val() != '') {
-                clearInterval(timer);
-
-                $.ajax({
-                    url: 'index.php?p=common/filemanager/upload&token=<?php echo $token; ?>&directory=<?php echo $directory; ?>',
-                    type: 'post',
-                    dataType: 'json',
-                    data: new FormData($('#form-upload')[0]),
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    beforeSend: function () {
-                        $('#button-upload i').replaceWith('<i class="fa fa-circle-o-notch fa-spin"></i>');
-                        $('#button-upload').prop('disabled', true);
-                        $('#upload-progress').removeClass('hide');
-                    },
-                    complete: function () {
-                        $('#button-upload i').replaceWith('<i class="fa fa-upload"></i>');
-                        $('#button-upload').prop('disabled', false);
-                        $('#upload-progress').addClass('hide');
-                    },
-                    success: function (json) {
-                        if (json['error']) {
-                            alert(json['error']);
-                        }
-
-                        if (json['success']) {
-                            alert(json['success']);
-
-                            $('#button-refresh').trigger('click');
-                        }
-                    },
-                    xhr: function () {
-                        var xhr = new window.XMLHttpRequest();
-
-                        xhr.upload.addEventListener("progress", function (evt) {
-                            if (evt.lengthComputable) {
-                                var percentComplete = evt.loaded / evt.total;
-                                percentComplete = parseInt(percentComplete * 100);
-                                console.log(percentComplete);
-                                $('.progress-bar').html(percentComplete + '%').attr('aria-valuenow', percentComplete).css('width', percentComplete + '%');
-                            }
-                        }, false);
-
-                        return xhr;
-                    },
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-                    }
-                });
-            }
-        }, 500);
-
-        /*$('#form-upload input[name=\'file\']').on('change', function () {
-            $.ajax({
-                url: 'index.php?p=common/filemanager/upload&token=<?php echo $token; ?>&directory=<?php echo $directory; ?>',
-                type: 'post',
-                dataType: 'json',
-                data: new FormData($(this).parent()[0]),
-                cache: false,
-                contentType: false,
-                processData: false,
-                beforeSend: function () {
-                    $('#button-upload i').replaceWith('<i class="fa fa-circle-o-notch fa-spin"></i>');
-                    $('#button-upload').prop('disabled', true);
-                },
-                complete: function () {
-                    $('#button-upload i').replaceWith('<i class="fa fa-upload"></i>');
-                    $('#button-upload').prop('disabled', false);
-                },
-                success: function (json) {
-                    if (json['error']) {
-                        alert(json['error']);
-                    }
-
-                    if (json['success']) {
-                        alert(json['success']);
-
-                        $('#button-refresh').trigger('click');
-                    }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-                }
-            });
-        });*/
-    });
-
-    $('#button-folder').popover({
-        html: true,
-        placement: 'bottom',
-        trigger: 'click',
-        title: '<?php echo $entry_folder; ?>',
-        content: function () {
-            html = '<div class="input-group">';
-            html += '  <input type="text" name="folder" value="" placeholder="<?php echo $entry_folder; ?>" class="form-control">';
-            html += '  <span class="input-group-btn"><button type="button" title="<?php echo $button_folder; ?>" id="button-create" class="btn btn-primary"><i class="fa fa-plus-circle"></i></button></span>';
-            html += '</div>';
-
-            return html;
-        }
-    });
-
-    $('#button-folder').on('shown.bs.popover', function () {
-        $('#button-create').on('click', function () {
-            $.ajax({
-                url: 'index.php?p=common/filemanager/folder&token=<?php echo $token; ?>&directory=<?php echo $directory; ?>',
-                type: 'post',
-                dataType: 'json',
-                data: 'folder=' + encodeURIComponent($('input[name=\'folder\']').val()),
-                beforeSend: function () {
-                    $('#button-create i').replaceWith('<i class="fa fa-circle-o-notch fa-spin"></i>');
-                    $('#button-create').prop('disabled', true);
-                },
-                complete: function () {
-                    $('#button-create i').replaceWith('<i class="fa fa-plus-circle"></i>');
-                    $('#button-create').prop('disabled', false);
-                },
-                success: function (json) {
-                    if (json['error']) {
-                        alert(json['error']);
-                    }
-
-                    if (json['success']) {
-                        alert(json['success']);
-
-                        $('#button-refresh').trigger('click');
-                    }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-                }
-            });
-        });
-    });
-
-    $('#modal-image #button-delete').on('click', function (e) {
-        if (confirm('<?php echo $text_confirm; ?>')) {
-            $.ajax({
-                url: 'index.php?p=common/filemanager/delete&token=<?php echo $token; ?>',
-                type: 'post',
-                dataType: 'json',
-                data: $('input[name^=\'path\']:checked'),
-                beforeSend: function () {
-                    $('#button-delete i').replaceWith('<i class="fa fa-circle-o-notch fa-spin"></i>');
-                    $('#button-delete').prop('disabled', true);
-                },
-                complete: function () {
-                    $('#button-delete i').replaceWith('<i class="fa fa-trash-o"></i>');
-                    $('#button-delete').prop('disabled', false);
-                },
-                success: function (json) {
-                    if (json['error']) {
-                        alert(json['error']);
-                    }
-
-                    if (json['success']) {
-                        alert(json['success']);
-
-                        $('#button-refresh').trigger('click');
-                    }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-                }
-            });
-        }
-    });
-//--></script>
+<script type="text/javascript">
+    new PHFileManager('<?php echo $target; ?>', '<?php echo $thumb; ?>', '<?php echo $ckeditor; ?>', '<?php echo $callback; ?>', '<?php echo $directory; ?>');
+</script>

@@ -1,5 +1,14 @@
 <?php
-
+/**
+ * CoreCMS - Bootstrap Based PHP 5 CMS
+ * @name Modules - Gallery
+ * @author      Craig Smith <vxdhost@gmail.com>
+ * @copyright   2016 Craig smith
+ * @link        http://www.omnihost.co.nz
+ * @license     http://www.omnihost.co.nz/cms-license
+ * @version     1.8.0
+ * @package     CoreCMS
+ */
 class ControllerModuleGallery extends \Core\Controller {
 
     private $error = array();
@@ -43,6 +52,9 @@ class ControllerModuleGallery extends \Core\Controller {
 
         $data['button_save'] = $this->language->get('button_save');
         $data['button_cancel'] = $this->language->get('button_cancel');
+        
+        $data['entry_class_suffix'] = $this->language->get('entry_class_suffix');
+        $data['help_class_suffix'] = $this->language->get('help_class_suffix');
 
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
@@ -122,6 +134,14 @@ class ControllerModuleGallery extends \Core\Controller {
             $data['filter_banner_id'] = '';
         }
 
+        if (isset($this->request->post['class_suffix'])) {
+            $data['class_suffix'] = $this->request->post['class_suffix'];
+        } elseif (!empty($module_info['class_suffix'])) {
+            $data['class_suffix'] = $module_info['class_suffix'];
+        } else {
+            $data['class_suffix'] = '';
+        }
+
         $this->load->model('cms/banner');
 
         $data['banners'] = $this->model_cms_banner->getBanners();
@@ -142,7 +162,7 @@ class ControllerModuleGallery extends \Core\Controller {
             $data['status'] = '';
         }
 
-         $this->children = array('common/header', 'common/footer');
+        $this->children = array('common/header', 'common/footer');
         $this->template = 'module/gallery.phtml';
         $this->data = $data;
         $this->response->setOutput($this->render());

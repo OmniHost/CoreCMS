@@ -1,5 +1,15 @@
 <?php
 
+/* CoreCMS - Bootstrap Based PHP 5 CMS
+ * @name Tools - Uploads
+ * @author      Craig Smith <vxdhost@gmail.com>
+ * @copyright   2016 Craig smith
+ * @link        http://www.omnihost.co.nz
+ * @license     http://www.omnihost.co.nz/cms-license
+ * @version     1.8.0
+ * @package     CoreCMS
+ */
+
 class ControllerToolUpload extends \Core\Controller {
 
     private $error = array();
@@ -10,8 +20,8 @@ class ControllerToolUpload extends \Core\Controller {
         $this->document->setTitle($this->language->get('heading_title'));
 
         $this->load->model('tool/upload');
-        
-        
+
+
 
         $this->getList();
     }
@@ -66,11 +76,11 @@ class ControllerToolUpload extends \Core\Controller {
     }
 
     protected function getList() {
-        
+
         $this->document->addScript('view/plugins/datetimepicker/moment.min.js');
         $this->document->addScript('view/plugins/datetimepicker/bootstrap-datetimepicker.min.js');
         $this->document->addStyle('view/plugins/datetimepicker/bootstrap-datetimepicker.min.css');
-        
+
         if (isset($this->request->get['filter_name'])) {
             $filter_name = $this->request->get['filter_name'];
         } else {

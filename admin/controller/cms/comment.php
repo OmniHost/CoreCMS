@@ -1,7 +1,16 @@
 <?php
 /**
+ * CoreCMS - Bootstrap Based PHP 5 CMS
  * @name Content - Blog Comments
+ * @author      Craig Smith <vxdhost@gmail.com>
+ * @copyright   2016 Craig smith
+ * @link        http://www.omnihost.co.nz
+ * @license     http://www.omnihost.co.nz/cms-license
+ * @version     1.8.0
+ * @package     CoreCMS
+ * 
  */
+ 
 
 class ControllerCmsComment extends \Core\Controller {
 
@@ -393,7 +402,7 @@ class ControllerCmsComment extends \Core\Controller {
         $this->document->addScript('view/plugins/datetimepicker/moment.min.js');
         $this->document->addScript('view/plugins/datetimepicker/bootstrap-datetimepicker.min.js');
         $this->document->addStyle('view/plugins/datetimepicker/bootstrap-datetimepicker.min.css');
-        $this->document->addScript('//code.jquery.com/ui/1.11.4/jquery-ui.min.js');
+       // $this->document->addScript('//code.jquery.com/ui/1.11.4/jquery-ui.min.js');
 
         $this->data = $data;
         $this->template = 'cms/comment_list.phtml';
@@ -495,6 +504,7 @@ class ControllerCmsComment extends \Core\Controller {
             $data['action'] = $this->url->link('cms/comment/edit', 'token=' . $this->session->data['token'] . '&comment_id=' . $this->request->get['comment_id'] . $url, 'SSL');
         }
 
+        $data['text_edit'] = $this->language->get('text_edit');
         $data['cancel'] = $this->url->link('cms/comment', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
         if (isset($this->request->get['comment_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
@@ -546,7 +556,7 @@ class ControllerCmsComment extends \Core\Controller {
             $data['status'] = '';
         }
         
-        $this->document->addScript('//code.jquery.com/ui/1.11.4/jquery-ui.min.js');
+     $this->document->addScript('view/plugins/jQueryUI/jquery-ui.js');
 
         $this->data = $data;
         $this->children = array(

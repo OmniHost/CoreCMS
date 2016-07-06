@@ -21,12 +21,18 @@ class ControllerStep3 extends \Core\Controller {
             $front_config .= "define('DIR_LANGUAGE', DIR_APPLICATION . 'language/'); \n";
             $front_config .= "define('DIR_TEMPLATE', DIR_APPLICATION . 'view/template/'); \n";
             $front_config .= "define('DIR_SYSTEM', DIR_ROOT . 'system/'); \n";
-            $front_config .= "define('DIR_DOWNLOAD', DIR_ROOT . 'system/downloads/'); \n";
+            $front_config .= "define('DIR_STORAGE', DIR_SYSTEM . 'storage/'); \n";
+            $front_config .= "define('DIR_DOWNLOAD', DIR_STORAGE . 'downloads/'); \n";
             $front_config .= "define('DIR_VENDOR', DIR_ROOT . 'vendor/'); \n";
             $front_config .= "define('DIR_IMAGE', DIR_ROOT . 'img/'); \n";
             $front_config .= "define('DIR_CONFIG', DIR_APPLICATION . '_configs/'); \n";
-            $front_config .= "define('DIR_CACHE', DIR_APPLICATION . '_cache/'); \n";
-            $front_config .= "define('DIR_LOGS', DIR_APPLICATION . '_logs/'); \n";
+            $front_config .= "define('DIR_CACHE', DIR_STORAGE . 'cache/'); \n";
+            $front_config .= "define('DIR_LOGS', DIR_STORAGE . 'logs/'); \n";
+            $front_config .= "define('DIR_UPLOAD', DIR_STORAGE . 'upload/'); \n";
+            $front_config .= "define('DIR_MODIFICATION', DIR_STORAGE . 'modification/'); \n";
+
+
+
             $front_config .= '$config' . " = array(
                 'DB_DRIVER' => '" . addslashes($this->request->post['db_driver']) . "',
                 'DB_HOSTNAME' => '" . addslashes($this->request->post['db_host']) . "',
@@ -44,13 +50,16 @@ class ControllerStep3 extends \Core\Controller {
             $admin_config .= "define('DIR_LANGUAGE', DIR_APPLICATION . 'language/');\n";
             $admin_config .= "define('DIR_TEMPLATE', DIR_APPLICATION . 'view/template/');\n";
             $admin_config .= "define('DIR_SYSTEM', DIR_ROOT . 'system/');\n";
-            $admin_config .= "define('DIR_DOWNLOAD', DIR_ROOT . 'system/downloads/'); \n";
+            $admin_config .= "define('DIR_STORAGE', DIR_SYSTEM . 'storage/'); \n";
+            $admin_config .= "define('DIR_DOWNLOAD', DIR_STORAGE . 'downloads/'); \n";
             $admin_config .= "define('DIR_VENDOR', DIR_ROOT . 'vendor/');\n";
             $admin_config .= "define('DIR_IMAGE', DIR_ROOT . 'img/');\n";
             $admin_config .= "define('DIR_CONFIG', DIR_ROOT . '_configs/');\n";
-            $admin_config .= "define('DIR_CACHE', DIR_ROOT . '_cache/');\n";
-            $admin_config .= "define('DIR_LOGS', DIR_ROOT . '_logs/');\n";
+            $admin_config .= "define('DIR_CACHE', DIR_STORAGE . 'cache/');\n";
+            $admin_config .= "define('DIR_LOGS', DIR_STORAGE . 'logs/');\n";
             $admin_config .= "define('DIR_PLUGINS', DIR_ROOT . 'plugins/');\n";
+            $admin_config .= "define('DIR_UPLOAD', DIR_STORAGE . 'upload/'); \n";
+            $admin_config .= "define('DIR_MODIFICATION', DIR_STORAGE . 'modification/'); \n";
             $admin_config .= '$config' . " = array(
                 'DB_DRIVER' => '" . addslashes($this->request->post['db_driver']) . "',
                 'DB_HOSTNAME' => '" . addslashes($this->request->post['db_host']) . "',

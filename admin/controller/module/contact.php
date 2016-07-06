@@ -1,5 +1,14 @@
 <?php
-
+/**
+ * CoreCMS - Bootstrap Based PHP 5 CMS
+ * @name Modules - Contact form
+ * @author      Craig Smith <vxdhost@gmail.com>
+ * @copyright   2016 Craig smith
+ * @link        http://www.omnihost.co.nz
+ * @license     http://www.omnihost.co.nz/cms-license
+ * @version     1.8.0
+ * @package     CoreCMS
+ */
 class ControllerModuleContact extends \Core\Controller {
 
     private $error = array();
@@ -26,6 +35,8 @@ class ControllerModuleContact extends \Core\Controller {
         $data['text_disabled'] = $this->language->get('text_disabled');
 
         $data['entry_status'] = $this->language->get('entry_status');
+        $data['entry_class_suffix'] = $this->language->get('entry_class_suffix');
+        $data['help_class_suffix'] = $this->language->get('help_class_suffix');
 
         $data['button_save'] = $this->language->get('button_save');
         $data['button_cancel'] = $this->language->get('button_cancel');
@@ -61,6 +72,12 @@ class ControllerModuleContact extends \Core\Controller {
             $data['contact_status'] = $this->request->post['contact_status'];
         } else {
             $data['contact_status'] = $this->config->get('contact_status');
+        }
+        
+        if (isset($this->request->post['contact_status'])) {
+            $data['contact_class_suffix'] = $this->request->post['contact_class_suffix'];
+        } else {
+            $data['contact_class_suffix'] = $this->config->get('contact_class_suffix');
         }
 
         $this->data = $data;
