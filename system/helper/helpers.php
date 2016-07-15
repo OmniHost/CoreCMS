@@ -301,6 +301,10 @@ function __modification($filename) {
     }
 }
 
+function placeFormField($formfield){
+    registry('formbuilder')->placeFormField($formfield);
+}
+
 function formfield($field) {
 
     return registry('formbuilder')->render($field);

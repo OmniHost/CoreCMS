@@ -177,6 +177,9 @@ abstract class Controller {
             $this->data[basename($child)] = $this->getChild($child);
         }
 
+        $this->output = $this->load->view($this->template, $this->data);
+        return $this->output;
+        /*
         $template = DIR_TEMPLATE;
 
         if (NS != 'admin' && NS != 'installer') {
@@ -210,11 +213,11 @@ abstract class Controller {
         } else {
             throw new \Core\Exception('Error: Could not load template ' . $template . $this->template . '!');
             exit();
-        }
+        }*/
     }
-    
-    public function not_allowed(){
-         $this->language->load('error/not_allowed');
+
+    public function not_allowed() {
+        $this->language->load('error/not_allowed');
 
         $this->document->settitle($this->language->get('heading_title'));
 
@@ -339,6 +342,43 @@ abstract class Controller {
 
     public function getOutput() {
         return $this->output;
+    }
+
+    public function renderJSON($data = array()) {
+
+        if ($data) {
+            $this->data = array_deap_merge($data, $this->data);
+        }
+
+        $json = \json_encode($this->data);
+
+# JSON if no callback
+        if (!isset($this->request->get['callback'])) {
+            $this->output = $json;
+            return $this->output;
+        }
+
+        if ($this->is_valid_callback($this->request->get['callback'])) {
+            return("{$this->request->get['callback']}($json)");
+        } else {
+            return \json_encode("Invalid Callback provided");
+        }
+    }
+
+    protected function is_valid_callback($subject) {
+        $identifier_syntax = '/^[$_\p{L}][$_\p{L}\p{Mn}\p{Mc}\p{Nd}\p{Pc}\x{200C}\x{200D}]*+$/u';
+
+        $reserved_words = array('break', 'do', 'instanceof', 'typeof', 'case',
+            'else', 'new', 'var', 'catch', 'finally', 'return', 'void', 'continue',
+            'for', 'switch', 'while', 'debugger', 'function', 'this', 'with',
+            'default', 'if', 'throw', 'delete', 'in', 'try', 'class', 'enum',
+            'extends', 'super', 'const', 'export', 'import', 'implements', 'let',
+            'private', 'public', 'yield', 'interface', 'package', 'protected',
+            'static', 'null', 'true', 'false');
+
+
+
+        return preg_match($identifier_syntax, $subject) && !in_array(strtolower($subject), $reserved_words);
     }
 
 }

@@ -38,7 +38,7 @@ final class Loader {
             $path = DIR_APPLICATION;
         }
         $file = $path . 'library/' . $library . '.php';
-      
+
 
         if (file_exists($file)) {
             include_once(__modification($file));
@@ -62,11 +62,11 @@ final class Loader {
             exit();
         }
     }
-    
+
     public function controller($route, $args = array()) {
-		$action = new \Core\Action($route, $args);
-		return $action->execute();
-	}
+        $action = new \Core\Action($route, $args);
+        return $action->execute();
+    }
 
     /**
      * Loads model for the current application namespace
@@ -83,8 +83,8 @@ final class Loader {
 
         if (file_exists($file)) {
             include_once(__modification($file));
-            $regclass =  new $class($this->registry);
-            \Core\Core::$registry->set('model_' . str_replace('/', '_', $model),$regclass);
+            $regclass = new $class($this->registry);
+            \Core\Core::$registry->set('model_' . str_replace('/', '_', $model), $regclass);
             return $regclass;
         } else {
             throw new \Core\Exception('Error: Could not load model ' . $model . '!');
@@ -132,8 +132,30 @@ final class Loader {
         return $this->language->load($language);
     }
 
-    
+    public function view($route, $data = array()) {
+        // Sanitize the call
+        $route = str_replace('../', '', (string) $route);
+        if (substr($route, -6) == '.phtml') {
 
-    
-    
+            $route = substr($route, 0, -6);
+        }
+
+        // Trigger the pre events
+        $this->event->trigger('view/' . $route . '/before', $data);
+
+
+        $template = new \Core\Template('basic');
+
+        foreach ($data as $key => $value) {
+            $template->set($key, $value);
+        }
+
+        $output = $template->fetch($route . '.phtml');
+
+        // Trigger the post e
+        $this->event->trigger('view/' . $route . '/after', $output);
+
+        return $output;
+    }
+
 }

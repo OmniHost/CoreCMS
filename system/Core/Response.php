@@ -138,8 +138,10 @@ class Response {
                 }
                 $output = str_replace('<!-- Custom META -->', $html, $output);
             }
-            \Core\Registry::getInstance()->get('event')->trigger('before.render', $output);
             
+            
+            \Core\Registry::getInstance()->get('event')->trigger('before.render', $output);
+
 
             if ($this->level) {
 

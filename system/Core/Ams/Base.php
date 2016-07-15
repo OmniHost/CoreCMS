@@ -264,6 +264,7 @@ Abstract class Base extends \Core\Controller {
         $this->data['tab_revision'] = $this->language->get('tab_revision');
 
         $this->data['button_save'] = $this->language->get('button_save');
+        $this->data['button_save_stay'] = $this->language->get('button_save_stay');
         $this->data['button_cancel'] = $this->language->get('button_cancel');
         $this->data['button_preview'] = $this->language->get('button_preview');
 
@@ -290,6 +291,14 @@ Abstract class Base extends \Core\Controller {
             $this->data['error_slug'] = $this->error['slug'];
         } else {
             $this->data['error_slug'] = '';
+        }
+        
+         if (isset($this->session->data['success'])) {
+            $this->data['success'] = $this->session->data['success'];
+
+            unset($this->session->data['success']);
+        } else {
+            $this->data['success'] = '';
         }
 
 

@@ -112,7 +112,7 @@ class Formbuilder extends \Core\Model {
     }
 
     function autocomplete_list_addable($field) {
-       $this->document->addScript('view/plugins/jQueryUI/jquery-ui.js');
+        $this->document->addScript('view/plugins/jQueryUI/jquery-ui.js');
 
         $html = '<div class="input-group"><input type="autocomplete" data-limit="0" data-key="' . $field['key'] . '" data-target="' . $field['id'] . '" data-url="' . $field['url'] . '" value="" placeholder="' . $field['label'] . '" id="input-' . $field['id'] . '" class="form-control" /> <span class="input-group-btn">
         <button id="' . $field['key'] . '-addnew" class="btn btn-default" type="button">' . $this->language->get("Add New") . '</button>
@@ -344,6 +344,25 @@ $(document).on("click","#' . $field['key'] . '-addnew", function(e) { e.preventD
         $this->document->addScript('view/plugins/ckeditor/ckeditor.js?');
         $this->document->addScript($uri . '?p=cms/page/ajaxlist');
         $this->document->addScript($uri . '?p=cms/page/downloadlist');
+    }
+
+    function placeFormField($formfield) {
+        if ($formfield['type'] != 'custom') {
+            ?>
+            <div class="form-group">
+                <label for="<?php echo $el; ?>Input" class="col-sm-3 col-md-2 control-label <?php echo $formfield['required'] ? 'required' : ''; ?>"><?php echo $formfield['label']; ?></label>
+
+                <div class="col-sm-<?php echo $formfield['type'] == 'builder' ? 12 : 9; ?> col-md-<?php echo $formfield['type'] == 'builder' ? 12 : 10; ?>">
+                    <?php echo formfield($formfield); ?>
+                    <?php if (!empty($formfield['error'])) { ?>
+                        <span class="error text-danger"><?php echo $formfield['error']; ?></span>
+                    <?php } ?>
+                </div>
+            </div>
+            <?php
+        } else {
+            echo formfield($formfield);
+        }
     }
 
 }

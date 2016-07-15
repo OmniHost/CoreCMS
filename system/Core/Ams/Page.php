@@ -594,7 +594,7 @@ Abstract class Page {
         }
         if (isset(request()->post[$name])) {
             $data[$name] = request()->post[$name];
-        } elseif (!empty($this->{$name})) {
+        } elseif (isset($this->{$name})) {
             $data[$name] = $this->{$name};
         } else {
             reset($values);
