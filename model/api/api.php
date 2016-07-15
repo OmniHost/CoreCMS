@@ -14,4 +14,20 @@ class ModelApiApi extends \Core\Model {
         return $query->row;   
     }
 
+    public function JsHash($String, $Secure = TRUE) {
+        if ($Secure === TRUE)
+            $Secure = 'md5';
+
+        switch ($Secure) {
+            case 'sha1':
+                return sha1($String);
+                break;
+            case 'md5':
+            case FALSE:
+
+                return md5($String);
+            default:
+                return hash($Secure, $String);
+        }
+    }
 }

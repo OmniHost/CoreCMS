@@ -15,6 +15,7 @@ class Customer {
     private $request;
     private $session;
     private $config;
+    private $profile_img;
 
     public function __construct() {
         $registry = \Core\Registry::getInstance();
@@ -40,6 +41,7 @@ class Customer {
                 $this->newsletter = $customer_query->row['newsletter'];
                 $this->customer_group_id = json_decode($customer_query->row['customer_group_id'], 1);
                 $this->address_id = $customer_query->row['address_id'];
+                $this->profile_img = $customer_query->row['profile_img'];
 
                 $query = $this->db->query("SELECT * FROM #__customer_ip WHERE customer_id = '" . (int) $this->session->data['customer_id'] . "' AND ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "'");
 
@@ -71,6 +73,7 @@ class Customer {
             $this->newsletter = $customer_query->row['newsletter'];
             $this->customer_group_id = json_decode($customer_query->row['customer_group_id'], 1);
             $this->address_id = $customer_query->row['address_id'];
+            $this->profile_img = $customer_query->row['profile_img'];
 
             $this->db->query("UPDATE #__customer SET ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE customer_id = '" . (int) $this->customer_id . "'");
 
@@ -88,6 +91,7 @@ class Customer {
         $this->customer_id = '';
         $this->firstname = '';
         $this->lastname = '';
+        $this->profile_img = '';
         $this->email = '';
         $this->telephone = '';
         $this->fax = '';
@@ -134,6 +138,10 @@ class Customer {
 
     public function getAddressId() {
         return $this->address_id;
+    }
+    
+    public function getProfileImg(){
+        return $this->profile_img;
     }
 
 }

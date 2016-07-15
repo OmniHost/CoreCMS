@@ -15,10 +15,16 @@ class ModelSettingRights extends \Core\Model {
         return (!empty($row['password'])) ? $row['password'] : '';
     }
 
-    public function getRight($object_id, $object_type) {
+    public function getRight($object_id, $object_type, $user_id = false) {
 
-        $group_id = $this->customer->getGroupId();
-        $user_id = $this->customer->getId();
+        if (!$user_id) {
+
+            $group_id = $this->customer->getGroupId();
+            $user_id = $this->customer->getId();
+        }else{
+            $q = $this->db->query("select * from #__customer where customer_id='" . $user_id . "'");
+            $group_id = json_decode($q->row['customer_group_id'],1);
+        }
 
         $viewable = false;
 

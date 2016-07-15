@@ -108,6 +108,7 @@ class ModelAccountCustomer extends \Core\Model {
                 . " lastname = '" . $this->db->escape($data['lastname']) . "', "
                 . " email = '" . $this->db->escape($data['email']) . "', "
                 . " telephone = '" . $this->db->escape($data['telephone']) . "', "
+                . " profile_img = '" . $this->db->escape($data['profile_img']) . "', "
                 . " custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', "
                 . "country_id = '" . (int) $data['country_id'] . "' WHERE customer_id = '" . (int) $customer_id . "'");
 
