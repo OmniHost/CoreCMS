@@ -31,5 +31,10 @@ class ControllerCommonHome extends \Core\Controller {
             $this->db->query("UPDATE `#__marketing` SET clicks = (clicks + 1) WHERE code = '" . $this->db->escape($this->request->get['tracking']) . "'");
         }
     }
+    
+    public function redirect(){
+        $this->load->model('module/redirect');
+        $this->model_module_redirect->detect301Status();
+    }
 
 }

@@ -4,177 +4,212 @@ class ControllerApiSso extends Core\Controller\Api {
 
     public function index() {
         $json = array();
-
+        $json['name'] = '';
+        $json['photourl'] = '';
         $this->load->model('api/api');
+        $this->load->model('tool/image');
+        $this->load->model('account/customer_group');
         $sso = $this->model_api_api->getCredentials($this->config->get('config_sso_id'));
-        $ClientID = '';
-        $secret = '';
-        if ($sso) {
-            $ClientID = $sso['username'];
-            $secret = $sso['password'];
+
+        if ($sso['username'] == $this->request->get['client_id']) {
             if ($this->customer->getId()) {
                 $json['uniqueid'] = $this->customer->getId();
-                $json['name'] = $this->customer->getFirstName() . '_' . $this->customer->getId();
+                $json['name'] = $this->customer->getFirstName() . ' ' . $this->customer->getLastName();
                 $json['email'] = $this->customer->getEmail();
-                $json['photourl'] = '';
-                $clientID = '';
-                $secret = '';
+
+                if ($this->customer->getProfileImg()) {
+                    $json['photourl'] = $this->config->get('config_url') . $this->model_tool_image->resize($this->customer->getProfileImg(), 150, 150);
+                } else {
+                    $json['photourl'] = $this->config->get('config_url') . $this->model_tool_image->resize('no_photo.jpg', 150, 150);
+                }
+                $roles = array();
+                //GET USER GROUPS
+                $groups = $this->customer->getGroupId();
+                foreach ($groups as $group) {
+                    $roles[] = $this->model_account_customer_group->getCustomerGroup($group)['name'];
+                }
+                $json['roles'] = implode(",", $roles);
+            } else {
+                
             }
+            $sigarr = array_change_key_case($json);
+            ksort($sigarr);
+            $String = http_build_query($sigarr, NULL, '&');
+            $Signature = $this->model_api_api->JsHash($String . $sso['password'], TRUE);
+            $json['client_id'] = $sso['username'];
+            $json['signature'] = $Signature;
+        } else {
+            $json['error'] = 'Incorrect client id';
         }
 
         $this->response->addHeader('Content-Type: application/json');
-
-
-        
-        $secure = true;
-        ob_start();
-        WriteJsConnect($json, $this->request->get, $ClientID, $secret, true);
-        $output = ob_get_clean();
-
-        $this->response->setOutput($output);
+        $this->response->setOutput($this->renderJSON($json));
     }
 
-}
-
-/**
- * This file contains the client code for Vanilla jsConnect single sign on.
- * @author Todd Burry <todd@vanillaforums.com>
- * @version 1.3b
- * @copyright Copyright 2008, 2009 Vanilla Forums Inc.
- * @license http://www.opensource.org/licenses/gpl-2.0.php GPLv2
- */
-define('JS_TIMEOUT', 24 * 60);
-
-/**
- * Write the jsConnect string for single sign on.
- * @param array $User An array containing information about the currently signed on user. If no user is signed in then this should be an empty array.
- * @param array $Request An array of the $_GET request.
- * @param string $ClientID The string client ID that you set up in the jsConnect settings page.
- * @param string $Secret The string secret that you set up in the jsConnect settings page.
- * @param string|bool $Secure Whether or not to check for security. This is one of these values.
- *  - true: Check for security and sign the response with an md5 hash.
- *  - false: Don't check for security, but sign the response with an md5 hash.
- *  - string: Check for security and sign the response with the given hash algorithm. See hash_algos() for what your server can support.
- *  - null: Don't check for security and don't sign the response.
- * @since 1.1b Added the ability to provide a hash algorithm to $Secure.
- */
-function WriteJsConnect($User, $Request, $ClientID, $Secret, $Secure = TRUE) {
-    $User = array_change_key_case($User);
-
-
-    
-    // Error checking.
-    if ($Secure) {
-        // Check the client.
-        if (!isset($Request['client_id']))
-            $Error = array('error' => 'invalid_request', 'message' => 'The client_id parameter is missing.');
-        elseif ($Request['client_id'] != $ClientID)
-            $Error = array('error' => 'invalid_client', 'message' => "Unknown client {$Request['client_id']}.");
-        elseif (!isset($Request['timestamp']) && !isset($Request['signature'])) {
-            if (is_array($User) && count($User) > 0) {
-                // This isn't really an error, but we are just going to return public information when no signature is sent.
-                $Error = array('name' => (string) @$User['name'], 'photourl' => @$User['photourl'], 'signedin' => true);
+    public function login() {
+        $json = array();
+        $this->load->model('account/customer');
+        if (!empty($this->request->get['redir'])) {
+            $this->session->data['sso_redirect'] = urldecode($this->request->get['redir']);
+        }
+        if ($this->customer->isLogged()) {
+            if (isset($this->session->data['sso_redirect'])) {
+                return $this->redirect($this->session->data['sso_redirect']);
             } else {
-                $Error = array('name' => '', 'photourl' => '');
+                echo '<script>window.top.location = "' . $this->url->link('account/account', '', 'SSL') . '";</script>';
+                exit;
             }
-        } elseif (!isset($Request['timestamp']) || !is_numeric($Request['timestamp']))
-            $Error = array('error' => 'invalid_request', 'message' => 'The timestamp parameter is missing or invalid.');
-        elseif (!isset($Request['signature']))
-            $Error = array('error' => 'invalid_request', 'message' => 'Missing  signature parameter.');
-        elseif (($Diff = abs($Request['timestamp'] - JsTimestamp())) > JS_TIMEOUT)
-            $Error = array('error' => 'invalid_request', 'message' => 'The timestamp is invalid.');
-        else {
-            // Make sure the timestamp hasn't timed out.
-            $Signature = JsHash($Request['timestamp'] . $Secret, $Secure);
-            if ($Signature != $Request['signature'])
-                $Error = array('error' => 'access_denied', 'message' => 'Signature invalid.');
         }
-    }
+        $this->load->language('account/login');
 
-    if (isset($Error))
-        $Result = $Error;
-    elseif (is_array($User) && count($User) > 0) {
-        if ($Secure === NULL) {
-            $Result = $User;
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateLogin()) {
+            unset($this->session->data['guest']);
+
+            // Add to activity log
+            $this->load->model('account/activity');
+
+            $activity_data = array(
+                'customer_id' => $this->customer->getId(),
+                'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName()
+            );
+
+            $this->model_account_activity->addActivity('login', $activity_data);
+
+            if (isset($this->request->post['remember_me'])) {
+                setcookie("corecms_customer_remember", $this->encryption->encrypt($activity_data['customer_id']), time() + (10 * 365 * 24 * 60 * 60), "/");
+            }
+
+            if (isset($this->session->data['sso_redirect'])) {
+                return $this->redirect($this->session->data['sso_redirect']);
+                // Added strpos check to pass McAfee PCI compliance test 
+            } elseif (isset($this->request->post['redirect']) && (strpos($this->request->post['redirect'], $this->config->get('config_url')) !== false || strpos($this->request->post['redirect'], $this->config->get('config_ssl')) !== false)) {
+                //  $this->redirect(str_replace('&amp;', '&', $this->request->post['redirect']));
+                echo '<script>window.top.location = "' . str_replace('&amp;', '&', $this->request->post['redirect']) . '";</script>';
+                exit;
+            } else {
+                echo '<script>window.top.location = "' . $this->url->link('account/account', '', 'SSL') . '";</script>';
+                exit;
+            }
+        }
+
+        $data['text_new_customer'] = $this->language->get('text_new_customer');
+        $data['text_register'] = $this->language->get('text_register');
+        $data['text_register_account'] = $this->language->get('text_register_account');
+        $data['text_returning_customer'] = $this->language->get('text_returning_customer');
+        $data['text_i_am_returning_customer'] = $this->language->get('text_i_am_returning_customer');
+        $data['text_remember_me'] = $this->language->get('text_remember_me');
+
+        $data['text_forgotten'] = $this->language->get('text_forgotten');
+
+        $data['entry_email'] = $this->language->get('entry_email');
+        $data['entry_password'] = $this->language->get('entry_password');
+
+        $data['button_continue'] = $this->language->get('button_continue');
+        $data['button_login'] = $this->language->get('button_login');
+
+        if (isset($this->error['warning'])) {
+            $data['error_warning'] = $this->error['warning'];
         } else {
-            $Result = SignJsConnect($User, $ClientID, $Secret, $Secure, TRUE);
+            $data['error_warning'] = '';
         }
-    } else
-        $Result = array('name' => '', 'photourl' => '');
 
-    $Json = json_encode($Result);
+        $data['account_register'] = $this->config->get('config_account_register');
+        $data['remember_me'] = $this->config->get('config_account_rememberme');
 
-    if (isset($Request['callback']))
-        echo "{$Request['callback']}($Json)";
-    else
-        echo $Json;
-}
 
-function SignJsConnect($Data, $ClientID, $Secret, $HashType, $ReturnData = FALSE) {
-    $Data2 = array_change_key_case($Data);
-    ksort($Data2);
+        $data['action'] = $this->url->link('api/sso/login', '', 'SSL');
+        $data['register'] = $this->url->link('account/register', '', 'SSL');
+        $data['forgotten'] = $this->url->link('account/forgotten', '', 'SSL');
 
-    foreach ($Data2 as $Key => $Value) {
-        if ($Value === NULL)
-            $Data[$Key] = '';
+        // Added strpos check to pass McAfee PCI compliance test 
+        if (isset($this->request->post['redirect']) && (strpos($this->request->post['redirect'], $this->config->get('config_url')) !== false || strpos($this->request->post['redirect'], $this->config->get('config_ssl')) !== false)) {
+            $data['redirect'] = $this->request->post['redirect'];
+        } elseif (isset($this->session->data['redirect'])) {
+            $data['redirect'] = $this->session->data['redirect'];
+
+            unset($this->session->data['redirect']);
+        } else {
+            $data['redirect'] = '';
+        }
+
+        if (isset($this->session->data['success'])) {
+            $data['success'] = $this->session->data['success'];
+
+            unset($this->session->data['success']);
+        } else {
+            $data['success'] = '';
+        }
+
+        if (isset($this->request->post['email'])) {
+            $data['email'] = $this->request->post['email'];
+        } else {
+            $data['email'] = '';
+        }
+
+        if (isset($this->request->post['password'])) {
+            $data['password'] = $this->request->post['password'];
+        } else {
+            $data['password'] = '';
+        }
+
+        $this->template = 'api/sso_login.phtml';
+
+        $data['title'] = $this->config->get('config_meta_title');
+
+        if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
+            $data['base'] = HTTPS_SERVER;
+        } else {
+            $data['base'] = HTTP_SERVER;
+        }
+
+        $this->data = $data;
+
+
+
+        $this->response->setOutput($this->render());
     }
 
-    $String = http_build_query($Data2, NULL, '&');
-//   echo "$String\n";
-    $Signature = JsHash($String . $Secret, $HashType);
-    if ($ReturnData) {
-        $Data['client_id'] = $ClientID;
-        $Data['signature'] = $Signature;
-//      $Data['string'] = $String;
-        return $Data;
-    } else {
-        return $Signature;
+    protected function validateLogin() {
+        // Check how many login attempts have been made.
+        $login_info = $this->model_account_customer->getLoginAttempts($this->request->post['email']);
+
+        if ($login_info && ($login_info['total'] > $this->config->get('config_login_attempts')) && strtotime('-1 hour') < strtotime($login_info['date_modified'])) {
+            $this->error['warning'] = $this->language->get('error_attempts');
+        }
+
+        // Check if customer has been approved.
+        $customer_info = $this->model_account_customer->getCustomerByEmail($this->request->post['email']);
+
+        if ($customer_info && !$customer_info['approved']) {
+            $this->error['warning'] = $this->language->get('error_approved');
+        }
+
+        if (!$this->error) {
+            if (!$this->customer->login($this->request->post['email'], $this->request->post['password'])) {
+                $this->error['warning'] = $this->language->get('error_login');
+
+                $this->model_account_customer->addLoginAttempt($this->request->post['email']);
+            } else {
+                $this->model_account_customer->deleteLoginAttempts($this->request->post['email']);
+            }
+        }
+
+        return !$this->error;
     }
-}
 
-/**
- * Return the hash of a string.
- * @param string $String The string to hash.
- * @param string|bool $Secure The hash algorithm to use. TRUE means md5.
- * @return string 
- * @since 1.1b
- */
-function JsHash($String, $Secure = TRUE) {
-    if ($Secure === TRUE)
-        $Secure = 'md5';
+    public function logout() {
+        $json = array();
+        $json['action'] = 'Login User';
+        echo '<script>window.top.location = "' . $this->url->link('account/logout', '', 'SSL') . '";</script>';
 
-    switch ($Secure) {
-        case 'sha1':
-            return sha1($String);
-            break;
-        case 'md5':
-        case FALSE:
-            return md5($String);
-        default:
-            return hash($Secure, $String);
+        /*   $this->response->addHeader('Content-Type: application/json');
+          $this->response->setOutput(json_encode($json)); */
     }
-}
 
-function JsTimestamp() {
-    return time();
-}
+    public function register() {
+        $json = array();
+        $json['action'] = 'Register User';
+ echo '<script>window.top.location = "' . $this->url->link('account/register', '', 'SSL') . '";</script>';
+    }
 
-/**
- * Generate an SSO string suitable for passing in the url for embedded SSO.
- * 
- * @param array $User The user to sso.
- * @param string $ClientID Your client ID.
- * @param string $Secret Your secret.
- * @return string
- */
-function JsSSOString($User, $ClientID, $Secret) {
-    if (!isset($User['client_id']))
-        $User['client_id'] = $ClientID;
-
-    $String = base64_encode(json_encode($User));
-    $Timestamp = time();
-    $Hash = hash_hmac('sha1', "$String $Timestamp", $Secret);
-
-    $Result = "$String $Hash $Timestamp hmacsha1";
-    return $Result;
 }

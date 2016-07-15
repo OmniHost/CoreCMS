@@ -52,6 +52,10 @@ class ControllerErrorNotFound extends \Core\Controller {
         $this->response->addheader($this->request->server['SERVER_PROTOCOL'] . '/1.1 404 not found');
 
         $this->data['continue'] = $this->url->link('common/home');
+        
+        $this->load->model('module/redirect');
+		
+		$this->model_module_redirect->detect404Status();
 
 
         $this->template = 'error/not_found.phtml';

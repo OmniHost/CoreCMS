@@ -68,6 +68,7 @@ class ControllerAccountEdit extends \Core\Controller {
         $data['entry_telephone'] = $this->language->get('entry_telephone');
         $data['entry_fax'] = $this->language->get('entry_fax');
         $data['entry_country'] = $this->language->get('entry_country');
+        $data['entry_profile_image'] = $this->language->get('entry_profile_image');
 
         $data['button_continue'] = $this->language->get('button_continue');
         $data['button_back'] = $this->language->get('button_back');
@@ -116,6 +117,23 @@ class ControllerAccountEdit extends \Core\Controller {
         if ($this->request->server['REQUEST_METHOD'] != 'POST') {
             $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
         }
+        
+        
+        
+        $this->load->model('tool/image');
+        $data['placeholder'] = $this->model_tool_image->resizeExact('no_photo.jpg', 100,100);
+        
+        
+         if (isset($this->request->post['profile_img'])) {
+            $data['profile_img'] = $this->request->post['profile_img'];
+        } elseif (!empty($customer_info)) {
+            $data['profile_img'] = $customer_info['profile_img'];
+        } else {
+            $data['profile_img'] = '';
+        }
+        
+        
+         $data['profile_thumb'] = $this->model_tool_image->resizeExact($data['profile_img'], 100,100);
 
         if (isset($this->request->post['firstname'])) {
             $data['firstname'] = $this->request->post['firstname'];
