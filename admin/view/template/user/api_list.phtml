@@ -3,12 +3,21 @@
 
 <!-- Main content -->
 <section class="content">
-
-    <div class="box">
-        <div class="box-header text-right">
-            <a href="<?php echo $insert; ?>" data-toggle="tooltip" title="<?php echo $button_insert; ?>" class="btn btn-app"><i class="fa fa-plus text-primary"></i> <?php echo $button_insert; ?></a>
-        <button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-app" onclick="confirm('<?php echo $text_confirm; ?>') ? $('#form-api').submit() : false;"><i class="fa fa-trash-o text-danger"></i><?php echo $button_delete; ?></button>
+      <div class="box box-theme">
+        <div class="box-header with-border">
+            <h3 class="box-title"><i class="fa fa-list"></i> <?php echo $text_list; ?></h3>
+            <div class="box-tools pull-right">
+                <a href="<?php echo $insert; ?>" class="btn btn-success" data-toggle="tooltip" title="<?php echo $button_insert; ?>">
+                    <i class="fa fa-plus"></i>
+                </a>
+                <button class="btn btn-danger" onclick="confirmDelete('Are you Sure?', '', function () {
+                            $('#form').submit();
+                        });" data-toggle="tooltip" title="<?php echo $button_delete; ?>">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </div>
         </div>
+          
         <div class="box-body table-responsive">
             <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form">
                  <table class="table table-bordered table-hover">
@@ -45,7 +54,7 @@
                   <td class="text-left"><?php echo $api['username']; ?></td>
                   <td class="text-left"><?php echo $api['status']; ?></td>
                   <td class="text-left"><?php echo $api['date_added']; ?></td>
-                  <td class="text-right"><a href="<?php echo $api['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
+                  <td class="text-right"><a href="<?php echo $api['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-edit"></i></a></td>
                 </tr>
                 <?php } ?>
                 <?php } else { ?>

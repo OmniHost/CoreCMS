@@ -1,0 +1,48 @@
+<?php echo $header; ?>
+<?php include(__DIR__ . '/../common/page-header.phtml'); ?>
+
+<section class="content">
+
+    <div class="box box-theme">
+        <div class="box-header with-border">
+            <h3 class="box-title"><i class="fa fa-edit"></i> <?php echo $heading_title; ?></h3>
+            <div class="box-tools pull-right">
+                <button type="submit" form="form" data-toggle="tooltip" title="<?php echo $button_save; ?>" class="btn btn-success"><i class="fa fa-save"></i></button>
+                <a href="<?php echo $cancel; ?>" data-toggle="tooltip" title="<?php echo $button_cancel; ?>" class="btn btn-default"><i class="fa fa-reply"></i></a>
+            </div>
+        </div>
+
+        <div class="box-body">
+            <form action="<?php echo $action; ?>" method="post" id="form" class="form-horizontal">
+                <?php foreach ($urls as $type => $url) : ?>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3 col-md-2 required"><?php echo ${"entry_{$type}_url"}; ?></label>
+                        <div class="col-sm-9 col-md-10">
+                            <input type="text" name="url[<?php echo $type; ?>]" value="<?php echo $url; ?>" class="form-control required"/>
+                            <?php if (isset($error_url[$type])) { ?>
+                                <span class="text-danger"><?php echo $error_url[$type]; ?></span>
+                            <?php } ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-status"><?php echo $entry_status; ?></label>
+                    <div class="col-sm-10">
+                        <select name="status" id="input-status" class="form-control">
+                            <?php if ($status) { ?>
+                                <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+                                <option value="0"><?php echo $text_disabled; ?></option>
+                            <?php } else { ?>
+                                <option value="1"><?php echo $text_enabled; ?></option>
+                                <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</section>
+<?php echo $footer; ?> 

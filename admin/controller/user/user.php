@@ -185,6 +185,8 @@ class ControllerUserUser extends \Core\Controller {
             $action = array();
 
             $action[] = array(
+                'class' => 'primary',
+                'icon' => 'fa fa-edit',
                 'text' => $this->language->get('text_edit'),
                 'href' => $this->url->link('user/user/update', 'token=' . $this->session->data['token'] . '&user_id=' . $result['user_id'] . $url, 'SSL')
             );
@@ -364,8 +366,10 @@ class ControllerUserUser extends \Core\Controller {
 
         if (!isset($this->request->get['user_id'])) {
             $this->data['action'] = $this->url->link('user/user/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $this->data['text_edit'] = $this->language->get('text_add');
         } else {
             $this->data['action'] = $this->url->link('user/user/update', 'token=' . $this->session->data['token'] . '&user_id=' . $this->request->get['user_id'] . $url, 'SSL');
+             $this->data['text_edit'] = $this->language->get('text_edit');
         }
 
         $this->data['cancel'] = $this->url->link('user/user', 'token=' . $this->session->data['token'] . $url, 'SSL');

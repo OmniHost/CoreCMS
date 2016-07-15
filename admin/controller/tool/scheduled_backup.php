@@ -10,11 +10,11 @@
 @visibility hidden
 @TODO - MIGRATE TO SETTINGS / FRONT
  */
-/** @should migrate to a setting in the system settings --- does not need its own module/controller!!!! (only frontend)
+/** @should migrate to a setting in the system settings --- does not need its own module/controller!!!! (only frontend)*/
 
 define("DIR_BACKUP", DIR_SYSTEM."backup/");
 
-class ControllerToolScheduledBackup extends Controller { 
+class ControllerToolScheduledBackup extends \Core\Controller { 
 	private $error = array();
 	
 	public function index() {		

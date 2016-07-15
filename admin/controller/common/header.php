@@ -176,15 +176,28 @@ class ControllerCommonHeader extends \Core\Controller {
         $this->data['total_comments'] = $alerts['comments']['total'];
 
 
+        $this->data['header_navs'] = array();
 
-        $this->data['header_navs'] = array(
-            'alerts' => array(
-                'title' => $this->language->get('alert_user'),
-                'icon' => 'fa fa-bell-o',
+        if ($this->user->hasPermission('access', 'dashboard/calendar')) {
+            $this->load->model('dashboard/calendar');
+
+
+            $this->data['header_navs']['calendar'] = array(
+                'title' => $this->language->get('alert_calendar'),
+                'icon' => 'fa fa-calendar',
                 'class' => 'warning',
-                'total' => $alerts['customers']['total'] + $alerts['comments']['total'] + $alerts['contacts']['total'],
-                'items' => $alerts
-            )
+                'href' => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+                'order' => 0,
+                'total' => $this->model_dashboard_calendar->getTodayCount()
+            );
+        }
+        $this->data['header_navs']['alerts'] = array(
+            'title' => $this->language->get('alert_user'),
+            'icon' => 'fa fa-bell-o',
+            'class' => 'warning',
+            'total' => $alerts['customers']['total'] + $alerts['comments']['total'] + $alerts['contacts']['total'],
+            'items' => $alerts,
+            'order' => 1
         );
 
         if ($this->config->get('config_maintenance')) {
@@ -205,6 +218,8 @@ class ControllerCommonHeader extends \Core\Controller {
 
         $this->event->trigger('admin.header.navs', $this->data['header_navs']);
 
+
+        sort_this_array($this->data['header_navs'], 'order', SORT_ASC);
 
         $this->data['module_menu'] = array(
             'dashboard' => array(
@@ -238,12 +253,12 @@ class ControllerCommonHeader extends \Core\Controller {
                         'order' => 2,
                         'route' => 'blog/category',
                     ),
-                       'tags' => array(
-                      'label' => $this->language->get("Post Tags"),
-                      'href' => $this->url->link('blog/tags', 'token=' . $this->session->data['token'], 'SSL'),
-                      'order' => 3,
-                      'route' => 'blog/tags',
-                      ), 
+                    'tags' => array(
+                        'label' => $this->language->get("Post Tags"),
+                        'href' => $this->url->link('blog/tags', 'token=' . $this->session->data['token'], 'SSL'),
+                        'order' => 3,
+                        'route' => 'blog/tags',
+                    ),
                     'banner' => array(
                         'label' => $this->data['menu_banners'],
                         'href' => $this->data['banner'],
@@ -290,31 +305,30 @@ class ControllerCommonHeader extends \Core\Controller {
                         'badge' => $this->data['total_contact_us'] ? '<span class="badge bg-red pull-right">' . $this->data['total_contact_us'] . '</span>' : '',
                         'route' => 'sale/contact',
                     ),
-'contact_emai' => array(
+                    'contact_email' => array(
                         'label' => $this->language->get('Email Users'),
                         'href' => $this->url->link('marketing/contact', 'token=' . $this->session->data['token'], 'SSL'),
-                        'order' => 0,
-                        
+                        'order' => 1,
                         'route' => 'marketing/contact',
                     ),
                     'marketing' => array(
                         'label' => $this->data['menu_marketing'],
                         'href' => $this->data['marketing'],
-                        'order' => 1,
+                        'order' => 2,
                         'children' => array(),
                         'route' => 'marketing/marketing',
                     ),
                     'forms' => array(
                         'label' => $this->data['menu_formbuilder'],
                         'href' => $this->data['formbuilder'],
-                        'order' => 2,
+                        'order' => 3,
                         'children' => array(),
                         'route' => 'marketing/form',
                     ),
                     'newsletters' => array(
                         'label' => $this->language->get('menu_newsletter_system'),
                         'href' => '#',
-                        'order' => 3,
+                        'order' => 4,
                         'route' => 'marketing/newsletter',
                         'children' => array(
                             'overview' => array(

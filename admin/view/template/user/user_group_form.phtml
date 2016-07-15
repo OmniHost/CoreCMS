@@ -7,7 +7,20 @@
 <section class="content">
 
     <form action="<?php echo $action; ?>" class="form-horizontal form-validate" method="post" enctype="multipart/form-data" id="form">
-        <div class="box">
+         <div class="box box-theme">
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="fa fa-edit"></i> <?php echo $text_edit; ?></h3>
+
+                <div class="box-tools pull-right">
+                    <button class="btn btn-success" data-toggle="tooltip" title="<?php echo $button_save; ?>">
+                        <i class="fa fa-save"></i>
+                    </button>
+                 
+                    <a href="<?php echo $cancel; ?>" class="btn btn-default" title="<?php echo $button_cancel; ?>"  data-toggle="tooltip">
+                        <i class="fa fa-reply"></i> 
+                    </a>
+                </div>
+            </div>
             <div class="box-body">
                 <div class="form-group">
                     <label for="nameInput" class="col-sm-2 control-label required"><?php echo $entry_name; ?></label>
@@ -69,14 +82,6 @@
 
 
 
-            </div>
-            <div class="box-footer">
-                <button class="btn btn-primary">
-                    <i class="fa fa-check"></i> <?php echo $button_save; ?>
-                </button>
-                <a href="<?php echo $cancel; ?>" class="btn" onclick="$('#form').submit();">
-                    <i class="fa fa-times"></i> <?php echo $button_cancel; ?>
-                </a>
             </div>
         </div>
     </form>

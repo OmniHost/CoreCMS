@@ -176,6 +176,8 @@ class ControllerUserUserPermission extends \Core\Controller {
             $action = array();
 
             $action[] = array(
+                'icon' => 'fa fa-edit',
+                'class' => 'primary',
                 'text' => $this->language->get('text_edit'),
                 'href' => $this->url->link('user/user_permission/update', 'token=' . $this->session->data['token'] . '&user_group_id=' . $result['user_group_id'] . $url, 'SSL')
             );
@@ -313,8 +315,10 @@ class ControllerUserUserPermission extends \Core\Controller {
 
         if (!isset($this->request->get['user_group_id'])) {
             $this->data['action'] = $this->url->link('user/user_permission/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $this->data['text_edit'] = $this->language->get('text_add');
         } else {
             $this->data['action'] = $this->url->link('user/user_permission/update', 'token=' . $this->session->data['token'] . '&user_group_id=' . $this->request->get['user_group_id'] . $url, 'SSL');
+             $this->data['text_edit'] = $this->language->get('text_edit');
         }
 
         $this->data['cancel'] = $this->url->link('user/user_permission', 'token=' . $this->session->data['token'] . $url, 'SSL');

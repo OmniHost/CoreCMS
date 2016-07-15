@@ -1,0 +1,28 @@
+<?php echo $header; ?>
+<?php include(__DIR__ . '/../common/page-header.phtml'); ?>
+
+<section class="content">
+
+    <div class="box box-theme">
+        <div class="box-header with-border">
+            <h3 class="box-title"><i class="fa fa-edit"></i> <?php echo $heading_title; ?></h3>
+            <div class="box-tools pull-right">
+                <button type="submit" form="form" data-toggle="tooltip" title="<?php echo $button_save; ?>" class="btn btn-success"><i class="fa fa-save"></i></button>
+                <a href="<?php echo $cancel; ?>" data-toggle="tooltip" title="<?php echo $button_cancel; ?>" class="btn btn-default"><i class="fa fa-reply"></i></a>
+            </div>
+        </div>
+
+        <div class="box-body">
+            <form action="<?php echo $action; ?>" method="post" id="form" class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-sm-3 col-md-2"><?php echo $entry_exceptions; ?></label>
+                    <div class="col-sm-9 col-md-10">
+                        <textarea name="exceptions" class="form-control" rows="10"><?php echo $exceptions; ?></textarea>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</section>
+<?php echo $footer; ?> 

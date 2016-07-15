@@ -109,6 +109,7 @@
                                         <?php foreach ($page['action'] as $action) { ?>
                                             <a target="<?php echo (!empty($action['target'])) ? $action['target'] : '_self'; ?>" class="btn btn-sm btn-<?php echo $action['class']; ?>" href="<?php echo $action['href']; ?>" data-toggle="tooltip" title="<?php echo $action['text']; ?>"><i class="<?php echo $action['icon']; ?>"></i></a>
                                 <?php } ?>
+                                    </td>
 
                                 </tr>
     <?php } ?>

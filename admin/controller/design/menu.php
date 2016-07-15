@@ -205,7 +205,7 @@ class ControllerDesignMenu extends \Core\Controller {
         }
 
 
-        $this->document->addScript('//code.jquery.com/ui/1.11.4/jquery-ui.min.js');
+        $this->document->addScript('view/plugins/jQueryUI/jquery-ui.js');
 
         if (isset($this->error['warning'])) {
             $this->data['error_warning'] = $this->error['warning'];

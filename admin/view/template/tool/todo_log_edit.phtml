@@ -1,0 +1,23 @@
+<div class="todo-log">
+<div class="title"><?php echo sprintf($data['text_log_title_edit'], $date_modified,$username) ?>:</div>
+<div class="description" data-log-description="1"><?php echo $description; ?></div>
+<?php if(!empty($value_priority) || !empty($value_queue) || !empty($value_onhold) || !empty($contractor) || isset($deadline)) {?>
+<div class="params">
+<?php if(!empty($contractor)) {
+    echo $data['text_log_contractor'].': <b>'.$contractor.'</b> ';
+}?>
+<?php if(!empty($value_priority)) {
+    echo $data['text_log_priority'].': <b>'.$value_priority.'</b> ';
+}?>
+<?php if(!empty($value_queue)) {
+    echo $data['text_log_queue'].': <b>'.$value_queue.'</b> ';
+}?>
+<?php if(isset($deadline)) {
+    echo $data['text_log_deadline'].': <b>'.(empty($deadline) ? $data['text_log_deadline_not_set'] : $deadline).'</b>';
+}?>
+<?php if(!empty($value_onhold)) {
+    echo $data['text_log_onhold'].': <b>'.$value_onhold.'</b> ';
+}?>
+</div>
+<?php }?>
+</div>

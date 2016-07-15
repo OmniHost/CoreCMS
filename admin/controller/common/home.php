@@ -18,7 +18,7 @@ class ControllerCommonHome extends \Core\Controller {
     public function index() {
         $this->language->load('common/home');
         $this->document->setTitle($this->language->get('heading_title'));
-        $this->document->addScript('//code.jquery.com/ui/1.11.4/jquery-ui.min.js');
+        $this->document->addScript('view/plugins/jQueryUI/jquery-ui.js');
         $this->data['heading_title'] = $this->language->get('heading_title');
 
         $this->data['breadcrumbs'] = array();

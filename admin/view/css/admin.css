@@ -373,3 +373,47 @@ input[type=range]:focus::-ms-fill-upper {
 .skin-red .box-theme {
     border-top: 3px solid #dd4b39;
 }
+.box-fullscreen {
+    display: block;
+    z-index: 9999;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    overflow: auto;
+}
+
+div.todo-log {
+	margin-bottom:10px;
+}
+
+div.todo-log .title {
+	font-style:italic;
+	font-weight:bold;
+}
+
+div.todo-log .description {
+}
+
+div.todo-log .params {
+	font-style:italic;
+}
+
+div.todo-popup {
+    background: none repeat scroll 0% 0% #FFF;
+    padding: 20px 30px;
+    text-align: left;
+    max-width: 650px;
+    margin: 40px auto;
+    position: relative;
+}
+.radio-inline input[type="radio"], .checkbox-inline input[type="checkbox"] {
+	position: absolute; 
+}
+
+td.finished {
+	text-decoration: line-through;
+}

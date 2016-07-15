@@ -133,6 +133,22 @@ $(document).ready(function () {
     });
 
 
+    $(document).on("click", "[data-widget='fullscreen']", function (e) {
+        e.preventDefault();
+
+        var $this = $(this);
+
+        if ($this.children('i').hasClass('glyphicon-resize-full'))
+        {
+            $this.children('i').removeClass('glyphicon-resize-full');
+            $this.children('i').addClass('glyphicon-resize-small');
+        } else if ($this.children('i').hasClass('glyphicon-resize-small'))
+        {
+            $this.children('i').removeClass('glyphicon-resize-small');
+            $this.children('i').addClass('glyphicon-resize-full');
+        }
+        $(this).closest('.box').toggleClass('box-fullscreen');
+    });
 
 
     // Image Manager
@@ -302,12 +318,12 @@ $(document).ready(function () {
                                 url: 'index.php?p=common/filemanager&token=' + getURLVar('token') + '&ckeditor=' + editor.name,
                                 dataType: 'html',
                                 success: function (html) {
-                              //      console.log(html);
-                                  $('body').append('<div id="modal-image" class="modal">' + html + '</div>');
+                                    //      console.log(html);
+                                    $('body').append('<div id="modal-image" class="modal">' + html + '</div>');
 
-                    $('#modal-image').modal('show');
-                               //     $('body').append('<div id="modal-image" class="modal" style="z-index: 99991;">' + html + '</div>');
-                              //      $('#modal-image').modal('show');
+                                    $('#modal-image').modal('show');
+                                    //     $('body').append('<div id="modal-image" class="modal" style="z-index: 99991;">' + html + '</div>');
+                                    //      $('#modal-image').modal('show');
                                 }
                             });
 
@@ -674,7 +690,7 @@ function slugify(text)
             + "</div>"
             );
     var skins_list = $("<ul />", {"class": 'list-unstyled clearfix'});
-    
+
 
     //Dark sidebar skins
     var skin_blue =
@@ -779,7 +795,7 @@ function slugify(text)
     demo_settings = $('<div />');
     demo_settings.append('<h4 class="control-sidebar-heading">Skins</h4>');
     demo_settings.append(skins_list);
-   // demo_settings.prepend("<h4 class='control-sidebar-heading'>Skins</h4>");
+
 
 
     tab_pane.append(demo_settings);

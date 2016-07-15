@@ -1,0 +1,215 @@
+<?php echo $header; ?>
+<?php include(__DIR__ . '/../common/page-header.phtml'); ?>
+
+<section class="content">
+
+    <div class="box box-theme">
+        <div class="box-header with-border">
+            <h3 class="box-title"><i class="fa fa-list"></i> <?php echo $text_list; ?></h3>
+            <div class="box-tools pull-right">
+                <a href="<?php echo $insert; ?>" data-toggle="tooltip" title="<?php echo $button_insert; ?>" class="btn btn-success"><i class="fa fa-plus"></i></a>
+                <button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger" onclick="confirmDelete('Are you Sure?', '<?php echo $text_confirm; ?>', function () {$('#form-todo').submit();});" onclick2="confirm('<?php echo $text_confirm; ?>') ? $('#form-todo').submit() : false;"><i class="fa fa-check-square-o"></i></button>
+            </div>
+        </div>
+
+        <div class="box-body">
+            <div class="well">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label class="control-label"><?php echo $entry_role; ?></label>
+                            <div>
+                                <label class="radio-inline  control-label">
+                                    <input type="radio" name="filter_role" value="author" <?php echo $filter_role == "author" ? 'checked="checked"' : ''; ?>/>
+                                    <?php echo $text_role_author; ?>
+                                </label>
+                                <label class="radio-inline  control-label">
+                                    <input type="radio" name="filter_role" value="contractor" <?php echo $filter_role == "contractor" ? 'checked="checked"' : ''; ?>/>
+                                    <?php echo $text_role_contractor; ?>
+                                </label>
+                            </div>
+                            <label class="checkbox-inline" id="label-suspended">
+                                <input type="checkbox" id="input-suspended" name="filter_suspended" value="1" <?php echo empty($filter_suspended) ? '' : 'checked="checked"'; ?>><?php echo $entry_suspended ?>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label class="control-label" for="input-priority"><?php echo $entry_priority; ?></label>
+                            <select name="filter_priority" id="input-priority" placeholder="<?php echo $entry_priority; ?>" class="form-control">
+                                <option value=""></option>
+                                <option value="1"<?php echo isset($filter_priority) && $filter_priority == '1' ? ' selected="selected"' : '' ?>><?php echo $text_priority_1; ?></option>
+                                <option value="2"<?php echo isset($filter_priority) && $filter_priority == '2' ? ' selected="selected"' : '' ?>><?php echo $text_priority_2; ?></option>
+                                <option value="3"<?php echo isset($filter_priority) && $filter_priority == '3' ? ' selected="selected"' : '' ?>><?php echo $text_priority_3; ?></option>
+                                <option value="4"<?php echo isset($filter_priority) && $filter_priority == '4' ? ' selected="selected"' : '' ?>><?php echo $text_priority_4; ?></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label class="control-label" for="input-queue"><?php echo $entry_queue; ?></label>
+                            <select name="filter_queue" id="input-queue" placeholder="<?php echo $entry_queue; ?>" class="form-control">
+                                <option value=""></option>
+                                <?php if ($filter_role == 'author') { ?>
+                                    <option value="awaiting_decision"<?php echo isset($filter_queue) && $filter_queue == 'awaiting_decision' ? ' selected="selected"' : '' ?>><?php echo $text_filter_queue_awaiting_decision; ?></option>
+                                    <option value="not_distributed"<?php echo isset($filter_queue) && $filter_queue == 'not_distributed' ? ' selected="selected"' : '' ?>><?php echo $text_filter_queue_not_distributed; ?></option>
+                                    <option value="inwork"<?php echo isset($filter_queue) && $filter_queue == 'inwork' ? ' selected="selected"' : '' ?>><?php echo $text_filter_queue_inwork; ?></option>
+                                    <option value="finished"<?php echo isset($filter_queue) && $filter_queue == 'finished' ? ' selected="selected"' : '' ?>><?php echo $text_filter_queue_finished; ?></option>
+                                <?php } else { ?>
+                                    <option value="myqueue"<?php echo isset($filter_queue) && $filter_queue == 'myqueue' ? ' selected="selected"' : '' ?>><?php echo $text_filter_queue_myqueue; ?></option>
+                                    <option value="not_distributed"<?php echo isset($filter_queue) && $filter_queue == 'not_distributed' ? ' selected="selected"' : '' ?>><?php echo $text_filter_queue_not_distributed; ?></option>
+                                    <option value="inwork"<?php echo isset($filter_queue) && $filter_queue == 'inwork' ? ' selected="selected"' : '' ?>><?php echo $text_filter_queue_inwork; ?></option>
+                                    <option value="awaiting_answer"<?php echo isset($filter_queue) && $filter_queue == 'awaiting_answer' ? ' selected="selected"' : '' ?>><?php echo $text_filter_queue_awaiting_answer; ?></option>
+                                    <option value="finished"<?php echo isset($filter_queue) && $filter_queue == 'finished' ? ' selected="selected"' : '' ?>><?php echo $text_filter_queue_finished; ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
+                    </div>
+                </div>
+            </div>
+            <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form-todo">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
+                                <td class="text-left"><?php echo $column_description; ?></td>
+                                <td class="text-left"><?php if ($sort == 'a.username') { ?>
+                            <nobr><a href="<?php echo $sort_author; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_author; ?></a></nobr>
+                        <?php } else { ?>
+                            <a href="<?php echo $sort_author; ?>"><?php echo $column_author; ?></a>
+                        <?php } ?></td>
+                        <td class="text-left"><?php if ($sort == 'c.username') { ?>
+                            <nobr><a href="<?php echo $sort_contractor; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_contractor; ?></a></nobr>
+                        <?php } else { ?>
+                            <a href="<?php echo $sort_contractor; ?>"><?php echo $column_contractor; ?></a>
+                        <?php } ?></td>
+                        <td class="text-left"><?php if ($sort == 'priority') { ?>
+                            <nobr><a href="<?php echo $sort_priority; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_priority; ?></a></nobr>
+                        <?php } else { ?>
+                            <a href="<?php echo $sort_priority; ?>"><?php echo $column_priority; ?></a>
+                        <?php } ?></td>
+                        <td class="text-left"><?php if ($sort == 'status') { ?>
+                            <nobr><a href="<?php echo $sort_queue; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_queue; ?></a></nobr>
+                        <?php } else { ?>
+                            <a href="<?php echo $sort_queue; ?>"><?php echo $column_queue; ?></a>
+                        <?php } ?></td>
+                        <td class="text-left"><?php if ($sort == 'deadline') { ?>
+                            <nobr><a href="<?php echo $sort_deadline; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_deadline; ?></a></nobr>
+                        <?php } else { ?>
+                            <a href="<?php echo $sort_deadline; ?>"><?php echo $column_deadline; ?></a>
+                        <?php } ?></td>
+                        <td class="text-left"><?php echo $column_action; ?></td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <?php if ($tasks) { ?>
+                                <?php foreach ($tasks as $task) { ?>
+                                    <tr>
+                                        <td class="text-center"><?php if (in_array($task['task_id'], $selected)) { ?>
+                                                <input type="checkbox" name="selected[]" value="<?php echo $task['task_id']; ?>" checked="checked" />
+                                            <?php } else { ?>
+                                                <input type="checkbox" name="selected[]" value="<?php echo $task['task_id']; ?>" />
+                                            <?php } ?></td>
+                                        <td class="text-left<?php echo $task['status'] == 'archived' || $task['status'] == 'closed' ? ' finished' : ''; ?>"><?php echo $task['description']; ?></td>
+                                        <td class="text-left"><?php echo $task['author']; ?></td>
+                                        <td class="text-left"><?php echo $task['contractor']; ?></td>
+                                        <td class="text-left"><?php echo $task['priority']; ?></td>
+                                        <td class="text-left"><?php echo $task['queue']; ?></td>
+                                        <td class="text-left"><?php echo $task['deadline']; ?></td>
+                                        <td class="text-right"><nobr><?php if ($task['editable']) { ?><a href="<?php echo $task['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a>&nbsp;<?php } ?><a href="<?php echo $task['log']; ?>" data-toggle="tooltip" title="<?php echo $button_log; ?>" class="btn btn-primary log-popup"><i class="fa fa-file-text-o"></i></a></nobr></td>
+                                </tr>
+                            <?php } ?>
+                        <?php } else { ?>
+                            <tr>
+                                <td class="text-center" colspan="8"><?php echo $text_no_results; ?></td>
+                            </tr>
+                        <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+            <div class="row">
+                <div class="col-sm-6 text-left"><?php echo $pagination; ?></div>
+                <div class="col-sm-6 text-right"><?php echo $results; ?></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+<!--
+docReady(function() { 
+    $('input[name=\'filter_role\']').on('change', function () {
+        $.ajax({
+            url: 'index.php?p=tool/todo/queue&token=<?php echo $token; ?>&filter_role=' + this.value,
+            dataType: 'json',
+            success: function (data) {
+                var queue = $('#input-queue');
+                var val = queue.val();
+                var i;
+                queue.html('');
+                var e = [{name: "", value: 0}];
+                data = e.concat(data);
+                for (i = 0; i < data.length; i++) {
+                    queue.append('<option ' + (val == data[i]['value'] ? 'selected="selected"' : '') + ' value="' + data[i]['value'] + '">' + data[i]['name'] + '</option>');
+                }
+            }
+        });
+        if (this.value == 'author')
+            $('#label-suspended').css('visibility', 'visible');
+        else
+            $('#label-suspended').css('visibility', 'hidden');
+    });
+
+    $('#button-filter').on('click', function () {
+        url = 'index.php?p=tool/todo&token=<?php echo $token; ?>';
+
+        var filter_priority = $('select[name=\'filter_priority\']').val();
+        if (filter_priority) {
+            url += '&filter_priority=' + encodeURIComponent(filter_priority);
+        }
+
+        var filter_queue = $('select[name=\'filter_queue\']').val();
+        if (filter_queue) {
+            url += '&filter_queue=' + encodeURIComponent(filter_queue);
+        }
+
+        var filter_role = $('input[name=\'filter_role\']:checked').val();
+        url += '&filter_role=' + encodeURIComponent(filter_role);
+
+        var filter_suspended = $('input[name=\'filter_suspended\']:checked').val();
+        if (filter_suspended) {
+            url += '&filter_suspended=' + encodeURIComponent(filter_suspended);
+        }
+
+        location = url;
+    });
+
+<?php if ($config_autofilter) { ?>
+        $('select[name=\'filter_priority\'],select[name=\'filter_queue\'],input[name=\'filter_role\'],input[name=\'filter_suspended\']').
+                on('change', function () {
+                    $('#button-filter').click();
+                });
+<?php } ?>
+    $(document).ready(function () {
+
+        $('.log-popup').magnificPopup({
+            type: 'ajax',
+            alignTop: true,
+            overflowY: 'scroll' // as we know that popup content is tall we set scroll overflow by default to avoid jump
+        });
+
+        if ($('input[name=\'filter_role\']:checked').val() == 'author')
+            $('#label-suspended').css('visibility', 'visible');
+        else
+            $('#label-suspended').css('visibility', 'hidden');
+
+    });
+    });
+-->
+</script> 
+</section>
+<?php echo $footer; ?>

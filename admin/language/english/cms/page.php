@@ -46,6 +46,7 @@ $_['column_autosave'] = 'Autosave';
 $_['column_author'] = 'Author';
 $_['button_load_revision'] = 'Load Revision';
 $_['button_preview'] = 'Preview Page';
+$_['button_save_stay'] = 'Save Page & Stay';
 
 $_['text_autosaving_on'] = 'Autosaving is on. Click here to turn it off.';
 $_['text_autosaving_off'] = 'Autosaving is on. Click here to turn it off.';

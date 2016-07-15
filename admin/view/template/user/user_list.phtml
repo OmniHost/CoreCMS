@@ -4,14 +4,18 @@
 <!-- Main content -->
 <section class="content">
 
-    <div class="box">
-        <div class="box-header text-right">
-            <a href="<?php echo $insert; ?>" class="btn btn-app">
-        <i class="fa fa-plus text-green"></i> <?php echo $button_insert; ?>
-    </a>
-    <button class="btn btn-app" onclick="$('#form').submit();">
-        <i class="fa fa-times text-red"></i> <?php echo $button_delete; ?>
-    </button>
+    <div class="box box-theme">
+        <div class="box-header with-border">
+            <h3 class="box-title"><i class="fa fa-list"></i> <?php echo $heading_title; ?></h3>
+            <div class="box-tools pull-right">
+                <a href="<?php echo $insert; ?>" class="btn btn-success" data-toggle="tooltip" title="<?php echo $button_insert; ?>">
+                    <i class="fa fa-plus"></i>
+                </a>
+                <button class="btn btn-danger" onclick="confirmDelete('Are you Sure?', '', function () {
+                            $('#form').submit();
+                        });" data-toggle="tooltip" title="<?php echo $button_delete; ?>">
+                    <i class="fa fa-times"></i></button>
+            </div>
         </div>
         <div class="box-body table-responsive">
             <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form">
@@ -50,8 +54,10 @@
                                     <td class="left"><?php echo $user['status']; ?></td>
                                     <td class="left"><?php echo $user['date_added']; ?></td>
                                     <td class="text-right"><?php foreach ($user['action'] as $action) { ?>
-                                            <a class="btn btn-xs btn-primary" href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a>
-                                        <?php } ?></td>
+
+                                                <a href="<?php echo $action['href']; ?>" data-toggle="tooltip"  title="<?php echo $action['text']; ?>" class="btn btn-<?php echo $action['class']; ?>"><i class="<?php echo $action['icon']; ?>"></i></a>
+
+                                            <?php } ?>
                                 </tr>
                             <?php } ?>
                         <?php } else { ?>
@@ -60,15 +66,14 @@
                             </tr>
                         <?php } ?>
                     </tbody>
+                    <tfoot>
+                        <tr><td colspan="5"><?php echo $pagination; ?></td></tr>
+                    </tfoot>
                 </table>
 
             </form>
         </div>
-        <div clas="box-footer">
-                <div class="pagination-container row">
-                    <?php echo $pagination; ?>
-                </div>
-        </div>
+
     </div>
 </section><!-- /.content -->
 

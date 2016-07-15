@@ -1,37 +1,20 @@
 <?php echo $header; ?>
 <?php include(__DIR__ . '/../common/page-header.phtml'); ?>.
-<?php
 
-function placeFormField($formfield) {
-    ?>
-    <?php if ($formfield['type'] != 'custom'): ?>
-        <div class="form-group">
-            <label for="<?php echo $el; ?>Input" class="col-sm-2 control-label <?php echo $formfield['required'] ? 'required' : ''; ?>"><?php echo $formfield['label']; ?></label>
-
-            <div class="col-sm-<?php echo $formfield['type'] == 'builder' ? 12 : 9; ?>">
-                <?php echo formfield($formfield); ?>
-                <?php if (!empty($formfield['error'])) { ?>
-                    <span class="error text-danger"><?php echo $formfield['error']; ?></span>
-                <?php } ?>
-            </div>
-        </div>
-    <?php else: ?>
-        <?php echo formfield($formfield); ?>
-    <?php
-    endif;
-}
-?>
 <!-- Main content -->
 <section class="content">
 
     <form action="<?php echo $action; ?>" class="form-horizontal form-validate" method="post" enctype="multipart/form-data" id="form">
         <div class="box box-theme">
             <div class="box-header with-border">
-                <h3 class="box-title"><i class="fa fa-pencil"></i> <?php echo $text_edit; ?></h3>
+                <h3 class="box-title"><i class="fa fa-edit"></i> <?php echo $text_edit; ?></h3>
 
                 <div class="box-tools pull-right">
                     <button class="btn btn-success" data-toggle="tooltip" title="<?php echo $button_save; ?>">
                         <i class="fa fa-save"></i>
+                    </button>
+                    <button type="button" id="savenstay" class="btn btn-success" data-toggle="tooltip" title="<?php echo $button_save_stay; ?>">
+                        <i class="fa fa-refresh"></i>
                     </button>
                     <?php if ($ams_is_public): ?>
                         <button type="button" class="btn btn-default preview-page" title="<?php echo $button_preview; ?>" data-toggle="tooltip">
@@ -62,9 +45,9 @@ function placeFormField($formfield) {
                 <ul class="nav nav-tabs" style='margin-bottom:15px;'>
 
                     <li class="active"><a href="#tab-general" data-toggle="tab"><?php echo $tab_general; ?></a></li>
-                    <?php if(!empty($tabs['links'])): ?>
+
                     <li><a href="#tab-links" data-toggle="tab"><?php echo $tab_links; ?></a></li>
-                    <?php endif; ?>
+
                     <?php foreach ($tabs as $tabid => $tab): ?>
                         <?php if ($tabid != 'links' && $tabid != 'permission' && $tabid != 'general' && $tabid != 'meta' && $tabid != 'general_details'): ?>
                             <li class=""><a href="#tab-<?php echo slug($tabid); ?>" data-toggle="tab"><?php echo ucfirst($tabid); ?></a></li>
@@ -79,7 +62,7 @@ function placeFormField($formfield) {
                 <div class="tab-content">
                     <div class="tab-pane active" id="tab-general">
                         <div class="row">
-                            <div class="col-lg-10 col-md-8 col-sm-12">
+                            <div class="col-sm-12">
                                 <div class="form-group">
                                     <label for="nameInput" class="col-sm-3 col-md-2 control-label required"><?php echo $entry_name; ?></label>
                                     <div class="col-sm-9 col-md-10">
@@ -111,73 +94,25 @@ function placeFormField($formfield) {
                                             <?php } ?>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="designInput" class="control-label required col-sm-3 col-md-2"><?php echo $entry_layout; ?></label>
-                                        <div class="col-sm-9 col-md-10">
-                                            <select name="layout_id" id="designInput" class="form-control">
-                                                <?php foreach ($layouts as $layout): ?>
-                                                    <?php if ($layout_id == $layout['layout_id']): ?>
-                                                        <option value="<?php echo $layout['layout_id']; ?>" selected><?php echo $layout['name']; ?></option>
-                                                    <?php else: ?>
-                                                        <option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
-                                                    <?php endif; ?>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </div>
-                                    </div>
+
+
+                                    <?php foreach ($tabs['general'] as $el => $formfield): ?>
+                                        <?php placeFormField($formfield); ?>
+                                    <?php endforeach; ?>
                                 <?php endif; ?>
-                                <?php foreach ($tabs['general'] as $el => $formfield): ?>
+
+                                <?php foreach ($tabs['general_details'] as $el => $formfield): ?>
                                     <?php placeFormField($formfield); ?>
                                 <?php endforeach; ?>
-                            </div>
-                            <div class="col-lg-2 col-md-4 col-sm-12">
-                                <div class="box box-default box-solid collapsed-box">
-                                    <div class="box-header with-border">
-                                        <h3 class="box-title"><?php echo $heading_page_details; ?></h3>
-                                        <div class="box-tools pull-right">
-                                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
-                                        </div>
-                                    </div>
-                                    <div class="box-body">
 
+                                <div class="form-group">
+                                    <label for="statusInput" class="control-label required col-sm-3 col-md-2"><?php echo $entry_status; ?></label>
+                                    <div class="col-sm-9 col-md-10">
+                                        <select name="status" id="statusInput" class="form-control">
+                                            <option value="0"><?php echo $text_disabled; ?></option>
+                                            <option value="1" <?php echo ($status) ? 'selected' : ''; ?>><?php echo $text_enabled; ?></option>
 
-                                        <?php if ($ams_parents): ?>
-                                            <div class="">
-                                                <label for="parentInput" class="control-label required"><?php echo $entry_parent; ?></label>
-                                                <div class="">
-                                                    <select name="parent_id" id="parentInput" class="form-control">
-                                                        <option value="0"><?php echo $text_none; ?></option>
-                                                        <?php echo render_select($parents, $parent_id); ?>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        <?php endif; ?>
-                                        <div class="">
-                                            <label for="statusInput" class="control-label required"><?php echo $entry_status; ?></label>
-                                            <div class="">
-                                                <select name="status" id="statusInput" class="form-control">
-                                                    <option value="0"><?php echo $text_disabled; ?></option>
-                                                    <option value="1" <?php echo ($status) ? 'selected' : ''; ?>><?php echo $text_enabled; ?></option>
-
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <?php if ($ams_commentable): ?>
-                                            <div class="">
-                                                <label for="commentsInput" class="control-label required"><?php echo $entry_comments; ?></label>
-                                                <div class="">
-                                                    <select name="comments" id="commentsInput" class="form-control">
-                                                        <option value="0"><?php echo $text_disabled; ?></option>
-                                                        <option value="1" <?php echo ($comments) ? 'selected' : ''; ?>><?php echo $text_enabled; ?></option>
-
-                                                    </select>
-                                                </div>
-                                            </div>
-
-                                        <?php endif; ?>
-                                        <?php foreach ($tabs['general_details'] as $el => $formfield): ?>
-                                            <?php placeFormField($formfield); ?>
-                                        <?php endforeach; ?>
+                                        </select>
                                     </div>
                                 </div>
 
@@ -188,15 +123,57 @@ function placeFormField($formfield) {
 
 
 
+
                         </div>
                     </div>
-                    <?php if(!empty($tabs['links'])): ?>
+
                     <div class="tab-pane" id="tab-links">
- <?php foreach ($tabs['links'] as $el => $formfield): ?>
-                                    <?php placeFormField($formfield); ?>
-                                <?php endforeach; ?>
+                        <div class="form-group">
+                            <label for="designInput" class="control-label required col-sm-3 col-md-2"><?php echo $entry_layout; ?></label>
+                            <div class="col-sm-9 col-md-10">
+                                <select name="layout_id" id="designInput" class="form-control">
+                                    <?php foreach ($layouts as $layout): ?>
+                                        <?php if ($layout_id == $layout['layout_id']): ?>
+                                            <option value="<?php echo $layout['layout_id']; ?>" selected><?php echo $layout['name']; ?></option>
+                                        <?php else: ?>
+                                            <option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                        <?php if ($ams_parents): ?>
+                            <div class="form-group">
+                                <label for="parentInput" class="control-label required col-sm-3 col-md-2"><?php echo $entry_parent; ?></label>
+                                <div class="col-sm-9 col-md-10">
+                                    <select name="parent_id" id="parentInput" class="form-control">
+                                        <option value="0"><?php echo $text_none; ?></option>
+                                        <?php echo render_select($parents, $parent_id); ?>
+                                    </select>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+
+                        <?php if ($ams_commentable): ?>
+                            <div class="form-group">
+                                <label for="commentsInput" class="control-label required col-sm-3 col-md-2"><?php echo $entry_comments; ?></label>
+                                <div class="col-sm-9 col-md-10">
+                                    <select name="comments" id="commentsInput" class="form-control">
+                                        <option value="0"><?php echo $text_disabled; ?></option>
+                                        <option value="1" <?php echo ($comments) ? 'selected' : ''; ?>><?php echo $text_enabled; ?></option>
+
+                                    </select>
+                                </div>
+                            </div>
+
+                        <?php endif; ?>
+                        <?php if (!empty($tabs['links'])): ?>
+                            <?php foreach ($tabs['links'] as $el => $formfield): ?>
+                                <?php placeFormField($formfield); ?>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </div>
-                    <?php endif; ?>
+
                     <div class="tab-pane" id="tab-meta">
                         <div class="form-group">
                             <label for="metaTitleInput" class="col-sm-2 control-label "><?php echo $entry_meta_title; ?></label>
@@ -442,6 +419,14 @@ function placeFormField($formfield) {
     }
 
     docReady(function () {
+
+        $(document).on("click", "#savenstay", function (e) {
+            e.preventDefault();
+            var acturl = $('#form').attr('action');
+            acturl += '&update=1';
+            $('#form').attr('action', acturl);
+            $('#form').submit();
+        });
 
 
         $(document).on("click", ".preview-page", function (e) {

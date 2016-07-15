@@ -1,0 +1,222 @@
+<?php echo $header; ?>
+<?php include(__DIR__ . '/../common/page-header.phtml'); ?>
+
+<section class="content">
+
+    <div class="box box-theme">
+        <div class="box-header with-border">
+            <h3 class="box-title"><i class="fa fa-list"></i> <?php echo $heading_title; ?></h3>
+            <div class="box-tools pull-right">
+
+                <a id="save-button" class="btn btn-success" data-toggle="tooltip" title="<?php echo $save_redirects; ?>"><i class="fa fa-save"></i></a>
+                <a href="<?php echo $exceptions; ?>" class="btn btn-warning" data-toggle="tooltip" title="<?php echo $button_exceptions; ?>"><i class="fa fa-warning"></i></a>
+                <a href="<?php echo $insert; ?>" class="btn btn-success" data-toggle="tooltip" title="<?php echo $button_insert; ?>"><i class="fa fa-plus"></i></a>
+                <a onclick="confirmDelete('Are you Sure?', '', function () {
+                            $('#form').submit();
+                        });" class="btn btn-danger" data-toggle="tooltip" title="<?php echo $button_delete; ?>"><i class="fa fa-trash-o"></i></a>
+            </div>
+        </div>
+
+        <div class="box-body">
+            <div class="row">
+                <label class="control-label col-sm-4"><?php echo $text_tracking; ?></label>
+                <div class="col-sm-8">
+                    <select name="module_tracking" class="form-control">
+                        <?php if ($tracking == 1) { ?>
+                            <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+                            <option value="2"><?php echo $text_disabled; ?></option>
+                        <?php } else { ?>
+                            <option value="1"><?php echo $text_enabled; ?></option>
+                            <option value="2" selected="selected"><?php echo $text_disabled; ?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+            </div>
+            <br />
+            <form action="<?php echo $delete; ?>" method="post" id="form" class="form-horizontal">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></th>
+                                <th class="left"> 
+                                    <?php echo $column_old_url; ?>
+                                </th>
+                                <th class="left"> 
+                                    <?php echo $column_new_url; ?>
+                                </th>
+                                <th class="left"> 
+                                    <?php echo $column_referer; ?>
+                                </th>
+                                <th class="left"><?php if ($sort == 'status') { ?>
+                                        <a href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?></a>
+                                    <?php } else { ?>
+                                        <a href="<?php echo $sort_status; ?>"><?php echo $column_status; ?></a>
+                                    <?php } ?></th>
+                                <th class="left"><?php if ($sort == 'date_added') { ?>
+                                        <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
+                                    <?php } else { ?>
+                                        <a href="<?php echo $sort_date_added; ?>"><?php echo $column_date_added; ?></a>
+                                    <?php } ?></th>
+                            </tr>
+                        </thead>
+                        <?php $row = 1; ?>
+                        <tbody>
+                            <?php if ($redirects) { ?>
+                                <?php foreach ($redirects as $redirect) { ?>
+                                    <tr>
+                                        <td style="text-align: center;"><?php if ($redirect['selected']) { ?>
+                                                <input type="checkbox" name="selected[]" value="<?php echo $redirect['url_id']; ?>" checked="checked" />
+                                            <?php } else { ?>
+                                                <input type="checkbox" name="selected[]" value="<?php echo $redirect['url_id']; ?>" />
+                                            <?php } ?></td>
+                                        <td class="left"><a href="<?php echo $redirect['old_valid_url']; ?>" target="_blank"><?php echo implode('<br/>', str_split_unicode($redirect['old_url'], 62)); ?></a></td>
+                                        <td class="left">
+                                            <input type="text" class="postme necessary form-control" name="url[<?php echo $row; ?>][link]"  value="<?php echo $redirect['new_url']; ?>" />
+                                            <input type="hidden" class="postme" name="url[<?php echo $row; ?>][id]" value="<?php echo $redirect['url_id']; ?>" />
+                                        </td>
+                                        <td class="left"><a href="<?php echo $redirect['referer']; ?>" target="_blank"><?php echo implode('<br/>', str_split_unicode($redirect['referer'], 36)); ?></a></td>
+                                        <td class="left">
+                                            <select class="postme form-control" name="url[<?php echo $row; ?>][status]">
+                                                <?php if ($redirect['status']) { ?>
+                                                    <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+                                                    <option value="0"><?php echo $text_disabled; ?></option>
+                                                <?php } else { ?>
+                                                    <option value="1"><?php echo $text_enabled; ?></option>
+                                                    <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+                                                <?php } ?>
+                                            </select>
+                                        </td>
+                                        <td class="left"><?php echo $redirect['date_added']; ?></td>
+                                    </tr>
+                                    <?php
+                                    $row++;
+                                }
+                                ?>
+                            <?php } else { ?>
+                                <tr>
+                                    <td class="text-center" colspan="7"><?php echo $text_no_results; ?></td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                        <tfoot>
+                            <tr><td colspan="7"><?php echo $pagination; ?></td></tR>
+                        </tfoot>
+                    </table>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</section>
+<script type="text/javascript">
+
+
+    function saveInit() {
+
+        var html = '<div class="overlay" id="box-message"><i class="fa fa-refresh fa-spin"></i> </div>';
+
+        $('.box-theme .box-body').block({
+            title: '<?php echo $text_save; ?>',
+            message: html,
+            css: {
+                border: '1px solid #ddd',
+                top: '40px'
+            },
+            centerY: false
+        });
+    }
+
+    function showMessage(selector, message) {
+        if (message) {
+            $(selector).html(message);
+        }
+        setTimeout(function () {
+            $('.box-theme .box-body').unblock();
+        }, 2000);
+        prepareSave();
+    }
+
+    function prepareSave() {
+        $('#save-button').one('click', function () {
+            $('#form').trigger('saveData');
+        });
+    }
+
+    docReady(function () {
+        prepareSave();
+        $('#form').on('saveData', function (event) {
+
+            event.preventDefault();
+
+            $.ajax({
+                url: 'index.php?p=module/redirect/save&token=<?php echo $token; ?>',
+                type: 'post',
+                data: $('.postme').serialize(),
+                dataType: 'json',
+                beforeSend: function () {
+                    saveInit();
+                },
+                success: function (json) {
+
+                    if (json['success']) {
+                        showMessage('#box-message', json['success']);
+
+                    } else {
+                        showMessage('#box-message', json['error']);
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.error(thrownError);
+                }
+            });
+        });
+
+
+        $('select[name=\'module_tracking\']').change(function () {
+
+            $.ajax({
+                url: 'index.php?p=module/redirect/tracking&status=' + this.value + '&token=<?php echo $token; ?>',
+                dataType: 'json',
+                beforeSend: function () {
+                    $('select[name=\'module_tracking\']').before('<span class="wait" style="position:absolute;">&nbsp;<i class="fa fa-refresh fa-spin"></i></span>');
+                },
+                complete: function () {
+                    $('.wait').remove();
+                },
+                success: function (json) {
+
+                    var html = '';
+
+                    if (json['tracking'] == '1') {
+                        html += '<option value="1" selected="selected"><?php echo $text_enabled; ?></option>';
+                        html += '<option value="2"><?php echo $text_disabled; ?></option>';
+                    } else {
+                        html += '<option value="1"><?php echo $text_enabled; ?></option>';
+                        html += '<option value="2" selected="selected"><?php echo $text_disabled; ?></option>';
+                    }
+
+                    $('select[name=\'module_tracking\']').html(html);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.error(thrownError);
+                }
+            });
+        });
+    });
+</script>
+<?php echo $footer; ?>
+<?php
+
+function str_split_unicode($str, $l = 0) {
+    if ($l > 0) {
+        $ret = array();
+        $len = mb_strlen($str, 'UTF-8');
+        for ($i = 0; $i < $len; $i += $l) {
+            $ret[] = mb_substr($str, $i, $l, 'UTF-8');
+        }
+        return $ret;
+    }
+    return preg_split('//u', $str, -1, PREG_SPLIT_NO_EMPTY);
+}
+?>

@@ -35,7 +35,7 @@
                                         <td class="right"><?php echo $category['status'] ? 'Enabled' : 'Disabled'; ?></td>
                                         <td class="text-right"><?php foreach ($category['action'] as $action) { ?>
 
-                                                <a href="<?php echo $action['href']; ?>" data-toggle="tooltip"  title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-edit"></i></a>
+                                                <a href="<?php echo $action['href']; ?>" data-toggle="tooltip"  title="<?php echo $action['text']; ?>" class="btn btn-<?php echo $action['class']; ?>"><i class="<?php echo $action['icon']; ?>"></i></a>
 
                                             <?php } ?></td>
                                     </tr>

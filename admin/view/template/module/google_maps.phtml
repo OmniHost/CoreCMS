@@ -24,7 +24,7 @@
                                     }
                                     ?></td>
                                 <td class="text-right"><?php echo count($gmaps); ?></td>
-                                <td class="text-right"><?php if (!$wlocation) { ?><a class="btn btn-warning"><i class="fa fa-exclamation-triangle"></i></a><?php } else { ?><a href="<?php echo $action_add_marker; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a><?php } ?></td>
+                                <td class="text-right"><?php if (!$wlocation) { ?><a class="btn btn-warning"><i class="fa fa-exclamation-triangle"></i></a><?php } else { ?><a href="<?php echo $action_add_marker; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-edit"></i></a><?php } ?></td>
                             </tr>
                             <tr>
                                 <td class="text-left"><?php
@@ -52,7 +52,7 @@
                                 <?php foreach ($module_data as $module) { ?>
                                     <tr>
                                         <td class="text-left"><?php echo $module['name']; ?></td>
-                                        <td class="text-right"><?php if (!$wmapmodule) { ?><a class="btn btn-warning"><i class="fa fa-exclamation-triangle"></i></a><?php } else { ?><a onclick="confirm('<?php echo $text_confirm; ?>') ? location.href = '<?php echo $module['delete']; ?>' : false;" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger"><i class="fa fa-trash-o"></i></a> <a href="<?php echo $module['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a><?php } ?></td>
+                                        <td class="text-right"><?php if (!$wmapmodule) { ?><a class="btn btn-warning"><i class="fa fa-exclamation-triangle"></i></a><?php } else { ?><a onclick="confirm('<?php echo $text_confirm; ?>') ? location.href = '<?php echo $module['delete']; ?>' : false;" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger"><i class="fa fa-trash-o"></i></a> <a href="<?php echo $module['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-edit"></i></a><?php } ?></td>
                                     </tr>
                     <?php } ?>
                             </tbody>

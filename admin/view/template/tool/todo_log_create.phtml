@@ -1,0 +1,16 @@
+<div class="todo-log">
+    <div class="title"><?php
+        echo sprintf($text_log_title_add1, $date_created, $author);
+        if (!empty($contractor_id)) {
+            echo ' ' . sprintf($text_log_title_add2, $contractor);
+        }
+        ?>:</div>
+    <div class="description" id="log-title"><?php echo $description; ?></div>
+    <div class="params"><?php echo $text_log_priority; ?>: <b><?php echo $value_priority; ?></b>
+        <?php
+        if (!empty($deadline)) {
+            echo $text_log_deadline . ': <b>' . $deadline . '</b>';
+        }
+        ?>
+    </div>
+</div>

@@ -25,3 +25,5 @@ $_['tab_general'] = 'General';
 $_['tab_region'] = 'Region Assignment';
 
 $_['error_region'] = 'Please Select region(s) user has access to';
+$_['text_add'] = 'Add User';
+$_['text_edit'] = 'Edit User';

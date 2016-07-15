@@ -323,8 +323,10 @@ class ControllerUserApi extends \Core\Controller {
 
 		if (!isset($this->request->get['api_id'])) {
 			$data['action'] = $this->url->link('user/api/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+                        $data['text_edit'] = $this->language->get('text_add');
 		} else {
 			$data['action'] = $this->url->link('user/api/edit', 'token=' . $this->session->data['token'] . '&api_id=' . $this->request->get['api_id'] . $url, 'SSL');
+                        $data['text_edit'] = $this->language->get('text_edit');
 		}
 
 		$data['cancel'] = $this->url->link('user/api', 'token=' . $this->session->data['token'] . $url, 'SSL');

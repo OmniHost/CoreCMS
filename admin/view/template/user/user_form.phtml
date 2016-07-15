@@ -1,30 +1,26 @@
 <?php echo $header; ?>
-<!-- Content Header (Page header) -->
-<section class="content-header">
-    <h1><i class="fa fa-user"></i> <?php echo $heading_title; ?><small></small>
-    </h1>
-    <ol class="breadcrumb">
-        <?php foreach ($breadcrumbs as $i => $breadcrumb) { ?>
-            <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo ($i == 0) ? '<i class="fa fa-dashboard"></i> ' : ''; ?><?php echo $breadcrumb['text']; ?></a></li>
-        <?php } ?>
-    </ol>
-</section>
+<?php include(__DIR__ . '/../common/page-header.phtml'); ?>
 
 
 <!-- Main content -->
 <section class="content">
-    <?php if ($error_warning) { ?>
-        <div class="alert alert-danger alert-dismissable">
-            <i class="fa fa-ban"></i>
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <?php echo $error_warning; ?>
-        </div>
-    <?php } ?>
+
     <form action="<?php echo $action; ?>" class="form-horizontal form-validate" method="post" enctype="multipart/form-data" id="form">
 
 
 
-        <div class="box">
+        <div class="box box-theme">
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="fa fa-list"></i> <?php echo $text_edit; ?></h3>
+                <div class="box-tools">
+                    <button class="btn btn-success" data-toggle="tooltip" title="<?php echo $button_save; ?>">
+                        <i class="fa fa-save"></i>
+                    </button>
+                    <a href="<?php echo $cancel; ?>" class="btn btn-default" title="<?php echo $button_cancel; ?>"  data-toggle="tooltip">
+                        <i class="fa fa-reply"></i> 
+                    </a>
+                </div>
+            </div>
             <div class="box-body">
 
 
@@ -101,29 +97,29 @@
                         <?php } ?>
                     </div>
                 </div>
-<?php /*
-                <div class="form-group">
-                    <label for="timezoneInput" class="col-sm-2 control-label "><?php echo $entry_timezone; ?></label>
-                    <div class="col-sm-9">
-                        <select name="timezone" class="form-control" id="timezoneInput">
-                            <?php foreach ($timezones as $tzstring): ?>
-                                <?php if ($tzstring == $timezone): ?>
-                                    <option value="<?php echo $tzstring; ?>" selected><?php echo $tzstring; ?></option>
-                                <?php else: ?>
-                                    <option value="<?php echo $tzstring; ?>" ><?php echo $tzstring; ?></option>
-                                <?php endif; ?>
-                            <?php endforeach; ?>
-                        </select>
+                <?php /*
+                  <div class="form-group">
+                  <label for="timezoneInput" class="col-sm-2 control-label "><?php echo $entry_timezone; ?></label>
+                  <div class="col-sm-9">
+                  <select name="timezone" class="form-control" id="timezoneInput">
+                  <?php foreach ($timezones as $tzstring): ?>
+                  <?php if ($tzstring == $timezone): ?>
+                  <option value="<?php echo $tzstring; ?>" selected><?php echo $tzstring; ?></option>
+                  <?php else: ?>
+                  <option value="<?php echo $tzstring; ?>" ><?php echo $tzstring; ?></option>
+                  <?php endif; ?>
+                  <?php endforeach; ?>
+                  </select>
 
-                    </div>
-                </div> */ ?>
-                
+                  </div>
+                  </div> */ ?>
+
                 <div class="form-group">
-                            <label class="col-sm-2 control-label" for="input-logo"><?php echo $entry_avatar; ?></label>
-                            <div class="col-sm-9"><a href="" id="thumb-logo" data-toggle="image" class="img-thumbnail"><img src="<?php echo $profile_img_preview; ?>" alt="" title="" data-placeholder="<?php echo $placeholder; ?>" /></a>
-                                <input type="hidden" name="profile_img" value="<?php echo $profile_img; ?>" id="input-logo" />
-                            </div>
-                        </div>
+                    <label class="col-sm-2 control-label" for="input-logo"><?php echo $entry_avatar; ?></label>
+                    <div class="col-sm-9"><a href="" id="thumb-logo" data-toggle="image" class="img-thumbnail"><img src="<?php echo $profile_img_preview; ?>" alt="" title="" data-placeholder="<?php echo $placeholder; ?>" /></a>
+                        <input type="hidden" name="profile_img" value="<?php echo $profile_img; ?>" id="input-logo" />
+                    </div>
+                </div>
 
                 <div class="form-group">
                     <label for="statusInput" class="col-sm-2 control-label "><?php echo $entry_status; ?></label>
@@ -144,15 +140,7 @@
 
 
             </div>
-            <div class="box-footer text-center">
-                <button class="btn btn-primary">
-                    <i class="fa fa-check"></i> <?php echo $button_save; ?>
-                </button>
-                <a href="<?php echo $cancel; ?>" class="btn" onclick="$('#form').submit();">
-                    <i class="fa fa-times"></i> <?php echo $button_cancel; ?>
-                </a>
 
-            </div>
         </div>
 
     </form>

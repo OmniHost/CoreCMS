@@ -134,6 +134,8 @@ class ControllerMarketingForm extends \Core\Controller {
             $action = array();
 
             $action[] = array(
+                'class' => 'primary',
+                'icon' => 'fa fa-edit',
                 'text' => $this->language->get('text_edit'),
                 'href' => $this->url->link('marketing/form/update', 'token=' . $this->session->data['token'] . '&form_id=' . $result['form_id'], 'SSL')
             );
@@ -305,22 +307,10 @@ class ControllerMarketingForm extends \Core\Controller {
         
         $this->document->addStyle("view/template/marketing/externals/css/custom.css");
         $this->document->addScript('view/plugins/jQueryUI/jquery-ui.js');
-//$this->document->addScript("//code.jquery.com/jquery-migrate-1.4.1.js");
-      //  $this->document->addScript("view/template/marketing/externals/js/jquery.js");
-       // $this->document->addScript("view/template/marketing/externals/js/jquery_003.js");
-      //  $this->document->addScript("view/template/marketing/externals/js/jquery_005.js");
-      //  $this->document->addScript("view/template/marketing/externals/js/jquery_002.js");
-       // $this->document->addScript("view/template/marketing/externals/js/jquery_004.js");
+
         $this->document->addScript("view/template/marketing/externals/js/drag-drop-custom.js");
         $this->document->addScript("view/template/marketing/externals/js/jquery.blockUI.js");
-        
-/*<script src="view/template/marketing/externals/js/jquery.js"></script>
-<script src="view/template/marketing/externals/js/jquery_003.js"></script>
-<script src="view/template/marketing/externals/js/jquery_005.js"></script>
-<script src="view/template/marketing/externals/js/jquery_002.js"></script>
-<script src="view/template/marketing/externals/js/jquery_004.js"></script>
-<script src="view/template/marketing/externals/js/drag-drop-custom.js"></script>
-<script src="view/template/marketing/externals/js/jquery.blockUI.js"></script>*/
+
         
         
 

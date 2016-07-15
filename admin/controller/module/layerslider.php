@@ -7,7 +7,7 @@ class ControllerModuleLayerslider extends \Core\Controller {
 		$this->document->addStyle('view/plugins/layerslider/layerslider.css');
 		$this->document->addStyle('view/plugins/layerslider/css/bootstrap-colorpicker.min.css');
 		$this->document->addStyle('view/plugins/layerslider/css/jquery-ui.css');
-		$this->document->addScript('view/plugins/layerslider/jquery-ui.js');
+		$this->document->addScript('view/plugins/jQueryUI/jquery-ui.js');
 		$this->document->addScript('view/plugins/layerslider/js/bootstrap-colorpicker.min.js');
 		$this->document->addScript('view/plugins/layerslider/js/removeclasses.js');
 		

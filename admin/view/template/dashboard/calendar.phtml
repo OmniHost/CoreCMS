@@ -1,0 +1,154 @@
+<div id="calendar-box">
+    <div class="box box-theme">
+        <div class="box-header ui-sortable-handle">
+            <div class="pull-right box-tools">
+                <button class="btn btn-sm btn-default" data-widget='fullscreen' role="button" data-toggle="tooltip" title="Toggle fullscreen"><i class="glyphicon glyphicon-resize-full"></i></button> 
+                 <button class="btn btn-primary btn-sm" data-widget='collapse' data-toggle="tooltip" title="Collapse" style="margin-right: 5px;"><i class="fa fa-minus"></i></button>
+            </div><!-- /. tools -->
+
+            <i class="fa fa-calendar"></i> 
+            <h3 class="box-title"><?php echo $text_title; ?></h3>
+        </div>
+        <div class="box-body">
+            <input type="hidden" id="tokenVal" value="<?php echo $token; ?>" />
+            <input type="hidden" id="javascriptLang" value='<?php echo $javascript_lang; ?>' />
+            <div class="modal fade" id="modalEvento" tabindex="-2" role="dialog" aria-labelledby="myModalEvento">
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header bg-blue">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalEvento"><?php echo $text_read_event; ?></h4>
+                        </div>
+                        <div class="modal-body"></div>
+                        <div class="modal-footer">
+                            <div class="col-sm-12">
+                                <button type="button" id="eventoEditar" class="btn btn-primary btn-block"><i class="fa fa-edit"></i>&nbsp; <?php echo $button_edit; ?></button>
+                                <button type="button" id="eventoExcluir" data-id="0" class="btn btn-danger btn-block"><i class="fa fa-times"></i>&nbsp; <?php echo $button_delete; ?></button>
+                                <button type="button" class="btn btn-default btn-block" data-dismiss="modal"><?php echo $button_dismiss; ?></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="modalCalendar" tabindex="-1" role="dialog" aria-labelledby="myModalCalendar">
+                <div class="modal-dialog modal-sm" role="document">
+                    <form role="form" method="post" id="formCalendar">
+                        <div class="modal-content">
+                            <div class="modal-header bg-blue">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalCalendar"><?php echo $text_new_event; ?></h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="nav-tabs" style="margin-bottom: 0">
+                                    <ul class="nav nav-tabs nav-justified" style="margin-bottom: 0">
+                                        <li class="active"><a href="#tab_basico" data-toggle="tab" aria-expanded="false"><?php echo $text_tab_basic; ?></a></li>
+                                        <li><a href="#tab_avancado" data-toggle="tab" aria-expanded="false"><?php echo $text_tab_advanced; ?></a></li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="tab_basico">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <label for="evento_nome"><?php echo $label_event_name; ?></label>
+                                                    <input required type="text" name="evento_nome" id="evento_nome" maxlength="40" class="form-control" />
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <label for="evento_data_inicial"><?php echo $label_initial_date; ?></label>
+                                                    <input required type="date" name="evento_data_inicial" id="evento_data_inicial" class="form-control" />
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <label for="evento_duracao"><?php echo $label_duration; ?></label>
+                                                    <select required class="form-control" id="evento_duracao" name="evento_duracao">
+                                                        <option value="0"><?php echo $option_duration_allday; ?></option>
+                                                        <option value="1"><?php echo $option_duration_scheduled_time; ?></option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group col-md-12" style="display: none;">
+                                                    <label for="evento_hora_inicial"><?php echo $label_initial_time; ?></label>
+                                                    <input type="time" name="evento_hora_inicial" id="evento_hora_inicial" class="form-control" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="tab_avancado">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <label for="evento_data_final"><?php echo $label_final_date; ?></label>
+                                                    <input required type="date" name="evento_data_final" id="evento_data_final" class="form-control" />
+                                                </div>
+                                                <div class="form-group col-md-12" style="display: none;">
+                                                    <label for="evento_hora_final"><?php echo $label_final_time; ?></label>
+                                                    <input type="time" name="evento_hora_final" id="evento_hora_final" class="form-control" />
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <label for="evento_repeticao"><?php echo $label_repeat; ?></label>
+                                                    <select required class="form-control" id="evento_repeticao" name="evento_repeticao">
+                                                        <option value="0" selected><?php echo $option_repeat_once; ?></option>
+                                                        <option value="1"><?php echo $option_repeat_every_day; ?></option>
+                                                        <option value="2"><?php echo $option_repeat_weekly; ?></option>
+                                                        <option value="3"><?php echo $option_repeat_two_weeks; ?></option>
+                                                        <option value="4"><?php echo $option_repeat_monthly; ?></option>
+                                                        <option value="5"><?php echo $option_repeat_semester; ?></option>
+                                                        <option value="6"><?php echo $option_repeat_yearly; ?></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-12">
+                                        <label for="evento_cor"><?php echo $label_color; ?></label>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <input type="radio" checked class="line-blue" name="evento_cor" value="#0073b7" />
+                                        <label><?php echo $option_color_blue; ?></label>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <input type="radio" class="line-red" name="evento_cor" value="#f56954" />
+                                        <label><?php echo $option_color_red; ?></label>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <input type="radio" class="line-green" name="evento_cor" value="#00a65a" />
+                                        <label><?php echo $option_color_green; ?></label>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <input type="radio" class="line-orange" name="evento_cor" value="#f39c12" />
+                                        <label><?php echo $option_color_orange; ?></label>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <input type="radio" class="line-purple" name="evento_cor" value="#af7ac5" />
+                                        <label><?php echo $option_color_purple; ?></label>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <input type="radio" class="line-aero" name="evento_cor" value="#9cc2cb" />
+                                        <label><?php echo $option_color_aero; ?></label>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <input type="radio" class="line-yellow" name="evento_cor" value="#ffc414" />
+                                        <label><?php echo $option_color_yellow; ?></label>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <input type="radio" class="line" name="evento_cor" value="#333333" />
+                                        <label><?php echo $option_color_black; ?></label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-12">
+                                        <label for="evento_descricao"><?php echo $label_description; ?> (<?php echo $label_optional; ?>)</label>
+                                        <textarea class="form-control" rows="3" name="evento_descricao" id="evento_descricao"></textarea>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="evento_id" name="evento_id" value="0" />
+                                <div class="row" id="eventoStatus"></div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo $button_dismiss; ?></button>
+                                <button type="submit" class="btn btn-primary"><?php echo $button_save; ?></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div id="calendar"></div>
+        </div>
+    </div>
+</div>

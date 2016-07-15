@@ -678,7 +678,7 @@ class ControllerSaleCustomer extends \Core\Controller {
         $this->document->addScript('view/plugins/datetimepicker/moment.min.js');
         $this->document->addScript('view/plugins/datetimepicker/bootstrap-datetimepicker.min.js');
         $this->document->addStyle('view/plugins/datetimepicker/bootstrap-datetimepicker.min.css');
-        $this->document->addScript('//code.jquery.com/ui/1.11.4/jquery-ui.min.js');
+        
         
         $this->children = array(
             'common/header',

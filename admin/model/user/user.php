@@ -47,6 +47,9 @@ class ModelUserUser extends \Core\Model {
 
     public function getUsers($data = array()) {
         $sql = "SELECT * FROM `#__user`";
+        if (!empty($data['filter_name'])) {
+            $sql .= " WHERE username LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+        }
 
         $sort_data = array(
             'username',
@@ -101,12 +104,13 @@ class ModelUserUser extends \Core\Model {
         return $query->row['total'];
     }
 
-    public function getDashboard($user_id){
-        $query = $this->db->query("select dashboard from #__user where user_id = '" . (int)$user_id . "'");
+    public function getDashboard($user_id) {
+        $query = $this->db->query("select dashboard from #__user where user_id = '" . (int) $user_id . "'");
         return $query->row['dashboard'];
     }
-    
-    public function saveDashboard($user_id,$data){
-        $query = $this->db->query("update #__user set dashboard = '" . $this->db->escape($data) . "' where user_id = '" . (int)$user_id . "'");
+
+    public function saveDashboard($user_id, $data) {
+        $query = $this->db->query("update #__user set dashboard = '" . $this->db->escape($data) . "' where user_id = '" . (int) $user_id . "'");
     }
+
 }
