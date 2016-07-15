@@ -23,6 +23,9 @@ $_['column_description']    = 'Description';
 $_['column_ip']             = 'IP';
 $_['column_total']          = 'Total Accounts';
 $_['column_action']         = 'Action';
+$_['column_description']    = 'Description';
+$_['column_amount']         = 'Amount';
+$_['column_points']         = 'Points';
 
 // Entry
 $_['entry_customer_group']  = 'User Group';
@@ -62,4 +65,10 @@ $_['button_login'] = 'Login As User';
 $_['tab_general'] = 'General';
 $_['tab_history'] = 'History';
 $_['tab_ip'] = 'IP\'s';
+$_['tab_reward'] = 'Reward Points';
 $_['button_history_add'] = 'Add History';
+$_['button_reward_add'] = 'Add Points';
+$_['help_points']           = 'Use minus to remove points';
+$_['entry_points']          = 'Points';
+$_['entry_amount']          = 'Amount';
+$_['text_balance'] = 'Balance';

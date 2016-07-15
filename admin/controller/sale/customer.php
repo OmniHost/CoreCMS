@@ -1,6 +1,6 @@
 <?php
 
- /* CoreCMS - Bootstrap Based PHP 5 CMS
+/* CoreCMS - Bootstrap Based PHP 5 CMS
  * @name Users - Customers Management
  * @author      Craig Smith <vxdhost@gmail.com>
  * @copyright   2016 Craig smith
@@ -674,12 +674,12 @@ class ControllerSaleCustomer extends \Core\Controller {
         $data['sort'] = $sort;
         $data['order'] = $order;
 
-        
+
         $this->document->addScript('view/plugins/datetimepicker/moment.min.js');
         $this->document->addScript('view/plugins/datetimepicker/bootstrap-datetimepicker.min.js');
         $this->document->addStyle('view/plugins/datetimepicker/bootstrap-datetimepicker.min.css');
-        
-        
+
+
         $this->children = array(
             'common/header',
             'common/footer'
@@ -687,8 +687,8 @@ class ControllerSaleCustomer extends \Core\Controller {
         $this->data = $data;
         $this->template = 'sale/customer_list.phtml';
         $this->response->setOutput($this->render());
-        
-        
+
+
         //$this->response->setOutput($this->load->view('sale/customer_list.tpl', $data));
     }
 
@@ -720,6 +720,12 @@ class ControllerSaleCustomer extends \Core\Controller {
         $data['entry_country'] = $this->language->get('entry_country');
         $data['entry_comment'] = $this->language->get('entry_comment');
         $data['entry_description'] = $this->language->get('entry_description');
+		$data['entry_amount'] = $this->language->get('entry_amount');
+		$data['entry_points'] = $this->language->get('entry_points');
+                $data['help_points'] = $this->language->get('help_points');
+                $data['button_reward_add'] = $this->language->get('button_reward_add');
+		$data['button_remove'] = $this->language->get('button_remove');
+                $data['tab_reward'] = $this->language->get('tab_reward');
 
         $data['button_save'] = $this->language->get('button_save');
         $data['button_cancel'] = $this->language->get('button_cancel');
@@ -780,12 +786,12 @@ class ControllerSaleCustomer extends \Core\Controller {
         } else {
             $data['error_confirm'] = '';
         }
-        
+
         if (isset($this->error['custom_field'])) {
-			$data['error_custom_field'] = $this->error['custom_field'];
-		} else {
-			$data['error_custom_field'] = array();
-		}
+            $data['error_custom_field'] = $this->error['custom_field'];
+        } else {
+            $data['error_custom_field'] = array();
+        }
 
         $url = '';
 
@@ -856,9 +862,9 @@ class ControllerSaleCustomer extends \Core\Controller {
         );
 
         $data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups($filter_data);
-        
-        
-      
+
+
+
 
         if (isset($this->request->post['customer_group_id'])) {
             $data['customer_group_id'] = $this->request->post['customer_group_id'];
@@ -907,40 +913,40 @@ class ControllerSaleCustomer extends \Core\Controller {
         } else {
             $data['telephone'] = '';
         }
-        
+
         // Custom Fields
-		$this->load->model('sale/custom_field');
+        $this->load->model('sale/custom_field');
 
-		$data['custom_fields'] = array();
+        $data['custom_fields'] = array();
 
-		$filter_data = array(
-			'sort'  => 'cf.sort_order',
-			'order' => 'ASC'
-		);
+        $filter_data = array(
+            'sort' => 'cf.sort_order',
+            'order' => 'ASC'
+        );
 
-		$custom_fields = $this->model_sale_custom_field->getCustomFields($filter_data);
+        $custom_fields = $this->model_sale_custom_field->getCustomFields($filter_data);
 
-		foreach ($custom_fields as $custom_field) {
-			$data['custom_fields'][] = array(
-				'custom_field_id'    => $custom_field['custom_field_id'],
-				'custom_field_value' => $this->model_sale_custom_field->getCustomFieldValues($custom_field['custom_field_id']),
-				'name'               => $custom_field['name'],
-				'value'              => $custom_field['value'],
-				'type'               => $custom_field['type'],
-				'location'           => $custom_field['location'],
-				'sort_order'         => $custom_field['sort_order']
-			);
-		}
+        foreach ($custom_fields as $custom_field) {
+            $data['custom_fields'][] = array(
+                'custom_field_id' => $custom_field['custom_field_id'],
+                'custom_field_value' => $this->model_sale_custom_field->getCustomFieldValues($custom_field['custom_field_id']),
+                'name' => $custom_field['name'],
+                'value' => $custom_field['value'],
+                'type' => $custom_field['type'],
+                'location' => $custom_field['location'],
+                'sort_order' => $custom_field['sort_order']
+            );
+        }
 
-		if (isset($this->request->post['custom_field'])) {
-			$data['account_custom_field'] = $this->request->post['custom_field'];
-		} elseif (!empty($customer_info)) {
-			$data['account_custom_field'] = unserialize($customer_info['custom_field']);
-		} else {
-			$data['account_custom_field'] = array();
-		}
-                
-                
+        if (isset($this->request->post['custom_field'])) {
+            $data['account_custom_field'] = $this->request->post['custom_field'];
+        } elseif (!empty($customer_info)) {
+            $data['account_custom_field'] = unserialize($customer_info['custom_field']);
+        } else {
+            $data['account_custom_field'] = array();
+        }
+
+
 
         if (isset($this->request->post['newsletter'])) {
             $data['newsletter'] = $this->request->post['newsletter'];
@@ -978,25 +984,25 @@ class ControllerSaleCustomer extends \Core\Controller {
             $data['confirm'] = '';
         }
 
-        
-        
+
+
         $this->load->model('localisation/country');
 
         $data['countries'] = $this->model_localisation_country->getCountries();
 
-         $this->document->addScript('view/plugins/datetimepicker/moment.min.js');
-		$this->document->addScript('view/plugins/datetimepicker/bootstrap-datetimepicker.min.js');
-		$this->document->addStyle('view/plugins/datetimepicker/bootstrap-datetimepicker.min.css');
-       
+        $this->document->addScript('view/plugins/datetimepicker/moment.min.js');
+        $this->document->addScript('view/plugins/datetimepicker/bootstrap-datetimepicker.min.js');
+        $this->document->addStyle('view/plugins/datetimepicker/bootstrap-datetimepicker.min.css');
+
         $this->children = array(
             'common/header',
             'common/footer'
         );
-        
-        
+
+
         $this->data = $data;
         $this->template = 'sale/customer_form.phtml';
-       
+
         $this->response->setOutput($this->render());
     }
 
@@ -1038,21 +1044,21 @@ class ControllerSaleCustomer extends \Core\Controller {
                 $this->error['confirm'] = $this->language->get('error_confirm');
             }
         }
-        
-        if(empty($this->request->post['customer_group_id'])){
+
+        if (empty($this->request->post['customer_group_id'])) {
             $this->request->post['customer_group_id'] = array($this->config->get('config_customer_group_id'));
         }
-        
+
         // Custom field validation
-		$this->load->model('sale/custom_field');
+        $this->load->model('sale/custom_field');
 
-		$custom_fields = $this->model_sale_custom_field->getCustomFields(array('filter_customer_group_id' => $this->request->post['customer_group_id']));
+        $custom_fields = $this->model_sale_custom_field->getCustomFields(array('filter_customer_group_id' => $this->request->post['customer_group_id']));
 
-		foreach ($custom_fields as $custom_field) {
-			if (($custom_field['location'] == 'account') && $custom_field['required'] && empty($this->request->post['custom_field'][$custom_field['custom_field_id']])) {
-				$this->error['custom_field'][$custom_field['custom_field_id']] = sprintf($this->language->get('error_custom_field'), $custom_field['name']);
-			}
-		}
+        foreach ($custom_fields as $custom_field) {
+            if (($custom_field['location'] == 'account') && $custom_field['required'] && empty($this->request->post['custom_field'][$custom_field['custom_field_id']])) {
+                $this->error['custom_field'][$custom_field['custom_field_id']] = sprintf($this->language->get('error_custom_field'), $custom_field['name']);
+            }
+        }
 
         if ($this->error && !isset($this->error['warning'])) {
             $this->error['warning'] = $this->language->get('error_warning');
@@ -1222,13 +1228,13 @@ class ControllerSaleCustomer extends \Core\Controller {
         $pagination->total = $ip_total;
         $pagination->page = $page;
         $pagination->limit = 10;
-        
+
         $pagination->text = $this->language->get('text_pagination');
         $pagination->url = $this->url->link('sale/customer/ip', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
-       
+
         $this->template = 'sale/customer_ip.phtml';
         $this->data = $data;
 
@@ -1316,7 +1322,7 @@ class ControllerSaleCustomer extends \Core\Controller {
                     'lastname' => $result['lastname'],
                     'email' => $result['email'],
                     'telephone' => $result['telephone'],
-                    'custom_field'      => unserialize($result['custom_field'])
+                    'custom_field' => unserialize($result['custom_field'])
                 );
             }
         }
@@ -1332,30 +1338,101 @@ class ControllerSaleCustomer extends \Core\Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
-    
+
     public function customfield() {
-		$json = array();
+        $json = array();
 
-		$this->load->model('sale/custom_field');
+        $this->load->model('sale/custom_field');
 
-		// Customer Group
-		if (isset($this->request->get['customer_group_id'])) {
-			$customer_group_id = $this->request->get['customer_group_id'];
-		} else {
-			$customer_group_id = $this->config->get('config_customer_group_id');
-		}
+        // Customer Group
+        if (isset($this->request->get['customer_group_id'])) {
+            $customer_group_id = $this->request->get['customer_group_id'];
+        } else {
+            $customer_group_id = $this->config->get('config_customer_group_id');
+        }
 
-		$custom_fields = $this->model_sale_custom_field->getCustomFields(array('filter_customer_group_id' => $customer_group_id));
+        $custom_fields = $this->model_sale_custom_field->getCustomFields(array('filter_customer_group_id' => $customer_group_id));
 
-		foreach ($custom_fields as $custom_field) {
-			$json[] = array(
-				'custom_field_id' => $custom_field['custom_field_id'],
-				'required'        => empty($custom_field['required']) || $custom_field['required'] == 0 ? false : true
-			);
-		}
+        foreach ($custom_fields as $custom_field) {
+            $json[] = array(
+                'custom_field_id' => $custom_field['custom_field_id'],
+                'required' => empty($custom_field['required']) || $custom_field['required'] == 0 ? false : true
+            );
+        }
 
-		$this->response->addHeader('Content-Type: application/json');
-		$this->response->setOutput(json_encode($json));
-	}
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    /** V 1.9 - Rewqrd Points * */
+    public function reward() {
+        $this->load->language('sale/customer');
+
+        $this->load->model('sale/customer');
+
+        $data['text_no_results'] = $this->language->get('text_no_results');
+        $data['text_balance'] = $this->language->get('text_balance');
+
+        $data['column_date_added'] = $this->language->get('column_date_added');
+        $data['column_description'] = $this->language->get('column_description');
+        $data['column_points'] = $this->language->get('column_points');
+
+        if (isset($this->request->get['page'])) {
+            $page = $this->request->get['page'];
+        } else {
+            $page = 1;
+        }
+
+        $data['rewards'] = array();
+        
+   
+
+        $results = $this->model_sale_customer->getRewards($this->request->get['customer_id'], ($page - 1) * 10, 10);
+
+        foreach ($results as $result) {
+            $data['rewards'][] = array(
+                'points' => $result['points'],
+                'description' => $result['description'],
+                'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added']))
+            );
+        }
+    
+        $data['balance'] = $this->model_sale_customer->getRewardTotal($this->request->get['customer_id']);
+
+        $reward_total = $this->model_sale_customer->getTotalRewards($this->request->get['customer_id']);
+
+        $pagination = new \Core\Pagination();
+        $pagination->total = $reward_total;
+        $pagination->page = $page;
+        $pagination->limit = 10;
+        $pagination->url = $this->url->link('sale/customer/reward', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', true);
+
+        $data['pagination'] = $pagination->render();
+        
+  
+
+
+        $this->response->setOutput($this->load->view('sale/customer_reward', $data));
+    }
+
+    public function addReward() {
+        $this->load->language('sale/customer');
+
+        $json = array();
+
+        if (!$this->user->hasPermission('modify', 'sale/customer')) {
+            $json['error'] = $this->language->get('error_permission');
+        } else {
+            $this->load->model('sale/customer');
+
+            $this->model_sale_customer->addReward($this->request->get['customer_id'], $this->request->post['description'], $this->request->post['points']);
+
+            $json['success'] = $this->language->get('text_success');
+        }
+   
+
+        $this->response->addHeader('Content-Type: application/json');
+         $this->response->setOutput($this->renderJSON($json));
+    }
 
 }
