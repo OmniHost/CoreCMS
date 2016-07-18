@@ -5259,3 +5259,12 @@ CREATE TABLE IF NOT EXISTS `#__allowed_password` (
 
 ALTER TABLE `#__allowed_password`
  ADD PRIMARY KEY (`object_id`);
+
+CREATE TABLE `#__customer_reward` (
+  `customer_reward_id` int(11) NOT NULL AUTO_INCREMENT,
+  `customer_id` int(11) NOT NULL DEFAULT '0',
+  `description` text NOT NULL,
+  `points` int(8) NOT NULL DEFAULT '0',
+  `date_added` datetime NOT NULL,
+  PRIMARY KEY (`customer_reward_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;

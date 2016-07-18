@@ -37,7 +37,7 @@ $core->event->trigger("core.pre.dispatch", $core);
 if(BASE_REQUEST_TYPE == 'cli'){
     $core->dispatch_cli();
 }else{
-$core->addPreAction('common/home/redirect');
+$core->addPreAction('common/home/redirect301');
 $core->addPreAction('common/maintenance');
 $core->addPreAction('common/home/marketing');
 

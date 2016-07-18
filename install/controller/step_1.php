@@ -9,7 +9,7 @@ class ControllerStep1 extends \Core\Controller {
 
         $this->data['action'] = $this->url->link('step_1');
 
-        $this->template = 'step_1.tpl';
+        $this->template = 'step_1';
         $this->children = array(
             'header',
             'footer'

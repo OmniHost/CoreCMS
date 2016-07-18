@@ -32,7 +32,7 @@ class ControllerCommonHome extends \Core\Controller {
         }
     }
     
-    public function redirect(){
+    public function redirect301(){
         $this->load->model('module/redirect');
         $this->model_module_redirect->detect301Status();
     }

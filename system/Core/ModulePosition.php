@@ -6,28 +6,32 @@ class ModulePosition extends \Core\Model {
 
     private $route = 'common/home';
     private $layout_id = 0;
+    private $init = false;
 
-    public function __construct() {
-        if(NS == 'front'){
-        if (isset($this->request->get['p'])) {
-            $this->route = (string) $this->request->get['p'];
-        }
-
-        $this->load->model('extension/module');
-        $this->load->model('design/layout');
-        if (isset($this->request->get['ams_page_id'])) {
-            $this->layout_id = $this->model_design_layout->getAmsLayout($this->request->get['ams_page_id']);
-        } else {
-            $this->layout_id = $this->model_design_layout->getLayout($this->route);
-        }
-
-        if (!$this->layout_id) {
-            $this->layout_id = $this->config->get('config_layout_id');
-        }
+    public function init() {
+        if (NS == 'front' && !$this->init) {
+            if (isset($this->request->get['p'])) {
+                $this->route = (string) $this->request->get['p'];
+            } else {
+                $this->route = 'common/home';
+            }
+        
+            $this->load->model('extension/module');
+            $this->load->model('design/layout');
+            if (isset($this->request->get['ams_page_id'])) {
+                $this->layout_id = $this->model_design_layout->getAmsLayout($this->request->get['ams_page_id']);
+            } else {
+                $this->layout_id = $this->model_design_layout->getLayout($this->route);
+            }
+            if (!$this->layout_id) {
+                $this->layout_id = $this->config->get('config_layout_id');
+            }
+            $this->init = true;
         }
     }
 
     public function has($layout_position = '') {
+        $this->init();
         $layout_position = preg_replace("/[^a-z0-9\/\s-_. ]/i", " ", $layout_position);
         if (!$layout_position) {
             return false;
@@ -56,6 +60,7 @@ class ModulePosition extends \Core\Model {
     }
 
     public function get($layout_position = '') {
+        $this->init();
         if (!$this->has($layout_position)) {
             return;
         }
@@ -75,11 +80,11 @@ class ModulePosition extends \Core\Model {
                 $setting_info = $this->model_extension_module->getModule($part[1]);
 
                 if ($setting_info && $setting_info['status']) {
-                     $data[] = $this->load->controller('module/' . $part[0], $setting_info);
+                    $data[] = $this->load->controller('module/' . $part[0], $setting_info);
                 }
             }
         }
-        
+
         return $data;
     }
 

@@ -173,6 +173,8 @@ abstract class Controller {
             $this->data = array_deap_merge($data, $this->data);
         }
 
+        $this->fillTranslations();
+        
         foreach ($this->children as $child) {
             $this->data[basename($child)] = $this->getChild($child);
         }

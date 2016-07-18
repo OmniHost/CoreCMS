@@ -205,7 +205,7 @@ class ControllerStep3 extends \Core\Controller {
 
         $this->data['back'] = $this->url->link('step_2');
 
-        $this->template = 'step_3.tpl';
+        $this->template = 'step_3';
         $this->children = array(
             'header',
             'footer'

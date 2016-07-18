@@ -26,20 +26,29 @@
             <div class="<?php echo $class; ?>">
                 <?php echo $content_top; ?>
 
-                <?php if ($success) { ?>
+                <?php if (!empty($success) && $success) { ?>
                     <div class="alert alert-success"><i class="fa fa-check-circle"></i> <?php echo $success; ?></div>
                 <?php } ?>
 
-                <h3 class="heading"><?php echo $text_my_account; ?></h3>
-                <ul class="list-unstyled">
-                    <li><a href="<?php echo $edit; ?>"><?php echo $text_edit; ?></a></li>
-                    <li><a href="<?php echo $password; ?>"><?php echo $text_password; ?></a></li>
-                </ul>
-                <h3 class="heading"><span><?php echo $text_my_newsletter; ?></span></h3>
+                <div class="row">
+                    <div class="col-md-4 col-sm-6 col-xs-12">
+                        <div class="panel panel-default panel-account">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-edit"></i> <?php echo $text_my_account; ?></h3>
+                            </div>
+                            <div class="panel-body">
+                                <ul class="list-unstyled">
+                                    <li><a href="<?php echo $edit; ?>"><i class="fa fa-user"></i> <?php echo $text_edit; ?></a></li>
+                                    <li><a href="<?php echo $password; ?>"><i class="fa fa-lock"></i> <?php echo $text_password; ?></a></li>
+                                    <li><a href="<?php echo $newsletter; ?>"><i class="fa fa-envelope-o"></i> <?php echo $text_newsletter; ?></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                <ul class="list-unstyled">
-                    <li><a href="<?php echo $newsletter; ?>"><?php echo $text_newsletter; ?></a></li>
-                </ul>
+
+               
 
                 <?php echo $content_bottom; ?>
             </div><!-- end col-sm-12 -->

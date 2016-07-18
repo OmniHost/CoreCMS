@@ -24,7 +24,7 @@ class ControllerUpgrade extends \Core\Controller {
         }
 
         $data['action'] = $this->url->link('upgrade');
-        $this->template = 'upgrade.tpl';
+        $this->template = 'upgrade';
         $this->children = array(
             'header',
             'footer'
@@ -36,7 +36,7 @@ class ControllerUpgrade extends \Core\Controller {
     public function success() {
         $data = array();
 
-        $this->template = 'success.tpl';
+        $this->template = 'success';
         $this->children = array(
             'header',
             'footer'

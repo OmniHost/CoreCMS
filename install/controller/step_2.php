@@ -32,7 +32,7 @@ class ControllerStep2 extends \Core\Controller {
 
         $this->data['back'] = $this->url->link('step_1');
 
-        $this->template = 'step_2.tpl';
+        $this->template = 'step_2';
         $this->children = array(
             'header',
             'footer'
