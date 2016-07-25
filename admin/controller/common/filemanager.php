@@ -293,6 +293,8 @@ class ControllerCommonFilemanager extends \Core\Controller {
         $this->load->language('common/filemanager');
 
         $json = array();
+        
+        $filenames = array();
 
         // Check user has permission
         if (!$this->user->hasPermission('modify', 'common/filemanager')) {
@@ -319,7 +321,7 @@ class ControllerCommonFilemanager extends \Core\Controller {
                 if (!empty($this->request->files['file']['name'][$i]) && is_file($this->request->files['file']['tmp_name'][$i])) {
 
                     // Sanitize the filename
-                    $filename = basename(html_entity_decode($this->request->files['file']['name'][$i], ENT_QUOTES, 'UTF-8'));
+                    $filename = filenameslug(basename(html_entity_decode($this->request->files['file']['name'][$i], ENT_QUOTES, 'UTF-8')));
 
                     // Validate the filename length
                     if ((utf8_strlen($filename) < 3) || (utf8_strlen($filename) > 255)) {
@@ -354,6 +356,7 @@ class ControllerCommonFilemanager extends \Core\Controller {
 
                     if (!$json) {
                         move_uploaded_file($this->request->files['file']['tmp_name'][$i], $directory . '/' . $filename);
+                        $filenames[] =  $filename;
                     }
                 } else {
                     $json['error'] = $this->language->get('error_upload');
@@ -363,9 +366,11 @@ class ControllerCommonFilemanager extends \Core\Controller {
             if (!$json) {
                 if ($count == 1) {
                     $json['success'] = $this->language->get('helper_uploaded_singular');
+                   
                 } else {
                     $json['success'] = $this->language->get('helper_uploaded_plural');
                 }
+                 $json['files'] = $filenames;
             }
         }
 

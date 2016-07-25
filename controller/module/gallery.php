@@ -39,7 +39,7 @@ class ControllerModuleGallery extends \Core\Controller {
 
         $data['module'] = $module++;
 
-        $data['suffix'] = html_entity_decode($setting['class_suffix']);
+        $data['suffix'] = isset($setting['class_suffix']) ? html_entity_decode($setting['class_suffix']) :'';
 
         $this->data = $data;
         $this->template = 'module/gallery.phtml';

@@ -4,7 +4,7 @@ class ModelCmsBanner extends \Core\Model {
 
     public function addBanner($data) {
 
-        $this->db->query("INSERT INTO #__banner SET name = '" . $this->db->escape($data['name']) . "', status = '" . (int) $data['status'] . "'");
+        $this->db->query("INSERT INTO #__banner SET name = '" . $this->db->escape($data['name']) . "', description = '" . $this->db->escape($data['description']) . "', status = '" . (int) $data['status'] . "'");
 
         $banner_id = $this->db->getLastId();
 
@@ -19,7 +19,7 @@ class ModelCmsBanner extends \Core\Model {
 
     public function editBanner($banner_id, $data) {
 
-        $this->db->query("UPDATE #__banner SET name = '" . $this->db->escape($data['name']) . "', status = '" . (int) $data['status'] . "' WHERE banner_id = '" . (int) $banner_id . "'");
+        $this->db->query("UPDATE #__banner SET name = '" . $this->db->escape($data['name']) . "', description = '" . $this->db->escape($data['description']) . "', status = '" . (int) $data['status'] . "' WHERE banner_id = '" . (int) $banner_id . "'");
 
         $this->db->query("DELETE FROM #__banner_image WHERE banner_id = '" . (int) $banner_id . "'");
 

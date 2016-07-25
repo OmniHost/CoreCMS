@@ -45,6 +45,10 @@ $_['menu_api_user'] = 'API Access';
 $_['menu_localisation'] = 'Localisation';
 
 $_['menu_zone'] = 'Zones';
+$_['menu_geo_zone'] = 'Geo Zones';
+$_['menu_tax_class'] = 'Tax Class';
+$_['menu_tax_rate'] = 'Tax Rate';
+$_['menu_order_status'] = 'Order Status';
 $_['menu_upload'] = 'Uploads';
 $_['menu_custom_field'] = 'Custom Fields';
 $_['menu_communication'] = 'Communication';

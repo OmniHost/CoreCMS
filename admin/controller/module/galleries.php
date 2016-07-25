@@ -1,7 +1,8 @@
 <?php
+
 /**
  * CoreCMS - Bootstrap Based PHP 5 CMS
- * @name Modules - Page as module
+ * @name Modules - Gallery
  * @author      Craig Smith <vxdhost@gmail.com>
  * @copyright   2016 Craig smith
  * @link        http://www.omnihost.co.nz
@@ -9,12 +10,12 @@
  * @version     1.8.0
  * @package     CoreCMS
  */
-class ControllerModulePage extends \Core\Controller {
+class ControllerModuleGalleries extends \Core\Controller {
 
     private $error = array();
 
     public function index() {
-        $this->load->language('module/page');
+        $this->load->language('module/galleries');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
@@ -22,7 +23,7 @@ class ControllerModulePage extends \Core\Controller {
 
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             if (!isset($this->request->get['module_id'])) {
-                $this->model_extension_module->addModule('page', $this->request->post);
+                $this->model_extension_module->addModule('galleries', $this->request->post);
             } else {
                 $this->model_extension_module->editModule($this->request->get['module_id'], $this->request->post);
             }
@@ -37,17 +38,24 @@ class ControllerModulePage extends \Core\Controller {
         $data['text_edit'] = $this->language->get('text_edit');
         $data['text_enabled'] = $this->language->get('text_enabled');
         $data['text_disabled'] = $this->language->get('text_disabled');
+        $data['text_yes'] = $this->language->get('text_yes');
+        $data['text_no'] = $this->language->get('text_no');
 
-        $data['entry_page'] = $this->language->get('entry_page');
-        $data['entry_status'] = $this->language->get('entry_status');
+        $data['entry_name'] = $this->language->get('entry_name');
         $data['entry_title'] = $this->language->get('entry_title');
-        
-                $data['entry_class_suffix'] = $this->language->get('entry_class_suffix');
-        $data['help_class_suffix'] = $this->language->get('help_class_suffix');
+        $data['entry_banner'] = $this->language->get('entry_banner');
+        $data['entry_resize'] = $this->language->get('entry_resize');
+        $data['entry_status'] = $this->language->get('entry_status');
+
+        $data['help_resize'] = $this->language->get('help_resize');
+        $data['help_auto'] = $this->language->get('help_auto');
+        $data['help_title'] = $this->language->get('help_title');
 
         $data['button_save'] = $this->language->get('button_save');
         $data['button_cancel'] = $this->language->get('button_cancel');
 
+        $data['entry_class_suffix'] = $this->language->get('entry_class_suffix');
+        $data['help_class_suffix'] = $this->language->get('help_class_suffix');
 
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
@@ -55,16 +63,16 @@ class ControllerModulePage extends \Core\Controller {
             $data['error_warning'] = '';
         }
 
-        if (isset($this->error['page'])) {
-            $data['error_page'] = $this->error['page'];
-        } else {
-            $data['error_page'] = '';
-        }
-        
-          if (isset($this->error['name'])) {
+        if (isset($this->error['name'])) {
             $data['error_name'] = $this->error['name'];
         } else {
             $data['error_name'] = '';
+        }
+
+        if (isset($this->error['banner'])) {
+            $data['error_banner'] = $this->error['banner'];
+        } else {
+            $data['error_banner'] = '';
         }
 
         $data['breadcrumbs'] = array();
@@ -82,19 +90,19 @@ class ControllerModulePage extends \Core\Controller {
         if (!isset($this->request->get['module_id'])) {
             $data['breadcrumbs'][] = array(
                 'text' => $this->language->get('heading_title'),
-                'href' => $this->url->link('module/page', 'token=' . $this->session->data['token'], 'SSL')
+                'href' => $this->url->link('module/gallery', 'token=' . $this->session->data['token'], 'SSL')
             );
         } else {
             $data['breadcrumbs'][] = array(
                 'text' => $this->language->get('heading_title'),
-                'href' => $this->url->link('module/page', 'token=' . $this->session->data['token'] . '&module_id=' . $this->request->get['module_id'], 'SSL')
+                'href' => $this->url->link('module/gallery', 'token=' . $this->session->data['token'] . '&module_id=' . $this->request->get['module_id'], 'SSL')
             );
         }
 
         if (!isset($this->request->get['module_id'])) {
-            $data['action'] = $this->url->link('module/page', 'token=' . $this->session->data['token'], 'SSL');
+            $data['action'] = $this->url->link('module/galleries', 'token=' . $this->session->data['token'], 'SSL');
         } else {
-            $data['action'] = $this->url->link('module/page', 'token=' . $this->session->data['token'] . '&module_id=' . $this->request->get['module_id'], 'SSL');
+            $data['action'] = $this->url->link('module/galleries', 'token=' . $this->session->data['token'] . '&module_id=' . $this->request->get['module_id'], 'SSL');
         }
 
         $data['cancel'] = $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL');
@@ -111,31 +119,22 @@ class ControllerModulePage extends \Core\Controller {
             $data['name'] = '';
         }
 
-        if (isset($this->request->post['ams_page_id'])) {
-            $data['ams_page_id'] = $this->request->post['ams_page_id'];
+        if (isset($this->request->post['module_description'])) {
+            $data['module_description'] = $this->request->post['module_description'];
         } elseif (!empty($module_info)) {
-            $data['ams_page_id'] = $module_info['ams_page_id'];
+            $data['module_description'] = $module_info['module_description'];
         } else {
-            $data['ams_page_id'] = '';
+            $data['module_description'] = '';
         }
 
-
-        if (isset($this->request->post['status'])) {
-            $data['status'] = $this->request->post['status'];
+        if (isset($this->request->post['filter_banner_id'])) {
+            $data['filter_banner_id'] = $this->request->post['filter_banner_id'];
         } elseif (!empty($module_info)) {
-            $data['status'] = $module_info['status'];
+            $data['filter_banner_id'] = $module_info['filter_banner_id'];
         } else {
-            $data['status'] = '0';
+            $data['filter_banner_id'] = array();
         }
 
-        if (isset($this->request->post['title'])) {
-            $data['title'] = $this->request->post['title'];
-        } elseif (!empty($module_info)) {
-            $data['title'] = $module_info['title'];
-        } else {
-            $data['title'] = '1';
-        }
-        
         if (isset($this->request->post['class_suffix'])) {
             $data['class_suffix'] = $this->request->post['class_suffix'];
         } elseif (!empty($module_info['class_suffix'])) {
@@ -144,47 +143,43 @@ class ControllerModulePage extends \Core\Controller {
             $data['class_suffix'] = '';
         }
 
+        $this->load->model('cms/banner');
 
-        $this->load->model('cms/page');
+        $data['banners'] = $this->model_cms_banner->getBanners();
 
-        $data['pages'] = array();
-
-
-
-        $results = $this->model_cms_page->getPages(array('status' => 1));
-
-        foreach ($results->rows as $result) {
-            $data['pages'][] = array(
-                'ams_page_id' => $result['ams_page_id'],
-                'name' => $result['name']
-            );
+        if (isset($this->request->post['resize'])) {
+            $data['resize'] = $this->request->post['resize'];
+        } elseif (!empty($module_info)) {
+            $data['resize'] = $module_info['resize'];
+        } else {
+            $data['resize'] = 3;
         }
 
-        $data['token'] = $this->session->data['token'];
+        if (isset($this->request->post['status'])) {
+            $data['status'] = $this->request->post['status'];
+        } elseif (!empty($module_info)) {
+            $data['status'] = $module_info['status'];
+        } else {
+            $data['status'] = '';
+        }
 
-        /*  $data['header'] = $this->load->controller('common/header');
-          $data['column_left'] = $this->load->controller('common/column_left');
-          $data['footer'] = $this->load->controller('common/footer');
-
-          $this->response->setOutput($this->load->view('module/menu.tpl', $data)); */
+        $this->children = array('common/header', 'common/footer');
+        $this->template = 'module/galleries.phtml';
         $this->data = $data;
-        $this->template = 'module/page.phtml';
-        $this->children = array(
-            'common/header',
-            'common/footer'
-        );
-
-
         $this->response->setOutput($this->render());
     }
 
     protected function validate() {
-        if (!$this->user->hasPermission('modify', 'module/page')) {
+        if (!$this->user->hasPermission('modify', 'module/galleries')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
         if ((utf8_strlen($this->request->post['name']) < 3) || (utf8_strlen($this->request->post['name']) > 64)) {
             $this->error['name'] = $this->language->get('error_name');
+        }
+
+        if (!$this->request->post['filter_banner_id']) {
+            $this->error['banner'] = $this->language->get('error_banner');
         }
 
         return !$this->error;

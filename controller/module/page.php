@@ -24,6 +24,8 @@ class ControllerModulePage extends \Core\Controller {
         $this->event->trigger('ams.page.content', $page['content']);
 
         $this->data['page'] = $page;
+        
+        $this->data['suffix'] = isset($setting['class_suffix']) ? html_entity_decode($setting['class_suffix']) :'';
 
         $this->data['setting'] = $setting;
         $this->template = 'module/page.phtml';

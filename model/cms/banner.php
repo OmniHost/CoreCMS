@@ -9,7 +9,7 @@ class ModelCmsBanner extends \Core\Model {
     }
 
     public function getBanners($data = array()) {
-        $sql = "SELECT title, image, link, description FROM #__banner_image bi";
+        $sql = "SELECT title, image, link, bi.description FROM #__banner_image bi";
        
 
         $sql .=" LEFT JOIN #__banner b ON (b.banner_id  = bi.banner_id) WHERE 1";

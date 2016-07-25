@@ -13,13 +13,24 @@ class ControllerCmsGallery extends \Core\Controller\Page {
         $this->load->model('cms/banner');
         $this->load->model('tool/image');
 
-        if (isset($this->request->get['gallery_id']) && isset($this->request->get['ref_id']) && $this->model_setting_rights->getRight($this->request->get['ref_id'], 'ams_page')) {
+        
+         $gallery_id = 0;
+         if (isset($this->request->get['gallery_id'])){
+             $gallery_id = $this->request->get['gallery_id'];
+         }
+         if(isset($this->request->get['ref_id'])){
+             if(!$this->model_setting_rights->getRight($this->request->get['ref_id'], 'ams_page')){
+                 return $this->not_allowed();
+             }
+         }
+        
+  /*      if (isset($this->request->get['gallery_id']) && isset($this->request->get['ref_id']) && $this->model_setting_rights->getRight($this->request->get['ref_id'], 'ams_page')) {
             $gallery_id = $this->request->get['gallery_id'];
         } elseif (isset($this->request->get['gallery_id']) && isset($this->request->get['cmslink']) && md5(strrev($this->request->get['gallery_id']) . 'gal') == $this->request->get['cmslink']) {
             $gallery_id = $this->request->get['gallery_id'];
         } else {
             $gallery_id = 0;
-        }
+        }*/
 
         $gallery = $this->model_cms_banner->getBannerDetail($gallery_id);
         if (!$gallery) {

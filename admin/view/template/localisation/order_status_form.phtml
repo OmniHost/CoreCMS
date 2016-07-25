@@ -1,0 +1,28 @@
+<?php echo $header; ?>
+<?php include(__DIR__ . '/../common/page-header.phtml'); ?>
+
+<!-- Main content -->
+<section class="content">
+
+    <div class="box box-theme">
+        <div class="box-header">
+            <h3 class="box-title"><i class="fa fa-edit"></i> <?php echo $text_form; ?></h3>
+            <div class="box-tools pull-right">
+                <button type="submit" form="form-order-status" data-toggle="tooltip" title="<?php echo $button_save; ?>" class="btn btn-primary"><i class="fa fa-save"></i></button>
+                <a href="<?php echo $cancel; ?>" data-toggle="tooltip" title="<?php echo $button_cancel; ?>" class="btn btn-default"><i class="fa fa-reply"></i></a></div>
+
+        </div>
+        <div class="box-body">
+            <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form-order-status" class="form-horizontal">
+                <div class="form-group required">
+                    <label class="col-sm-2 control-label"><?php echo $entry_name; ?></label>
+                    <div class="col-sm-10">
+                        <input type="text" name="name" value="<?php echo $order_status; ?>" placeholder="<?php echo $entry_name; ?>" class="form-control" />
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+<?php echo $footer; ?>

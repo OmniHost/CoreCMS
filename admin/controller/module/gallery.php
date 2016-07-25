@@ -169,7 +169,7 @@ class ControllerModuleGallery extends \Core\Controller {
     }
 
     protected function validate() {
-        if (!$this->user->hasPermission('modify', 'module/banner')) {
+        if (!$this->user->hasPermission('modify', 'module/gallery')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
 

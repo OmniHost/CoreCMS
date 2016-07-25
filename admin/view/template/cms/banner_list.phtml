@@ -201,7 +201,7 @@
                     url: 'index.php?p=common/filemanager/folder&token=<?php echo $this->session->data['token']; ?>',
                     type: 'post',
                     dataType: 'json',
-                    data: 'folder=' + $folderName,
+                    data: 'name=' + $folderName,
                     success: function (json) {
                         if (json['error']) {
                             alert(json['error']);

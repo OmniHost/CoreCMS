@@ -17,6 +17,7 @@ RewriteBase /
 RewriteRule ^view/(.*\.css) cssjs.php?type=css&files=$1 [L]
 RewriteRule ^view/(.*\.js) cssjs.php?type=javascript&files=$1 [L]
 RewriteRule ^admin/view/(.*\.css) admin/cssjs.php?type=css&files=$1 [L]
+RewriteRule ^admin/view/(.*\.js) admin/cssjs.php?type=javascript&files=$1 [L]
 
 RewriteRule ^admin/img/(.*)$ img/$1 [L,NC,R]
 

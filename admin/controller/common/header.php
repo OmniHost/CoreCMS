@@ -53,6 +53,10 @@ class ControllerCommonHeader extends \Core\Controller {
         $this->data['api_user'] = $this->url->link('user/api', 'token=' . $this->session->data['token'], 'SSL');
         $this->data['marketing'] = $this->url->link('marketing/marketing', 'token=' . $this->session->data['token'], 'SSL');
         $this->data['zone'] = $this->url->link('localisation/zone', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['geo_zone'] = $this->url->link('localisation/geo_zone', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['tax_class'] = $this->url->link('localisation/tax_class', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['order_status'] = $this->url->link('localisation/order_status', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['tax_rate'] = $this->url->link('localisation/tax_rate', 'token=' . $this->session->data['token'], 'SSL');
         $this->data['custom_field'] = $this->url->link('sale/custom_field', 'token=' . $this->session->data['token'], 'SSL');
         $this->data['upload'] = $this->url->link('tool/upload', 'token=' . $this->session->data['token'], 'SSL');
         $this->data['contact_us'] = $this->url->link('sale/contact', 'token=' . $this->session->data['token'], 'SSL');
@@ -104,6 +108,9 @@ class ControllerCommonHeader extends \Core\Controller {
         $this->data['menu_language'] = $this->language->get('menu_language');
 
         $this->data['menu_zone'] = $this->language->get('menu_zone');
+        $this->data['menu_geo_zone'] = $this->language->get('menu_geo_zone');
+        $this->data['menu_tax_rate'] = $this->language->get('menu_tax_rate');
+        $this->data['menu_tax_class'] = $this->language->get('menu_tax_class');
         $this->data['menu_upload'] = $this->language->get('menu_upload');
         $this->data['menu_custom_field'] = $this->language->get('menu_custom_field');
 
@@ -406,14 +413,34 @@ class ControllerCommonHeader extends \Core\Controller {
                                 'order' => 1,
                                 'route' => 'localisation/zone',
                             ),
+                            'geo_zone' => array('label' => $this->language->get('menu_geo_zone'),
+                                'href' => $this->data['geo_zone'],
+                                'order' => 2,
+                                'route' => 'localisation/geo_zone',
+                            ),
+                            'tax_class' => array('label' => $this->language->get('menu_tax_class'),
+                                'href' => $this->data['tax_class'],
+                                'order' => 4,
+                                'route' => 'localisation/tax_class',
+                            ),
+                            'tax_rate' => array('label' => $this->language->get('menu_tax_rate'),
+                                'href' => $this->data['tax_rate'],
+                                'order' => 3,
+                                'route' => 'localisation/tax_rate',
+                            ),
                             'currency' => array('label' => $this->language->get('menu_currency'),
                                 'href' => $this->data['currency'],
-                                'order' => 2,
+                                'order' => 5,
                                 'route' => 'localisation/currency',
+                            ),
+                            'currency' => array('label' => $this->language->get('menu_order_status'),
+                                'href' => $this->data['order_status'],
+                                'order' => 6,
+                                'route' => 'localisation/order_status',
                             ),
                             'language' => array('label' => $this->language->get('menu_language'),
                                 'href' => $this->data['language'],
-                                'order' => 3,
+                                'order' => 99,
                                 'route' => 'localisation/language',
                             ),
                         )
@@ -513,8 +540,13 @@ class ControllerCommonHeader extends \Core\Controller {
                     ),
                     'seo_urls' => array('label' => $this->language->get('SEO Urls'),
                         'href' => $this->data['seo_urls'],
-                        'order' => 2,
+                        'order' => 3,
                         'route' => 'tool/seourl',
+                    ),
+                     'payments' => array('label' => $this->language->get('Payment'),
+                        'href' => $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'),
+                        'order' => 2,
+                        'route' => 'extension/payment',
                     ),
                     'feeds' => array('label' => $this->language->get('menu_feeds'),
                         'href' => $this->data['feeds'],

@@ -368,6 +368,14 @@ class ControllerCmsBanner extends \Core\Controller {
         } else {
             $data['name'] = '';
         }
+        
+        if (isset($this->request->post['description'])) {
+            $data['description'] = $this->request->post['description'];
+        } elseif (!empty($banner_info)) {
+            $data['description'] = html_entity_decode($banner_info['description']);
+        } else {
+            $data['description'] = '';
+        }
 
         if (isset($this->request->post['status'])) {
             $data['status'] = $this->request->post['status'];

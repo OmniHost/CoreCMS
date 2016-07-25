@@ -67,6 +67,7 @@ $_['text_yes'] = 'Yes';
 $_['thousand_point'] = ',';
 $_['time_format'] = 'h:i:s A';
 
+$_['text_all_zones'] = 'All Zones';
 
 $_['entry_allowed_groups'] = 'Allowed Groups';
 $_['entry_denied_groups'] = 'Denied Groups';

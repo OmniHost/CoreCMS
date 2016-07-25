@@ -1,0 +1,52 @@
+<div class="widget gallery-widget <?php echo $suffix; ?>">
+    <?php if (!empty($heading_title)) { ?>
+        <h4 class="heading"><?php echo $heading_title; ?></h4>
+    <?php } ?>
+    <div id="links<?php echo $module; ?>" class="row">
+        <div id="gallery-list-<?php echo $module; ?>" class="row">
+            <?php foreach ($galleries as $gallery): ?>
+                <div class="col-xs-6 col-sm-4 col-md-3">
+                    <a class="thumbnail inthegallery" href="<?php echo $this->url->link('cms/gallery', 'gallery_id=' . $gallery['banner_id'] . '&ref_id=' . $page['id']); ?>">
+                        <img src="<?php echo $gallery['thumb']; ?>" class="img" />
+                        <div class="caption">
+                            <?php echo $gallery['name']; ?>
+                        </div>
+                    </a>
+                </div>
+            <?php endforeach; ?>
+
+        </div>
+
+
+
+    </div>
+    <?php if ($module === 0) { ?>
+        <div style="width:0px;height:0px;overflow:hidden;" id="thegallery">
+
+        </div>
+        <script>
+            docReady(function () {
+                $(document).on("click", ".inthegallery", function (e) {
+                    e.preventDefault();
+                    var $this = $(this);
+                    $this.addClass('loading');
+                    var href = $(this).attr('href');
+                    $('#thegallery').load(href, function () {
+                        $.each(onReadyCallbacks, function (i, callback) {
+                            if (callback instanceof Function) {
+                                callback();
+                            }
+                        });
+                        setTimeout(function () {
+                            $($('#gallery-page').find('.image-thumb').find('a')[0]).trigger("click");
+                            $this.removeClass('loading');
+                        }, 1000);
+
+                    });
+                });
+
+            });
+        </script>
+    <?php } ?>
+
+</div>
