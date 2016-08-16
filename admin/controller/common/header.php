@@ -44,6 +44,9 @@ class ControllerCommonHeader extends \Core\Controller {
         $this->data['modules'] = $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL');
         $this->data['setting'] = $this->url->link('setting/setting', 'token=' . $this->session->data['token'], 'SSL');
         $this->data['installer'] = $this->url->link('extension/installer', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['analytics'] = $this->url->link('extension/analytics', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['captcha'] = $this->url->link('extension/captcha', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['theme'] = $this->url->link('extension/theme', 'token=' . $this->session->data['token'], 'SSL');
         $this->data['modifications'] = $this->url->link('extension/modification', 'token=' . $this->session->data['token'], 'SSL');
         $this->data['report_user_online'] = $this->url->link('report/customer_online', 'token=' . $this->session->data['token'], 'SSL');
         $this->data['report_user_activity'] = $this->url->link('report/customer_activity', 'token=' . $this->session->data['token'], 'SSL');
@@ -102,6 +105,9 @@ class ControllerCommonHeader extends \Core\Controller {
         $this->data['menu_marketing'] = $this->language->get('menu_marketing');
         $this->data['menu_formbuilder'] = $this->language->get('Form Builder');
 
+        $this->data['menu_theme'] = $this->language->get('menu_theme');
+        $this->data['menu_analytics'] = $this->language->get('menu_analytics');
+        $this->data['menu_captcha'] = $this->language->get('menu_captcha');
 
         $this->data['menu_currency'] = $this->language->get('menu_currency');
         $this->data['menu_backup'] = $this->language->get('menu_backup');
@@ -303,6 +309,7 @@ class ControllerCommonHeader extends \Core\Controller {
                 'order' => 2,
                 'icon' => 'fa-envelope-o',
                 'label' => $this->language->get('menu_communication'),
+                'badge' => $this->data['total_contact_us'] ? '<span class="badge bg-red pull-right">' . $this->data['total_contact_us'] . '</span>' : '',
                 'href' => '#',
                 'children' => array(
                     'contact_form' => array(
@@ -525,32 +532,47 @@ class ControllerCommonHeader extends \Core\Controller {
                 'children' => array(
                     'modules' => array('label' => $this->language->get('menu_modules'),
                         'href' => $this->data['modules'],
-                        'order' => 0,
+                        'order' => 2,
                         'route' => 'extension/module',
                     ),
                     'modifications' => array('label' => $this->language->get('menu_modifications'),
                         'href' => $this->data['modifications'],
-                        'order' => 99,
+                        'order' => 1,
                         'route' => 'extension/modification',
                     ),
                     'installer' => array('label' => $this->language->get('menu_install'),
                         'href' => $this->data['installer'],
-                        'order' => 98,
+                        'order' => 0,
                         'route' => 'extension/installer',
+                    ),
+                     'theme' => array('label' => $this->language->get('menu_theme'),
+                        'href' => $this->data['theme'],
+                        'order' => 8,
+                        'route' => 'extension/theme',
+                    ),
+                     'analytics' => array('label' => $this->language->get('menu_analytics'),
+                        'href' => $this->data['analytics'],
+                        'order' => 3,
+                        'route' => 'extension/analytics',
+                    ),
+                     'captcha' => array('label' => $this->language->get('menu_captcha'),
+                        'href' => $this->data['captcha'],
+                        'order' => 4,
+                        'route' => 'extension/captcha',
                     ),
                     'seo_urls' => array('label' => $this->language->get('SEO Urls'),
                         'href' => $this->data['seo_urls'],
-                        'order' => 3,
+                        'order' => 7,
                         'route' => 'tool/seourl',
                     ),
-                     'payments' => array('label' => $this->language->get('Payment'),
+                    'payments' => array('label' => $this->language->get('Payment'),
                         'href' => $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'),
-                        'order' => 2,
+                        'order' => 6,
                         'route' => 'extension/payment',
                     ),
                     'feeds' => array('label' => $this->language->get('menu_feeds'),
                         'href' => $this->data['feeds'],
-                        'order' => 1,
+                        'order' => 5,
                         'route' => 'extension/feed',
                     ),
                 )

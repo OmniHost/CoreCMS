@@ -172,6 +172,7 @@ $(document).ready(function () {
 
         $('#button-image').on('click', function () {
             $('#modal-image').remove();
+            $('#avpw_holder').remove();
 
             var lstFolder = '';
 
@@ -191,7 +192,8 @@ $(document).ready(function () {
              imageManagerUrl = 'index.php?p=common/filemanager&token=' + getURLVar('token') + '&target=' + $(element).parent().find('input').attr('id') + '&thumb=' + $(element).attr('id') + '&' + directory;
              
              }*/
-
+ $('body').append('<div id="modal-image" class="modal"></div>');
+ $('#modal-image').modal('show');
             $.ajax({
                 url: imageManagerUrl,
                 dataType: 'html',
@@ -204,9 +206,9 @@ $(document).ready(function () {
                     $('#button-image').prop('disabled', false);
                 },
                 success: function (html) {
-                    $('body').append('<div id="modal-image" class="modal">' + html + '</div>');
+                    $('#modal-image').html(html);
 
-                    $('#modal-image').modal('show');
+                    //$('#modal-image').modal('show');
                 }
             });
 
@@ -313,6 +315,7 @@ $(document).ready(function () {
                         browseButton.onClick = function (dialog, i) {
                             editor._.filebrowserSe = this;
                             $('#modal-image').remove();
+                            $('#avpw_holder').remove();
 
                             $.ajax({
                                 url: 'index.php?p=common/filemanager&token=' + getURLVar('token') + '&ckeditor=' + editor.name,

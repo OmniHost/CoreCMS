@@ -720,12 +720,13 @@ class ControllerSaleCustomer extends \Core\Controller {
         $data['entry_country'] = $this->language->get('entry_country');
         $data['entry_comment'] = $this->language->get('entry_comment');
         $data['entry_description'] = $this->language->get('entry_description');
-		$data['entry_amount'] = $this->language->get('entry_amount');
-		$data['entry_points'] = $this->language->get('entry_points');
-                $data['help_points'] = $this->language->get('help_points');
-                $data['button_reward_add'] = $this->language->get('button_reward_add');
-		$data['button_remove'] = $this->language->get('button_remove');
-                $data['tab_reward'] = $this->language->get('tab_reward');
+        $data['entry_amount'] = $this->language->get('entry_amount');
+        $data['entry_points'] = $this->language->get('entry_points');
+        $data['help_points'] = $this->language->get('help_points');
+        $data['button_reward_add'] = $this->language->get('button_reward_add');
+        $data['button_remove'] = $this->language->get('button_remove');
+        $data['tab_reward'] = $this->language->get('tab_reward');
+        $data['entry_notify'] = $this->language->get('entry_notify');
 
         $data['button_save'] = $this->language->get('button_save');
         $data['button_cancel'] = $this->language->get('button_cancel');
@@ -1134,7 +1135,9 @@ class ControllerSaleCustomer extends \Core\Controller {
         $this->load->model('sale/customer');
 
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateHistory()) {
-            $this->model_sale_customer->addHistory($this->request->get['customer_id'], $this->request->post['comment']);
+            $this->model_sale_customer->addHistory($this->request->get['customer_id'], $this->request->post['comment'], $this->request->post['comment_notify']);
+
+
 
             $data['success'] = $this->language->get('text_success');
         } else {
@@ -1151,6 +1154,7 @@ class ControllerSaleCustomer extends \Core\Controller {
 
         $data['column_date_added'] = $this->language->get('column_date_added');
         $data['column_comment'] = $this->language->get('column_comment');
+        $data['column_notified'] = $this->language->get('column_notified');
 
         if (isset($this->request->get['page'])) {
             $page = $this->request->get['page'];
@@ -1161,9 +1165,11 @@ class ControllerSaleCustomer extends \Core\Controller {
         $data['histories'] = array();
 
         $results = $this->model_sale_customer->getHistories($this->request->get['customer_id'], ($page - 1) * 10, 10);
+    
 
         foreach ($results as $result) {
             $data['histories'][] = array(
+                'notified' => $result['notified'],
                 'comment' => $result['comment'],
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added']))
             );

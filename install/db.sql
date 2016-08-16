@@ -5332,3 +5332,23 @@ CREATE TABLE `#__order_status` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 ALTER TABLE `#__banner` ADD `description` TEXT NOT NULL AFTER `name`;
+
+ALTER TABLE  `#__customer_history` ADD  `notified` INT( 1 ) NOT NULL DEFAULT  '0' AFTER  `comment` ;
+
+ CREATE TABLE IF NOT EXISTS `#__mod_calendar` (
+                          `AgeId` bigint(20) NOT NULL AUTO_INCREMENT,
+                          `AgeUserId` int(11) DEFAULT NULL,
+                          `AgeNomeEvento` varchar(150) DEFAULT NULL,
+                          `AgeDescricao` text,
+                          `AgeCor` varchar(8) DEFAULT NULL,
+                          `AgeDataInicial` date DEFAULT NULL,
+                          `AgeDataFinal` date DEFAULT NULL,
+                          `AgeHoraInicial` time DEFAULT NULL,
+                          `AgeHoraFinal` time DEFAULT NULL,
+                          `AgeRepetir` int(11) DEFAULT '0',
+                          `AgeStatus` int(11) DEFAULT '1',
+                          `AgeInsertDate` datetime DEFAULT NULL,
+                          `AgeUpdateDate` datetime DEFAULT NULL,
+                          PRIMARY KEY (`AgeId`)
+                        ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+    

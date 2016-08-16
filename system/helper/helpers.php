@@ -289,6 +289,10 @@ function init_wysiwyg() {
     \Core\Registry::getInstance()->get('document')->addScript($uri . '?p=cms/page/downloadlist');
 }
 
+function __($str) {
+    echo \Core\Registry::getInstance()->get('language')->get($str);
+}
+
 function __modification($filename) {
 
     $file = DIR_MODIFICATION . ltrim(substr($filename, strlen(DIR_ROOT)), "/");
@@ -301,7 +305,7 @@ function __modification($filename) {
     }
 }
 
-function placeFormField($formfield){
+function placeFormField($formfield) {
     registry('formbuilder')->placeFormField($formfield);
 }
 
@@ -332,6 +336,25 @@ function registry($key = false) {
 
 function request() {
     return registry('request');
+}
+
+function formatDate($date, $inputFormat, $outputFormat = "Y-m-d") {
+    if (empty($date)) {
+        return FALSE;
+    }
+    $limiters = array('.', '-', '/');
+    foreach ($limiters as $limiter) {
+        if (strpos($inputFormat, $limiter) !== false) {
+            $_date = explode($limiter, $date);
+            $_iFormat = explode($limiter, $inputFormat);
+            $_iFormat = array_flip($_iFormat);
+            break;
+        }
+    }
+    if (!isset($_iFormat) || !isset($_date) || count($_date) !== 3) {
+        return FALSE;
+    }
+    return date($outputFormat, mktime(0, 0, 0, $_date[isset($_iFormat['m']) ? $_iFormat['m'] : $_iFormat['n']], $_date[isset($_iFormat['d']) ? $_iFormat['d'] : $_iFormat['j']], $_date[$_iFormat['Y']]));
 }
 
 function dateformat_PHP_to_MomentJs($php_format) {

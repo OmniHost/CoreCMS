@@ -9,6 +9,7 @@
     ],
     "require": {
         "sendgrid/sendgrid": "~3.2",
-        "stil/curl-easy": "*"
+        "stil/curl-easy": "*",
+        "mpdf/mpdf": "^6.1"
     }
 }

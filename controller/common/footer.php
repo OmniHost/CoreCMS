@@ -4,11 +4,6 @@ class ControllerCommonFooter extends \Core\Controller {
 
     public function index() {
 
-        if ($this->config->get('config_google_analytics_status')) {
-            $this->data['google_analytics'] = $this->config->get('config_google_analytics');
-        } else {
-            $this->data['google_analytics'] = '';
-        }
 
 
         $this->load->model('tool/online');
@@ -47,6 +42,18 @@ class ControllerCommonFooter extends \Core\Controller {
         } else {
             $this->data['fe_tbl'] = '';
         }
+
+
+        $this->load->model('extension/extension');
+        $this->data['analytics'] = array();
+        $analytics = $this->model_extension_extension->getExtensions('analytics');
+
+        foreach ($analytics as $analytic) {
+            if ($this->config->get($analytic['code'] . '_status')) {
+                $this->data['analytics'][] = $this->getChild('analytics/' . $analytic['code'], $this->config->get($analytic['code'] . '_status'));
+            }
+        }
+
 
         $this->load->model('cms/page');
         if ($this->config->get('config_site_terms_id')) {

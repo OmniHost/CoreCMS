@@ -322,7 +322,7 @@ input[type=range]:focus::-ms-fill-upper {
     left:0;
 }
 #modal-image {
-    z-index: 999999;
+    z-index: 1250;
 }
 
 .box-theme {

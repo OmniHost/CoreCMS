@@ -56,5 +56,23 @@ CREATE TABLE `#__customer_reward` (
   PRIMARY KEY (`customer_reward_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
+CREATE TABLE IF NOT EXISTS `#__mod_calendar` (
+                          `AgeId` bigint(20) NOT NULL AUTO_INCREMENT,
+                          `AgeUserId` int(11) DEFAULT NULL,
+                          `AgeNomeEvento` varchar(150) DEFAULT NULL,
+                          `AgeDescricao` text,
+                          `AgeCor` varchar(8) DEFAULT NULL,
+                          `AgeDataInicial` date DEFAULT NULL,
+                          `AgeDataFinal` date DEFAULT NULL,
+                          `AgeHoraInicial` time DEFAULT NULL,
+                          `AgeHoraFinal` time DEFAULT NULL,
+                          `AgeRepetir` int(11) DEFAULT '0',
+                          `AgeStatus` int(11) DEFAULT '1',
+                          `AgeInsertDate` datetime DEFAULT NULL,
+                          `AgeUpdateDate` datetime DEFAULT NULL,
+                          PRIMARY KEY (`AgeId`)
+                        ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+    
+
 Delete from #__setting where `code` = '_version_';
 INSERT INTO `#__setting` (`store_id`, `code`, `key`, `value`, `serialized`) VALUES ( 0, '_version_', '_version_', '1.8.0', 0);

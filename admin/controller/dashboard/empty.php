@@ -25,8 +25,6 @@ class ControllerDashboardEmpty extends \Core\Controller {
 
         $data['activities'] = array();
 
-        
-
         $this->template = 'dashboard/empty.phtml';
         $this->data = $data;
         return $this->render();

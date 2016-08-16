@@ -60,8 +60,10 @@ function PHFileManager(target, thumb, ckeditor, callback, folder) {
     this.staticEventHandlers();
     this.sendLoad();
 
+    return this;
 }
 PHFileManager.prototype.constructor = PHFileManager;
+
 
 PHFileManager.prototype.staticEventHandlers = function () {
 
@@ -528,6 +530,20 @@ PHFileManager.prototype.loadDynamicEventHandlers = function () {
             obj.croppingDirectory = obj.directory.join('/');
         }
     });
+    
+    /* Sends an image to the image editor to crop */
+    $("#btnAEdit").click(function () {
+        if (obj.selectedItems.length == 1 && obj.selectedItems[0] != 'parent') {
+         //   $("#editorInitial").hide();
+         //   $("#editorDivCanvas").show();
+        //    $("#phfm-navs a:last").on('shown.bs.tab', function () {
+         //       $("#editorImage").cropper('reset').cropper('replace', obj.selectedItems[0].href).cropper('resize');
+         //   }).tab('show');
+        //    obj.croppingDirectory = obj.directory.join('/');
+         $("#editorImage").attr('src',obj.selectedItems[0].href);
+            launchEditor('editorImage', obj.selectedItems[0].href);
+        }
+    });
 
 };
 
@@ -586,7 +602,8 @@ PHFileManager.prototype.loadDetails = function (details) {
     str += '<p class="text-center">';
     str += '<button class="btn btn-success" id="btnSelect" data-toggle="tooltip" data-placement="top" title="' + this.helpers.button_select + '"><i class="fa fa-check"></i></button> ';
     str += '<button class="btn btn-default" id="btnView" data-toggle="tooltip" data-placement="top" title="' + this.helpers.button_preview + '"><i class="fa fa-eye"></i></button> ';
-    str += '<button class="btn btn-primary" id="btnCrop" data-toggle="tooltip" data-placement="top" title="' + this.helpers.button_crop + '"><i class="fa fa-crop"></i></button> ';
+    //str += '<button class="btn btn-primary" id="btnCrop" data-toggle="tooltip" data-placement="top" title="' + this.helpers.button_crop + '"><i class="fa fa-crop"></i></button> ';
+    str += '<button class="btn btn-primary" id="btnAEdit" data-toggle="tooltip" data-placement="top" title="' + this.helpers.button_edit + '"><i class="fa fa-edit"></i></button> ';
     str += '<button class="btn btn-info" id="btnRename" data-toggle="tooltip" data-placement="top" title="' + this.helpers.button_rename + '"><i class="fa fa-pencil"></i></button> ';
     str += '<button class="btn btn-danger" id="btnDelete" data-toggle="tooltip" data-placement="top" title="' + this.helpers.button_delete + '"><i class="fa fa-trash"></i></button> ';
     str += '</p>';

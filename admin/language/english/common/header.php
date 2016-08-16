@@ -62,3 +62,6 @@ $_['menu_newsletter_campaign'] = 'Campaigns';
 $_['menu_newsletter_overview'] = 'Overview';
 $_['menu_marketing'] = 'Marketing';
 
+$_['menu_captcha'] = 'Captcha';
+$_['menu_analytics'] = 'Analytics';
+$_['menu_theme'] = 'Themes';

@@ -46,6 +46,7 @@ CKEDITOR.editorConfig = function (config) {
 
     config.skin = 'moonocolor';
 
+config.baseFloatZIndex = 1001;
     config.height = '350';     // CSS unit (em).
     config.allowedContent = true;
     CKEDITOR.dtd.$removeEmpty['i'] = false;

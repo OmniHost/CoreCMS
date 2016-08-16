@@ -20,7 +20,7 @@ $_['text_full_doc']             = 'Full Documentation';
 $_['entry_search']              = 'Search..';
 $_['entry_image_editor']        = 'Image Editor';
 $_['entry_image_editor_desc_1'] = 'Select an image in your gallery and click on the %s button';
-$_['entry_image_editor_desc_2'] = 'Or you can %s an image to crop';
+$_['entry_image_editor_desc_2'] = 'Edited images will be saved with a random filename';
 
 // Tabs
 $_['tab_gallery']               = 'Gallery';

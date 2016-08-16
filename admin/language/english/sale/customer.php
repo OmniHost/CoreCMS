@@ -26,6 +26,7 @@ $_['column_action']         = 'Action';
 $_['column_description']    = 'Description';
 $_['column_amount']         = 'Amount';
 $_['column_points']         = 'Points';
+$_['column_notified']         = 'Notified';
 
 // Entry
 $_['entry_customer_group']  = 'User Group';
@@ -46,6 +47,7 @@ $_['entry_name']            = 'User Name';
 $_['entry_approved']        = 'Approved';
 $_['entry_ip']              = 'IP';
 $_['entry_date_added']      = 'Date Added';
+$_['entry_notify']          = 'Notify User';
 
 // Error
 $_['error_warning']         = 'Warning: Please check the form carefully for errors!';

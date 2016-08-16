@@ -230,7 +230,7 @@
             location = url;
         });
 
-        $('input[name=\'filter_name\']').autocomplete({
+        $('input[name=\'filter_name\']').autoinput({
             'source': function (request, response) {
                 $.ajax({
                     url: 'index.php?p=sale/customer/autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
@@ -250,7 +250,7 @@
             }
         });
 
-        $('input[name=\'filter_email\']').autocomplete({
+        $('input[name=\'filter_email\']').autoinput({
             'source': function (request, response) {
                 $.ajax({
                     url: 'index.php?p=sale/customer/autocomplete&token=<?php echo $token; ?>&filter_email=' + encodeURIComponent(request),

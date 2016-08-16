@@ -25,4 +25,16 @@ abstract class Model {
         \Core\Core::$registry->set($key, $value);
     }
 
+    //Utilities :!-)
+
+    public function factory($table, $primary_key = 'id') {
+        require_once('Model/Factory.php');
+        $model = new \Core\Model\Factory($table, $primary_key);
+        return $model;
+    }
+    
+    public function reset(){
+        return false;
+    }
+
 }

@@ -16,7 +16,7 @@ class ControllerModuleGalleries extends \Core\Controller {
         $this->load->model('tool/image');
         $gallery = array();
         
-        $whv = round(1600 / $setting['resize']);
+        $whv = round(1400 / $setting['resize']);
         //2,3,4,6
         if($setting['resize'] == '2'){
             $data['bootcol'] = 'col-sm-6';

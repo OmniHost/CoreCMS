@@ -55,8 +55,8 @@
 
 <script type="text/javascript" src="view/template/default/assets/js/site.js"></script>
 
-<script>
-<?php echo $google_analytics; ?>
-</script>
+<?php foreach ($analytics as $analytic) { ?>
+<?php echo $analytic; ?>
+<?php } ?>
 </body>
 </html>

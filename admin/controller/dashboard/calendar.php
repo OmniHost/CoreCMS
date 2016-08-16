@@ -12,28 +12,11 @@
  */
 class ControllerDashboardCalendar extends \Core\Controller {
 
-    protected function install() {
-        $this->db->query('CREATE TABLE IF NOT EXISTS `#__mod_calendar` (
-                          `AgeId` bigint(20) NOT NULL AUTO_INCREMENT,
-                          `AgeUserId` int(11) DEFAULT NULL,
-                          `AgeNomeEvento` varchar(150) DEFAULT NULL,
-                          `AgeDescricao` text,
-                          `AgeCor` varchar(8) DEFAULT NULL,
-                          `AgeDataInicial` date DEFAULT NULL,
-                          `AgeDataFinal` date DEFAULT NULL,
-                          `AgeHoraInicial` time DEFAULT NULL,
-                          `AgeHoraFinal` time DEFAULT NULL,
-                          `AgeRepetir` int(11) DEFAULT \'0\',
-                          `AgeStatus` int(11) DEFAULT \'1\',
-                          `AgeInsertDate` datetime DEFAULT NULL,
-                          `AgeUpdateDate` datetime DEFAULT NULL,
-                          PRIMARY KEY (`AgeId`)
-                        ) ENGINE=InnoDB DEFAULT CHARSET=latin1;');
-    }
+  
 
     public function index() {
         $this->load->language('dashboard/calendar');
-        $this->install();
+  
 
         $data['token'] = $this->session->data['token'];
         $data['heading_title'] = $this->language->get('heading_title');

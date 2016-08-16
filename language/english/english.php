@@ -4,7 +4,9 @@ $_['code']                  = 'en';
 $_['direction']             = 'ltr';
 $_['date_format_short']     = 'd/m/Y';
 $_['date_format_long']      = 'l dS F Y';
+$_['date_format_friendly']      = 'D dS M Y';
 $_['time_format']           = 'h:i:s A';
+$_['time_format_short']           = 'h:i A';
 $_['decimal_point']         = '.';
 $_['thousand_point']        = ',';
 
@@ -24,6 +26,7 @@ $_['button_update']         = 'Update';
 $_['button_remove']         = 'Remove';
 $_['button_search']         = 'Search';
 $_['button_clear'] = 'Clear';
+$_['button_cancel'] = 'Cancel';
 
 // Error
 $_['error_upload_1']        = 'Warning: The uploaded file exceeds the upload_max_filesize directive in php.ini!';

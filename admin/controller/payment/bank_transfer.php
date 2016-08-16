@@ -18,6 +18,8 @@ class ControllerPaymentBankTransfer extends \Core\Controller {
 
             $this->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], true));
         }
+        
+      
 
         $data['heading_title'] = $this->language->get('heading_title');
 
@@ -44,10 +46,7 @@ class ControllerPaymentBankTransfer extends \Core\Controller {
             $data['error_warning'] = '';
         }
 
-       /* $this->load->model('localisation/language');
-
-        $languages = $this->model_localisation_language->getLanguages();*/
-
+ 
             if (isset($this->error['bank'])) {
                 $data['error_bank'] = $this->error['bank'];
             } else {
@@ -76,13 +75,13 @@ class ControllerPaymentBankTransfer extends \Core\Controller {
 
         $data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], true);
 
-        
-            if (isset($this->request->post['bank_transfer_bank' ])) {
-                $data['bank_transfer_bank'] = $this->request->post['bank_transfer_bank'];
-            } else {
-                $data['bank_transfer_bank'] = $this->config->get('bank_transfer_bank');
-            }
-        
+
+        if (isset($this->request->post['bank_transfer_bank'])) {
+            $data['bank_transfer_bank'] = $this->request->post['bank_transfer_bank'];
+        } else {
+            $data['bank_transfer_bank'] = $this->config->get('bank_transfer_bank');
+        }
+
 
 
         if (isset($this->request->post['bank_transfer_total'])) {
@@ -134,15 +133,13 @@ class ControllerPaymentBankTransfer extends \Core\Controller {
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
-        $this->load->model('localisation/language');
 
-        $languages = $this->model_localisation_language->getLanguages();
 
-        foreach ($languages as $language) {
-            if (empty($this->request->post['bank_transfer_bank' . $language['language_id']])) {
-                $this->error['bank' . $language['language_id']] = $this->language->get('error_bank');
-            }
+        if (empty($this->request->post['bank_transfer_bank'])) {
+            $this->error['bank'] = $this->language->get('error_bank');
         }
+
+     
 
         return !$this->error;
     }

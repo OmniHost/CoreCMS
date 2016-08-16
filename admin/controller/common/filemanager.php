@@ -27,7 +27,7 @@ class ControllerCommonFilemanager extends \Core\Controller {
 
         $data['entry_search'] = $this->language->get('entry_search');
         $data['entry_image_editor'] = $this->language->get('entry_image_editor');
-        $data['entry_image_editor_desc_1'] = str_replace('%s', '<button type="button" data-toggle="tooltip" title="' . $this->language->get('button_crop') . '" class="btn btn-primary"><i class="fa fa-crop"></i></button>', $this->language->get('entry_image_editor_desc_1'));
+        $data['entry_image_editor_desc_1'] = str_replace('%s', '<button type="button" data-toggle="tooltip" title="' . $this->language->get('button_edit') . '" class="btn btn-primary"><i class="fa fa-edit"></i></button>', $this->language->get('entry_image_editor_desc_1'));
         $data['entry_image_editor_desc_2'] = str_replace('%s', '<label for="inputImageEditor" class="btn btn-primary" data-toggle="tooltip" title="' . $this->language->get('button_upload') . '"><i class="fa fa-upload"></i><input type="file" class="sr-only" id="inputImageEditor" name="fileEditor" accept="image/*"></label>', $this->language->get('entry_image_editor_desc_2'));
 
         $data['tab_gallery'] = $this->language->get('tab_gallery');
@@ -78,6 +78,7 @@ class ControllerCommonFilemanager extends \Core\Controller {
         $data['helpers']['button_select'] = $this->language->get('button_select');
         $data['helpers']['button_delete'] = $this->language->get('button_delete');
         $data['helpers']['button_crop'] = $this->language->get('button_crop');
+        $data['helpers']['button_edit'] = $this->language->get('button_edit');
         $data['helpers']['button_rename'] = $this->language->get('button_rename');
         $data['helpers']['button_cancel'] = $this->language->get('button_cancel');
         $data['helpers']['button_preview'] = $this->language->get('button_preview');
@@ -336,7 +337,7 @@ class ControllerCommonFilemanager extends \Core\Controller {
                     }
 
                     // Allowed file mime types
-                    $allowed = array('image/jpeg', 'image/pjpeg', 'image/png', 'image/x-png', 'image/gif');
+                    $allowed = array('image/jpeg','image/jpg',  'image/pjpeg', 'image/png', 'image/x-png', 'image/gif');
 
                     if (!in_array($this->request->files['file']['type'][$i], $allowed)) {
                         $json['error'] = $this->language->get('error_filetype');
@@ -402,7 +403,8 @@ class ControllerCommonFilemanager extends \Core\Controller {
 
         // Check its a directory
         if (!is_dir($directory)) {
-            $json['error'] = $this->language->get('error_directory');
+           // $json['error'] = $this->language->get('error_directory');
+            mkdir($directory, 0777, true);
         }
 
         if (!$json) {
@@ -422,7 +424,7 @@ class ControllerCommonFilemanager extends \Core\Controller {
             }
 
             // Allowed file mime types
-            $allowed = array('image/jpeg', 'image/pjpeg', 'image/png', 'image/x-png', 'image/gif');
+            $allowed = array('image/jpeg', 'image/jpg', 'image/pjpeg', 'image/png', 'image/x-png', 'image/gif');
 
             if (!in_array($headers['Content-Type'], $allowed)) {
                 $json['error'] = $this->language->get('error_filetype');

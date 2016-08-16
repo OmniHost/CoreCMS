@@ -7,7 +7,7 @@ class ControllerCommonHome extends \Core\Controller {
 
     public function index() {
 
-        
+    
         $this->document->addLink($this->url->link('common/home'), 'canonical');
 
         $this->template = "common/home.phtml";

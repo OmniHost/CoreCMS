@@ -43,4 +43,8 @@ class Request {
         return (strtoupper($this->server['REQUEST_METHOD']) == 'POST')?true:false;
     }
 
+    public function isXHR(){
+        return strtoupper(BASE_REQUEST_TYPE) == 'AJAX';
+    }
+    
 }

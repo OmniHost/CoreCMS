@@ -21,6 +21,12 @@ class ModelSaleCustomer extends \Core\Model {
                 . " date_added = NOW()");
 
         $customer_id = $this->db->getLastId();
+
+        if (!empty($data['profile_img'])) {
+            $this->updateProfileImage($customer_id, $data['profile_img']);
+        }
+
+        return $customer_id;
     }
 
     public function editCustomer($customer_id, $data) {
@@ -41,6 +47,13 @@ class ModelSaleCustomer extends \Core\Model {
         if ($data['password']) {
             $this->db->query("UPDATE #__customer SET salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "' WHERE customer_id = '" . (int) $customer_id . "'");
         }
+        if (!empty($data['profile_img'])) {
+            $this->updateProfileImage($customer_id, $data['profile_img']);
+        }
+    }
+
+    public function updateProfileImage($customer_id, $profile_img) {
+        $this->db->query("UPDATE #__customer SET profile_img = '" . $this->db->escape($profile_img) . "' WHERE customer_id = '" . (int) $customer_id . "'");
     }
 
     public function editToken($customer_id, $token) {
@@ -255,8 +268,36 @@ class ModelSaleCustomer extends \Core\Model {
         return $query->row['total'];
     }
 
-    public function addHistory($customer_id, $comment) {
-        $this->db->query("INSERT INTO #__customer_history SET customer_id = '" . (int) $customer_id . "', comment = '" . $this->db->escape(strip_tags($comment)) . "', date_added = NOW()");
+    public function addHistory($customer_id, $comment, $notify) {
+        $this->db->query("INSERT INTO #__customer_history SET customer_id = '" . (int) $customer_id . "', comment = '" . $this->db->escape(strip_tags($comment)) . "', notified = '" . (int) $notify . "', date_added = NOW()");
+        if ($notify) {
+            $mail = new \Core\Mail();
+            $mail->tags = array('Comment Notification');
+            $mail->protocol = $this->config->get('config_mail_protocol');
+            $mail->parameter = $this->config->get('config_mail_parameter');
+            $mail->hostname = $this->config->get('config_mail_smtp_hostname');
+            $mail->username = $this->config->get('config_mail_smtp_username');
+            $mail->password = $this->config->get('config_mail_smtp_password');
+            $mail->port = $this->config->get('config_mail_smtp_port');
+            $mail->timeout = $this->config->get('config_mail_smtp_timeout');
+
+            $customer_info = $this->getCustomer($customer_id);
+            $this->load->language('mail/history');
+            $mail->setTo($customer_info['email']);
+            $mail->setFrom($this->config->get('config_email'));
+            $mail->setSender(html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8'));
+            $mail->setSubject(sprintf($this->language->get('subject_comment_notification'), html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8')));
+            $message = sprintf($this->language->get('text_comment_notification'), $this->config->get('config_name')) . "\n\n";
+            $message .= sprintf($this->language->get('text_comment_comment'), "\n" . $comment);
+            $mail->setText($message);
+
+
+            try {
+                $mail->send();
+            } catch (Exception $e) {
+                
+            }
+        }
     }
 
     public function getHistories($customer_id, $start = 0, $limit = 10) {
@@ -268,7 +309,7 @@ class ModelSaleCustomer extends \Core\Model {
             $limit = 10;
         }
 
-        $query = $this->db->query("SELECT comment, date_added FROM #__customer_history WHERE customer_id = '" . (int) $customer_id . "' ORDER BY date_added DESC LIMIT " . (int) $start . "," . (int) $limit);
+        $query = $this->db->query("SELECT comment,notified, date_added FROM #__customer_history WHERE customer_id = '" . (int) $customer_id . "' ORDER BY date_added DESC LIMIT " . (int) $start . "," . (int) $limit);
 
         return $query->rows;
     }
@@ -331,14 +372,14 @@ class ModelSaleCustomer extends \Core\Model {
 
             $store_name = $this->config->get('config_name');
 
- 
+
 
             $message = sprintf($this->language->get('text_reward_received'), $points) . "\n\n";
             $message .= sprintf($this->language->get('text_reward_total'), $this->getRewardTotal($customer_id));
-          
+
 
             $mail = new \Core\Mail();
-             $mail->tags = array('Points Notification');
+            $mail->tags = array('Points Notification');
             $mail->protocol = $this->config->get('config_mail_protocol');
             $mail->parameter = $this->config->get('config_mail_parameter');
             $mail->hostname = $this->config->get('config_smtp_host');
@@ -346,7 +387,7 @@ class ModelSaleCustomer extends \Core\Model {
             $mail->password = $this->config->get('config_smtp_password');
             $mail->port = $this->config->get('config_smtp_port');
             $mail->timeout = $this->config->get('config_smtp_timeout');
-            
+
 
 
             $mail->setTo($customer_info['email']);
@@ -354,12 +395,12 @@ class ModelSaleCustomer extends \Core\Model {
             $mail->setSender(html_entity_decode($store_name, ENT_QUOTES, 'UTF-8'));
             $mail->setSubject(sprintf($this->language->get('text_reward_subject'), html_entity_decode($store_name, ENT_QUOTES, 'UTF-8')));
             $mail->setText($message);
-           
-           try{
-            $mail->send();
-           }catch(Exception $e){
-            
-           }
+
+            try {
+                $mail->send();
+            } catch (Exception $e) {
+                
+            }
         }
     }
 

@@ -373,7 +373,11 @@ class ControllerUserUserPermission extends \Core\Controller {
                         if (!empty($info['name'])) {
                             $friendlyName = $info['name'];
                         }
-                        if(!empty($info['visibility']) && strtolower($info['visibility']) == 'private'){
+                        if (!empty($info['visibility']) && strtolower($info['visibility']) == 'private') {
+                            continue;
+                        }
+
+                        if (!empty($info['showif']) && !$this->config->get($info['showif'])) {
                             continue;
                         }
                     }
